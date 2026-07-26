@@ -1,0 +1,282 @@
+{
+  "translation": {
+    "name": "Bahasa Indonesia",
+    "a11y": {
+      "mainMenu": "Menu utama",
+      "previousPassage": "Bagian sebelumnya",
+      "nextPassage": "Bagian berikutnya",
+      "closeWindow": "Tutup jendela",
+      "linkWindow": "Tautkan jendela ini ke navigasi bersama",
+      "unlinkWindow": "Lepaskan tautan jendela ini dari navigasi bersama",
+      "close": "Tutup"
+    },
+    "menu": {
+      "labels": {
+        "about": "Tentang",
+        "addwindow": "Tambahkan Jendela",
+        "settings": "Pengaturan",
+        "feedback": "Umpan Balik",
+        "options": "Pilihan"
+      },
+      "feedback": {
+        "name": "Nama",
+        "email": "Email",
+        "comments": "Komentar Anda",
+        "feature": "Fitur Saran",
+        "bug": "Bug Report",
+        "other": "Yang Lainnya",
+        "send": "Mengirim",
+        "thankyou": "Terima kasih atas tanggapan Anda"
+      },
+      "search": {
+        "placeholder": "Pencarian",
+        "suggestversion": "Buka <strong>{0}</strong> di jendela baru",
+        "suggestreference": "Pergi ke <strong>{0}</strong> di {1}",
+        "suggestsearch": "Cari \"<strong>{0}</strong>\" di {1}"
+      },
+      "config": {
+        "font": "Fon",
+        "settings": "Pengaturan",
+        "tools": "Alat",
+        "apocrypha": "Tampilkan Kitab Apokrifa"
+      },
+      "reset": "ulang",
+      "commandpalette": {
+        "placeholder": "Ketik perintah atau referensi Alkitab...",
+        "help_reference": "Ketik referensi Alkitab untuk menavigasi",
+        "help_commands": "Ketik > untuk mencari perintah",
+        "no_results": "Tidak ada hasil ditemukan"
+      },
+      "themes": {
+        "default": "Normal",
+        "shiloh": "Silo",
+        "jabbok": "Yabok",
+        "gethsemane": "Getsemani"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "Sorotan tidak dapat disimpan: penyimpanan peramban penuh atau tidak tersedia."
+      },
+      "visualfilters": {
+        "button": "Visual Filter",
+        "title": "Visual Filter",
+        "newfilter": "Filter baru",
+        "strongsnumber": "Strong #",
+        "morphology": "Morfologi",
+        "style": "Gaya"
+      },
+      "eng2p": {
+        "button": "English 2 Orang Plural",
+        "title": "English Kedua Orang Plural",
+        "description": "Bahasa Inggris modern tidak membedakan antara <em>kamu tunggal</em> dan <em>kamu jamak</em>, jadi plugin ini menggunakan padanan bahasa Inggris regional untuk mewakili bentuk Ibrani dan Yunani."
+      },
+      "lemmapopup": {
+        "findalloccurrences": "Cari semua kejadian (sekitar __count__)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "Alkitab Tuli"
+      },
+      "videobible": {
+        "label": "Video Alkitab"
+      },
+      "bible": {
+        "label": "Alkitab",
+        "recentlyused": "Baru Digunakan",
+        "filter": "Filter ...",
+        "ot": "Perjanjian Lama",
+        "nt": "Perjanjian Baru",
+        "dc": "Deuterokanonika Books",
+        "more": "Lebih",
+        "less": "Kurang",
+        "default": "Unggulan",
+        "languages": "Bahasa",
+        "countries": "Negara",
+        "lemma": "Yunani/Ibrani",
+        "audio": "Audio tersedia",
+        "prevversion": "Versi sebelumnya",
+        "nextversion": "Versi berikutnya",
+        "gotopassage": "Pergi ke bagian",
+        "reference": "Referensi",
+        "version": "Versi",
+        "versioninfo": "Informasi Versi",
+        "versioninfoname": "Informasi {0}",
+        "loadinginfo": "Memuat informasi...",
+        "noinfo": "Tidak ada informasi tambahan yang tersedia untuk versi ini."
+      },
+      "commentary": {
+        "label": "Komentar"
+      },
+      "map": {
+        "label": "Peta",
+        "placeholder": "Cari ...",
+        "versenotloaded": "Teks tidak tersedia",
+        "openinbible": "Buka di Alkitab",
+      "loadfailed": "Gagal memuat peta",
+        "loading": "Memuat…",
+        "moreresults": "{count} kecocokan lagi",
+        "placesin": "Tempat di {reference}",
+        "journeystops": "{count} perhentian",
+        "journeynames": {
+          "abraham": "Perjalanan Abraham",
+          "jacob": "Pelarian dan Kepulangan Yakub",
+          "exodus": "Eksodus",
+          "ark": "Pengembaraan Tabut Perjanjian",
+          "elijah": "Perjalanan Elia",
+          "exile": "Pembuangan dan Kepulangan",
+          "nativity": "Kelahiran Yesus dan Pelarian ke Mesir",
+          "paul1": "Perjalanan Pertama Paulus",
+          "paul2": "Perjalanan Kedua Paulus",
+          "paul3": "Perjalanan Ketiga Paulus",
+          "rome": "Pelayaran Paulus ke Roma"
+        }
+      },
+      "search": {
+        "label": "Pencarian",
+        "placeholder": "Pencarian",
+        "button": "Pencarian",
+        "results": "Hasil",
+        "verses": "ayat",
+        "options": "Opsi pencarian",
+        "searchfailed": "Pencarian gagal. Silakan periksa koneksi Anda dan coba lagi.",
+        "noresults": "Tidak ada hasil",
+        "loadingprogress": "Memuat: {progress} :: {label}"
+      },
+      "parallel": {
+        "label": "Parallels",
+        "loading": "Loading ...",
+        "showall": "Tampilkan Semua",
+        "hideall": "Sembunyikan Semua",
+        "loadlistfailed": "Gagal memuat daftar paralel",
+        "loadtextfailed": "Gagal memuat teks Alkitab",
+        "loadpassagesfailed": "Gagal memuat bagian paralel"
+      },
+      "media": {
+        "label": "Media",
+        "videolanguage": "Bahasa video",
+        "videolanguageauto": "Sesuai teks Alkitab",
+        "videolanguagefilter": "Cari bahasa",
+        "videolanguagenone": "Tidak ada bahasa yang cocok"
+      },
+      "notes": {
+        "label": "Catatan",
+        "toggleSidebar": "Alihkan bilah sisi",
+        "newNote": "Catatan baru",
+        "linkToVerse": "Tautkan ke ayat saat ini",
+        "download": "Unduh catatan",
+        "downloadMarkdown": "Unduh sebagai Markdown",
+        "downloadText": "Unduh sebagai teks biasa",
+        "downloadRtf": "Unduh sebagai RTF",
+        "downloadJson": "Cadangkan sebagai JSON",
+        "noNotesToDownload": "Tidak ada catatan untuk diunduh",
+        "import": "Impor catatan",
+        "importReadError": "Tidak dapat membaca berkas yang dipilih",
+        "importInvalid": "Bukan berkas cadangan catatan yang valid",
+        "importNone": "Tidak ada catatan ditemukan dalam berkas",
+        "imported": "Mengimpor {count} catatan",
+        "importMerged": "Cadangan dipulihkan: {added} ditambahkan, {updated} diperbarui, {skipped} tidak berubah",
+        "print": "Cetak catatan",
+        "printCurrent": "Cetak catatan saat ini",
+        "printAll": "Cetak semua catatan",
+        "printAllTitle": "Semua Catatan",
+        "printIncludeVerses": "Sertakan teks ayat",
+        "printButton": "Cetak",
+        "closeButton": "Tutup",
+        "preparingPrint": "Menyiapkan cetakan dengan ayat...",
+        "printError": "Cetak gagal, lihat konsol browser",
+        "popupBlocked": "Jendela cetak diblokir. Izinkan popup untuk situs ini dan coba lagi.",
+        "noNotesToPrint": "Tidak ada catatan untuk dicetak",
+        "selectToPrint": "Pilih catatan untuk dicetak",
+        "verseLabel": "Ayat",
+        "modifiedLabel": "Diubah",
+        "searchPlaceholder": "Cari catatan...",
+        "filterLabel": "Saring catatan",
+        "filterAll": "Semua catatan",
+        "filterLinked": "Tertaut ke ayat",
+        "filterStandalone": "Berdiri sendiri",
+        "filterReference": "Ayat saat ini",
+        "sortLabel": "Urutkan catatan",
+        "sortModified": "Baru diedit",
+        "sortCreated": "Baru dibuat",
+        "sortTitle": "Berdasarkan judul",
+        "titlePlaceholder": "Judul catatan...",
+        "editorPlaceholder": "Mulai menulis...",
+        "bold": "Tebal (Ctrl+B)",
+        "italic": "Miring (Ctrl+I)",
+        "underline": "Garis bawah (Ctrl+U)",
+        "heading": "Tajuk",
+        "paragraph": "Paragraf",
+        "bulletList": "Daftar berpoin",
+        "numberedList": "Daftar bernomor",
+        "pin": "Sematkan catatan",
+        "unpin": "Lepas sematan catatan",
+        "removeLink": "Hapus tautan ayat",
+        "delete": "Hapus",
+        "deleteNote": "Hapus catatan",
+        "deleteConfirm": "Hapus catatan ini?",
+        "confirmOk": "OK",
+        "confirmCancel": "Batal",
+        "untitled": "Tanpa judul",
+        "noNoteSelected": "Tidak ada catatan dipilih",
+        "selectOrCreate": "Pilih catatan dari daftar atau buat yang baru",
+        "storageWarning": "Catatan disimpan di penyimpanan lokal browser Anda dan dapat hilang jika Anda menghapus data browser. Cadangkan dengan Unduh → Cadangkan sebagai JSON.",
+        "noNotesFound": "Tidak ada catatan yang cocok",
+        "emptyListHint": "Belum ada catatan, buat satu untuk memulai",
+        "modified": "Diubah: {date}",
+        "saved": "Tersimpan",
+        "unsavedChanges": "Perubahan belum disimpan",
+        "notSaved": "Tidak tersimpan, penyimpanan penuh",
+        "saveFailed": "Gagal menyimpan",
+        "quotaError": "Catatan tidak dapat disimpan karena penyimpanan browser penuh. Ekspor cadangan JSON, lalu hapus beberapa catatan.",
+        "corruptError": "Catatan tersimpan tidak dapat dibaca. Cadangan data yang tidak terbaca disimpan di penyimpanan browser.",
+        "navigateToLink": "Navigasikan ke ayat untuk menautkan",
+        "linkedTo": "Tertaut ke {reference}",
+        "linkRemoved": "Tautan ayat dihapus",
+        "detectedRefs": "Referensi:",
+        "goToReference": "Pergi ke {reference}"
+      },
+      "audio": {
+        "label": "Audio",
+        "options": "Audio Pilihan",
+        "synctext": "Sync Text (beta)",
+        "autoplay": "Autoplay Berikutnya",
+        "drama": "Drama",
+        "nondrama": "Non-Drama",
+        "noaudiotitle": "Tidak Ada Audio Tersedia",
+        "noaudiomessage": "Versi Alkitab ini tidak memiliki rekaman audio. Silakan pilih versi lain yang mendukung audio."
+      },
+      "comparison": {
+        "label": "Perbandingan",
+        "invalidreference": "Referensi Alkitab tidak valid",
+        "nobibles": "Tidak ada Alkitab yang tersedia untuk bagian ini. Silakan pilih bagian atau versi Alkitab lain.",
+        "onebible": "Hanya satu versi Alkitab yang tersedia untuk bagian ini. Silakan pilih versi Alkitab lain yang memuat kitab ini.",
+        "loadfailed": "Gagal memuat bagian. Silakan coba lagi."
+      },
+      "stats": {
+        "label": "Statistik",
+        "frequentwords": "Kata-kata sering",
+        "loadtextfailed": "Tidak dapat memuat teks ini.",
+        "loadchapterfailed": "Tidak dapat memuat pasal ini."
+      }
+    },
+    "names": {
+      "en": "Indonesian",
+      "fr": "indonésien",
+      "es": "indonesio",
+      "de": "Indonesisch",
+      "ru": "индонезийский",
+      "hi": "इंडोनेशियाई",
+      "ar": "الإندونيسية",
+      "af": "Indonesies",
+      "bn": "ইন্দোনেশীয়",
+      "id": "Bahasa Indonesia",
+      "sw": "Kiindonesia",
+      "tr": "Endonezce",
+      "ja": "インドネシア語",
+      "zh-TW": "印尼語",
+      "zh-CN": "印尼语"
+    }
+  }
+}

@@ -1,0 +1,361 @@
+.search-input-wrap {
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 5px 0 0;
+}
+
+.search-input-wrap .search-text {
+	margin: 0;
+}
+
+.search-go-button {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	width: 28px;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	color: var(--color-primary);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.search-go-button:hover {
+	background: var(--color-background-hover);
+}
+
+.search-go-button svg {
+	width: 16px;
+	height: 16px;
+}
+
+.compact-ui .SearchWindow .search-text {
+	width: 100px;
+}
+
+.compact-ui .window .window-header .search-text {
+	padding-right: 28px;
+}
+
+.search-main {
+	background: var(--color-background);
+	overflow: auto;
+}
+
+.search-wrapper {
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.search-main .loading-indicator {
+	min-height: 50px;
+}
+
+.search-header .search-text {
+	width: 150px;
+	min-width: inherit;
+	padding-left: 8px;
+	padding-right: 30px;
+}
+
+.search-top {
+	position: sticky;
+	top: -10px;
+	z-index: var(--z-base);
+	background: var(--color-background);
+	padding-top: 10px;
+}
+
+.search-results-count {
+	margin: 0 6px 0;
+	float: right;
+	font-size: .8rem;
+	opacity: .7;
+	font-weight: 600;
+}
+
+.search-result-book-header {
+	position: sticky;
+	top: calc(var(--search-top-height, 83px) - 10px);
+	z-index: calc(var(--z-base) - 1);
+	background: var(--color-background-hover);
+	font-weight: bold;
+	font-size: .78em;
+	padding: 6px 8px;
+	border-bottom: 1px solid var(--color-border);
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.search-result-book-count {
+	margin-inline-start: auto;
+	background: var(--division-color, #2563eb);
+	color: #fff;
+	font-weight: 600;
+	font-size: .79em;
+	line-height: 1.65;
+	min-width: 1.65em;
+	padding: 0 .55em;
+	border-radius: 999px;
+	text-align: center;
+}
+
+.search-result-row {
+	gap: 6px;
+	padding: 6px 8px;
+	border-bottom: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+}
+
+.search-result-ref {
+	flex-shrink: 0;
+	white-space: nowrap;
+	font-size: .67em;
+	font-weight: bold;
+	display: block;
+
+	float: left;
+	padding: 0 .3em;
+}
+
+.search-result-text {
+	font-size: .67em;
+	display: block;
+}
+
+.search-result-text .note,
+.search-result-text .cf {
+	display: none;
+}
+
+.search-result-row:hover {
+	cursor: pointer;
+	background-color: var(--color-background-hover);
+}
+
+
+.search-usage {
+	margin: 0 0 20px;
+	font-size: .75em;
+}
+
+.search-lemma-info .lemma-word {
+	margin: 0;
+}
+
+.search-visual {
+    border-bottom: solid 1px var(--color-border);
+    height: 42px;
+    margin-top: 16px;
+    padding: 0 5px;
+    display: flex;
+    position: relative;
+}
+
+.search-visual-label {
+	position: absolute;
+	top: 100%;
+	margin-top: 2px;
+	font-size: .625em;
+	z-index: var(--z-menu);
+	min-width: 50px;
+	display: none;
+	white-space: nowrap;
+	padding: 2px 5px;
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
+	border-radius: 3px;
+}
+
+.search-result-book-bar {
+	height: 40px;
+	cursor: pointer;
+}
+
+.search-result-book-bar span {
+	height: 40px;
+	display: block;
+	background: var(--division-color, var(--color-border));
+	border-right: solid 1px var(--color-background);
+}
+
+.search-division-chooser {
+	position: absolute;
+	background: var(--color-background);
+	font-size: 80%;
+	box-shadow: var(--shadow-popup);
+	border: 1px solid var(--color-border);
+	margin: 0;
+	inset: auto;
+}
+.search-division-chooser .search-division-header {
+	color: var(--color-background);
+	background: var(--color-background-active);
+	padding: 8px;
+	font-weight: bold;
+
+}
+.search-division-chooser .search-division-main {
+	padding: 10px;
+	max-height: 250px;
+	overflow: auto;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.search-division-chooser .division-header {
+	display: block;
+	font-weight: bold;
+}
+
+
+.search-division-chooser .division-name {
+	display: block;
+	white-space: nowrap;
+}
+
+.search-division-chooser .division-list-items {
+	padding: 0 0 0 5px;
+}
+.search-division-chooser[dir=rtl] .division-list-items {
+	padding: 0 5px 0 0;
+}
+
+
+
+/* Per-book division color, consumed by the visual bars and book-count badges */
+.search-wrapper .divisionid-GN,
+.search-wrapper .divisionid-EX,
+.search-wrapper .divisionid-LV,
+.search-wrapper .divisionid-NU,
+.search-wrapper .divisionid-DT {
+	--division-color: var(--color-division-pentateuch);
+}
+
+.search-wrapper .divisionid-JS,
+.search-wrapper .divisionid-JG,
+.search-wrapper .divisionid-RT,
+.search-wrapper .divisionid-S1,
+.search-wrapper .divisionid-S2,
+.search-wrapper .divisionid-K1,
+.search-wrapper .divisionid-K2,
+.search-wrapper .divisionid-R1,
+.search-wrapper .divisionid-R2,
+.search-wrapper .divisionid-ER,
+.search-wrapper .divisionid-NH,
+.search-wrapper .divisionid-ET {
+	--division-color: var(--color-division-historical);
+}
+
+.search-wrapper .divisionid-JB,
+.search-wrapper .divisionid-PS,
+.search-wrapper .divisionid-PR,
+.search-wrapper .divisionid-EC,
+.search-wrapper .divisionid-SS,
+.search-wrapper .divisionid-LM {
+	--division-color: var(--color-division-wisdom);
+}
+
+.search-wrapper .divisionid-IS,
+.search-wrapper .divisionid-JR,
+.search-wrapper .divisionid-EK,
+.search-wrapper .divisionid-DN {
+	--division-color: var(--color-division-major-prophets);
+}
+
+.search-wrapper .divisionid-HS,
+.search-wrapper .divisionid-JL,
+.search-wrapper .divisionid-AM,
+.search-wrapper .divisionid-OB,
+.search-wrapper .divisionid-JH,
+.search-wrapper .divisionid-MC,
+.search-wrapper .divisionid-NM,
+.search-wrapper .divisionid-HK,
+.search-wrapper .divisionid-ZP,
+.search-wrapper .divisionid-HG,
+.search-wrapper .divisionid-ZC,
+.search-wrapper .divisionid-ML {
+	--division-color: var(--color-division-minor-prophets);
+}
+
+.search-wrapper .divisionid-MT,
+.search-wrapper .divisionid-MK,
+.search-wrapper .divisionid-LK,
+.search-wrapper .divisionid-JN {
+	--division-color: var(--color-division-gospels);
+}
+
+.search-wrapper .divisionid-AC {
+	--division-color: var(--color-division-acts);
+}
+
+.search-wrapper .divisionid-RM,
+.search-wrapper .divisionid-C1,
+.search-wrapper .divisionid-C2,
+.search-wrapper .divisionid-GL,
+.search-wrapper .divisionid-EP,
+.search-wrapper .divisionid-PP,
+.search-wrapper .divisionid-CL,
+.search-wrapper .divisionid-H1,
+.search-wrapper .divisionid-H2,
+.search-wrapper .divisionid-T1,
+.search-wrapper .divisionid-T2,
+.search-wrapper .divisionid-TT,
+.search-wrapper .divisionid-PM {
+	--division-color: var(--color-division-paul-epistles);
+}
+
+.search-wrapper .divisionid-HB,
+.search-wrapper .divisionid-JM,
+.search-wrapper .divisionid-P1,
+.search-wrapper .divisionid-P2,
+.search-wrapper .divisionid-J1,
+.search-wrapper .divisionid-J2,
+.search-wrapper .divisionid-J3,
+.search-wrapper .divisionid-JD {
+	--division-color: var(--color-division-general-epistles);
+}
+
+.search-wrapper .divisionid-RV {
+	--division-color: var(--color-division-revelation);
+}
+
+
+.highlight {
+	background: var(--color-highlight);
+}
+
+.search-progress-bar {
+	border: solid 1px var(--color-border);
+	height: 1.5em;
+	width: 100%;
+	position: relative;
+	margin: 0 0 2em;
+}
+
+.search-progress-bar-inner {
+	width: 0;
+	background: var(--color-primary);
+	height: 100%;
+}
+
+.search-progress-bar-label {
+	display: block;
+	position: absolute;
+	height: 1.5em;
+	line-height: 1.5em;
+	font-size: .7em;
+	top: 0;
+	padding: 3px;
+	color: var(--color-background);
+	text-align: right;
+}
+
+.search-progress-bar-label-outside {
+	color: var(--color-text);
+}

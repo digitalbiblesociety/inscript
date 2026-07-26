@@ -1,0 +1,87 @@
+#main-search-box {
+	height: 26px;
+	font-size: 15px;
+	padding: 0;
+}
+
+#main-search-input {
+	width: 200px;
+	height: 26px;
+	font-size: 13px;
+	padding: 0;
+	border: solid 1px var(--color-border);
+	vertical-align: middle;
+	appearance: none;
+	border-radius: 0;
+	background: var(--color-background);
+	color: var(--color-text);
+}
+
+#main-search-input:focus-visible {
+	outline: none;
+	border-color: var(--color-primary);
+}
+
+#main-search-button {
+	width: 30px;
+	cursor: pointer;
+	height: 26px;
+	border: solid 1px var(--color-border);
+	vertical-align: middle;
+	border-width: 1px 1px 1px 0;
+	border: 0;
+	background: var(--color-primary) url(../../css/images/search-button.svg) center center no-repeat;
+	appearance: none;
+	border-radius: 0;
+}
+
+.compact-ui #main-search-box {
+	height: 24px;
+}
+
+.compact-ui #main-search-input {
+	width: 120px;
+	height: 24px;
+}
+
+.compact-ui #main-search-button {
+	width: 26px;
+	height: 24px;
+}
+
+.compact-ui #main-search-suggestions {
+	top: 40px;
+	right: 10px;
+}
+
+#main-search-suggestions {
+	background: var(--color-background);
+	border: solid 1px var(--color-border);
+	box-shadow: var(--shadow-popup);
+	width: 200px;
+	position: absolute;
+	right: 95px;
+	top: 44px;
+	z-index: var(--z-menu);
+}
+
+.suggestion-item {
+	padding: 6px 8px;
+	display: block;
+	font-size: 12px;
+	color: var(--color-text);
+	cursor: pointer;
+}
+
+.suggestion-item:hover {
+	background-color: var(--color-background-hover);
+}
+
+.suggestion-item.selected {
+	background-color: var(--color-primary);
+	color: var(--color-background);
+}
+
+
+
+

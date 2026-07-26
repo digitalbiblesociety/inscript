@@ -1,0 +1,16 @@
+{
+  "name": "inScript Bible Browser",
+  "short_name": "inScript",
+  "description": "A free, open-source Bible study tool. 1,300+ translations in 1,100+ languages.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

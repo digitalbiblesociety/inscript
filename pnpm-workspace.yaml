@@ -1,0 +1,6 @@
+packages:
+  - "."
+  - "verse-detection"
+
+allowBuilds:
+  esbuild: true

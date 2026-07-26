@@ -1,0 +1,55 @@
+#config-themes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	padding: 0.5rem 0;
+}
+
+.config-theme-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.5rem;
+	height: 2.5rem;
+	padding: 0.4rem 0.6rem;
+	border: 1.5px solid var(--color-border);
+	border-radius: 6px;
+	font-size: 11px;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.config-theme-toggle:hover {
+	border-color: var(--color-primary);
+}
+
+.config-theme-toggle-selected {
+	border-width: 2px;
+	border-color: var(--color-primary);
+}
+
+#config-theme-default {
+	background-color: oklch(1 0 0);
+	color: oklch(0.1776 0 0);
+}
+
+#config-theme-shiloh {
+	background-color: #36312C;
+	color: #EBD1B7;
+}
+
+#config-theme-jabbok {
+	background-color: oklch(0.1776 0 0);
+	color: oklch(1 0 0);
+}
+
+#config-theme-gethsemane {
+	background-color: #1a1b26;
+	color: #7aa2f7;
+}
+
+#config-theme-auto {
+	background: linear-gradient(135deg, oklch(1 0 0) 50%, oklch(0.1776 0 0) 50%);
+	color: oklch(0.5103 0 0);
+}

@@ -1,0 +1,864 @@
+.MapWindow .window-close-button {
+	background-color: var(--color-error);
+}
+
+.linked-location {
+	cursor: pointer;
+	background: var(--color-success);
+	border-bottom: solid 1px var(--color-success);
+	transition: filter 0.15s ease;
+}
+
+.linked-location:hover {
+	text-decoration: underline;
+	filter: brightness(1.08);
+}
+
+
+/* === Map Container === */
+
+.svg-map-container {
+	position: relative;
+	overflow: hidden;
+	/* Sea tone so the aspect-ratio letterbox around the map reads as ocean. */
+	background: #aacfe2;
+	cursor: grab;
+}
+
+.svg-map-container.panning {
+	cursor: grabbing;
+}
+
+.svg-map-container:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
+}
+
+.svg-map-container svg {
+	touch-action: none;
+	user-select: none;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+
+/* === Markers Overlay === */
+
+.map-markers-overlay {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	overflow: visible;
+	will-change: transform;
+}
+
+
+/* === Markers (HTML div elements) === */
+
+.map-marker {
+	position: absolute;
+	top: 0;
+	left: 0;
+	pointer-events: auto;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: opacity 0.3s ease;
+	will-change: transform;
+}
+
+.map-marker.faded {
+	opacity: 0.1;
+}
+
+.map-marker.filtered-out,
+.map-marker.clustered {
+	display: none;
+}
+
+/* Icon sizing by importance tier */
+.map-marker[data-tier="1"] .map-marker-icon { width: 28px; height: 28px; }
+.map-marker[data-tier="2"] .map-marker-icon { width: 22px; height: 22px; }
+.map-marker[data-tier="3"] .map-marker-icon { width: 18px; height: 18px; }
+.map-marker[data-tier="4"] .map-marker-icon { width: 14px; height: 14px; }
+
+.map-marker .map-marker-icon { color: #455a64; } /* fallback */
+.map-marker[data-type="city"]     .map-marker-icon { color: #c0392b; } /* brick red */
+.map-marker[data-type="building"] .map-marker-icon { color: #8e44ad; } /* purple */
+.map-marker[data-type="mountain"] .map-marker-icon { color: #6d4c41; } /* brown */
+.map-marker[data-type="river"]    .map-marker-icon { color: #2980b9; } /* blue */
+.map-marker[data-type="sea"]      .map-marker-icon { color: #0d5c8f; } /* deep blue */
+.map-marker[data-type="spring"]   .map-marker-icon { color: #17a2b8; } /* teal-cyan */
+.map-marker[data-type="valley"]   .map-marker-icon { color: #9e9d24; } /* olive */
+.map-marker[data-type="desert"]   .map-marker-icon { color: #e67e22; } /* orange */
+.map-marker[data-type="island"]   .map-marker-icon { color: #00897b; } /* teal */
+.map-marker[data-type="region"]   .map-marker-icon { color: #607d8b; } /* blue-gray */
+.map-marker[data-type="other"]    .map-marker-icon { color: #455a64; } /* slate */
+
+/* In the current passage → stands out green, overriding the type color */
+.map-marker.highlighted .map-marker-icon { color: #135c13; }
+
+.map-marker-icon {
+	display: block;
+	flex-shrink: 0;
+	pointer-events: none;
+	transition: transform 0.15s ease;
+	overflow: visible;
+}
+
+.map-marker:hover .map-marker-icon,
+.map-marker:focus-visible .map-marker-icon {
+	transform: scale(1.2);
+	filter: brightness(1.15);
+}
+
+.map-marker:focus-visible {
+	outline: none; /* the scaled icon + shown label are the focus indicator */
+}
+
+
+/* === Marker Labels === */
+
+.map-marker-label {
+	position: absolute;
+	bottom: calc(100% + 3px);
+	left: 50%;
+	transform: translateX(-50%);
+	white-space: nowrap;
+	font-size: 11px;
+	font-weight: 600;
+	font-family: var(--font-family-sans, sans-serif);
+	padding: 2px 6px;
+	background: var(--color-background, #fff);
+	border: 1px solid var(--color-border, #ccc);
+	border-radius: 3px;
+	color: var(--color-text, #333);
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.15s ease;
+	z-index: 1;
+}
+
+.map-marker-label.label-shown,
+.map-marker:hover .map-marker-label,
+.map-marker:focus-visible .map-marker-label {
+	opacity: 1;
+	pointer-events: auto;
+	cursor: pointer;
+}
+
+
+/* === Clusters (HTML div elements) === */
+
+.map-cluster {
+	position: absolute;
+	top: 0;
+	left: 0;
+	pointer-events: auto;
+	cursor: pointer;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: oklch(0.55 0.15 25);
+	box-shadow: 0 0 0 5px oklch(0.55 0.15 25 / 0.25);
+	transition: background 0.15s ease;
+}
+
+.map-cluster:hover {
+	background: oklch(0.48 0.18 25);
+}
+
+.map-cluster:focus-visible {
+	outline: 2px solid var(--color-background, #fff);
+	outline-offset: 1px;
+	background: oklch(0.48 0.18 25);
+}
+
+.map-cluster-text {
+	color: #fff;
+	font-family: var(--font-family-sans, sans-serif);
+	font-weight: 700;
+	font-size: 12px;
+	pointer-events: none;
+	line-height: 1;
+}
+
+
+/* === Zoom Controls === */
+
+.map-zoom-controls {
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	z-index: 2;
+}
+
+.map-zoom-btn {
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	background: var(--color-background);
+	color: var(--color-text);
+	font-size: 18px;
+	line-height: 1;
+	cursor: pointer;
+	box-shadow: var(--shadow-popup);
+	transition: background 0.15s ease;
+}
+
+.map-zoom-btn:hover:not(:disabled) {
+	background: var(--color-background-hover);
+}
+
+.map-zoom-btn:disabled {
+	opacity: 0.4;
+	cursor: default;
+}
+
+.map-zoom-btn:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 1px;
+}
+
+.map-zoom-btn svg {
+	width: 16px;
+	height: 16px;
+	pointer-events: none;
+}
+
+
+/* === Layout: map-window fills its .window wrapper via flex === */
+
+map-window {
+	display: flex;
+	flex-direction: column;
+}
+
+map-window .map-main {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+map-window .svg-map-container {
+	/* Map fills the space above the controls bar; when a detail opens it gives up
+	   the bottom 40% (see .map-detail). With no detail open, the map fills it all. */
+	flex: 1 1 0;
+	min-height: 0;
+}
+
+/* Persistent bar below the map, above the detail: mode toggle, era filter,
+   location count, and the contextual Back button (shown only with a detail open). */
+.map-controls-bar {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 30px;
+	padding: 0 12px;
+	border-top: 1px solid var(--color-border);
+	background: var(--color-background);
+}
+
+
+/* === Header === */
+
+.map-header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* Clear the window chrome (close/link buttons) pinned to the top-right corner.
+   Needs .window for specificity over the generic `.window .window-header` padding. */
+.window .window-header.map-header {
+	padding-right: 76px;
+}
+
+.map-header-inner {
+	flex: 1;
+	min-width: 0;
+	position: relative;
+}
+
+.map-header-inner .map-nav {
+	width: 100%;
+}
+
+
+/* === Mode Toggle === */
+
+.map-mode-toggle {
+	display: flex;
+	align-self: stretch;
+	margin-left: auto;
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.map-mode-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 12px;
+	border: none;
+	background: transparent;
+	color: var(--color-text-muted);
+	font-size: 14.4px;
+	cursor: pointer;
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
+.map-mode-btn:hover {
+	background: var(--color-background-hover);
+}
+
+.map-mode-btn.active {
+	background: var(--color-primary);
+	color: #fff;
+}
+
+/* Journeys mode button stays hidden until journeys.json loads */
+.map-mode-btn.hidden {
+	display: none;
+}
+
+.map-era-filter {
+	display: flex;
+	align-self: stretch;
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.map-era-filter.hidden {
+	display: none;
+}
+
+.map-era-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 12px;
+	border: none;
+	background: transparent;
+	color: var(--color-text-muted);
+	font-size: 14.4px;
+	cursor: pointer;
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
+.map-era-btn:hover {
+	background: var(--color-background-hover);
+}
+
+.map-era-btn.active {
+	background: var(--color-primary);
+	color: #fff;
+}
+
+.map-nav.hidden {
+	display: none;
+}
+
+/* Trigger reuses the .app-list skin (same as the Bible version dropdown) */
+.map-journey-list {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	text-align: left;
+	cursor: pointer;
+	font-size: 13px;
+	color: var(--color-text);
+}
+
+.map-journey-list.hidden {
+	display: none;
+}
+
+.map-journey-list-label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Color dot carries the journey's route color */
+.map-journey-dot {
+	flex-shrink: 0;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: var(--journey-color);
+}
+
+.map-journey-menu {
+	display: none;
+	position: absolute;
+	inset: 100% 0 auto;
+	background: var(--color-background-alt);
+	border-radius: 0 0 4px 4px;
+	box-shadow: var(--shadow-popup);
+	z-index: var(--z-popover);
+	max-height: 300px;
+	overflow-y: auto;
+}
+
+.map-journey-menu-item {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	border: none;
+	border-bottom: 1px solid var(--color-border);
+	background: transparent;
+	color: var(--color-text);
+	font-size: 13px;
+	text-align: left;
+	cursor: pointer;
+}
+
+.map-journey-menu-item:last-child {
+	border-bottom: none;
+}
+
+.map-journey-menu-item:hover,
+.map-journey-menu-item:focus-visible {
+	background: var(--color-background-hover);
+}
+
+.map-journey-menu-item[aria-selected="true"] {
+	font-weight: 600;
+}
+
+
+/* === Journey Routes (SVG paths inside the basemap) === */
+
+/* Stroke color is set inline from journeys.json. The paths carry
+   vector-effect="non-scaling-stroke", which puts stroke-width AND
+   stroke-dasharray in screen space: constant-looking lines at every zoom. */
+.journey-route {
+	fill: none;
+	stroke-width: 3px;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	opacity: 0.85;
+	pointer-events: none;
+}
+
+/* Sea legs are dashed, land legs solid (Bible-atlas convention) */
+.journey-route-sea {
+	stroke-dasharray: 8 6;
+}
+
+
+/* === Journey Stop Badges (HTML overlay) === */
+
+/* Size must match STOP_BADGE_SIZE in journey-layer.js */
+.journey-stop {
+	position: absolute;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: var(--journey-color);
+	color: #fff;
+	font-family: var(--font-family-sans, sans-serif);
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid rgba(255, 255, 255, 0.9);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+	pointer-events: auto;
+	cursor: pointer;
+	will-change: transform;
+}
+
+.journey-stop:hover,
+.journey-stop:focus-visible {
+	filter: brightness(1.15);
+}
+
+.journey-stop:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 1px;
+}
+
+
+/* === Journey Stop List (inline detail area) === */
+
+.map-journey-swatch {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: var(--journey-color);
+	margin-right: 6px;
+}
+
+/* Journey stop list header: title on the left, "N stops" floated to its right */
+.map-journey-list-header {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.map-journey-list-header h2 {
+	margin-bottom: 0;
+}
+
+.map-journey-list-header .map-detail-count {
+	flex-shrink: 0;
+	white-space: nowrap;
+	font-size: 12px;
+	color: var(--color-text-muted);
+}
+
+.map-journey-stops {
+	padding: 4px 0;
+}
+
+.map-journey-stop-row {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	padding: 6px 16px;
+	cursor: pointer;
+}
+
+.map-journey-stop-row:hover {
+	background: var(--color-background-hover);
+}
+
+.map-journey-stop-num {
+	flex-shrink: 0;
+	align-self: center;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--journey-color);
+	color: #fff;
+	font-size: 11px;
+	font-weight: 600;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.map-journey-stop-name {
+	font-weight: 600;
+	color: var(--color-text);
+}
+
+.map-journey-stop-verses {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 10px;
+	margin-left: auto;
+	justify-content: flex-end;
+}
+
+.map-journey-stop-verse {
+	color: var(--color-primary);
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+.map-journey-stop-verse:hover {
+	text-decoration: underline;
+}
+
+.map-location-count {
+	color: var(--color-text-muted);
+	font-size: 13.2px;
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+
+/* === Search Suggestions === */
+
+.map-search-suggestions {
+	display: none;
+	position: absolute;
+	inset: 100% 0 auto;
+	background: var(--color-background-alt);
+	border-radius: 0 0 4px 4px;
+	box-shadow: var(--shadow-popup);
+	z-index: var(--z-popover);
+	max-height: 300px;
+	overflow-y: auto;
+}
+
+.map-suggestion-item {
+	padding: 8px 12px;
+	cursor: pointer;
+	border-bottom: 1px solid var(--color-border);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: var(--color-text);
+}
+
+.map-suggestion-item:last-child {
+	border-bottom: none;
+}
+
+.map-suggestion-item:hover,
+.map-suggestion-item.selected {
+	background: var(--color-background-hover);
+}
+
+.map-suggestion-item .verse-count {
+	color: var(--color-text-muted);
+	font-size: 11px;
+}
+
+/* "Places in John 3" row offered when the query parses as a reference */
+.map-suggestion-reference {
+	padding: 8px 12px;
+	cursor: pointer;
+	border-bottom: 1px solid var(--color-border);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: var(--color-primary);
+	font-weight: 600;
+}
+
+.map-suggestion-reference:hover {
+	background: var(--color-background-hover);
+}
+
+.map-suggestion-reference .verse-count {
+	color: var(--color-text-muted);
+	font-size: 11px;
+	font-weight: 400;
+}
+
+/* "N more matches" footer — expands the dropdown */
+.map-suggestion-more {
+	padding: 6px 12px;
+	cursor: pointer;
+	text-align: center;
+	font-size: 12px;
+	color: var(--color-text-muted);
+}
+
+.map-suggestion-more:hover {
+	background: var(--color-background-hover);
+	color: var(--color-text);
+}
+
+
+/* === Inline Detail Panel (below map) === */
+
+.map-detail {
+	/* Takes the bottom 40% when open; the map fills the rest above the controls bar. */
+	flex: 0 0 40%;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border-top: 1px solid var(--color-border);
+}
+
+.map-detail.hidden {
+	display: none;
+}
+
+.map-detail-back {
+	flex-shrink: 0;
+	border: none;
+	background: none;
+	color: var(--color-primary);
+	cursor: pointer;
+	font-size: 13px;
+	padding: 2px 4px;
+	border-radius: 3px;
+}
+
+.map-detail-back.hidden {
+	display: none;
+}
+
+.map-detail-back:hover {
+	background: var(--color-background-hover);
+}
+
+.map-detail-content {
+	flex: 1;
+	overflow-y: auto;
+}
+
+/* Still needed for the popover used outside MapWindow */
+.map-detail-panel {
+	position: absolute;
+	width: 300px;
+	max-height: 400px;
+	overflow-y: auto;
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	box-shadow: var(--shadow-popup);
+	padding: 0;
+	margin: 0;
+	inset: auto;
+}
+
+.map-detail-header {
+	padding: 12px 16px 8px;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.map-detail-header h2 {
+	margin: 0 0 4px 0;
+	font-size: 16px;
+	color: var(--color-text);
+}
+
+.map-detail-meta {
+	font-size: 12px;
+	color: var(--color-text-muted);
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-wrap: wrap;
+}
+
+.map-detail-separator {
+	color: var(--color-border);
+}
+
+.map-detail-colocated {
+	margin-top: 6px;
+	font-size: 12px;
+	color: var(--color-text-muted);
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
+}
+
+.map-detail-colocated-label {
+	font-weight: 600;
+	color: var(--color-text-muted);
+}
+
+.map-detail-colocated-item {
+	color: var(--color-primary);
+	cursor: pointer;
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	transition: text-decoration-color 0.15s ease;
+}
+
+.map-detail-colocated-item:hover {
+	text-decoration-color: var(--color-primary);
+}
+
+.map-detail-verses {
+	padding: 4px 0;
+}
+
+/*
+ * Verse rows reuse .search-result-row / .search-result-ref / .search-result-text
+ * from searchwindow.css. Those rely on `float: left` for the ref, which only
+ * works when the row also has in-flow verse text beside it. Map locations
+ * frequently have no loaded verse text, leaving the float-only row to collapse
+ * and the refs to stack into a diagonal staircase. Lay them out as real flex
+ * rows here so they read as a clean list with or without verse text.
+ */
+.map-detail-verses .search-result-row {
+	display: flex;
+	align-items: baseline;
+	cursor: pointer;
+}
+
+.map-detail-verses .search-result-ref {
+	float: none;
+}
+
+/* Rows navigate the Bible window on click — show the affordance on hover */
+.map-detail-verses .search-result-row:hover {
+	background: var(--color-background-hover);
+}
+
+.map-detail-verses .search-result-row:hover .search-result-ref::after {
+	content: ' ↗';
+	color: var(--color-primary);
+}
+
+/* Verse snippets being fetched / unavailable */
+.verse-text-pending {
+	color: var(--color-text-muted);
+}
+
+.verse-text-missing {
+	color: var(--color-text-muted);
+	font-style: italic;
+}
+
+
+/* === Empty State === */
+
+.map-empty-state {
+	display: none;
+	position: absolute;
+	inset: 0;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.map-empty-state.visible {
+	display: flex;
+}
+
+.map-empty-message {
+	margin: 0;
+	color: var(--color-text-muted);
+	font-size: 14px;
+}
+
+.map-empty-explore-btn {
+	pointer-events: auto;
+	padding: 6px 16px;
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	background: var(--color-background);
+	color: var(--color-primary);
+	cursor: pointer;
+	font-size: 13px;
+	transition: background 0.15s ease;
+}
+
+.map-empty-explore-btn:hover {
+	background: var(--color-background-hover);
+}
+

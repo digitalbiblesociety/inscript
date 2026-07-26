@@ -1,0 +1,2834 @@
+{
+	"GN1_1": [
+		{
+			"org": "Jesus",
+			"chapter": 1,
+			"filename": "Jesus-01",
+			"name": "The Beginning",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_01.jpg"
+		},
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 2,
+			"filename": "Lumo-Covenant-02",
+			"name": "The Creation of Humanity",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_02.webp"
+		},
+		{
+			"org": "Genesis",
+			"chapter": 1,
+			"filename": "Genesis-01",
+			"name": "Creation — Genesis 1:1–2:3",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_01.webp"
+		}
+	],
+	"GN2_4": [
+		{
+			"org": "Genesis",
+			"chapter": 2,
+			"filename": "Genesis-02",
+			"name": "The Garden of Eden — Genesis 2:4–25",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_02.webp"
+		}
+	],
+	"GN3_1": [
+		{
+			"org": "Genesis",
+			"chapter": 3,
+			"filename": "Genesis-03",
+			"name": "The Fall — Genesis 3:1–24",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_03.webp"
+		}
+	],
+	"GN4_1": [
+		{
+			"org": "Genesis",
+			"chapter": 4,
+			"filename": "Genesis-04",
+			"name": "Cain and Abel — Genesis 4:1–7",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_04.webp"
+		}
+	],
+	"GN4_8": [
+		{
+			"org": "Genesis",
+			"chapter": 5,
+			"filename": "Genesis-05",
+			"name": "Cain Murders Abel — Genesis 4:8–16",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_05.webp"
+		}
+	],
+	"GN6_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 3,
+			"filename": "Lumo-Covenant-03",
+			"name": "Noah, the Flood and the Next Generation",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_03.webp"
+		},
+		{
+			"org": "Genesis",
+			"chapter": 6,
+			"filename": "Genesis-06",
+			"name": "Noah and the Ark — Genesis 6:1–21",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_06.webp"
+		}
+	],
+	"GN7_1": [
+		{
+			"org": "Genesis",
+			"chapter": 7,
+			"filename": "Genesis-07",
+			"name": "The Great Flood — Genesis 7:1–9:17",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_07.webp"
+		}
+	],
+	"GN11_31": [
+		{
+			"org": "Genesis",
+			"chapter": 8,
+			"filename": "Genesis-08",
+			"name": "God Calls Abram — Genesis 11:31–12:20",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_08.webp"
+		}
+	],
+	"GN12_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 4,
+			"filename": "Lumo-Covenant-04",
+			"name": "The Lord's Covenant with Abraham",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_04.webp"
+		}
+	],
+	"GN13_1": [
+		{
+			"org": "Genesis",
+			"chapter": 9,
+			"filename": "Genesis-09",
+			"name": "Abram and Lot Separate — Genesis 13:1–17",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_09.webp"
+		}
+	],
+	"GN14_8": [
+		{
+			"org": "Genesis",
+			"chapter": 10,
+			"filename": "Genesis-10",
+			"name": "Abram Rescues Lot — Genesis 14:8–23",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_10.webp"
+		}
+	],
+	"GN15_1": [
+		{
+			"org": "Genesis",
+			"chapter": 11,
+			"filename": "Genesis-11",
+			"name": "God's Covenant with Abram — Genesis 15:1–18",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_11.webp"
+		}
+	],
+	"GN16_1": [
+		{
+			"org": "Genesis",
+			"chapter": 12,
+			"filename": "Genesis-12",
+			"name": "Hagar and Ishmael — Genesis 16:1–16",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_12.webp"
+		}
+	],
+	"GN17_1": [
+		{
+			"org": "Genesis",
+			"chapter": 13,
+			"filename": "Genesis-13",
+			"name": "The Sign of the Covenant — Genesis 17:1–27",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_13.webp"
+		}
+	],
+	"GN18_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 5,
+			"filename": "Lumo-Covenant-05",
+			"name": "The Birth of Isaac",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_05.webp"
+		},
+		{
+			"org": "Genesis",
+			"chapter": 14,
+			"filename": "Genesis-14",
+			"name": "The Three Visitors — Genesis 18:1–33",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_14.webp"
+		}
+	],
+	"GN19_1": [
+		{
+			"org": "Genesis",
+			"chapter": 15,
+			"filename": "Genesis-15",
+			"name": "The Destruction of Sodom — Genesis 19:1–38",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_15.webp"
+		}
+	],
+	"GN20_1": [
+		{
+			"org": "Genesis",
+			"chapter": 16,
+			"filename": "Genesis-16",
+			"name": "Abraham and Abimelech — Genesis 20:1–15",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_16.webp"
+		}
+	],
+	"GN21_1": [
+		{
+			"org": "Genesis",
+			"chapter": 17,
+			"filename": "Genesis-17",
+			"name": "The Birth of Isaac — Genesis 21:1–34",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_17.webp"
+		}
+	],
+	"GN22_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 6,
+			"filename": "Lumo-Covenant-06",
+			"name": "Abraham Tested",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_06.webp"
+		},
+		{
+			"org": "Genesis",
+			"chapter": 18,
+			"filename": "Genesis-18",
+			"name": "Abraham's Test — Genesis 22:1–18",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_18.webp"
+		}
+	],
+	"GN23_1": [
+		{
+			"org": "Genesis",
+			"chapter": 19,
+			"filename": "Genesis-19",
+			"name": "The Death of Sarah — Genesis 23:1–20",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_19.webp"
+		}
+	],
+	"GN24_1": [
+		{
+			"org": "Genesis",
+			"chapter": 20,
+			"filename": "Genesis-20",
+			"name": "A Wife for Isaac — Genesis 24:1–67",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_20.webp"
+		}
+	],
+	"GN25_7": [
+		{
+			"org": "Genesis",
+			"chapter": 21,
+			"filename": "Genesis-21",
+			"name": "Esau Sells His Birthright — Genesis 25:7–34",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_21.webp"
+		}
+	],
+	"GN26_1": [
+		{
+			"org": "Genesis",
+			"chapter": 22,
+			"filename": "Genesis-22",
+			"name": "Isaac and Abimelech — Genesis 26:1–35",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_22.webp"
+		}
+	],
+	"GN27_1": [
+		{
+			"org": "Genesis",
+			"chapter": 23,
+			"filename": "Genesis-23",
+			"name": "Jacob's Blessing and Dream — Genesis 27:1–28:22",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_23.webp"
+		}
+	],
+	"GN29_1": [
+		{
+			"org": "Genesis",
+			"chapter": 24,
+			"filename": "Genesis-24",
+			"name": "Rachel and Leah — Genesis 29:1–30",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_24.webp"
+		}
+	],
+	"GN29_31": [
+		{
+			"org": "Genesis",
+			"chapter": 25,
+			"filename": "Genesis-25",
+			"name": "Jacob's Children — Genesis 29:31–30:43",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_25.webp"
+		}
+	],
+	"GN31_1": [
+		{
+			"org": "Genesis",
+			"chapter": 26,
+			"filename": "Genesis-26",
+			"name": "Jacob Flees from Laban — Genesis 31:1–55",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_26.webp"
+		}
+	],
+	"GN32_1": [
+		{
+			"org": "Genesis",
+			"chapter": 27,
+			"filename": "Genesis-27",
+			"name": "Jacob Wrestles with God — Genesis 32:1–32",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_27.webp"
+		}
+	],
+	"GN33_1": [
+		{
+			"org": "Genesis",
+			"chapter": 28,
+			"filename": "Genesis-28",
+			"name": "Jacob and Esau Meet — Genesis 33:1–16",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_28.webp"
+		}
+	],
+	"GN33_18": [
+		{
+			"org": "Genesis",
+			"chapter": 29,
+			"filename": "Genesis-29",
+			"name": "Dinah at Shechem — Genesis 33:18–34:31",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_29.webp"
+		}
+	],
+	"GN35_1": [
+		{
+			"org": "Genesis",
+			"chapter": 30,
+			"filename": "Genesis-30",
+			"name": "Jacob Returns to Bethel — Genesis 35:1–29",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_30.webp"
+		}
+	],
+	"GN37_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 7,
+			"filename": "Lumo-Covenant-07",
+			"name": "Joseph's Dream",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_07.webp"
+		},
+		{
+			"org": "Genesis",
+			"chapter": 31,
+			"filename": "Genesis-31",
+			"name": "Joseph the Dreamer — Genesis 37:1–35",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_31.webp"
+		}
+	],
+	"GN38_1": [
+		{
+			"org": "Genesis",
+			"chapter": 32,
+			"filename": "Genesis-32",
+			"name": "Judah and Tamar — Genesis 38:1–30",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_32.webp"
+		}
+	],
+	"GN39_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 8,
+			"filename": "Lumo-Covenant-08",
+			"name": "Joseph and Potiphar's Wife",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_08.webp"
+		},
+		{
+			"org": "Genesis",
+			"chapter": 33,
+			"filename": "Genesis-33",
+			"name": "Joseph in Potiphar's House — Genesis 39:1–23",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_33.webp"
+		}
+	],
+	"GN40_1": [
+		{
+			"org": "Genesis",
+			"chapter": 34,
+			"filename": "Genesis-34",
+			"name": "The Prisoners' Dreams — Genesis 40:1–23",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_34.webp"
+		}
+	],
+	"GN41_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 9,
+			"filename": "Lumo-Covenant-09",
+			"name": "Joseph's Brothers Go to Egypt",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_09.webp"
+		},
+		{
+			"org": "Genesis",
+			"chapter": 35,
+			"filename": "Genesis-35",
+			"name": "Pharaoh's Dream — Genesis 41:1–57",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_35.webp"
+		}
+	],
+	"GN42_1": [
+		{
+			"org": "Genesis",
+			"chapter": 36,
+			"filename": "Genesis-36",
+			"name": "Joseph's Brothers Go to Egypt — Genesis 42:1–38",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_36.webp"
+		}
+	],
+	"GN43_1": [
+		{
+			"org": "Genesis",
+			"chapter": 37,
+			"filename": "Genesis-37",
+			"name": "Benjamin Goes to Egypt — Genesis 43:1–34",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_37.webp"
+		}
+	],
+	"GN44_1": [
+		{
+			"org": "Genesis",
+			"chapter": 38,
+			"filename": "Genesis-38",
+			"name": "Joseph's Cup — Genesis 44:1–33",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_38.webp"
+		}
+	],
+	"GN45_1": [
+		{
+			"org": "Genesis",
+			"chapter": 39,
+			"filename": "Genesis-39",
+			"name": "Joseph Revealed — Genesis 45:1–28",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_39.webp"
+		}
+	],
+	"GN46_1": [
+		{
+			"org": "Genesis",
+			"chapter": 40,
+			"filename": "Genesis-40",
+			"name": "Jacob's Journey to Egypt — Genesis 46:1–47:12",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_40.webp"
+		}
+	],
+	"GN47_13": [
+		{
+			"org": "Genesis",
+			"chapter": 41,
+			"filename": "Genesis-41",
+			"name": "The Famine Intensifies — Genesis 47:13–26",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_41.webp"
+		}
+	],
+	"GN47_27": [
+		{
+			"org": "Genesis",
+			"chapter": 42,
+			"filename": "Genesis-42",
+			"name": "Jacob Blesses Joseph's Sons — Genesis 47:27–48:21",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_42.webp"
+		}
+	],
+	"GN49_1": [
+		{
+			"org": "Genesis",
+			"chapter": 43,
+			"filename": "Genesis-43",
+			"name": "Jacob Blesses His Sons — Genesis 49:1–50:1",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_43.webp"
+		}
+	],
+	"GN50_2": [
+		{
+			"org": "Genesis",
+			"chapter": 44,
+			"filename": "Genesis-44",
+			"name": "The Death of Joseph — Genesis 50:2–26",
+			"source": "Book of Genesis",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Genesis/genesis_chapter_44.webp"
+		}
+	],
+	"EX1_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 10,
+			"filename": "Lumo-Covenant-10",
+			"name": "The Israelites Oppressed",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_10.webp"
+		}
+	],
+	"EX3_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 11,
+			"filename": "Lumo-Covenant-11",
+			"name": "Moses and the Burning Bush",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_11.webp"
+		}
+	],
+	"EX5_1": [
+		{
+			"org": "Lumo-Covenant",
+			"chapter": 12,
+			"filename": "Lumo-Covenant-12",
+			"name": "The Passover, the Exodus, and the Covenant at Sinai",
+			"source": "LUMO: The Covenant",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Covenant/covenant_12.webp"
+		}
+	],
+	"MT1_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 1,
+			"filename": "Lumo-Matthew-01",
+			"name": "The Genealogy and Birth of Jesus",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_01.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 1,
+			"filename": "Matthew-01",
+			"name": "The Genealogy and Birth of Jesus",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-01.webp"
+		}
+	],
+	"MT2_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 2,
+			"filename": "Lumo-Matthew-02",
+			"name": "The Visit of the Magi",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_02.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 2,
+			"filename": "Matthew-02",
+			"name": "The Visit of the Magi",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-02.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 1,
+			"filename": "Bible_Slides-01",
+			"name": "The Visit of the Magi — Matthew 2:1–23",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_02.webp"
+		}
+	],
+	"MT3_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 3,
+			"filename": "Lumo-Matthew-03",
+			"name": "John the Baptist and the Baptism of Jesus",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_03.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 3,
+			"filename": "Matthew-03",
+			"name": "John the Baptist and the Baptism of Jesus",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-03.webp"
+		}
+	],
+	"MT4_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 4,
+			"filename": "Lumo-Matthew-04",
+			"name": "The Temptation and Beginning of Ministry",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_04.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 4,
+			"filename": "Matthew-04",
+			"name": "The Temptation and Beginning of Ministry",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-04.webp"
+		}
+	],
+	"MT5_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 5,
+			"filename": "Lumo-Matthew-05",
+			"name": "The Sermon on the Mount: The Beatitudes",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_05.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 5,
+			"filename": "Matthew-05",
+			"name": "The Sermon on the Mount: The Beatitudes",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-05.webp"
+		}
+	],
+	"MT6_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 6,
+			"filename": "Lumo-Matthew-06",
+			"name": "The Sermon on the Mount: Prayer and Trust",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_06.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 6,
+			"filename": "Matthew-06",
+			"name": "The Sermon on the Mount: Prayer and Trust",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-06.webp"
+		}
+	],
+	"MT7_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 7,
+			"filename": "Lumo-Matthew-07",
+			"name": "The Sermon on the Mount: Wise and Foolish Builders",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_07.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 7,
+			"filename": "Matthew-07",
+			"name": "The Sermon on the Mount: Wise and Foolish Builders",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-07.webp"
+		}
+	],
+	"MT8_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 8,
+			"filename": "Lumo-Matthew-08",
+			"name": "Healings and the Cost of Following Jesus",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_08.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 8,
+			"filename": "Matthew-08",
+			"name": "Healings and the Cost of Following Jesus",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-08.webp"
+		}
+	],
+	"MT9_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 9,
+			"filename": "Lumo-Matthew-09",
+			"name": "More Healings and the Call of Matthew",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_09.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 9,
+			"filename": "Matthew-09",
+			"name": "More Healings and the Call of Matthew",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-09.webp"
+		}
+	],
+	"MT10_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 10,
+			"filename": "Lumo-Matthew-10",
+			"name": "Sending Out the Twelve",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_10.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 10,
+			"filename": "Matthew-10",
+			"name": "Sending Out the Twelve",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-10.webp"
+		}
+	],
+	"MT11_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 11,
+			"filename": "Lumo-Matthew-11",
+			"name": "John's Question and Jesus' Invitation",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_11.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 11,
+			"filename": "Matthew-11",
+			"name": "John's Question and Jesus' Invitation",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-11.webp"
+		}
+	],
+	"MT12_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 12,
+			"filename": "Lumo-Matthew-12",
+			"name": "Lord of the Sabbath",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_12.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 12,
+			"filename": "Matthew-12",
+			"name": "Lord of the Sabbath",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-12.webp"
+		}
+	],
+	"MT13_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 13,
+			"filename": "Lumo-Matthew-13",
+			"name": "Parables of the Kingdom",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_13.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 13,
+			"filename": "Matthew-13",
+			"name": "Parables of the Kingdom",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-13.webp"
+		}
+	],
+	"MT14_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 14,
+			"filename": "Lumo-Matthew-14",
+			"name": "The Death of John and Feeding the Five Thousand",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_14.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 14,
+			"filename": "Matthew-14",
+			"name": "The Death of John and Feeding the Five Thousand",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-14.webp"
+		}
+	],
+	"MT14_22": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 2,
+			"filename": "Bible_Slides-02",
+			"name": "Jesus Walks on Water — Matthew 14:22–36",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_03.webp"
+		}
+	],
+	"MT15_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 15,
+			"filename": "Lumo-Matthew-15",
+			"name": "Clean and Unclean",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_15.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 15,
+			"filename": "Matthew-15",
+			"name": "Clean and Unclean",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-15.webp"
+		}
+	],
+	"MT16_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 16,
+			"filename": "Lumo-Matthew-16",
+			"name": "Peter's Confession",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_16.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 16,
+			"filename": "Matthew-16",
+			"name": "Peter's Confession",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-16.webp"
+		}
+	],
+	"MT17_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 17,
+			"filename": "Lumo-Matthew-17",
+			"name": "The Transfiguration",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_17.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 17,
+			"filename": "Matthew-17",
+			"name": "The Transfiguration",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-17.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 3,
+			"filename": "Bible_Slides-03",
+			"name": "The Transfiguration — Matthew 17:1–13",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_04.webp"
+		}
+	],
+	"MT18_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 18,
+			"filename": "Lumo-Matthew-18",
+			"name": "Humility and Forgiveness",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_18.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 18,
+			"filename": "Matthew-18",
+			"name": "Humility and Forgiveness",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-18.webp"
+		}
+	],
+	"MT19_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 19,
+			"filename": "Lumo-Matthew-19",
+			"name": "Marriage, Children, and the Rich Young Man",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_19.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 19,
+			"filename": "Matthew-19",
+			"name": "Marriage, Children, and the Rich Young Man",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-19.webp"
+		}
+	],
+	"MT20_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 20,
+			"filename": "Lumo-Matthew-20",
+			"name": "The Workers in the Vineyard",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_20.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 20,
+			"filename": "Matthew-20",
+			"name": "The Workers in the Vineyard",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-20.webp"
+		}
+	],
+	"MT21_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 21,
+			"filename": "Lumo-Matthew-21",
+			"name": "The Triumphal Entry",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_21.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 21,
+			"filename": "Matthew-21",
+			"name": "The Triumphal Entry",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-21.webp"
+		}
+	],
+	"MT22_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 22,
+			"filename": "Lumo-Matthew-22",
+			"name": "Parables and Questions",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_22.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 22,
+			"filename": "Matthew-22",
+			"name": "Parables and Questions",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-22.webp"
+		}
+	],
+	"MT23_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 23,
+			"filename": "Lumo-Matthew-23",
+			"name": "Woes to the Pharisees",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_23.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 23,
+			"filename": "Matthew-23",
+			"name": "Woes to the Pharisees",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-23.webp"
+		}
+	],
+	"MT24_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 24,
+			"filename": "Lumo-Matthew-24",
+			"name": "Signs of the End",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_24.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 24,
+			"filename": "Matthew-24",
+			"name": "Signs of the End",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-24.webp"
+		}
+	],
+	"MT25_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 25,
+			"filename": "Lumo-Matthew-25",
+			"name": "Parables of Readiness and the Final Judgment",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew_25.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 25,
+			"filename": "Matthew-25",
+			"name": "Parables of Readiness and the Final Judgment",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-25.webp"
+		}
+	],
+	"MT26_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 26,
+			"filename": "Lumo-Matthew-26",
+			"name": "The Last Supper and Arrest",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 26,
+			"filename": "Matthew-26",
+			"name": "The Last Supper and Arrest",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-26.webp"
+		}
+	],
+	"MT27_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 27,
+			"filename": "Lumo-Matthew-27",
+			"name": "The Crucifixion",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 27,
+			"filename": "Matthew-27",
+			"name": "The Crucifixion",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-27.webp"
+		}
+	],
+	"MT28_1": [
+		{
+			"org": "Lumo-Matthew",
+			"chapter": 28,
+			"filename": "Lumo-Matthew-28",
+			"name": "The Resurrection and Great Commission",
+			"source": "LUMO: The Gospel of Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Matthew/lumo_matthew.webp"
+		},
+		{
+			"org": "Matthew",
+			"chapter": 28,
+			"filename": "Matthew-28",
+			"name": "The Resurrection and Great Commission",
+			"source": "Visual Bible: Matthew",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Matthew/chapters/matthew-chapter-28.webp"
+		}
+	],
+	"MK1_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 1,
+			"filename": "Lumo-Mark-01",
+			"name": "The Beginning of the Gospel",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_01.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 4,
+			"filename": "Bible_Slides-04",
+			"name": "Jesus Is Baptized — Mark 1",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_05.webp"
+		}
+	],
+	"MK2_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 2,
+			"filename": "Lumo-Mark-02",
+			"name": "Authority to Forgive and Heal",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_02.webp"
+		}
+	],
+	"MK3_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 3,
+			"filename": "Lumo-Mark-03",
+			"name": "Choosing the Twelve",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_03.webp"
+		}
+	],
+	"MK4_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 4,
+			"filename": "Lumo-Mark-04",
+			"name": "Parables and the Storm",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_04.webp"
+		}
+	],
+	"MK4_35": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 5,
+			"filename": "Bible_Slides-05",
+			"name": "Jesus Calms the Storm — Mark 4:35–41",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_06.webp"
+		}
+	],
+	"MK5_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 5,
+			"filename": "Lumo-Mark-05",
+			"name": "Power Over Demons, Disease, and Death",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_05.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 6,
+			"filename": "Bible_Slides-06",
+			"name": "Jesus Casts Out Demons — Mark 5:1–20",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_07.webp"
+		}
+	],
+	"MK6_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 6,
+			"filename": "Lumo-Mark-06",
+			"name": "Rejection, Mission, and Miracles",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_06.webp"
+		}
+	],
+	"MK6_30": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 7,
+			"filename": "Bible_Slides-07",
+			"name": "Jesus Feeds the Five Thousand — Mark 6:30–44",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_08.webp"
+		}
+	],
+	"MK7_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 7,
+			"filename": "Lumo-Mark-07",
+			"name": "Traditions and True Purity",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_07.webp"
+		}
+	],
+	"MK8_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 8,
+			"filename": "Lumo-Mark-08",
+			"name": "Peter's Confession and the Way of the Cross",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_08.webp"
+		}
+	],
+	"MK9_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 9,
+			"filename": "Lumo-Mark-09",
+			"name": "The Transfiguration and Teaching on Discipleship",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_09.webp"
+		}
+	],
+	"MK9_14": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 8,
+			"filename": "Bible_Slides-08",
+			"name": "Jesus Heals a Boy with an Unclean Spirit — Mark 9:14–29",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_09.webp"
+		}
+	],
+	"MK10_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 10,
+			"filename": "Lumo-Mark-10",
+			"name": "Teaching on the Way to Jerusalem",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_10.webp"
+		}
+	],
+	"MK11_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 11,
+			"filename": "Lumo-Mark-11",
+			"name": "The Triumphal Entry and Temple Cleansing",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_11.webp"
+		}
+	],
+	"MK12_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 12,
+			"filename": "Lumo-Mark-12",
+			"name": "Parables and Confrontations in the Temple",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_12.webp"
+		}
+	],
+	"MK12_41": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 9,
+			"filename": "Bible_Slides-09",
+			"name": "The Widow's Offering — Mark 12:41–44",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_10.webp"
+		}
+	],
+	"MK13_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 13,
+			"filename": "Lumo-Mark-13",
+			"name": "The Olivet Discourse",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_13.webp"
+		}
+	],
+	"MK14_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 14,
+			"filename": "Lumo-Mark-14",
+			"name": "The Last Supper, Gethsemane, and Arrest",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_14.webp"
+		}
+	],
+	"MK14_12": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 10,
+			"filename": "Bible_Slides-10",
+			"name": "The Last Supper — Mark 14:12–26",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_11.webp"
+		}
+	],
+	"MK14_32": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 11,
+			"filename": "Bible_Slides-11",
+			"name": "Jesus Arrested and Tried — Mark 14:32–72",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_12.webp"
+		}
+	],
+	"MK15_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 15,
+			"filename": "Lumo-Mark-15",
+			"name": "The Trial and Crucifixion",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark_15.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 12,
+			"filename": "Bible_Slides-12",
+			"name": "The Crucifixion and Resurrection — Mark 15",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_13.webp"
+		}
+	],
+	"MK16_1": [
+		{
+			"org": "Lumo-Mark",
+			"chapter": 16,
+			"filename": "Lumo-Mark-16",
+			"name": "The Resurrection",
+			"source": "LUMO: The Gospel of Mark",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Mark/lumo_mark.webp"
+		}
+	],
+	"LK1_1": [
+		{
+			"org": "Jesus",
+			"chapter": 2,
+			"filename": "Jesus-02",
+			"name": "Birth Of Jesus",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_02.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 1,
+			"filename": "Lumo-Luke-01",
+			"name": "The Announcements",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_01.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 1,
+			"filename": "Luke-01",
+			"name": "Luke 1:1-25",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_01.webp"
+		}
+	],
+	"LK1_26": [
+		{
+			"org": "Luke",
+			"chapter": 2,
+			"filename": "Luke-02",
+			"name": "Luke 1:26-80",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_02.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 13,
+			"filename": "Bible_Slides-13",
+			"name": "The Birth of Jesus Foretold — Luke 1:26–38",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_14.webp"
+		}
+	],
+	"LK1_39": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 2,
+			"filename": "Lumo-Luke-02",
+			"name": "Mary's Visit and John's Birth",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_02.webp"
+		}
+	],
+	"LK2_1": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 3,
+			"filename": "Lumo-Luke-03",
+			"name": "The Birth of Jesus",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_03.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 3,
+			"filename": "Luke-03",
+			"name": "Luke 2:1-20",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_03.webp"
+		}
+	],
+	"LK2_21": [
+		{
+			"org": "Jesus",
+			"chapter": 3,
+			"filename": "Jesus-03",
+			"name": "Childhood Of Jesus",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_03.jpg"
+		},
+		{
+			"org": "Luke",
+			"chapter": 4,
+			"filename": "Luke-04",
+			"name": "Luke 2:21-52",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_04.webp"
+		}
+	],
+	"LK2_39": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 4,
+			"filename": "Lumo-Luke-04",
+			"name": "The Boy Jesus at the Temple",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_04.webp"
+		}
+	],
+	"LK3_1": [
+		{
+			"org": "Jesus",
+			"chapter": 4,
+			"filename": "Jesus-04",
+			"name": "Baptism Of Jesus By John",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_04.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 5,
+			"filename": "Lumo-Luke-05",
+			"name": "The Ministry of John the Baptist",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_05.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 5,
+			"filename": "Luke-05",
+			"name": "Luke 3:1-38",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_05.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 6,
+			"filename": "Luke-06",
+			"name": "Luke 3:1-4:13",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_05.webp"
+		}
+	],
+	"LK3_21": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 6,
+			"filename": "Lumo-Luke-06",
+			"name": "The Baptism and Genealogy of Jesus",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_06.webp"
+		}
+	],
+	"LK4_1": [
+		{
+			"org": "Jesus",
+			"chapter": 5,
+			"filename": "Jesus-05",
+			"name": "The Devil Tempts Jesus",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_05.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 7,
+			"filename": "Lumo-Luke-07",
+			"name": "Temptation and Rejection at Nazareth",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_07.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 7,
+			"filename": "Luke-07",
+			"name": "Luke 4:1-13",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_06.webp"
+		}
+	],
+	"LK4_14": [
+		{
+			"org": "Jesus",
+			"chapter": 6,
+			"filename": "Jesus-06",
+			"name": "Jesus Proclaims Fulfillment Of The Scriptures",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_06.jpg"
+		},
+		{
+			"org": "Luke",
+			"chapter": 8,
+			"filename": "Luke-08",
+			"name": "Luke 4:14-44",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_06.webp"
+		}
+	],
+	"LK4_31": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 8,
+			"filename": "Lumo-Luke-08",
+			"name": "Authority in Capernaum",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_08.webp"
+		}
+	],
+	"LK5_1": [
+		{
+			"org": "Jesus",
+			"chapter": 8,
+			"filename": "Jesus-08",
+			"name": "Miraculous Catch Of Fish",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_08.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 9,
+			"filename": "Lumo-Luke-09",
+			"name": "The Miraculous Catch of Fish",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_09.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 9,
+			"filename": "Luke-09",
+			"name": "Luke 5:1-39",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_07.webp"
+		}
+	],
+	"LK5_17": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 10,
+			"filename": "Lumo-Luke-10",
+			"name": "Healing and Calling",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_10.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 14,
+			"filename": "Bible_Slides-14",
+			"name": "Jesus Heals a Paralytic — Luke 5:17–26",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_15.webp"
+		}
+	],
+	"LK5_27": [
+		{
+			"org": "Jesus",
+			"chapter": 10,
+			"filename": "Jesus-10",
+			"name": "Disciples Chosen",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_10.jpg"
+		}
+	],
+	"LK5_31": [
+		{
+			"org": "Jesus",
+			"chapter": 29,
+			"filename": "Jesus-29",
+			"name": "Jesus Spends Time With Sinners",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_29.jpg"
+		}
+	],
+	"LK6_1": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 11,
+			"filename": "Lumo-Luke-11",
+			"name": "Lord of the Sabbath and the Beatitudes",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_11.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 10,
+			"filename": "Luke-10",
+			"name": "Luke 6:1-49",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_08.webp"
+		}
+	],
+	"LK6_20": [
+		{
+			"org": "Jesus",
+			"chapter": 11,
+			"filename": "Jesus-11",
+			"name": "Beatitudes",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_11.jpg"
+		}
+	],
+	"LK6_24": [
+		{
+			"org": "Jesus",
+			"chapter": 12,
+			"filename": "Jesus-12",
+			"name": "Sermon On The Mount",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_12.jpg"
+		}
+	],
+	"LK6_27": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 12,
+			"filename": "Lumo-Luke-12",
+			"name": "Love Your Enemies",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_12.webp"
+		}
+	],
+	"LK7_1": [
+		{
+			"org": "Jesus",
+			"chapter": 16,
+			"filename": "Jesus-16",
+			"name": "John The Baptist In Prison",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_16.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 13,
+			"filename": "Lumo-Luke-13",
+			"name": "The Centurion's Faith and the Widow's Son",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_13.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 11,
+			"filename": "Luke-11",
+			"name": "Luke 7:1-50",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_09.webp"
+		}
+	],
+	"LK7_18": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 14,
+			"filename": "Lumo-Luke-14",
+			"name": "Jesus and John the Baptist",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_14.webp"
+		}
+	],
+	"LK7_36": [
+		{
+			"org": "Jesus",
+			"chapter": 14,
+			"filename": "Jesus-14",
+			"name": "Sinful Woman Forgiven",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_14.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 15,
+			"filename": "Lumo-Luke-15",
+			"name": "A Sinful Woman Anoints Jesus",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_15.webp"
+		}
+	],
+	"LK8_1": [
+		{
+			"org": "Jesus",
+			"chapter": 15,
+			"filename": "Jesus-15",
+			"name": "Women Disciples",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_15.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 16,
+			"filename": "Lumo-Luke-16",
+			"name": "Parables and the Calming of the Storm",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_16.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 12,
+			"filename": "Luke-12",
+			"name": "Luke 8:1-56",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_10.webp"
+		}
+	],
+	"LK8_4": [
+		{
+			"org": "Jesus",
+			"chapter": 17,
+			"filename": "Jesus-17",
+			"name": "Parable Of The Sower And The Seed",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_17.jpg"
+		}
+	],
+	"LK8_22": [
+		{
+			"org": "Jesus",
+			"chapter": 19,
+			"filename": "Jesus-19",
+			"name": "Jesus Calms The Storm",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_19.jpg"
+		}
+	],
+	"LK8_26": [
+		{
+			"org": "Jesus",
+			"chapter": 20,
+			"filename": "Jesus-20",
+			"name": "Healing Of The Demoniac",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_20.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 17,
+			"filename": "Lumo-Luke-17",
+			"name": "The Healing of the Demoniac",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_17.webp"
+		}
+	],
+	"LK8_40": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 18,
+			"filename": "Lumo-Luke-18",
+			"name": "A Dying Girl and a Suffering Woman",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_18.webp"
+		}
+	],
+	"LK8_41": [
+		{
+			"org": "Jesus",
+			"chapter": 9,
+			"filename": "Jesus-09",
+			"name": "Jairuss Daughter Brought Back To Life",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_09.jpg"
+		}
+	],
+	"LK9_1": [
+		{
+			"org": "Jesus",
+			"chapter": 21,
+			"filename": "Jesus-21",
+			"name": "Jesus Feeds 5000",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_21.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 19,
+			"filename": "Lumo-Luke-19",
+			"name": "Sending the Twelve and Peter's Confession",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_19.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 13,
+			"filename": "Luke-13",
+			"name": "Luke 9:1-22",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_11.webp"
+		}
+	],
+	"LK9_18": [
+		{
+			"org": "Jesus",
+			"chapter": 22,
+			"filename": "Jesus-22",
+			"name": "Peter Declares Jesus To Be The Christ",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_22.jpg"
+		}
+	],
+	"LK9_23": [
+		{
+			"org": "Luke",
+			"chapter": 14,
+			"filename": "Luke-14",
+			"name": "Luke 9:23-62",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_12.webp"
+		}
+	],
+	"LK9_28": [
+		{
+			"org": "Jesus",
+			"chapter": 23,
+			"filename": "Jesus-23",
+			"name": "The Transfiguration",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_23.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 20,
+			"filename": "Lumo-Luke-20",
+			"name": "The Transfiguration and Journey to Jerusalem",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_20.webp"
+		}
+	],
+	"LK9_37": [
+		{
+			"org": "Jesus",
+			"chapter": 24,
+			"filename": "Jesus-24",
+			"name": "Jesus Heals Boy From Evil Spirit",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_24.jpg"
+		}
+	],
+	"LK9_57": [
+		{
+			"org": "Lumo-Luke",
+			"chapter": 21,
+			"filename": "Lumo-Luke-21",
+			"name": "The Cost of Following and the Mission of the Seventy-Two",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_21.webp"
+		}
+	],
+	"LK10_1": [
+		{
+			"org": "Luke",
+			"chapter": 15,
+			"filename": "Luke-15",
+			"name": "Luke 10:1-42",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_13.webp"
+		}
+	],
+	"LK10_25": [
+		{
+			"org": "Jesus",
+			"chapter": 31,
+			"filename": "Jesus-31",
+			"name": "Parable Of The Good Samaritan",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_31.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 22,
+			"filename": "Lumo-Luke-22",
+			"name": "The Good Samaritan and Mary and Martha",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_22.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 15,
+			"filename": "Bible_Slides-15",
+			"name": "The Good Samaritan — Luke 10:25–37",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_16.webp"
+		}
+	],
+	"LK11_1": [
+		{
+			"org": "Jesus",
+			"chapter": 25,
+			"filename": "Jesus-25",
+			"name": "The Lords Prayer",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_25.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 23,
+			"filename": "Lumo-Luke-23",
+			"name": "Teaching on Prayer and the Sign of Jonah",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_23.webp"
+		},
+		{
+			"org": "Luke",
+			"chapter": 16,
+			"filename": "Luke-16",
+			"name": "Luke 11:1-54",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_14.webp"
+		}
+	],
+	"LK11_5": [
+		{
+			"org": "Jesus",
+			"chapter": 26,
+			"filename": "Jesus-26",
+			"name": "Teaching About Prayer And Faith",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_26.jpg"
+		}
+	],
+	"LK11_27": [
+		{
+			"org": "Jesus",
+			"chapter": 13,
+			"filename": "Jesus-13",
+			"name": "Blessed Are Those Who Hear And Obey",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_13.jpg"
+		}
+	],
+	"LK11_33": [
+		{
+			"org": "Jesus",
+			"chapter": 18,
+			"filename": "Jesus-18",
+			"name": "Parable Of The Lamp",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_18.jpg"
+		},
+		{
+			"org": "Lumo-Luke",
+			"chapter": 24,
+			"filename": "Lumo-Luke-24",
+			"name": "Warnings and Encouragements",
+			"source": "LUMO: The Gospel of Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Luke/lumo_luke_24.webp"
+		}
+	],
+	"LK12_1": [
+		{
+			"org": "Luke",
+			"chapter": 17,
+			"filename": "Luke-17",
+			"name": "Luke 12:1-59",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_15.webp"
+		}
+	],
+	"LK13_1": [
+		{
+			"org": "Luke",
+			"chapter": 18,
+			"filename": "Luke-18",
+			"name": "Luke 13:1-35",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_16.webp"
+		}
+	],
+	"LK13_10": [
+		{
+			"org": "Jesus",
+			"chapter": 30,
+			"filename": "Jesus-30",
+			"name": "Healing On The Sabbath",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_30.jpg"
+		}
+	],
+	"LK14_1": [
+		{
+			"org": "Luke",
+			"chapter": 19,
+			"filename": "Luke-19",
+			"name": "Luke 14:1-35",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_17.webp"
+		}
+	],
+	"LK15_1": [
+		{
+			"org": "Luke",
+			"chapter": 20,
+			"filename": "Luke-20",
+			"name": "Luke 15:1-32",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_18.webp"
+		}
+	],
+	"LK15_11": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 16,
+			"filename": "Bible_Slides-16",
+			"name": "The Lost Son — Luke 15:11–32",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_17.webp"
+		}
+	],
+	"LK16_1": [
+		{
+			"org": "Luke",
+			"chapter": 21,
+			"filename": "Luke-21",
+			"name": "Luke 16:1-31",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_19.webp"
+		}
+	],
+	"LK17_1": [
+		{
+			"org": "Luke",
+			"chapter": 22,
+			"filename": "Luke-22",
+			"name": "Luke 17:1-37",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_20.webp"
+		}
+	],
+	"LK17_5": [
+		{
+			"org": "Jesus",
+			"chapter": 27,
+			"filename": "Jesus-27",
+			"name": "Woe To Those Who Cause Others To Sin",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_27.jpg"
+		}
+	],
+	"LK17_6": [
+		{
+			"org": "Jesus",
+			"chapter": 28,
+			"filename": "Jesus-28",
+			"name": "The Kingdom Of God As A Mustard Seed",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_28.jpg"
+		}
+	],
+	"LK18_1": [
+		{
+			"org": "Luke",
+			"chapter": 23,
+			"filename": "Luke-23",
+			"name": "Luke 18:1-43",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_21.webp"
+		}
+	],
+	"LK18_9": [
+		{
+			"org": "Jesus",
+			"chapter": 7,
+			"filename": "Jesus-07",
+			"name": "Parable Of The Pharisee And Tax Collector",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_07.jpg"
+		}
+	],
+	"LK18_31": [
+		{
+			"org": "Jesus",
+			"chapter": 34,
+			"filename": "Jesus-34",
+			"name": "Jesus Predicts His Death And Resurrection",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_34.jpg"
+		}
+	],
+	"LK18_35": [
+		{
+			"org": "Jesus",
+			"chapter": 32,
+			"filename": "Jesus-32",
+			"name": "Healing Of Bartimaeus",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_32.jpg"
+		}
+	],
+	"LK19_1": [
+		{
+			"org": "Jesus",
+			"chapter": 33,
+			"filename": "Jesus-33",
+			"name": "Jesus And Zaccheus",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_33.jpg"
+		},
+		{
+			"org": "Luke",
+			"chapter": 24,
+			"filename": "Luke-24",
+			"name": "Luke 19:1-48",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_22.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 17,
+			"filename": "Bible_Slides-17",
+			"name": "Jesus and Zacchaeus — Luke 19:1–9",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_18.webp"
+		}
+	],
+	"LK19_28": [
+		{
+			"org": "Jesus",
+			"chapter": 35,
+			"filename": "Jesus-35",
+			"name": "Jesuss Triumphal Entry",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_35.jpg"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 18,
+			"filename": "Bible_Slides-18",
+			"name": "Jesus Enters Jerusalem — Luke 19:28–44",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_19.webp"
+		}
+	],
+	"LK19_41": [
+		{
+			"org": "Jesus",
+			"chapter": 36,
+			"filename": "Jesus-36",
+			"name": "Jesus Weeps Over Jerusalem",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_36.jpg"
+		}
+	],
+	"LK19_45": [
+		{
+			"org": "Jesus",
+			"chapter": 37,
+			"filename": "Jesus-37",
+			"name": "Jesus Drives Out Money Changers",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_37.jpg"
+		}
+	],
+	"LK20_1": [
+		{
+			"org": "Jesus",
+			"chapter": 39,
+			"filename": "Jesus-39",
+			"name": "Annas Questions Jesuss Authority",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_39.jpg"
+		},
+		{
+			"org": "Luke",
+			"chapter": 25,
+			"filename": "Luke-25",
+			"name": "Luke 20:1-47",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_23.webp"
+		}
+	],
+	"LK20_9": [
+		{
+			"org": "Jesus",
+			"chapter": 40,
+			"filename": "Jesus-40",
+			"name": "Parable Of The Vineyard And Tenants",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_40.jpg"
+		}
+	],
+	"LK20_20": [
+		{
+			"org": "Jesus",
+			"chapter": 41,
+			"filename": "Jesus-41",
+			"name": "Paying Taxes To Caesar",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_41.jpg"
+		}
+	],
+	"LK21_1": [
+		{
+			"org": "Jesus",
+			"chapter": 38,
+			"filename": "Jesus-38",
+			"name": "Widows Offering",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_38.jpg"
+		},
+		{
+			"org": "Luke",
+			"chapter": 26,
+			"filename": "Luke-26",
+			"name": "Luke 21:1-38",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_24.webp"
+		}
+	],
+	"LK22_1": [
+		{
+			"org": "Luke",
+			"chapter": 27,
+			"filename": "Luke-27",
+			"name": "Luke 22:1-71",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_25.webp"
+		}
+	],
+	"LK22_7": [
+		{
+			"org": "Jesus",
+			"chapter": 42,
+			"filename": "Jesus-42",
+			"name": "The Last Supper",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_42.jpg"
+		}
+	],
+	"LK22_24": [
+		{
+			"org": "Jesus",
+			"chapter": 43,
+			"filename": "Jesus-43",
+			"name": "Upper Room Teaching",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_43.jpg"
+		}
+	],
+	"LK22_39": [
+		{
+			"org": "Jesus",
+			"chapter": 44,
+			"filename": "Jesus-44",
+			"name": "Jesus Is Betrayed And Arrested",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_44.jpg"
+		}
+	],
+	"LK22_54": [
+		{
+			"org": "Jesus",
+			"chapter": 45,
+			"filename": "Jesus-45",
+			"name": "Peter Disowns Jesus",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_45.jpg"
+		}
+	],
+	"LK22_66": [
+		{
+			"org": "Jesus",
+			"chapter": 46,
+			"filename": "Jesus-46",
+			"name": "Jesus Is Mocked And Questioned",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_46.jpg"
+		}
+	],
+	"LK23_1": [
+		{
+			"org": "Jesus",
+			"chapter": 47,
+			"filename": "Jesus-47",
+			"name": "Jesus Is Brought To Pilate",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_47.jpg"
+		},
+		{
+			"org": "Luke",
+			"chapter": 28,
+			"filename": "Luke-28",
+			"name": "Luke 23:1-31",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_26.webp"
+		}
+	],
+	"LK23_8": [
+		{
+			"org": "Jesus",
+			"chapter": 48,
+			"filename": "Jesus-48",
+			"name": "Jesus Is Brought To Herod",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_48.jpg"
+		}
+	],
+	"LK23_13": [
+		{
+			"org": "Jesus",
+			"chapter": 49,
+			"filename": "Jesus-49",
+			"name": "Jesus Is Sentenced",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_49.jpg"
+		}
+	],
+	"LK23_26": [
+		{
+			"org": "Jesus",
+			"chapter": 50,
+			"filename": "Jesus-50",
+			"name": "Jesus Carries His Cross",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_50.jpg"
+		}
+	],
+	"LK23_32": [
+		{
+			"org": "Jesus",
+			"chapter": 51,
+			"filename": "Jesus-51",
+			"name": "Jesus Is Crucified",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_51.jpg"
+		},
+		{
+			"org": "Luke",
+			"chapter": 29,
+			"filename": "Luke-29",
+			"name": "Luke 23:32-56",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_27.webp"
+		}
+	],
+	"LK23_38": [
+		{
+			"org": "Jesus",
+			"chapter": 53,
+			"filename": "Jesus-53",
+			"name": "Sign On The Cross",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_53.jpg"
+		}
+	],
+	"LK23_39": [
+		{
+			"org": "Jesus",
+			"chapter": 54,
+			"filename": "Jesus-54",
+			"name": "Crucified Convicts",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_54.jpg"
+		}
+	],
+	"LK23_44": [
+		{
+			"org": "Jesus",
+			"chapter": 55,
+			"filename": "Jesus-55",
+			"name": "Death Of Jesus",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_55.jpg"
+		}
+	],
+	"LK23_50": [
+		{
+			"org": "Jesus",
+			"chapter": 56,
+			"filename": "Jesus-56",
+			"name": "Burial Of Jesus",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_56.jpg"
+		}
+	],
+	"LK24_1": [
+		{
+			"org": "Jesus",
+			"chapter": 57,
+			"filename": "Jesus-57",
+			"name": "Angels At The Tomb",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_57.jpg"
+		},
+		{
+			"org": "Luke",
+			"chapter": 30,
+			"filename": "Luke-30",
+			"name": "Luke 24:1-53",
+			"source": "JESUS: Luke",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Luke/gospel_of_luke_chapter_28.webp"
+		}
+	],
+	"LK24_9": [
+		{
+			"org": "Jesus",
+			"chapter": 58,
+			"filename": "Jesus-58",
+			"name": "The Tomb Is Empty",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_58.jpg"
+		}
+	],
+	"LK24_35": [
+		{
+			"org": "Jesus",
+			"chapter": 59,
+			"filename": "Jesus-59",
+			"name": "Resurrected Jesus Appears",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_59.jpg"
+		}
+	],
+	"LK24_50": [
+		{
+			"org": "Jesus",
+			"chapter": 60,
+			"filename": "Jesus-60",
+			"name": "Great Commission And Ascension",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_60.jpg"
+		}
+	],
+	"JN1_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 1,
+			"filename": "Lumo-John-01",
+			"name": "The Word Became Flesh",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_01.webp"
+		}
+	],
+	"JN1_29": [
+		{
+			"org": "Lumo-John",
+			"chapter": 2,
+			"filename": "Lumo-John-02",
+			"name": "The Lamb of God and the First Disciples",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_02.webp"
+		}
+	],
+	"JN2_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 3,
+			"filename": "Lumo-John-03",
+			"name": "The Wedding at Cana and Temple Cleansing",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_03.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 19,
+			"filename": "Bible_Slides-19",
+			"name": "The Wedding at Cana — John 2:1–11",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_20.webp"
+		}
+	],
+	"JN3_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 4,
+			"filename": "Lumo-John-04",
+			"name": "Nicodemus and Being Born Again",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_04.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 20,
+			"filename": "Bible_Slides-20",
+			"name": "Jesus and Nicodemus — John 3",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_21.webp"
+		}
+	],
+	"JN3_22": [
+		{
+			"org": "Lumo-John",
+			"chapter": 5,
+			"filename": "Lumo-John-05",
+			"name": "John's Testimony About Jesus",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_05.webp"
+		}
+	],
+	"JN4_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 6,
+			"filename": "Lumo-John-06",
+			"name": "The Woman at the Well",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_06.webp"
+		}
+	],
+	"JN4_4": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 21,
+			"filename": "Bible_Slides-21",
+			"name": "John 4:4–42",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides.webp"
+		}
+	],
+	"JN4_27": [
+		{
+			"org": "Lumo-John",
+			"chapter": 7,
+			"filename": "Lumo-John-07",
+			"name": "The Harvest and the Official's Son",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_07.webp"
+		}
+	],
+	"JN5_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 8,
+			"filename": "Lumo-John-08",
+			"name": "Healing at the Pool of Bethesda",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_08.webp"
+		}
+	],
+	"JN5_31": [
+		{
+			"org": "Lumo-John",
+			"chapter": 9,
+			"filename": "Lumo-John-09",
+			"name": "Witnesses to Jesus",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_09.webp"
+		}
+	],
+	"JN6_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 10,
+			"filename": "Lumo-John-10",
+			"name": "Feeding the Five Thousand and Walking on Water",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_10.webp"
+		}
+	],
+	"JN6_22": [
+		{
+			"org": "John_Slides",
+			"chapter": 1,
+			"filename": "John_Slides-01",
+			"name": "The Bread of Life — John 6:22–71",
+			"source": "Gospel of John Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/John_Slides/john_slides_chapter_14.webp"
+		}
+	],
+	"JN6_25": [
+		{
+			"org": "Lumo-John",
+			"chapter": 11,
+			"filename": "Lumo-John-11",
+			"name": "The Bread of Life",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_11.webp"
+		}
+	],
+	"JN6_59": [
+		{
+			"org": "Lumo-John",
+			"chapter": 12,
+			"filename": "Lumo-John-12",
+			"name": "Many Disciples Turn Away",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_12.webp"
+		}
+	],
+	"JN7_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 13,
+			"filename": "Lumo-John-13",
+			"name": "Jesus at the Festival of Tabernacles",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_13.webp"
+		}
+	],
+	"JN7_25": [
+		{
+			"org": "Lumo-John",
+			"chapter": 14,
+			"filename": "Lumo-John-14",
+			"name": "Rivers of Living Water",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_14.webp"
+		}
+	],
+	"JN8_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 15,
+			"filename": "Lumo-John-15",
+			"name": "The Woman Caught in Adultery",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_15.webp"
+		}
+	],
+	"JN8_12": [
+		{
+			"org": "Lumo-John",
+			"chapter": 16,
+			"filename": "Lumo-John-16",
+			"name": "The Light of the World",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_16.webp"
+		}
+	],
+	"JN8_31": [
+		{
+			"org": "Lumo-John",
+			"chapter": 17,
+			"filename": "Lumo-John-17",
+			"name": "Before Abraham Was, I Am",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_17.webp"
+		}
+	],
+	"JN9_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 18,
+			"filename": "Lumo-John-18",
+			"name": "Healing the Man Born Blind",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_18.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 22,
+			"filename": "Bible_Slides-22",
+			"name": "John 9:1–41",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides.webp"
+		},
+		{
+			"org": "John_Slides",
+			"chapter": 2,
+			"filename": "John_Slides-02",
+			"name": "Jesus Heals a Man Born Blind — John 9:1–41",
+			"source": "Gospel of John Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/John_Slides/john_slides_chapter_20.webp"
+		}
+	],
+	"JN9_13": [
+		{
+			"org": "Lumo-John",
+			"chapter": 19,
+			"filename": "Lumo-John-19",
+			"name": "Spiritual Blindness",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_19.webp"
+		}
+	],
+	"JN10_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 20,
+			"filename": "Lumo-John-20",
+			"name": "The Good Shepherd",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_20.webp"
+		}
+	],
+	"JN11_1": [
+		{
+			"org": "Lumo-John",
+			"chapter": 21,
+			"filename": "Lumo-John-21",
+			"name": "The Raising of Lazarus",
+			"source": "LUMO: The Gospel of John",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-John/lumo_john_21.webp"
+		},
+		{
+			"org": "Bible_Slides",
+			"chapter": 23,
+			"filename": "Bible_Slides-23",
+			"name": "John 11",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides.webp"
+		},
+		{
+			"org": "John_Slides",
+			"chapter": 3,
+			"filename": "John_Slides-03",
+			"name": "Jesus Raises Lazarus — John 11:1–57",
+			"source": "Gospel of John Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/John_Slides/john_slides_chapter_23.webp"
+		}
+	],
+	"JN13_1": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 24,
+			"filename": "Bible_Slides-24",
+			"name": "John 13:1–17",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides.webp"
+		}
+	],
+	"JN15_1": [
+		{
+			"org": "John_Slides",
+			"chapter": 4,
+			"filename": "John_Slides-04",
+			"name": "The Vine and the Branches — John 15:1–17",
+			"source": "Gospel of John Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/John_Slides/john_slides_chapter_32.webp"
+		}
+	],
+	"JN17_1": [
+		{
+			"org": "John_Slides",
+			"chapter": 5,
+			"filename": "John_Slides-05",
+			"name": "Jesus Prays for His Followers — John 17:1–26",
+			"source": "Gospel of John Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/John_Slides/john_slides_chapter_35.webp"
+		}
+	],
+	"JN19_23": [
+		{
+			"org": "Jesus",
+			"chapter": 52,
+			"filename": "Jesus-52",
+			"name": "Soldiers Gamble For Jesuss Clothes",
+			"source": "JESUS Film",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Jesus/jesus_chapter_52.jpg"
+		}
+	],
+	"JN21_1": [
+		{
+			"org": "John_Slides",
+			"chapter": 6,
+			"filename": "John_Slides-06",
+			"name": "Jesus at the Sea of Galilee — John 21:1–25",
+			"source": "Gospel of John Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/John_Slides/john_slides_chapter_43.webp"
+		}
+	],
+	"AC1_1": [
+		{
+			"org": "Lumo-Acts",
+			"chapter": 1,
+			"filename": "Lumo-Acts-01",
+			"name": "The Spirit Descends and the Church is Born",
+			"source": "LUMO: Acts of the Apostles",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Acts/acts_01.webp"
+		}
+	],
+	"AC1_4": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 25,
+			"filename": "Bible_Slides-25",
+			"name": "Jesus Ascends to Heaven — Acts 1:4–11",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_22.webp"
+		}
+	],
+	"AC8_1": [
+		{
+			"org": "Lumo-Acts",
+			"chapter": 2,
+			"filename": "Lumo-Acts-02",
+			"name": "The Gospel Breaks Boundaries",
+			"source": "LUMO: Acts of the Apostles",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Acts/acts_02.webp"
+		}
+	],
+	"AC9_1": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 26,
+			"filename": "Bible_Slides-26",
+			"name": "The Conversion of Saul — Acts 9:1–19",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_23.webp"
+		}
+	],
+	"AC15_1": [
+		{
+			"org": "Lumo-Acts",
+			"chapter": 3,
+			"filename": "Lumo-Acts-03",
+			"name": "Mission and Resistance",
+			"source": "LUMO: Acts of the Apostles",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Acts/acts_03.webp"
+		}
+	],
+	"AC16_16": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 27,
+			"filename": "Bible_Slides-27",
+			"name": "The Conversion of the Jailer — Acts 16:16–40",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_24.webp"
+		}
+	],
+	"AC21_1": [
+		{
+			"org": "Lumo-Acts",
+			"chapter": 4,
+			"filename": "Lumo-Acts-04",
+			"name": "Bound Yet Unstoppable",
+			"source": "LUMO: Acts of the Apostles",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Lumo-Acts/acts_04.webp"
+		}
+	],
+	"AC27_1": [
+		{
+			"org": "Bible_Slides",
+			"chapter": 28,
+			"filename": "Bible_Slides-28",
+			"name": "The Shipwreck — Acts 27",
+			"source": "Bible Slides",
+			"cover": "https://meta.dbs.org/data/data-video/covers/Bible_Slides/bible_slides_chapter_25.webp"
+		}
+	]
+}

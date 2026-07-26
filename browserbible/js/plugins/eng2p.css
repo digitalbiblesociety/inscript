@@ -1,0 +1,65 @@
+.eng2p-original {
+	text-decoration: line-through;
+	color: var(--color-text-muted);
+	display: none;
+}
+
+.eng2p-corrected {
+	color: var(--color-success);
+}
+.lemma-highlight .eng2p-corrected {
+	color: var(--color-success);
+}
+
+.eng2p-highlight,
+.eng2p-highlight-demo {
+	color: var(--color-success);
+}
+
+.eng2p-verbs::before {
+	background: var(--color-success);
+	content: '';
+	width: 10px;
+	height: 10px;
+	display: inline-block;
+	margin: 0 4px 0 0;
+}
+
+.config-eng2p-off .eng2p-original {
+	text-decoration: inherit;
+	color: inherit;
+	display: inherit;
+}
+
+.config-eng2p-off .eng2p-corrected {
+	display: none;
+}
+
+#config-eng2p table {
+	border-collapse: collapse;
+	margin: 10px auto;
+	width: 490px;
+}
+
+#config-eng2p {
+	font-size: 13px;
+}
+
+#config-eng2p th {
+	white-space: nowrap;
+}
+
+#config-eng2p td,
+#config-eng2p th {
+	border: solid 1px var(--color-border);
+	padding: 2px;
+	text-align: left;
+}
+
+#config-eng2p-button {
+	padding: 5px 0;
+}
+
+#config-eng2p p {
+	margin: 10px 30px 0 ;
+}

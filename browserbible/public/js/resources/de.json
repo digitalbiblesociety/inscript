@@ -1,0 +1,282 @@
+{
+  "translation": {
+    "name": "Deutsch",
+    "a11y": {
+      "mainMenu": "Hauptmenü",
+      "previousPassage": "Vorheriger Abschnitt",
+      "nextPassage": "Nächster Abschnitt",
+      "closeWindow": "Fenster schließen",
+      "linkWindow": "Dieses Fenster mit der gemeinsamen Navigation verknüpfen",
+      "unlinkWindow": "Dieses Fenster von der gemeinsamen Navigation trennen",
+      "close": "Schließen"
+    },
+    "menu": {
+      "labels": {
+        "about": "Über",
+        "addwindow": "Neues Fenster",
+        "settings": "Einstellungen",
+        "feedback": "Rückmeldung",
+        "options": "Optionen"
+      },
+      "feedback": {
+        "name": "Name",
+        "email": "E-Mail",
+        "comments": "Ihre Kommentare",
+        "feature": "Feature-Vorschlag",
+        "bug": "Fehlerhinweis",
+        "other": "Sonstiges",
+        "send": "Absenden",
+        "thankyou": "Vielen Dank für Ihre Rückmeldung"
+      },
+      "search": {
+        "placeholder": "Suche",
+        "suggestversion": "<strong>{0}</strong> in neuem Fenster öffnen",
+        "suggestreference": "Gehe zu <strong>{0}</strong> in {1}",
+        "suggestsearch": "\"<strong>{0}</strong>\" in {1} suchen"
+      },
+      "config": {
+        "font": "Schriftart",
+        "settings": "Einstellungen",
+        "tools": "Werkzeuge",
+        "apocrypha": "Apokryphen anzeigen"
+      },
+      "reset": "zurücksetzen",
+      "commandpalette": {
+        "placeholder": "Befehl oder Bibelstelle eingeben ...",
+        "help_reference": "Bibelstelle eingeben, um dorthin zu navigieren",
+        "help_commands": "> eingeben, um Befehle zu suchen",
+        "no_results": "Keine Ergebnisse gefunden"
+      },
+      "themes": {
+        "default": "Normal",
+        "shiloh": "Silo",
+        "jabbok": "Jabbok",
+        "gethsemane": "Gethsemane"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "Markierung konnte nicht gespeichert werden: Browser-Speicher ist voll oder nicht verfügbar."
+      },
+      "visualfilters": {
+        "button": "Visuelle Filter",
+        "title": "Visuelle Filter",
+        "newfilter": "Neuer Filter",
+        "strongsnumber": "Strong #",
+        "morphology": "Morphologie",
+        "style": "Stil"
+      },
+      "eng2p": {
+        "button": "2. Person Plural Englisch",
+        "title": "Englisch Zweite Person Plural",
+        "description": "Modernes Englisch unterscheidet nicht zwischen <em>du (Singular)</em> und <em>ihr (Plural)</em>, daher verwendet dieses Plugin regionale englische Entsprechungen zur Darstellung der hebräischen und griechischen Formen."
+      },
+      "lemmapopup": {
+        "findalloccurrences": "Alle Vorkommen (etwa __count__)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "Bibel für Taube"
+      },
+      "videobible": {
+        "label": "Video-Bibel"
+      },
+      "bible": {
+        "label": "Bibel",
+        "recentlyused": "Zuletzt verwendet",
+        "filter": "Filter ...",
+        "ot": "Altes Testament",
+        "nt": "Neues Testament",
+        "dc": "Deuterokanonische Bücher",
+        "more": "Mehr",
+        "less": "Weniger",
+        "default": "Empfohlen",
+        "languages": "Sprachen",
+        "countries": "Länder",
+        "lemma": "Griechisch/Hebräisch-Popups",
+        "audio": "Audio verfügbar",
+        "prevversion": "Vorherige Version",
+        "nextversion": "Nächste Version",
+        "gotopassage": "Zur Stelle gehen",
+        "reference": "Bibelstelle",
+        "version": "Version",
+        "versioninfo": "Versionsinformationen",
+        "versioninfoname": "{0} – Informationen",
+        "loadinginfo": "Informationen werden geladen ...",
+        "noinfo": "Für diese Version sind keine weiteren Informationen verfügbar."
+      },
+      "commentary": {
+        "label": "Kommentar"
+      },
+      "map": {
+        "label": "Karten",
+        "placeholder": "Suche ...",
+        "versenotloaded": "Text nicht verfügbar",
+        "openinbible": "In der Bibel öffnen",
+        "loading": "Wird geladen …",
+        "loadfailed": "Karte konnte nicht geladen werden",
+        "moreresults": "{count} weitere Treffer",
+        "placesin": "Orte in {reference}",
+        "journeystops": "{count} Stationen",
+        "journeynames": {
+          "abraham": "Abrahams Reise",
+          "jacob": "Jakobs Flucht und Rückkehr",
+          "exodus": "Der Auszug aus Ägypten",
+          "ark": "Die Wanderungen der Bundeslade",
+          "elijah": "Elias Reisen",
+          "exile": "Das Exil und die Rückkehr",
+          "nativity": "Die Geburt Jesu und die Flucht nach Ägypten",
+          "paul1": "Paulus' erste Missionsreise",
+          "paul2": "Paulus' zweite Missionsreise",
+          "paul3": "Paulus' dritte Missionsreise",
+          "rome": "Paulus' Seereise nach Rom"
+        }
+      },
+      "search": {
+        "label": "Suche",
+        "placeholder": "Suche",
+        "button": "Suche",
+        "results": "Ergebnisse",
+        "verses": "Verse",
+        "options": "Suchoptionen",
+        "searchfailed": "Suche fehlgeschlagen. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+        "noresults": "Keine Ergebnisse",
+        "loadingprogress": "Wird geladen: {progress} :: {label}"
+      },
+      "parallel": {
+        "label": "Parallelstellen",
+        "loading": "Wird geladen ...",
+        "showall": "Alle anzeigen",
+        "hideall": "Alle ausblenden",
+        "loadlistfailed": "Liste der Parallelstellen konnte nicht geladen werden",
+        "loadtextfailed": "Bibeltext konnte nicht geladen werden",
+        "loadpassagesfailed": "Parallelstellen konnten nicht geladen werden"
+      },
+      "media": {
+        "label": "Medien",
+        "videolanguage": "Videosprache",
+        "videolanguageauto": "Wie der Bibeltext",
+        "videolanguagefilter": "Sprache suchen",
+        "videolanguagenone": "Keine passende Sprache"
+      },
+      "notes": {
+        "label": "Notizen",
+        "toggleSidebar": "Seitenleiste ein-/ausblenden",
+        "newNote": "Neue Notiz",
+        "linkToVerse": "Mit aktuellem Vers verknüpfen",
+        "download": "Notizen herunterladen",
+        "downloadMarkdown": "Als Markdown herunterladen",
+        "downloadText": "Als reinen Text herunterladen",
+        "downloadRtf": "Als RTF herunterladen",
+        "downloadJson": "Als JSON sichern",
+        "noNotesToDownload": "Keine Notizen zum Herunterladen",
+        "import": "Notizen importieren",
+        "importReadError": "Die ausgewählte Datei konnte nicht gelesen werden",
+        "importInvalid": "Keine gültige Notizen-Sicherungsdatei",
+        "importNone": "Keine Notizen in der Datei gefunden",
+        "imported": "{count} Notizen importiert",
+        "importMerged": "Sicherung wiederhergestellt: {added} hinzugefügt, {updated} aktualisiert, {skipped} unverändert",
+        "print": "Notizen drucken",
+        "printCurrent": "Aktuelle Notiz drucken",
+        "printAll": "Alle Notizen drucken",
+        "printAllTitle": "Alle Notizen",
+        "printIncludeVerses": "Verstext einschließen",
+        "printButton": "Drucken",
+        "closeButton": "Schließen",
+        "preparingPrint": "Druck mit Versen wird vorbereitet ...",
+        "printError": "Druck fehlgeschlagen – siehe Browser-Konsole",
+        "popupBlocked": "Das Druckfenster wurde blockiert. Erlauben Sie Popups für diese Seite und versuchen Sie es erneut.",
+        "noNotesToPrint": "Keine Notizen zum Drucken",
+        "selectToPrint": "Wählen Sie eine Notiz zum Drucken aus",
+        "verseLabel": "Vers",
+        "modifiedLabel": "Geändert",
+        "searchPlaceholder": "Notizen durchsuchen ...",
+        "filterLabel": "Notizen filtern",
+        "filterAll": "Alle Notizen",
+        "filterLinked": "Mit Vers verknüpft",
+        "filterStandalone": "Eigenständig",
+        "filterReference": "Aktueller Vers",
+        "sortLabel": "Notizen sortieren",
+        "sortModified": "Zuletzt bearbeitet",
+        "sortCreated": "Zuletzt erstellt",
+        "sortTitle": "Nach Titel",
+        "titlePlaceholder": "Notiztitel ...",
+        "editorPlaceholder": "Schreiben Sie los ...",
+        "bold": "Fett (Strg+B)",
+        "italic": "Kursiv (Strg+I)",
+        "underline": "Unterstrichen (Strg+U)",
+        "heading": "Überschrift",
+        "paragraph": "Absatz",
+        "bulletList": "Aufzählungsliste",
+        "numberedList": "Nummerierte Liste",
+        "pin": "Notiz anheften",
+        "unpin": "Anheften aufheben",
+        "removeLink": "Versverknüpfung entfernen",
+        "delete": "Löschen",
+        "deleteNote": "Notiz löschen",
+        "deleteConfirm": "Diese Notiz löschen?",
+        "confirmOk": "OK",
+        "confirmCancel": "Abbrechen",
+        "untitled": "Ohne Titel",
+        "noNoteSelected": "Keine Notiz ausgewählt",
+        "selectOrCreate": "Wählen Sie eine Notiz aus der Liste oder erstellen Sie eine neue",
+        "storageWarning": "Notizen werden im lokalen Speicher Ihres Browsers abgelegt und können verloren gehen, wenn Sie Browserdaten löschen. Sichern Sie sie über Herunterladen → Als JSON sichern.",
+        "noNotesFound": "Keine passenden Notizen",
+        "emptyListHint": "Noch keine Notizen – erstellen Sie eine, um zu beginnen",
+        "modified": "Geändert: {date}",
+        "saved": "Gespeichert",
+        "unsavedChanges": "Nicht gespeicherte Änderungen",
+        "notSaved": "Nicht gespeichert – Speicher ist voll",
+        "saveFailed": "Speichern fehlgeschlagen",
+        "quotaError": "Notizen können nicht gespeichert werden, da der Browserspeicher voll ist. Exportieren Sie eine JSON-Sicherung und löschen Sie dann einige Notizen.",
+        "corruptError": "Gespeicherte Notizen konnten nicht gelesen werden. Eine Sicherung der unlesbaren Daten wurde im Browserspeicher aufbewahrt.",
+        "navigateToLink": "Zu einem Vers navigieren, um ihn zu verknüpfen",
+        "linkedTo": "Verknüpft mit {reference}",
+        "linkRemoved": "Versverknüpfung entfernt",
+        "detectedRefs": "Bibelstellen:",
+        "goToReference": "Zu {reference} gehen"
+      },
+      "audio": {
+        "label": "Audio",
+        "options": "Audio-Optionen",
+        "synctext": "Text synchron halten (beta)",
+        "autoplay": "Automatisch nächstes spielen",
+        "drama": "Dramatisiert",
+        "nondrama": "Vorgelesen",
+        "noaudiotitle": "Kein Audio verfügbar",
+        "noaudiomessage": "Diese Bibelversion enthält keine Audioaufnahmen. Bitte wählen Sie eine andere Version mit Audiounterstützung."
+      },
+      "comparison": {
+        "label": "Vergleich",
+        "invalidreference": "Ungültige Bibelstelle",
+        "nobibles": "Für diesen Abschnitt sind keine Bibeln verfügbar. Bitte wählen Sie einen anderen Abschnitt oder andere Bibelversionen.",
+        "onebible": "Für diesen Abschnitt ist nur eine Bibelversion verfügbar. Bitte wählen Sie eine weitere Bibelversion, die dieses Buch enthält.",
+        "loadfailed": "Abschnitt konnte nicht geladen werden. Bitte versuchen Sie es erneut."
+      },
+      "stats": {
+        "label": "Statistiken",
+        "frequentwords": "Häufige Wörter",
+        "loadtextfailed": "Dieser Text konnte nicht geladen werden.",
+        "loadchapterfailed": "Dieses Kapitel konnte nicht geladen werden."
+      }
+    },
+    "names": {
+      "en": "German",
+      "fr": "allemand",
+      "es": "Alemán",
+      "de": "Deutsch",
+      "ru": "немецкий",
+      "hi": "जर्मन",
+      "ar": "الألمانية",
+      "af": "Duits",
+      "bn": "জার্মান",
+      "id": "Bahasa Jerman",
+      "sw": "Kijerumani",
+      "tr": "almanca",
+      "ja": "ドイツ語",
+      "zh-TW": "德語",
+      "zh-CN": "德语"
+    }
+  }
+}

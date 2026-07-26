@@ -1,0 +1,282 @@
+{
+  "translation": {
+    "name": "العربية",
+    "a11y": {
+      "mainMenu": "القائمة الرئيسية",
+      "previousPassage": "المقطع السابق",
+      "nextPassage": "المقطع التالي",
+      "closeWindow": "إغلاق النافذة",
+      "linkWindow": "ربط هذه النافذة بالتنقّل المشترك",
+      "unlinkWindow": "إلغاء ربط هذه النافذة من التنقّل المشترك",
+      "close": "إغلاق"
+    },
+    "menu": {
+      "labels": {
+        "about": "حول",
+        "addwindow": "إضافة النافذة",
+        "settings": "الإعدادات",
+        "feedback": "ردود الفعل",
+        "options": "خيارات"
+      },
+      "feedback": {
+        "name": "اسم",
+        "email": "البريد الإلكتروني",
+        "comments": "تحديثاتك",
+        "feature": "ميزة اقتراح",
+        "bug": "تقرير علة",
+        "other": "آخر",
+        "send": "إرسال",
+        "thankyou": "شكرا لملاحظاتك"
+      },
+      "search": {
+        "placeholder": "بحث",
+        "suggestversion": "فتح <strong>{0}</strong> في نافذة جديدة",
+        "suggestreference": "الذهاب إلى <strong>{0}</strong> في {1}",
+        "suggestsearch": "بحث \"<strong>{0}</strong>\" في {1}"
+      },
+      "config": {
+        "font": "الخط",
+        "settings": "إعدادات",
+        "tools": "أدوات",
+        "apocrypha": "إظهار الأسفار الأبوكريفية"
+      },
+      "reset": "إعادة ضبط",
+      "commandpalette": {
+        "placeholder": "اكتب أمرًا أو مرجعًا كتابيًا...",
+        "help_reference": "اكتب مرجعًا كتابيًا للتنقّل",
+        "help_commands": "اكتب > للبحث في الأوامر",
+        "no_results": "لا توجد نتائج"
+      },
+      "themes": {
+        "default": "افتراضي",
+        "shiloh": "شِيلُوه",
+        "jabbok": "يَبُّوق",
+        "gethsemane": "جَثْسَيْمَانِي"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "تعذّر حفظ التظليل: مساحة تخزين المتصفح ممتلئة أو غير متوفرة."
+      },
+      "visualfilters": {
+        "button": "مرشحات بصرية",
+        "title": "مرشحات بصرية",
+        "newfilter": "مرشح جديد",
+        "strongsnumber": "رقم فهرس سترونج",
+        "morphology": "لغويات",
+        "style": "أسلوب"
+      },
+      "eng2p": {
+        "button": "استخدام كلمة أنت للجمع في الإنجليزية",
+        "title": "استخدام كلمة أنت للجمع في الإنجليزية",
+        "description": "اللغة الإنجليزية الحديثة لا تميز بين <em>أنت المفرد</em> و <em>أنت الجمع</em>، لذا يستخدم هذا الملحق مكافئات إنجليزية إقليمية لتمثيل الأشكال العبرية واليونانية."
+      },
+      "lemmapopup": {
+        "findalloccurrences": "البحث عن جميع المواضع (حوالي __count__)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "الكتاب المقدس للصم"
+      },
+      "videobible": {
+        "label": "الكتاب المقدس المرئي"
+      },
+      "bible": {
+        "label": "الكتاب المقدس",
+        "recentlyused": "المستخدمة مؤخرا",
+        "filter": "ترشيح القائمة",
+        "ot": "العهد القديم",
+        "nt": "العهد الجديد",
+        "dc": "الأسفار القانونية",
+        "more": "أكثر",
+        "less": "أقل",
+        "default": "مميز",
+        "languages": "اللغات",
+        "countries": "الدول",
+        "lemma": "يونانية/عبرية",
+        "audio": "الصوت متاح",
+        "prevversion": "النسخة السابقة",
+        "nextversion": "النسخة التالية",
+        "gotopassage": "الذهاب إلى المقطع",
+        "reference": "المرجع",
+        "version": "النسخة",
+        "versioninfo": "معلومات النسخة",
+        "versioninfoname": "معلومات {0}",
+        "loadinginfo": "جارٍ تحميل المعلومات...",
+        "noinfo": "لا تتوفر معلومات إضافية لهذه النسخة."
+      },
+      "commentary": {
+        "label": "تفاسير"
+      },
+      "map": {
+        "label": "خرائط",
+        "placeholder": "بحث",
+        "versenotloaded": "النص غير متوفر",
+        "openinbible": "فتح في الكتاب المقدس",
+        "loading": "جارٍ التحميل…",
+        "loadfailed": "فشل تحميل الخريطة",
+        "moreresults": "{count} تطابقات إضافية",
+        "placesin": "أماكن في {reference}",
+        "journeystops": "{count} محطات",
+        "journeynames": {
+          "abraham": "رحلة إبراهيم",
+          "jacob": "هروب يعقوب وعودته",
+          "exodus": "الخروج",
+          "ark": "تنقّلات تابوت العهد",
+          "elijah": "أسفار إيليا",
+          "exile": "السبي والعودة",
+          "nativity": "الميلاد والهروب إلى مصر",
+          "paul1": "رحلة بولس الأولى",
+          "paul2": "رحلة بولس الثانية",
+          "paul3": "رحلة بولس الثالثة",
+          "rome": "رحلة بولس إلى روما"
+        }
+      },
+      "search": {
+        "label": "بحث",
+        "placeholder": "بحث",
+        "button": "بحث",
+        "results": "النتائج",
+        "verses": "الآيات",
+        "options": "خيارات أكثر للبحث",
+        "searchfailed": "فشل البحث. يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+        "noresults": "لا توجد نتائج",
+        "loadingprogress": "جارٍ التحميل: {progress} :: {label}"
+      },
+      "parallel": {
+        "label": "المتوازيات",
+        "loading": "تحميل ...",
+        "showall": "عرض جميع",
+        "hideall": "إخفاء الكل",
+        "loadlistfailed": "فشل تحميل قائمة المتوازيات",
+        "loadtextfailed": "فشل تحميل نص الكتاب المقدس",
+        "loadpassagesfailed": "فشل تحميل المقاطع المتوازية"
+      },
+      "media": {
+        "label": "سمعيات وبصريات",
+        "videolanguage": "لغة الفيديو",
+        "videolanguageauto": "حسب لغة النص الكتابي",
+        "videolanguagefilter": "ابحث عن لغة",
+        "videolanguagenone": "لا توجد لغة مطابقة"
+      },
+      "notes": {
+        "label": "ملاحظات",
+        "toggleSidebar": "تبديل الشريط الجانبي",
+        "newNote": "ملاحظة جديدة",
+        "linkToVerse": "ربط بالآية الحالية",
+        "download": "تنزيل الملاحظات",
+        "downloadMarkdown": "تنزيل بصيغة Markdown",
+        "downloadText": "تنزيل كنص عادي",
+        "downloadRtf": "تنزيل بصيغة RTF",
+        "downloadJson": "نسخ احتياطي بصيغة JSON",
+        "noNotesToDownload": "لا توجد ملاحظات للتنزيل",
+        "import": "استيراد الملاحظات",
+        "importReadError": "تعذّرت قراءة الملف المحدد",
+        "importInvalid": "ليس ملف نسخة احتياطية صالحًا للملاحظات",
+        "importNone": "لم يُعثر على ملاحظات في الملف",
+        "imported": "تم استيراد {count} ملاحظة",
+        "importMerged": "تمت استعادة النسخة الاحتياطية: {added} مضافة، {updated} محدّثة، {skipped} دون تغيير",
+        "print": "طباعة الملاحظات",
+        "printCurrent": "طباعة الملاحظة الحالية",
+        "printAll": "طباعة جميع الملاحظات",
+        "printAllTitle": "جميع الملاحظات",
+        "printIncludeVerses": "تضمين نص الآيات",
+        "printButton": "طباعة",
+        "closeButton": "إغلاق",
+        "preparingPrint": "جارٍ تجهيز الطباعة مع الآيات...",
+        "printError": "فشلت الطباعة، راجع وحدة تحكّم المتصفح",
+        "popupBlocked": "تم حظر نافذة الطباعة. اسمح بالنوافذ المنبثقة لهذا الموقع وحاول مرة أخرى.",
+        "noNotesToPrint": "لا توجد ملاحظات للطباعة",
+        "selectToPrint": "اختر ملاحظة للطباعة",
+        "verseLabel": "الآية",
+        "modifiedLabel": "آخر تعديل",
+        "searchPlaceholder": "بحث في الملاحظات...",
+        "filterLabel": "تصفية الملاحظات",
+        "filterAll": "جميع الملاحظات",
+        "filterLinked": "المرتبطة بآية",
+        "filterStandalone": "مستقلة",
+        "filterReference": "الآية الحالية",
+        "sortLabel": "ترتيب الملاحظات",
+        "sortModified": "المعدّلة مؤخرًا",
+        "sortCreated": "المنشأة مؤخرًا",
+        "sortTitle": "حسب العنوان",
+        "titlePlaceholder": "عنوان الملاحظة...",
+        "editorPlaceholder": "ابدأ الكتابة...",
+        "bold": "عريض (Ctrl+B)",
+        "italic": "مائل (Ctrl+I)",
+        "underline": "تسطير (Ctrl+U)",
+        "heading": "عنوان",
+        "paragraph": "فقرة",
+        "bulletList": "قائمة نقطية",
+        "numberedList": "قائمة مرقّمة",
+        "pin": "تثبيت الملاحظة",
+        "unpin": "إلغاء التثبيت",
+        "removeLink": "إزالة رابط الآية",
+        "delete": "حذف",
+        "deleteNote": "حذف الملاحظة",
+        "deleteConfirm": "حذف هذه الملاحظة؟",
+        "confirmOk": "موافق",
+        "confirmCancel": "إلغاء",
+        "untitled": "بدون عنوان",
+        "noNoteSelected": "لم يتم اختيار ملاحظة",
+        "selectOrCreate": "اختر ملاحظة من القائمة أو أنشئ ملاحظة جديدة",
+        "storageWarning": "تُحفظ الملاحظات في التخزين المحلي لمتصفحك وقد تُفقد إذا مسحت بيانات المتصفح. احتفظ بنسخة احتياطية عبر تنزيل ← نسخ احتياطي بصيغة JSON.",
+        "noNotesFound": "لا توجد ملاحظات مطابقة",
+        "emptyListHint": "لا توجد ملاحظات بعد، أنشئ واحدة للبدء",
+        "modified": "آخر تعديل: {date}",
+        "saved": "تم الحفظ",
+        "unsavedChanges": "تغييرات غير محفوظة",
+        "notSaved": "لم يُحفظ، مساحة التخزين ممتلئة",
+        "saveFailed": "فشل الحفظ",
+        "quotaError": "تعذّر حفظ الملاحظات لأن مساحة تخزين المتصفح ممتلئة. صدّر نسخة احتياطية بصيغة JSON ثم احذف بعض الملاحظات.",
+        "corruptError": "تعذّرت قراءة الملاحظات المحفوظة. تم الاحتفاظ بنسخة احتياطية من البيانات غير القابلة للقراءة في تخزين المتصفح.",
+        "navigateToLink": "انتقل إلى آية لربطها",
+        "linkedTo": "مرتبطة بـ {reference}",
+        "linkRemoved": "تمت إزالة رابط الآية",
+        "detectedRefs": "المراجع:",
+        "goToReference": "الذهاب إلى {reference}"
+      },
+      "audio": {
+        "label": "صوت",
+        "options": "خيارات الصوت",
+        "synctext": "تحريك النص مع الصوت",
+        "autoplay": "تشغيل الأصحاح التالي تلقائياً",
+        "drama": "قراءة درامية",
+        "nondrama": "قراءة غير درامية",
+        "noaudiotitle": "لا يتوفر صوت",
+        "noaudiomessage": "لا تحتوي نسخة الكتاب المقدس هذه على تسجيلات صوتية. يرجى اختيار نسخة أخرى تدعم الصوت."
+      },
+      "comparison": {
+        "label": "مقارنة",
+        "invalidreference": "مرجع كتابي غير صالح",
+        "nobibles": "لا تتوفر نسخ من الكتاب المقدس لهذا المقطع. يرجى اختيار مقطع آخر أو نسخ أخرى.",
+        "onebible": "تتوفر نسخة واحدة فقط من الكتاب المقدس لهذا المقطع. يرجى اختيار نسخة أخرى تحتوي على هذا السفر.",
+        "loadfailed": "فشل تحميل المقطع. يرجى المحاولة مرة أخرى."
+      },
+      "stats": {
+        "label": "إحصائيات",
+        "frequentwords": "الكلمات المتكررة",
+        "loadtextfailed": "تعذّر تحميل هذا النص.",
+        "loadchapterfailed": "تعذّر تحميل هذا الأصحاح."
+      }
+    },
+    "names": {
+      "en": "Arabic",
+      "fr": "arabe",
+      "es": "árabe",
+      "de": "Arabisch",
+      "ru": "арабский",
+      "hi": "अरबी",
+      "ar": "العربية",
+      "af": "Arabies",
+      "bn": "আরবি",
+      "id": "Bahasa Arab",
+      "sw": "Kiarabu",
+      "tr": "Arapça",
+      "ja": "アラビア語",
+      "zh-TW": "阿拉伯語",
+      "zh-CN": "阿拉伯语"
+    }
+  }
+}

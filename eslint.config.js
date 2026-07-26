@@ -1,0 +1,63 @@
+import js from '@eslint/js';
+import globals from 'globals';
+
+export default [
+  js.configs.recommended,
+  {
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        // Build-time constants injected by Vite (see vite.config.js `define`)
+        __APP_VERSION__: 'readonly',
+        __DISABLED_WINDOW_TYPES__: 'readonly',
+        __DISABLED_FEATURES__: 'readonly',
+        __API_BIBLE_PROXY_BASE__: 'readonly',
+        __BIBLE_BRAIN_PROXY_BASE__: 'readonly'
+      }
+    },
+    rules: {
+      'no-unused-vars': ['error', {
+        args: 'none',
+        caughtErrors: 'none'
+      }],
+      // Keep intentional warn/error logging (failure paths) but block stray
+      // console.log/debug/info, native alert(), and leftover debugger.
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+      'no-alert': 'error',
+      'no-debugger': 'error',
+      'no-undef': 'error',
+      'no-constant-binary-expression': 'error',
+      'no-constructor-return': 'error',
+      'no-promise-executor-return': 'error',
+      'no-self-compare': 'error',
+      'no-template-curly-in-string': 'warn',
+      'no-unmodified-loop-condition': 'error',
+      'no-unreachable-loop': 'error',
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+      'no-return-assign': 'error',
+      'no-sequences': 'error',
+      'no-throw-literal': 'error',
+      'no-useless-concat': 'error',
+      'no-useless-return': 'error',
+      'prefer-promise-reject-errors': 'error',
+      'no-case-declarations': 'off',
+      'no-useless-escape': 'off'
+    }
+  },
+  {
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'browserbible/dist/**',
+      'downloads/**',
+      '**/*.min.js',
+      'browserbible/js/core/config-custom.js',
+      'browserbible/js/core/config-custom-example.js'
+    ]
+  }
+];

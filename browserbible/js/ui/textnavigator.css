@@ -1,0 +1,382 @@
+
+.text-navigator {
+	width: 320px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: var(--z-popover);
+	background: var(--color-background);
+	padding: 0;
+	font-family: var(--font-family-sans);
+	font-size: 14px;
+	box-shadow: var(--shadow-popup);
+}
+
+
+.text-navigator[popover] {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	border: none;
+	overflow: visible;
+	inset: unset;
+}
+
+.text-navigator::backdrop {
+	background: transparent;
+}
+
+
+.text-navigator::before,
+.text-navigator::after {
+	content: '';
+	position: absolute;
+	top: -10px;
+	left: var(--arrow-left, 20px);
+	width: 0;
+	height: 0;
+	border-right: 10px solid transparent;
+	border-left: 10px solid transparent;
+	pointer-events: none;
+}
+
+.text-navigator::before {
+	z-index: var(--z-base);
+	top: -11px;
+	border-bottom: 10px solid var(--color-border);
+}
+
+.text-navigator::after {
+	z-index: var(--z-above);
+	border-bottom: 10px solid var(--color-background-active);
+}
+
+.text-navigator .text-navigator-header {
+	padding: 8px;
+	color: var(--color-text);
+	position: relative;
+	background: var(--color-background-active);
+}
+
+.text-navigator .text-navigator-close {
+	cursor: pointer;
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+
+.text-navigator .text-navigator-divisions,
+.text-navigator .text-navigator-sections {
+	overflow: auto;
+	padding: 4px;
+}
+
+.text-navigator .text-navigator-sections {
+	padding: 4px 1px;
+}
+
+
+.text-navigator .text-navigator-sections {
+	display: grid;
+	grid-template-rows: 1fr;
+	transition: grid-template-rows 300ms ease-out;
+}
+
+.text-navigator .text-navigator-sections.collapsed {
+	grid-template-rows: 0fr;
+}
+
+.text-navigator .text-navigator-sections-inner {
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1px;
+}
+
+.text-navigator .text-navigator-division-header {
+	padding: 10px 0;
+	color: var(--color-text-muted);
+	font-weight: bold;
+}
+
+.text-navigator .text-navigator-division {
+	width: 38px;
+	height: 38px;
+	margin: 1px 1px 0 0;
+	border: solid 1px transparent;
+	background: var(--color-background-alt);
+	color: var(--color-text);
+	text-align: center;
+	padding: 10px 0 0;
+	cursor: pointer;
+	border-style: solid;
+	border-width: 0;
+	border-inline-start-width: 10px;
+}
+
+
+.text-navigator .text-navigator-division.selected {
+	width: auto;
+	height: auto;
+	text-align: start;
+	margin: 1px 0;
+	padding-inline-start: 4px;
+}
+.text-navigator .text-navigator-division.selected > span  {
+	font-weight: bold;
+}
+
+.text-navigator .text-navigator-division:hover > span {
+	-border-bottom-color: #ccc;
+	font-weight: bold;
+}
+
+.text-navigator .text-navigator-section:hover {
+	-outline: solid 1px #2a85e8;
+}
+
+.text-navigator-divisions-full .text-navigator-division {
+	display: block;
+	text-align: start;
+	width: auto;
+	min-height: 30px;
+	height: auto;
+	overflow: auto;
+	padding: 5px 0 0;
+	padding-inline-start: 10px;
+}
+.text-navigator-divisions-full  .text-navigator-division.selected {
+	padding: 5px 0 0;
+	padding-inline-start: 10px;
+}
+
+.text-navigator-divisions-full[dir=rtl] .text-navigator-division {
+	border-inline-start-width: 5px;
+}
+
+
+.text-navigator-divisions:not(.text-navigator-divisions-full) .text-navigator-division {
+	position: relative;
+}
+
+.text-navigator-divisions:not(.text-navigator-divisions-full) .text-navigator-division:hover::after {
+	content: attr(data-name);
+	position: absolute;
+	top: -1px;
+	inset-inline-start: 0;
+	z-index: var(--z-chrome);
+	height: 38px;
+	border: solid 1px var(--color-border);
+	background: inherit;
+	color: var(--color-text);
+	text-align: start;
+	padding: 10px 10px 0;
+	pointer-events: none;
+	font-size: 14px;
+	white-space: nowrap;
+	box-sizing: border-box;
+}
+
+
+
+.text-navigator .division-section-penta { border-color: var(--color-division-pentateuch); }
+.text-navigator .division-section-hist { border-color: var(--color-division-historical); }
+.text-navigator .division-section-poet { border-color: var(--color-division-wisdom); }
+.text-navigator .division-section-majorp { border-color: var(--color-division-major-prophets); }
+.text-navigator .division-section-minorp { border-color: var(--color-division-minor-prophets); }
+.text-navigator .division-section-gospel { border-color: var(--color-division-gospels); }
+.text-navigator .division-section-acts { border-color: var(--color-division-acts); }
+.text-navigator .division-section-paul { border-color: var(--color-division-paul-epistles); }
+.text-navigator .division-section-general { border-color: var(--color-division-general-epistles); }
+.text-navigator .division-section-rev { border-color: var(--color-division-revelation); }
+
+.text-navigator .text-navigator-division.selected {
+	background: var(--color-background-hover);
+}
+
+.text-navigator .text-navigator-section {
+	width: 36px;
+	height: 36px;
+	color: var(--color-text);
+	text-align: center;
+	padding: 10px 0 0;
+	cursor: pointer;
+}
+
+.text-navigator .text-navigator-section:hover,
+.text-navigator .text-navigator-section.selected {
+	background-color: var(--color-background-active);
+	font-weight: bold;
+}
+
+/* Verse Navigator — third level (verse grid) */
+
+/* Fade non-selected chapter numbers when a chapter is picked */
+.verse-navigator .has-verse-selection .text-navigator-section {
+	opacity: 0.5;
+	transition: opacity var(--transition-fast, 0.15s);
+}
+
+.verse-navigator .has-verse-selection .text-navigator-section.selected {
+	opacity: 1;
+}
+
+/* Verse grid inserted inline after the selected chapter */
+.verse-navigator .verse-navigator-verses {
+	display: grid;
+	grid-template-rows: 1fr;
+	transition: grid-template-rows 300ms ease-out;
+	padding: 4px 0;
+	border-top: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--color-border);
+	margin: 4px 0;
+}
+
+.verse-navigator .verse-navigator-verses.collapsed {
+	grid-template-rows: 0fr;
+	padding: 0;
+	border-color: transparent;
+	margin: 0;
+}
+
+.verse-navigator .verse-navigator-verses-inner {
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.verse-navigator .verse-navigator-verse {
+	width: 36px;
+	height: 36px;
+	margin: 1px 1px 0 0;
+	color: var(--color-text);
+	text-align: center;
+	padding: 10px 0 0;
+	cursor: pointer;
+	font-size: 13px;
+}
+
+.verse-navigator .verse-navigator-verse:hover {
+	font-weight: bold;
+	background: var(--color-background-hover);
+	border-radius: 3px;
+}
+
+/* ── Unified filter (header) ───────────────────────────────── */
+.text-navigator .text-navigator-filter {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 6px 8px;
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	background: var(--color-background);
+	color: var(--color-text);
+	font-family: var(--font-family-sans);
+	font-size: 13px;
+}
+
+.text-navigator .text-navigator-filter:focus {
+	outline: none;
+	border-color: var(--color-primary, #2a85e8);
+}
+
+/* ── Body: books column + (English) passages column ───────── */
+.text-navigator .text-navigator-body {
+	display: flex;
+	align-items: stretch;
+}
+
+.text-navigator .text-navigator-body > * {
+	min-height: 0;
+	min-width: 0;
+}
+
+/* One column by default (non-English): books fill the width */
+.text-navigator .text-navigator-divisions {
+	flex: 1 1 auto;
+}
+
+/* Two columns for English texts: books left, passages right */
+.text-navigator.text-navigator-2col {
+	width: 560px;
+}
+
+.text-navigator.text-navigator-2col .text-navigator-divisions {
+	flex: 0 0 200px;
+}
+
+/* ── Passages (pericopes) column ──────────────────────────── */
+.text-navigator .text-navigator-pericopes {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border-inline-start: 1px solid var(--color-border);
+}
+
+.text-navigator .text-navigator-peri-header {
+	flex: 0 0 auto;
+	padding: 8px 10px;
+	font-weight: bold;
+	color: var(--color-text);
+	border-bottom: 1px solid var(--color-border);
+	background: var(--color-background-active);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.text-navigator .text-navigator-peri-header:empty {
+	display: none;
+}
+
+.text-navigator .text-navigator-peri-list {
+	flex: 1;
+	overflow: auto;
+	padding: 4px 0;
+}
+
+.text-navigator .peri-book-header {
+	padding: 8px 10px 4px;
+	color: var(--color-text-muted);
+	font-weight: bold;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	position: sticky;
+	top: 0;
+	background: var(--color-background);
+}
+
+.text-navigator .peri-item {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 6px 10px;
+	cursor: pointer;
+	color: var(--color-text);
+}
+
+.text-navigator .peri-item:hover {
+	background: var(--color-background-hover);
+}
+
+.text-navigator .peri-item.current {
+	background: var(--color-background-active);
+	box-shadow: inset 3px 0 0 var(--color-primary, #2a85e8);
+}
+
+.text-navigator .peri-title {
+	flex: 1;
+	min-width: 0;
+}
+
+.text-navigator .peri-ref {
+	flex: 0 0 auto;
+	color: var(--color-text-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+

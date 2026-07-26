@@ -1,0 +1,282 @@
+{
+  "translation": {
+    "name": "简体中文",
+    "a11y": {
+      "mainMenu": "主菜单",
+      "previousPassage": "上一段经文",
+      "nextPassage": "下一段经文",
+      "closeWindow": "关闭窗口",
+      "linkWindow": "将此窗口链接到共享导航",
+      "unlinkWindow": "取消此窗口与共享导航的链接",
+      "close": "关闭"
+    },
+    "menu": {
+      "labels": {
+        "about": "关于",
+        "addwindow": "添加窗口",
+        "settings": "设置",
+        "feedback": "反馈",
+        "options": "选项"
+      },
+      "feedback": {
+        "name": "姓名",
+        "email": "邮箱",
+        "comments": "您的评论",
+        "feature": "功能建议",
+        "bug": "错误报告",
+        "other": "其他",
+        "send": "发送",
+        "thankyou": "感谢您的反馈"
+      },
+      "search": {
+        "placeholder": "搜索",
+        "suggestversion": "在新窗口中打开 <strong>{0}</strong>",
+        "suggestreference": "在 {1} 中转到 <strong>{0}</strong>",
+        "suggestsearch": "在 {1} 中搜索 \"<strong>{0}</strong>\""
+      },
+      "config": {
+        "font": "字体",
+        "settings": "设置",
+        "tools": "工具",
+        "apocrypha": "显示次经书卷"
+      },
+      "reset": "复位",
+      "commandpalette": {
+        "placeholder": "输入命令或圣经引用……",
+        "help_reference": "输入圣经引用以导航",
+        "help_commands": "输入 > 搜索命令",
+        "no_results": "未找到结果"
+      },
+      "themes": {
+        "default": "默认",
+        "shiloh": "示罗",
+        "jabbok": "雅博",
+        "gethsemane": "客西马尼"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "无法保存高亮：浏览器存储空间已满或不可用。"
+      },
+      "visualfilters": {
+        "button": "视觉过滤器",
+        "title": "视觉过滤器",
+        "newfilter": "新过滤器",
+        "strongsnumber": "Strong's #",
+        "morphology": "词形",
+        "style": "样式"
+      },
+      "eng2p": {
+        "button": "英语第二人称复数",
+        "title": "英语第二人称复数",
+        "description": "现代英语不区分<em>单数的你</em>和<em>复数的你</em>，因此这个插件使用地区性英语等价词来表示希伯来语和希腊语形式。"
+      },
+      "lemmapopup": {
+        "findalloccurrences": "查找所有出现 (大约 __count__)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "聋人圣经"
+      },
+      "videobible": {
+        "label": "视频圣经"
+      },
+      "bible": {
+        "label": "圣经",
+        "recentlyused": "最近使用",
+        "filter": "过滤器...",
+        "ot": "旧约",
+        "nt": "新约圣经",
+        "dc": "经书",
+        "more": "更多",
+        "less": "更少",
+        "default": "推荐",
+        "languages": "语言",
+        "countries": "国家",
+        "lemma": "希腊语/希伯来语",
+        "audio": "有音频",
+        "prevversion": "上一版本",
+        "nextversion": "下一版本",
+        "gotopassage": "转到经文",
+        "reference": "经文引用",
+        "version": "版本",
+        "versioninfo": "版本信息",
+        "versioninfoname": "{0} 信息",
+        "loadinginfo": "正在加载信息……",
+        "noinfo": "此版本没有其他可用信息。"
+      },
+      "commentary": {
+        "label": "解说"
+      },
+      "map": {
+        "label": "地图",
+        "placeholder": "搜索...",
+        "versenotloaded": "文本不可用",
+        "openinbible": "在圣经中打开",
+        "loading": "加载中…",
+        "loadfailed": "加载地图失败",
+        "moreresults": "还有 {count} 个匹配项",
+        "placesin": "{reference} 中的地点",
+        "journeystops": "{count} 站",
+        "journeynames": {
+          "abraham": "亚伯拉罕的旅程",
+          "jacob": "雅各的逃亡与归回",
+          "exodus": "出埃及",
+          "ark": "约柜的漂流",
+          "elijah": "以利亚的行程",
+          "exile": "被掳与归回",
+          "nativity": "耶稣降生与逃往埃及",
+          "paul1": "保罗第一次旅行传道",
+          "paul2": "保罗第二次旅行传道",
+          "paul3": "保罗第三次旅行传道",
+          "rome": "保罗前往罗马的航程"
+        }
+      },
+      "search": {
+        "label": "搜索",
+        "placeholder": "搜索",
+        "button": "搜索",
+        "results": "结果",
+        "verses": "诗",
+        "options": "搜索选项",
+        "searchfailed": "搜索失败，请检查您的网络连接后重试。",
+        "noresults": "无结果",
+        "loadingprogress": "加载中：{progress} :: {label}"
+      },
+      "parallel": {
+        "label": "平行经文",
+        "loading": "加载中...",
+        "showall": "显示全部",
+        "hideall": "隐藏全部",
+        "loadlistfailed": "加载平行经文列表失败",
+        "loadtextfailed": "加载圣经文本失败",
+        "loadpassagesfailed": "加载平行经文段落失败"
+      },
+      "media": {
+        "label": "媒体",
+        "videolanguage": "视频语言",
+        "videolanguageauto": "与圣经文本一致",
+        "videolanguagefilter": "查找语言",
+        "videolanguagenone": "没有匹配的语言"
+      },
+      "notes": {
+        "label": "注意",
+        "toggleSidebar": "切换侧边栏",
+        "newNote": "新建笔记",
+        "linkToVerse": "链接到当前经文",
+        "download": "下载笔记",
+        "downloadMarkdown": "下载为 Markdown",
+        "downloadText": "下载为纯文本",
+        "downloadRtf": "下载为 RTF",
+        "downloadJson": "备份为 JSON",
+        "noNotesToDownload": "没有可下载的笔记",
+        "import": "导入笔记",
+        "importReadError": "无法读取所选文件",
+        "importInvalid": "不是有效的笔记备份文件",
+        "importNone": "文件中未找到笔记",
+        "imported": "已导入 {count} 条笔记",
+        "importMerged": "备份已恢复：新增 {added} 条，更新 {updated} 条，未变 {skipped} 条",
+        "print": "打印笔记",
+        "printCurrent": "打印当前笔记",
+        "printAll": "打印全部笔记",
+        "printAllTitle": "全部笔记",
+        "printIncludeVerses": "包含经文文本",
+        "printButton": "打印",
+        "closeButton": "关闭",
+        "preparingPrint": "正在准备带经文的打印……",
+        "printError": "打印失败，请查看浏览器控制台",
+        "popupBlocked": "打印窗口被拦截。请允许本站弹出窗口后重试。",
+        "noNotesToPrint": "没有可打印的笔记",
+        "selectToPrint": "请选择要打印的笔记",
+        "verseLabel": "经文",
+        "modifiedLabel": "修改时间",
+        "searchPlaceholder": "搜索笔记...",
+        "filterLabel": "筛选笔记",
+        "filterAll": "全部笔记",
+        "filterLinked": "已链接到经文",
+        "filterStandalone": "独立笔记",
+        "filterReference": "当前经文",
+        "sortLabel": "排序笔记",
+        "sortModified": "最近编辑",
+        "sortCreated": "最近创建",
+        "sortTitle": "按标题",
+        "titlePlaceholder": "笔记标题...",
+        "editorPlaceholder": "开始撰写...",
+        "bold": "粗体 (Ctrl+B)",
+        "italic": "斜体 (Ctrl+I)",
+        "underline": "下划线 (Ctrl+U)",
+        "heading": "标题",
+        "paragraph": "段落",
+        "bulletList": "项目符号列表",
+        "numberedList": "编号列表",
+        "pin": "置顶笔记",
+        "unpin": "取消置顶",
+        "removeLink": "移除经文链接",
+        "delete": "删除",
+        "deleteNote": "删除笔记",
+        "deleteConfirm": "删除此笔记？",
+        "confirmOk": "确定",
+        "confirmCancel": "取消",
+        "untitled": "无标题",
+        "noNoteSelected": "未选择笔记",
+        "selectOrCreate": "从列表中选择一条笔记，或新建一条",
+        "storageWarning": "笔记存储在浏览器的本地存储中，清除浏览器数据时可能会丢失。请通过“下载 → 备份为 JSON”进行备份。",
+        "noNotesFound": "没有匹配的笔记",
+        "emptyListHint": "还没有笔记，新建一条即可开始",
+        "modified": "修改时间：{date}",
+        "saved": "已保存",
+        "unsavedChanges": "有未保存的更改",
+        "notSaved": "未保存，存储空间已满",
+        "saveFailed": "保存失败",
+        "quotaError": "由于浏览器存储空间已满，无法保存笔记。请导出 JSON 备份，然后删除一些笔记。",
+        "corruptError": "无法读取已保存的笔记。无法读取的数据备份已保留在浏览器存储中。",
+        "navigateToLink": "先导航到某段经文以进行链接",
+        "linkedTo": "已链接到 {reference}",
+        "linkRemoved": "已移除经文链接",
+        "detectedRefs": "引用：",
+        "goToReference": "转到 {reference}"
+      },
+      "audio": {
+        "label": "音频",
+        "options": "音频选项",
+        "synctext": "同步文本（测试版）",
+        "autoplay": "自动播放下一个",
+        "drama": "戏剧",
+        "nondrama": "非戏剧",
+        "noaudiotitle": "无可用音频",
+        "noaudiomessage": "此圣经版本没有音频录音。请选择其他支持音频的版本。"
+      },
+      "comparison": {
+        "label": "对照",
+        "invalidreference": "无效的圣经引用",
+        "nobibles": "此段经文没有可用的圣经版本。请选择其他段落或圣经版本。",
+        "onebible": "此段经文只有一个可用的圣经版本。请选择另一个包含此书卷的圣经版本。",
+        "loadfailed": "加载经文失败，请重试。"
+      },
+      "stats": {
+        "label": "统计",
+        "frequentwords": "常用词",
+        "loadtextfailed": "无法加载此文本。",
+        "loadchapterfailed": "无法加载此章节。"
+      }
+    },
+    "names": {
+      "en": "Chinese",
+      "fr": "chinois",
+      "es": "Chino",
+      "de": "Chinesisch",
+      "ru": "китайский",
+      "hi": "चीनी",
+      "ar": "الصينية",
+      "af": "Sjinees",
+      "bn": "চীনা",
+      "id": "Bahasa Tionghoa",
+      "sw": "Kichina",
+      "tr": "Çince",
+      "ja": "中国語",
+      "zh-TW": "中文",
+      "zh-CN": "中文"
+    }
+  }
+}

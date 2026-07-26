@@ -1,0 +1,84 @@
+.parallel-list {
+	display: inline-block;
+}
+
+
+.parallels-main {
+	padding: 15px;
+	overflow: auto;
+	background-color: var(--color-background);
+}
+
+.parallels-main table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.parallels-main td,
+.parallels-main th {
+	text-align: start;
+	font-weight: normal;
+	padding: 2px;
+	vertical-align: top;
+	border: 1px solid var(--color-border);
+}
+
+.parallels-main td {
+	border: 1px solid var(--color-border);
+	border-width: 0 1px;
+	padding: 8px;
+}
+
+.parallels-main .section-title {
+	padding: 20px 0;
+	font-weight: bold;
+	text-align: center;
+	background: var(--color-background-alt);
+}
+
+.parallels-main .parallel-title {
+	padding: 20px 0 6px;
+	font-style: italic;
+}
+
+.parallels-main .parallel-passage {
+	text-align: center;
+}
+
+.parallels-main td .v-1 {
+	display: inline;
+}
+
+.parallels-main .passage-notloaded {
+	cursor: pointer;
+	color: var(--color-primary);
+}
+
+.parallel-entry-header {
+	cursor: pointer;
+}
+
+.parallel-entry-header .parallel-title {
+	padding: 8px;
+}
+
+.parallel-entry-text-collapsed {
+	display: none;
+}
+
+.parallels-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 5px 0;
+}
+
+.parallels-buttons button {
+	padding: 8px 10px;
+	background-color: var(--color-primary);
+	color: var(--color-background);
+	border: none;
+	font: inherit;
+	font-size: 90%;
+	cursor: pointer;
+}

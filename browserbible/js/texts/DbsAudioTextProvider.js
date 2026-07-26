@@ -1,0 +1,158 @@
+/**
+ * Registers DBS audio Bibles as selectable entries in the AudioWindow version list.
+ * Entries have hasText:false (excluded from Bible text windows) and hasAudio:true
+ * (included in AudioWindow). Also annotates existing text entries that have DBS audio.
+ */
+
+import { getConfig } from '../core/config.js';
+import { getTextInfoData } from './TextLoader.js';
+import { OT_BOOKS, NT_BOOKS, BOOK_DATA } from '../bible/BibleData.js';
+import { dbsAudioMatches } from '../media/DbsAudioProvider.js';
+
+const providerName = 'dbs-audio';
+
+let indexCache = null;
+
+function dbsNumToCode(num) {
+  const n = parseInt(num, 10);
+  if (n >= 1 && n <= 39) return OT_BOOKS[n - 1];
+  if (n >= 40 && n <= 66) return NT_BOOKS[n - 40];
+  return null;
+}
+
+async function loadIndex() {
+  if (indexCache) return indexCache;
+
+  const config = getConfig();
+  const baseUrl = config.dbsAudioUrl || 'https://audio.dbs.org';
+
+  try {
+    const r = await fetch(`${baseUrl}/index.json`);
+    if (!r.ok) return [];
+    indexCache = await r.json();
+    return indexCache;
+  } catch {
+    return [];
+  }
+}
+
+function getTextManifest(callback) {
+  const config = getConfig();
+  if (!config.dbsAudioEnabled) {
+    callback(null);
+    return;
+  }
+
+  loadIndex().then(index => {
+    if (!index || !index.length) {
+      callback(null);
+      return;
+    }
+
+    const existingEntries = getTextInfoData() || [];
+
+    for (const entry of existingEntries) {
+      if (index.some(e => dbsAudioMatches(e, entry))) {
+        entry.hasAudio = true;
+      }
+    }
+
+    const newEntries = index
+      .filter(e => e.abbr && !existingEntries.some(t => dbsAudioMatches(e, t)))
+      .map(e => ({
+        type: 'bible',
+        id: e.abbr,
+        name: e.tt || e.abbr,
+        nameEnglish: e.tt || e.abbr,
+        title: e.tt || e.abbr,
+        abbr: e.abbr,
+        lang: e.iso || '',
+        langName: e.ln || '',
+        langNameEnglish: e.ln || '',
+        hasText: false,
+        hasAudio: true,
+        _dbsAudioId: e.id
+      }));
+
+    callback(newEntries);
+  });
+}
+
+function getTextInfo(textid, callback) {
+  const config = getConfig();
+  const baseUrl = config.dbsAudioUrl || 'https://audio.dbs.org';
+
+  loadIndex().then(async (index) => {
+    const entry = index.find(e => e.abbr === textid);
+    if (!entry) {
+      callback(null);
+      return;
+    }
+
+    try {
+      const r = await fetch(`${baseUrl}/${entry.id}/index.txt`);
+      if (!r.ok) {
+        callback(null);
+        return;
+      }
+
+      const text = await r.text();
+      const lines = text.trim().split('\n');
+
+      const divisions = [];
+      const sections = [];
+      const divisionNames = [];
+      const seenBooks = new Set();
+
+      for (const line of lines) {
+        const match = line.trim().match(/^(\d+)_(.+?)_(\d+)\.mp3$/);
+        if (!match) continue;
+
+        const [, dbsNum, , chapterStr] = match;
+        const code = dbsNumToCode(dbsNum);
+        if (!code) continue;
+
+        const chapter = parseInt(chapterStr, 10);
+
+        if (!seenBooks.has(code)) {
+          seenBooks.add(code);
+          divisions.push(code);
+          divisionNames.push(BOOK_DATA[code]?.name || code);
+        }
+
+        sections.push(`${code}${chapter}`);
+      }
+
+      callback({
+        type: 'bible',
+        id: textid,
+        name: entry.tt || textid,
+        nameEnglish: entry.tt || textid,
+        title: entry.tt || textid,
+        abbr: entry.abbr,
+        lang: entry.iso || '',
+        langName: entry.ln || '',
+        langNameEnglish: entry.ln || '',
+        hasText: false,
+        hasAudio: true,
+        divisions,
+        divisionNames,
+        sections,
+        _dbsAudioId: entry.id
+      });
+    } catch {
+      callback(null);
+    }
+  });
+}
+
+function loadSection(textid, sectionid, callback) {
+  callback(null);
+}
+
+export const DbsAudioTextProvider = {
+  name: providerName,
+  getTextManifest,
+  getTextInfo,
+  loadSection
+};

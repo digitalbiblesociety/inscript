@@ -1,0 +1,282 @@
+{
+  "translation": {
+    "name": "বাংলা",
+    "a11y": {
+      "mainMenu": "প্রধান মেনু",
+      "previousPassage": "পূর্ববর্তী অংশ",
+      "nextPassage": "পরবর্তী অংশ",
+      "closeWindow": "উইন্ডো বন্ধ করুন",
+      "linkWindow": "এই উইন্ডোটি ভাগ করা নেভিগেশনের সাথে যুক্ত করুন",
+      "unlinkWindow": "এই উইন্ডোটি ভাগ করা নেভিগেশন থেকে বিচ্ছিন্ন করুন",
+      "close": "বন্ধ করুন"
+    },
+    "menu": {
+      "labels": {
+        "about": "প্রায়",
+        "addwindow": "যোগ উইন্ডো",
+        "settings": "সেটিংস",
+        "feedback": "প্রতিক্রিয়া",
+        "options": "বিকল্প"
+      },
+      "feedback": {
+        "name": "নাম",
+        "email": "ইমেল",
+        "comments": "আপনার মন্তব্য",
+        "feature": "বৈশিষ্ট্য পরামর্শ",
+        "bug": "বাগ রিপোর্ট",
+        "other": "অন্যান্য",
+        "send": "পাঠান",
+        "thankyou": "আপনার প্রতিক্রিয়ার জন্য ধন্যবাদ"
+      },
+      "search": {
+        "placeholder": "অনুসন্ধান",
+        "suggestversion": "নতুন উইন্ডোতে <strong>{0}</strong> খুলুন",
+        "suggestreference": "{1}-এ <strong>{0}</strong>-এ যান",
+        "suggestsearch": "{1}-এ \"<strong>{0}</strong>\" অনুসন্ধান করুন"
+      },
+      "config": {
+        "font": "ফন্ট",
+        "settings": "সেটিংস",
+        "tools": "সরঞ্জাম",
+        "apocrypha": "অ্যাপোক্রিফা বইগুলি দেখান"
+      },
+      "reset": "রিসেট করুন",
+      "commandpalette": {
+        "placeholder": "একটি কমান্ড বা বাইবেল রেফারেন্স টাইপ করুন...",
+        "help_reference": "নেভিগেট করতে একটি বাইবেল রেফারেন্স টাইপ করুন",
+        "help_commands": "কমান্ড অনুসন্ধান করতে > টাইপ করুন",
+        "no_results": "কোনো ফলাফল পাওয়া যায়নি"
+      },
+      "themes": {
+        "default": "স্বাভাবিক",
+        "shiloh": "শীলো",
+        "jabbok": "যব্বোক",
+        "gethsemane": "গেৎশিমানী"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "হাইলাইট সংরক্ষণ করা যায়নি: ব্রাউজারের স্টোরেজ পূর্ণ বা অনুপলব্ধ।"
+      },
+      "visualfilters": {
+        "button": "ভিসুয়াল ফিল্টার",
+        "title": "ভিসুয়াল ফিল্টার",
+        "newfilter": "নতুন ফিল্টার",
+        "strongsnumber": "এর স্ট্রং #",
+        "morphology": "অঙ্গসংস্থানবিদ্যা",
+        "style": "শৈলী"
+      },
+      "eng2p": {
+        "button": "ইংরেজি 2nd ব্যক্তি বহুবচন",
+        "title": "ইংরেজি দ্বিতীয় ব্যক্তি বহুবচন",
+        "description": "আধুনিক ইংরেজি <em>তুমি একবচন</em> এবং <em>তোমরা বহুবচন</em> এর মধ্যে পার্থক্য করে না, তাই এই প্লাগইনটি হিব্রু এবং গ্রীক রূপগুলি উপস্থাপন করতে আঞ্চলিক ইংরেজি সমতুল্য ব্যবহার করে।"
+      },
+      "lemmapopup": {
+        "findalloccurrences": "সব ঘটনার খুঁজুন (আনুমানিক __count__)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "বধির বাইবেল"
+      },
+      "videobible": {
+        "label": "ভিডিও বাইবেল"
+      },
+      "bible": {
+        "label": "বাইবেল",
+        "recentlyused": "সম্প্রতি ব্যবহৃত",
+        "filter": "ফিল্টার ...",
+        "ot": "ওল্ড টেস্টামেন্ট",
+        "nt": "নববিধান",
+        "dc": "Deuterocanonical বই",
+        "more": "অধিক",
+        "less": "কম",
+        "default": "বৈশিষ্ট্যযুক্ত",
+        "languages": "ভাষা",
+        "countries": "দেশ সমূহ",
+        "lemma": "গ্রীক/হিব্রু",
+        "audio": "অডিও উপলব্ধ",
+        "prevversion": "পূর্ববর্তী সংস্করণ",
+        "nextversion": "পরবর্তী সংস্করণ",
+        "gotopassage": "অংশে যান",
+        "reference": "রেফারেন্স",
+        "version": "সংস্করণ",
+        "versioninfo": "সংস্করণ তথ্য",
+        "versioninfoname": "{0} তথ্য",
+        "loadinginfo": "তথ্য লোড হচ্ছে...",
+        "noinfo": "এই সংস্করণের জন্য কোনো অতিরিক্ত তথ্য উপলব্ধ নেই।"
+      },
+      "commentary": {
+        "label": "ভাষ্য"
+      },
+      "map": {
+        "label": "মানচিত্র",
+        "placeholder": "অনুসন্ধান ...",
+        "versenotloaded": "টেক্সট উপলব্ধ নেই",
+        "openinbible": "বাইবেলে খুলুন",
+        "loading": "লোড হচ্ছে…",
+        "loadfailed": "মানচিত্র লোড করা যায়নি",
+        "moreresults": "আরও {count}টি মিল",
+        "placesin": "{reference}-এর স্থানসমূহ",
+        "journeystops": "{count}টি থামার স্থান",
+        "journeynames": {
+          "abraham": "অব্রাহামের যাত্রা",
+          "jacob": "যাকোবের পলায়ন ও প্রত্যাবর্তন",
+          "exodus": "মিশর থেকে নির্গমন",
+          "ark": "নিয়ম-সিন্দুকের ভ্রমণ",
+          "elijah": "এলিয়ের যাত্রা",
+          "exile": "নির্বাসন ও প্রত্যাবর্তন",
+          "nativity": "যীশুর জন্ম ও মিশরে পলায়ন",
+          "paul1": "পৌলের প্রথম যাত্রা",
+          "paul2": "পৌলের দ্বিতীয় যাত্রা",
+          "paul3": "পৌলের তৃতীয় যাত্রা",
+          "rome": "পৌলের রোম যাত্রা"
+        }
+      },
+      "search": {
+        "label": "অনুসন্ধান",
+        "placeholder": "অনুসন্ধান",
+        "button": "অনুসন্ধান",
+        "results": "ফলাফল",
+        "verses": "আয়াত",
+        "options": "অনুসন্ধান বিকল্প",
+        "searchfailed": "অনুসন্ধান ব্যর্থ হয়েছে। আপনার সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।",
+        "noresults": "কোনো ফলাফল নেই",
+        "loadingprogress": "লোড হচ্ছে: {progress} :: {label}"
+      },
+      "parallel": {
+        "label": "সমান্তরাল",
+        "loading": "লোড হচ্ছে ...",
+        "showall": "সমস্ত দেখান",
+        "hideall": "সমস্ত লুকান",
+        "loadlistfailed": "সমান্তরাল তালিকা লোড করা যায়নি",
+        "loadtextfailed": "বাইবেল টেক্সট লোড করা যায়নি",
+        "loadpassagesfailed": "সমান্তরাল অংশগুলি লোড করা যায়নি"
+      },
+      "media": {
+        "label": "মিডিয়া",
+        "videolanguage": "ভিডিওর ভাষা",
+        "videolanguageauto": "বাইবেল পাঠের ভাষা অনুযায়ী",
+        "videolanguagefilter": "ভাষা খুঁজুন",
+        "videolanguagenone": "মিলে যাওয়া কোনো ভাষা নেই"
+      },
+      "notes": {
+        "label": "নোট",
+        "toggleSidebar": "সাইডবার টগল করুন",
+        "newNote": "নতুন নোট",
+        "linkToVerse": "বর্তমান আয়াতের সাথে যুক্ত করুন",
+        "download": "নোট ডাউনলোড করুন",
+        "downloadMarkdown": "মার্কডাউন হিসাবে ডাউনলোড করুন",
+        "downloadText": "সাধারণ টেক্সট হিসাবে ডাউনলোড করুন",
+        "downloadRtf": "RTF হিসাবে ডাউনলোড করুন",
+        "downloadJson": "JSON হিসাবে ব্যাকআপ করুন",
+        "noNotesToDownload": "ডাউনলোড করার জন্য কোনো নোট নেই",
+        "import": "নোট আমদানি করুন",
+        "importReadError": "নির্বাচিত ফাইলটি পড়া যায়নি",
+        "importInvalid": "এটি একটি বৈধ নোট ব্যাকআপ ফাইল নয়",
+        "importNone": "ফাইলে কোনো নোট পাওয়া যায়নি",
+        "imported": "{count}টি নোট আমদানি করা হয়েছে",
+        "importMerged": "ব্যাকআপ পুনরুদ্ধার করা হয়েছে: {added}টি যোগ, {updated}টি আপডেট, {skipped}টি অপরিবর্তিত",
+        "print": "নোট মুদ্রণ করুন",
+        "printCurrent": "বর্তমান নোট মুদ্রণ করুন",
+        "printAll": "সমস্ত নোট মুদ্রণ করুন",
+        "printAllTitle": "সমস্ত নোট",
+        "printIncludeVerses": "আয়াতের টেক্সট অন্তর্ভুক্ত করুন",
+        "printButton": "মুদ্রণ করুন",
+        "closeButton": "বন্ধ করুন",
+        "preparingPrint": "আয়াতসহ মুদ্রণ প্রস্তুত করা হচ্ছে...",
+        "printError": "মুদ্রণ ব্যর্থ হয়েছে: ব্রাউজার কনসোল দেখুন",
+        "popupBlocked": "মুদ্রণ উইন্ডোটি ব্লক করা হয়েছে। এই সাইটের জন্য পপআপ অনুমতি দিন এবং আবার চেষ্টা করুন।",
+        "noNotesToPrint": "মুদ্রণ করার জন্য কোনো নোট নেই",
+        "selectToPrint": "মুদ্রণ করার জন্য একটি নোট নির্বাচন করুন",
+        "verseLabel": "আয়াত",
+        "modifiedLabel": "পরিবর্তিত",
+        "searchPlaceholder": "নোট অনুসন্ধান করুন...",
+        "filterLabel": "নোট ফিল্টার করুন",
+        "filterAll": "সমস্ত নোট",
+        "filterLinked": "আয়াতের সাথে যুক্ত",
+        "filterStandalone": "স্বতন্ত্র",
+        "filterReference": "বর্তমান আয়াত",
+        "sortLabel": "নোট সাজান",
+        "sortModified": "সম্প্রতি সম্পাদিত",
+        "sortCreated": "সম্প্রতি তৈরি",
+        "sortTitle": "শিরোনাম অনুসারে",
+        "titlePlaceholder": "নোটের শিরোনাম...",
+        "editorPlaceholder": "লেখা শুরু করুন...",
+        "bold": "গাঢ় (Ctrl+B)",
+        "italic": "তির্যক (Ctrl+I)",
+        "underline": "নিম্নরেখা (Ctrl+U)",
+        "heading": "শিরোনাম",
+        "paragraph": "অনুচ্ছেদ",
+        "bulletList": "বুলেট তালিকা",
+        "numberedList": "সংখ্যাযুক্ত তালিকা",
+        "pin": "নোট পিন করুন",
+        "unpin": "নোট আনপিন করুন",
+        "removeLink": "আয়াতের লিঙ্ক সরান",
+        "delete": "মুছুন",
+        "deleteNote": "নোট মুছুন",
+        "deleteConfirm": "এই নোটটি মুছবেন?",
+        "confirmOk": "ঠিক আছে",
+        "confirmCancel": "বাতিল",
+        "untitled": "শিরোনামহীন",
+        "noNoteSelected": "কোনো নোট নির্বাচিত হয়নি",
+        "selectOrCreate": "তালিকা থেকে একটি নোট নির্বাচন করুন অথবা একটি নতুন তৈরি করুন",
+        "storageWarning": "নোটগুলি আপনার ব্রাউজারের লোকাল স্টোরেজে সংরক্ষিত থাকে এবং আপনি ব্রাউজার ডেটা মুছে ফেললে হারিয়ে যেতে পারে। ডাউনলোড → JSON হিসাবে ব্যাকআপ ব্যবহার করে সেগুলি ব্যাকআপ করুন।",
+        "noNotesFound": "কোনো মিল থাকা নোট নেই",
+        "emptyListHint": "এখনও কোনো নোট নেই; শুরু করতে একটি তৈরি করুন",
+        "modified": "পরিবর্তিত: {date}",
+        "saved": "সংরক্ষিত",
+        "unsavedChanges": "অসংরক্ষিত পরিবর্তন",
+        "notSaved": "সংরক্ষিত হয়নি; স্টোরেজ পূর্ণ",
+        "saveFailed": "সংরক্ষণ ব্যর্থ হয়েছে",
+        "quotaError": "ব্রাউজার স্টোরেজ পূর্ণ থাকায় নোট সংরক্ষণ করা যাচ্ছে না। একটি JSON ব্যাকআপ রপ্তানি করুন, তারপর কিছু নোট মুছুন।",
+        "corruptError": "সংরক্ষিত নোটগুলি পড়া যায়নি। অপঠনযোগ্য ডেটার একটি ব্যাকআপ ব্রাউজার স্টোরেজে রাখা হয়েছে।",
+        "navigateToLink": "যুক্ত করতে একটি আয়াতে নেভিগেট করুন",
+        "linkedTo": "{reference}-এর সাথে যুক্ত",
+        "linkRemoved": "আয়াতের লিঙ্ক সরানো হয়েছে",
+        "detectedRefs": "রেফারেন্স:",
+        "goToReference": "{reference}-এ যান"
+      },
+      "audio": {
+        "label": "অডিও",
+        "options": "অডিও বিকল্প",
+        "synctext": "সিঙ্ক টেক্সট (বিটা)",
+        "autoplay": "অটোপ্লে পরবর্তী",
+        "drama": "নাটক",
+        "nondrama": "অ নাটক",
+        "noaudiotitle": "কোনো অডিও উপলব্ধ নেই",
+        "noaudiomessage": "এই বাইবেল সংস্করণে কোনো অডিও রেকর্ডিং নেই। অডিও সমর্থন সহ একটি ভিন্ন সংস্করণ নির্বাচন করুন।"
+      },
+      "comparison": {
+        "label": "তুলনা",
+        "invalidreference": "অবৈধ বাইবেল রেফারেন্স",
+        "nobibles": "এই অংশের জন্য কোনো বাইবেল উপলব্ধ নেই। একটি ভিন্ন অংশ বা বাইবেল সংস্করণ নির্বাচন করুন।",
+        "onebible": "এই অংশের জন্য শুধুমাত্র একটি বাইবেল সংস্করণ উপলব্ধ। এই বইটি রয়েছে এমন আরেকটি বাইবেল সংস্করণ নির্বাচন করুন।",
+        "loadfailed": "অংশ লোড করা যায়নি। আবার চেষ্টা করুন।"
+      },
+      "stats": {
+        "label": "পরিসংখ্যান",
+        "frequentwords": "ঘন ঘন শব্দ",
+        "loadtextfailed": "এই টেক্সট লোড করা যায়নি।",
+        "loadchapterfailed": "এই অধ্যায় লোড করা যায়নি।"
+      }
+    },
+    "names": {
+      "en": "Bengali",
+      "fr": "bengali",
+      "es": "bengalí",
+      "de": "Bengalisch",
+      "ru": "бенгальский",
+      "hi": "बंगाली",
+      "ar": "البنغالية",
+      "af": "Bengaals",
+      "bn": "বাংলা",
+      "id": "Bahasa Bengali",
+      "sw": "Kibengali",
+      "tr": "Bengalce",
+      "ja": "ベンガル語",
+      "zh-TW": "孟加拉語",
+      "zh-CN": "孟加拉语"
+    }
+  }
+}

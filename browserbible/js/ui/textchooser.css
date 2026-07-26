@@ -1,0 +1,299 @@
+.text-chooser {
+	position: absolute;
+	z-index: var(--z-popover);
+	background: var(--color-background);
+	font-family: var(--font-family-sans);
+	width: 320px;
+	height: 100%;
+	max-height: min(600px, 80dvh);
+	font-size: 14px;
+	box-shadow: var(--shadow-popup);
+}
+
+.text-chooser[popover] {
+	margin: 0;
+	padding: 0;
+	border: none;
+	inset: unset;
+}
+
+.text-chooser:popover-open {
+	display: flex;
+	flex-direction: column;
+}
+
+.text-chooser::backdrop {
+	background: transparent;
+}
+
+.text-chooser .text-chooser-header {
+	padding: 8px;
+	color: var(--color-background);
+	position: relative;
+	background: var(--color-background-active);
+	overflow: hidden;
+}
+
+.text-chooser .text-chooser-header::before {
+	content: '';
+	position: absolute;
+	left: 18px;
+	top: 50%;
+	translate: 0 -50%;
+	width: 18px;
+	height: 18px;
+	background-color: var(--color-text-muted);
+	mask-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3ccircle cx='11' cy='11' r='8'%3e%3c/circle%3e%3cpath d='m21 21-4.35-4.35'%3e%3c/path%3e%3c/svg%3e");
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	z-index: var(--z-base);
+	pointer-events: none;
+}
+.text-chooser .text-chooser-filter-text {
+	background-color: var(--color-background);
+	border: solid 2px var(--color-border);
+	border-radius: 6px;
+	color: var(--color-text);
+	padding: 6px 12px 6px 36px;
+	font-size: 14px;
+	line-height: 1.5;
+	height: 36px;
+	width: 304px;
+	box-sizing: border-box;
+	outline: none;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.text-chooser .text-chooser-filter-text:focus-visible {
+	outline: none;
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 3px var(--color-background-hover);
+}
+
+.text-chooser .text-chooser-filter-text::placeholder {
+	color: var(--color-border);
+}
+
+.text-chooser .text-chooser-more-toggle {
+	margin: 0 0 0 10px;
+	font-size: 11px;
+	color: var(--color-background);
+	text-align: center;
+	cursor: pointer;
+	padding: 4px 4px 4px 18px;
+	width: 70px;
+	display: none;
+	position: relative;
+	background-color: var(--color-primary);
+}
+
+.text-chooser .text-chooser-main {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border: solid 1px var(--color-border);
+	contain: strict;
+	will-change: scroll-position;
+	scrollbar-gutter: stable;
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-border) var(--color-background-alt);
+}
+
+.text-chooser .text-chooser-main::-webkit-scrollbar {
+	width: 12px;
+}
+.text-chooser .text-chooser-main::-webkit-scrollbar-track {
+	background: var(--color-background-alt);
+}
+.text-chooser .text-chooser-main::-webkit-scrollbar-thumb {
+	background: var(--color-border);
+	border-radius: 6px;
+	border: 3px solid var(--color-background-alt);
+}
+.text-chooser .text-chooser-main::-webkit-scrollbar-thumb:hover {
+	background: var(--color-text-muted);
+}
+
+.text-chooser .text-chooser-scroll-content {
+	position: relative;
+	width: 100%;
+}
+
+.text-chooser .text-chooser-close {
+	top: 8px;
+	right: 8px;
+	background-color: none;
+	border: solid 1px transparent;
+}
+
+.text-chooser .text-chooser-close:hover {
+	background-color: none;
+	border: solid 1px var(--color-border);
+}
+
+.text-chooser table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.text-chooser-row-header {
+	background: var(--color-background-alt);
+	border-bottom: solid 1px var(--color-border);
+	color: var(--color-text);
+	font-weight: bold;
+	height: 32px;
+	line-height: 32px;
+	padding: 0 10px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+}
+
+.text-chooser-section-header {
+	background: var(--color-primary);
+	color: var(--color-background);
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.text-chooser-row-header .text-chooser-lang-code {
+	margin-inline-start: auto;
+	font-weight: normal;
+	font-size: 11px;
+	text-transform: uppercase;
+	opacity: .6;
+}
+
+.text-chooser-row-header td {
+	padding-left: 10px;
+}
+
+.text-chooser-row {
+	height: 32px;
+	line-height: 32px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	padding: 0 8px;
+	box-sizing: border-box;
+	contain: layout style;
+}
+
+.text-chooser-row.filtered {
+	background: var(--color-background-hover);
+}
+
+.text-chooser-row.filtered-hidden,
+.text-chooser-row-header.filtered-hidden {
+	display: none;
+}
+
+.text-chooser-row:hover {
+	background: var(--color-background-hover);
+}
+
+/* Subtle filter-match highlight (overrides the UA's opaque yellow <mark>) */
+.text-chooser mark.text-chooser-match {
+	background: color-mix(in srgb, var(--color-highlight) 55%, transparent);
+	color: inherit;
+	border-radius: 2px;
+}
+
+.text-chooser-row.selected {
+	color: var(--color-background);
+}
+
+.text-chooser-row .text-chooser-abbr {
+	color: var(--color-text-muted);
+	font-weight: bold;
+	text-align: right;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 50px;
+	padding-right: 10px;
+	flex-shrink: 0;
+}
+
+.text-chooser-row .text-chooser-image img {
+	height: 20px;
+	width: 40px;
+	display: block;
+	margin: 0 0 0 10px;
+}
+
+.text-chooser-row .text-chooser-name {
+	color: var(--color-primary);
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-right: 8px;
+}
+
+.text-chooser-row .text-chooser-audio,
+.text-chooser-row .text-chooser-lemma,
+.text-chooser-row .text-chooser-abs,
+.text-chooser-row .text-chooser-fcbh,
+.text-chooser-row .text-chooser-provider-apibible,
+.text-chooser-row .text-chooser-provider-biblebrain {
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+	margin-left: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.text-chooser-row .text-chooser-audio,
+.text-chooser-row .text-chooser-lemma,
+.text-chooser-row .text-chooser-provider-fcbh,
+.text-chooser-row .text-chooser-provider-apibible,
+.text-chooser-row .text-chooser-provider-biblebrain {
+	color: var(--color-text-muted);
+}
+.text-chooser-row .text-chooser-audio svg,
+.text-chooser-row .text-chooser-lemma svg,
+.text-chooser-row .text-chooser-provider-fcbh svg,
+.text-chooser-row .text-chooser-provider-apibible svg {
+	width: 16px;
+	height: 16px;
+}
+.text-chooser-row .text-chooser-provider-biblebrain svg {
+	width: 16px;
+	height: auto;
+	fill: currentColor;
+}
+
+table.collapsible .text-chooser-row-header {
+	cursor: pointer;
+}
+table.collapsible .text-chooser-row-header:hover {
+	background-color: var(--color-background-active);
+}
+table.collapsible .text-chooser-row-header.collapsed td::after {
+	width: 6px;
+	height: 10px;
+	mask-image: url(../../css/images/arrow-right.svg);
+}
+
+
+table.collapsible .text-chooser-row.collapsed {
+	display: none;
+}
+
+.text-chooser-row-divider {
+	background: var(--color-border);
+	color: var(--color-background);
+}
+.text-chooser-row-divider span.name{
+	padding: 3px 10px;
+}
+
+table.collapsible .text-chooser-row-divider.collapsed {
+	display: none;
+}
+
+

@@ -1,0 +1,110 @@
+
+.config-toggles {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	padding: 0.5rem 0;
+}
+
+.config-toggle {
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0.4rem;
+	border: 1.5px solid var(--color-border);
+	background: var(--color-background);
+	color: var(--color-text-muted);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.config-toggle input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.config-toggle label {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	color: inherit;
+}
+
+.config-toggle label svg {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.config-toggle:hover {
+	background: var(--color-background-hover);
+	border-color: var(--color-primary);
+}
+
+.toggle-on {
+	background: var(--color-primary);
+	border-color: var(--color-primary);
+	color: var(--color-background);
+}
+
+.toggle-on:hover {
+	background: var(--color-primary);
+	border-color: var(--color-primary);
+}
+
+.toggle-verses-off .verse-num,
+.toggle-verses-off .v-num {
+	display: none;
+}
+
+.toggle-chapters-off .c,
+.toggle-chapters-off .chapter-num {
+	display: none;
+}
+
+.toggle-chapters-off .v-1 {
+	display: inline;
+}
+
+.toggle-chapters-off.toggle-verses-off .v-1 {
+	display: none;
+}
+
+.PS .toggle-chapters-off .c,
+.PS .toggle-chapters-off .chapter-num {
+	display: block;
+}
+
+.toggle-justify-on .section {
+	text-align: justify;
+	text-align-last: start;
+	hyphens: auto;
+}
+
+.toggle-titles-off .is1,
+.toggle-titles-off .is2,
+.toggle-titles-off .s {
+	display: none;
+}
+
+.toggle-wordsofchrist-off .woj,
+.toggle-wordsofchrist-off .wj,
+.toggle-wordsofchrist-off .woc {
+	color: inherit;
+}
+
+.toggle-notes-off .note,
+.toggle-notes-off .cf {
+	display: none;
+}
+.toggle-media-off .image-icon,
+.toggle-media-off .map-icon,
+.toggle-media-off .video-icon {
+	display: none;
+}

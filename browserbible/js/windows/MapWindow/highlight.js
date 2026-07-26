@@ -1,0 +1,154 @@
+/**
+ * Location Highlighting
+ * Highlights location names in Bible window text and corresponding map markers.
+ * Matches are wrapped via a text-node walk (never innerHTML string replacement)
+ * so element attributes and existing markup can't be corrupted.
+ */
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Wrap every regex match inside root's text nodes in a .linked-location span.
+ * The matched text is kept verbatim (preserves source casing); the span carries
+ * the canonical location name for two-way linking.
+ * `nameByMatch` maps a lowercased match to its canonical location name.
+ */
+function wrapMatches(root, regex, nameByMatch) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node.nodeValue?.trim()) return NodeFilter.FILTER_REJECT;
+      if (node.parentElement?.closest('.linked-location')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+  for (const textNode of textNodes) {
+    const text = textNode.nodeValue;
+    regex.lastIndex = 0;
+
+    let match;
+    let lastIndex = 0;
+    let frag = null;
+    while ((match = regex.exec(text)) !== null) {
+      if (!frag) frag = document.createDocumentFragment();
+      if (match.index > lastIndex) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+      }
+      const span = document.createElement('span');
+      span.className = 'linked-location';
+      span.setAttribute('data-location-name', nameByMatch.get(match[0].toLowerCase()) ?? match[0]);
+      span.textContent = match[0];
+      frag.appendChild(span);
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (frag) {
+      if (lastIndex < text.length) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      }
+      textNode.parentNode.replaceChild(frag, textNode);
+    }
+  }
+}
+
+/**
+ * A `sectionid` limits the text walk to that section; wrapping is idempotent,
+ * so sections walked earlier keep their spans. Marker classes are always
+ * synced against every rendered verse.
+ */
+export function highlightLocations(markersGroup, locationDataByVerse, sectionid = null) {
+  let verses = null;
+  if (sectionid) {
+    const scope = `.BibleWindow .section[data-id="${CSS.escape(sectionid)}"]`;
+    verses = document.querySelectorAll(`${scope} .verse, ${scope} .v`);
+    if (!verses.length) verses = null; // section not found; walk everything
+  }
+  if (!verses) verses = document.querySelectorAll('.BibleWindow .verse, .BibleWindow .v');
+
+  verses.forEach((verse) => {
+    const verseid = verse.getAttribute('data-id');
+    const verseLocations = locationDataByVerse?.[verseid];
+    if (!verseLocations) return;
+
+    // Map lowercased display form → canonical name. A trailing "?" in the data
+    // marks an uncertain identification and never appears in the Bible text,
+    // so it is stripped for matching but kept in the canonical name.
+    const nameByMatch = new Map();
+    for (const location of verseLocations) {
+      const matchName = location.name.replace(/\?+$/, '');
+      if (matchName && !nameByMatch.has(matchName.toLowerCase())) {
+        nameByMatch.set(matchName.toLowerCase(), location.name);
+      }
+    }
+    if (nameByMatch.size === 0) return;
+
+    // Longest-first alternation so "Abel-beth-maacah" wins over "Abel".
+    // Right boundary is (?!\w), not \b — names can end in a non-word character.
+    const patterns = [...nameByMatch.keys()]
+      .sort((a, b) => b.length - a.length)
+      .map(escapeRegExp);
+    const regex = new RegExp(`\\b(?:${patterns.join('|')})(?!\\w)`, 'gi');
+
+    wrapMatches(verse, regex, nameByMatch);
+  });
+
+  if (markersGroup) {
+    // Markers reflect every rendered verse, not just the walked section.
+    // Syncing both ways clears stale highlights after a navigation jump.
+    const highlightedNames = new Set();
+    document.querySelectorAll('.BibleWindow .verse, .BibleWindow .v').forEach((verse) => {
+      const verseLocations = locationDataByVerse?.[verse.getAttribute('data-id')];
+      if (!verseLocations) return;
+      for (const location of verseLocations) highlightedNames.add(location.name);
+    });
+
+    markersGroup.querySelectorAll('.map-marker').forEach((marker) => {
+      if (!marker.locationData) return;
+      if (highlightedNames.has(marker.locationData.name)) {
+        marker.classList.add('highlighted');
+        marker.classList.remove('filtered-out');
+      } else {
+        marker.classList.remove('highlighted');
+      }
+    });
+  }
+}
+
+/**
+ * Remove the .linked-location spans from Bible window text. Document-wide:
+ * the spans are shared by every live map panel, so only call this when the
+ * last panel that highlighted releases them (see MapPanel.removeHighlights).
+ */
+export function removeTextHighlights() {
+  const parents = new Set();
+  document.querySelectorAll('.BibleWindow .linked-location').forEach((el) => {
+    if (el.tagName.toLowerCase() === 'l') {
+      el.className = el.className.replace(/linked-location/gi, '');
+    } else if (el.parentNode) {
+      parents.add(el.parentNode);
+      el.parentNode.insertBefore(document.createTextNode(el.textContent), el);
+      el.parentNode.removeChild(el);
+    }
+  });
+  // Merge the text nodes back together so repeated highlight cycles don't fragment the DOM
+  parents.forEach(p => p.normalize());
+}
+
+/** Remove the highlighted class from one panel own markers. */
+export function removeMarkerHighlights(markersGroup) {
+  if (markersGroup) {
+    markersGroup.querySelectorAll('.map-marker.highlighted').forEach((marker) => {
+      marker.classList.remove('highlighted');
+    });
+  }
+}
+
+export function removeHighlights(markersGroup) {
+  removeTextHighlights();
+  removeMarkerHighlights(markersGroup);
+}

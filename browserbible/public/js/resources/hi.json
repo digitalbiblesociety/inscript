@@ -1,0 +1,282 @@
+{
+  "translation": {
+    "name": "हिन्दी",
+    "a11y": {
+      "mainMenu": "मुख्य मेन्यू",
+      "previousPassage": "पिछला अनुच्छेद",
+      "nextPassage": "अगला अनुच्छेद",
+      "closeWindow": "विंडो बंद करें",
+      "linkWindow": "इस विंडो को साझा नेविगेशन से जोड़ें",
+      "unlinkWindow": "इस विंडो को साझा नेविगेशन से अलग करें",
+      "close": "बंद करें"
+    },
+    "menu": {
+      "labels": {
+        "about": "तकरीबन",
+        "addwindow": "खिड़की जोड़ें",
+        "settings": "सेटिंग्स",
+        "feedback": "प्रतिक्रिया",
+        "options": "विकल्प"
+      },
+      "feedback": {
+        "name": "नाम",
+        "email": "ईमेल",
+        "comments": "आपकी टिप्पणी",
+        "feature": "सुविधा सुझाव",
+        "bug": "बग रिपोर्ट",
+        "other": "अन्य",
+        "send": "भेजो",
+        "thankyou": "आपकी प्रतिक्रिया के लिए धन्यवाद"
+      },
+      "search": {
+        "placeholder": "खोज",
+        "suggestversion": "नई विंडो में <strong>{0}</strong> खोलें",
+        "suggestreference": "{1} में <strong>{0}</strong> पर जाएं",
+        "suggestsearch": "{1} में \"<strong>{0}</strong>\" खोजें"
+      },
+      "config": {
+        "font": "फ़ॉन्ट",
+        "settings": "सेटिंग",
+        "tools": "उपकरण",
+        "apocrypha": "अपोक्रिफ़ल पुस्तकें दिखाएँ"
+      },
+      "reset": "रीसेट",
+      "commandpalette": {
+        "placeholder": "कोई कमांड या बाइबल संदर्भ टाइप करें...",
+        "help_reference": "नेविगेट करने के लिए बाइबल संदर्भ टाइप करें",
+        "help_commands": "कमांड खोजने के लिए > टाइप करें",
+        "no_results": "कोई परिणाम नहीं मिला"
+      },
+      "themes": {
+        "default": "साधारण",
+        "shiloh": "शीलो",
+        "jabbok": "यब्बोक",
+        "gethsemane": "गतसमनी"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "हाइलाइट सहेजा नहीं जा सका: ब्राउज़र संग्रहण भरा है या अनुपलब्ध है।"
+      },
+      "visualfilters": {
+        "button": "विजुअल फ़िल्टर",
+        "title": "विजुअल फ़िल्टर",
+        "newfilter": "नया फ़िल्टर",
+        "strongsnumber": "मजबूत #",
+        "morphology": "आकृति विज्ञान",
+        "style": "शैली"
+      },
+      "eng2p": {
+        "button": "अंग्रेजी 2 व्यक्ति बहुवचन",
+        "title": "अंग्रेजी 2 व्यक्ति बहुवचन",
+        "description": "आधुनिक अंग्रेजी <em>एकवचन तुम</em> और <em>बहुवचन तुम</em> में अंतर नहीं करती, इसलिए यह प्लगइन हिब्रू और ग्रीक रूपों का प्रतिनिधित्व करने के लिए क्षेत्रीय अंग्रेजी समकक्षों का उपयोग करता है।"
+      },
+      "lemmapopup": {
+        "findalloccurrences": "सभी घटनाओं का पता (लगभग __count__)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "बधिर बाइबिल"
+      },
+      "videobible": {
+        "label": "वीडियो बाइबिल"
+      },
+      "bible": {
+        "label": "बाइबल",
+        "recentlyused": "हाल ही में प्रयुक्त",
+        "filter": "तक...",
+        "ot": "ओल्ड टेस्टामेंट",
+        "nt": "न्यू टेस्टामेंट",
+        "dc": "द्वितीयप्रामाणिक पुस्तकें",
+        "more": "अधिक",
+        "less": "कम",
+        "default": "विशेष",
+        "languages": "भाषाएँ",
+        "countries": "देश",
+        "lemma": "ग्रीक/हिब्रू",
+        "audio": "ऑडियो उपलब्ध",
+        "prevversion": "पिछला संस्करण",
+        "nextversion": "अगला संस्करण",
+        "gotopassage": "अनुच्छेद पर जाएं",
+        "reference": "संदर्भ",
+        "version": "संस्करण",
+        "versioninfo": "संस्करण जानकारी",
+        "versioninfoname": "{0} जानकारी",
+        "loadinginfo": "जानकारी लोड हो रही है...",
+        "noinfo": "इस संस्करण के लिए कोई अतिरिक्त जानकारी उपलब्ध नहीं है।"
+      },
+      "commentary": {
+        "label": "टीका"
+      },
+      "map": {
+        "label": "मानचित्र",
+        "placeholder": "खोज...",
+        "versenotloaded": "पाठ उपलब्ध नहीं है",
+        "openinbible": "बाइबल में खोलें",
+        "loading": "लोड हो रहा है…",
+        "loadfailed": "मानचित्र लोड करने में विफल",
+        "moreresults": "{count} और मिलान",
+        "placesin": "{reference} में स्थान",
+        "journeystops": "{count} पड़ाव",
+        "journeynames": {
+          "abraham": "अब्राहम की यात्रा",
+          "jacob": "याकूब का पलायन और वापसी",
+          "exodus": "निर्गमन",
+          "ark": "संदूक की यात्राएँ",
+          "elijah": "एलिय्याह की यात्राएँ",
+          "exile": "निर्वासन और वापसी",
+          "nativity": "यीशु का जन्म और मिस्र को पलायन",
+          "paul1": "पौलुस की पहली यात्रा",
+          "paul2": "पौलुस की दूसरी यात्रा",
+          "paul3": "पौलुस की तीसरी यात्रा",
+          "rome": "पौलुस की रोम यात्रा"
+        }
+      },
+      "search": {
+        "label": "खोज",
+        "placeholder": "खोज",
+        "button": "खोज",
+        "results": "परिणाम",
+        "verses": "छंद",
+        "options": "खोज विकल्प",
+        "searchfailed": "खोज विफल रही। कृपया अपना कनेक्शन जांचें और पुनः प्रयास करें।",
+        "noresults": "कोई परिणाम नहीं",
+        "loadingprogress": "लोड हो रहा है: {progress} :: {label}"
+      },
+      "parallel": {
+        "label": "समानताएं",
+        "loading": "लोडिंग ...",
+        "showall": "सब दिखाएं",
+        "hideall": "सभी छुपाएं",
+        "loadlistfailed": "समानताओं की सूची लोड करने में विफल",
+        "loadtextfailed": "बाइबल पाठ लोड करने में विफल",
+        "loadpassagesfailed": "समानांतर अनुच्छेद लोड करने में विफल"
+      },
+      "media": {
+        "label": "मीडिया",
+        "videolanguage": "वीडियो की भाषा",
+        "videolanguageauto": "बाइबल पाठ के अनुसार",
+        "videolanguagefilter": "भाषा खोजें",
+        "videolanguagenone": "कोई मेल खाती भाषा नहीं"
+      },
+      "notes": {
+        "label": "नोट्स",
+        "toggleSidebar": "साइडबार टॉगल करें",
+        "newNote": "नया नोट",
+        "linkToVerse": "वर्तमान पद से जोड़ें",
+        "download": "नोट्स डाउनलोड करें",
+        "downloadMarkdown": "Markdown के रूप में डाउनलोड करें",
+        "downloadText": "सादे पाठ के रूप में डाउनलोड करें",
+        "downloadRtf": "RTF के रूप में डाउनलोड करें",
+        "downloadJson": "JSON के रूप में बैकअप लें",
+        "noNotesToDownload": "डाउनलोड करने के लिए कोई नोट नहीं",
+        "import": "नोट्स आयात करें",
+        "importReadError": "चयनित फ़ाइल पढ़ी नहीं जा सकी",
+        "importInvalid": "यह मान्य नोट्स बैकअप फ़ाइल नहीं है",
+        "importNone": "फ़ाइल में कोई नोट नहीं मिला",
+        "imported": "{count} नोट्स आयात किए गए",
+        "importMerged": "बैकअप पुनर्स्थापित: {added} जोड़े गए, {updated} अद्यतन किए गए, {skipped} अपरिवर्तित",
+        "print": "नोट्स प्रिंट करें",
+        "printCurrent": "वर्तमान नोट प्रिंट करें",
+        "printAll": "सभी नोट्स प्रिंट करें",
+        "printAllTitle": "सभी नोट्स",
+        "printIncludeVerses": "पद का पाठ शामिल करें",
+        "printButton": "प्रिंट करें",
+        "closeButton": "बंद करें",
+        "preparingPrint": "पदों के साथ प्रिंट तैयार हो रहा है...",
+        "printError": "प्रिंट विफल रहा, ब्राउज़र कंसोल देखें",
+        "popupBlocked": "प्रिंट विंडो अवरुद्ध कर दी गई। इस साइट के लिए पॉपअप की अनुमति दें और पुनः प्रयास करें।",
+        "noNotesToPrint": "प्रिंट करने के लिए कोई नोट नहीं",
+        "selectToPrint": "प्रिंट करने के लिए कोई नोट चुनें",
+        "verseLabel": "पद",
+        "modifiedLabel": "संशोधित",
+        "searchPlaceholder": "नोट्स खोजें...",
+        "filterLabel": "नोट्स फ़िल्टर करें",
+        "filterAll": "सभी नोट्स",
+        "filterLinked": "पद से जुड़े",
+        "filterStandalone": "स्वतंत्र",
+        "filterReference": "वर्तमान पद",
+        "sortLabel": "नोट्स क्रमबद्ध करें",
+        "sortModified": "हाल में संपादित",
+        "sortCreated": "हाल में बनाए गए",
+        "sortTitle": "शीर्षक के अनुसार",
+        "titlePlaceholder": "नोट का शीर्षक...",
+        "editorPlaceholder": "लिखना शुरू करें...",
+        "bold": "बोल्ड (Ctrl+B)",
+        "italic": "इटैलिक (Ctrl+I)",
+        "underline": "रेखांकित (Ctrl+U)",
+        "heading": "शीर्षक",
+        "paragraph": "अनुच्छेद",
+        "bulletList": "बुलेट सूची",
+        "numberedList": "क्रमांकित सूची",
+        "pin": "नोट पिन करें",
+        "unpin": "नोट अनपिन करें",
+        "removeLink": "पद लिंक हटाएं",
+        "delete": "हटाएं",
+        "deleteNote": "नोट हटाएं",
+        "deleteConfirm": "यह नोट हटाएं?",
+        "confirmOk": "ठीक है",
+        "confirmCancel": "रद्द करें",
+        "untitled": "बिना शीर्षक",
+        "noNoteSelected": "कोई नोट चयनित नहीं",
+        "selectOrCreate": "सूची से कोई नोट चुनें या नया बनाएं",
+        "storageWarning": "नोट्स आपके ब्राउज़र के लोकल स्टोरेज में संग्रहीत होते हैं और यदि आप ब्राउज़र डेटा साफ़ करते हैं तो खो सकते हैं। डाउनलोड → JSON के रूप में बैकअप लें से इनका बैकअप लें।",
+        "noNotesFound": "कोई मिलान नोट नहीं",
+        "emptyListHint": "अभी कोई नोट नहीं, शुरू करने के लिए एक बनाएं",
+        "modified": "संशोधित: {date}",
+        "saved": "सहेजा गया",
+        "unsavedChanges": "असहेजे परिवर्तन",
+        "notSaved": "सहेजा नहीं गया, स्टोरेज भरा है",
+        "saveFailed": "सहेजना विफल",
+        "quotaError": "नोट्स सहेजे नहीं जा सकते क्योंकि ब्राउज़र स्टोरेज भरा है। JSON बैकअप निर्यात करें, फिर कुछ नोट्स हटाएं।",
+        "corruptError": "सहेजे गए नोट्स पढ़े नहीं जा सके। अपठनीय डेटा का बैकअप ब्राउज़र स्टोरेज में रखा गया है।",
+        "navigateToLink": "जोड़ने के लिए किसी पद पर जाएं",
+        "linkedTo": "{reference} से जुड़ा",
+        "linkRemoved": "पद लिंक हटा दिया गया",
+        "detectedRefs": "संदर्भ:",
+        "goToReference": "{reference} पर जाएं"
+      },
+      "audio": {
+        "label": "ऑडियो",
+        "options": "ऑडियो विकल्प",
+        "synctext": "सिंक पाठ ( बीटा )",
+        "autoplay": "ऑटोप्ले अगला",
+        "drama": "ड्रामा",
+        "nondrama": "गैर ड्रामा",
+        "noaudiotitle": "कोई ऑडियो उपलब्ध नहीं",
+        "noaudiomessage": "इस बाइबल संस्करण में ऑडियो रिकॉर्डिंग नहीं है। कृपया ऑडियो समर्थन वाला कोई अन्य संस्करण चुनें।"
+      },
+      "comparison": {
+        "label": "तुलना",
+        "invalidreference": "अमान्य बाइबल संदर्भ",
+        "nobibles": "इस अनुच्छेद के लिए कोई बाइबल उपलब्ध नहीं है। कृपया कोई अन्य अनुच्छेद या बाइबल संस्करण चुनें।",
+        "onebible": "इस अनुच्छेद के लिए केवल एक बाइबल संस्करण उपलब्ध है। कृपया कोई अन्य बाइबल संस्करण चुनें जिसमें यह पुस्तक हो।",
+        "loadfailed": "अनुच्छेद लोड करने में विफल। कृपया पुनः प्रयास करें।"
+      },
+      "stats": {
+        "label": "आँकड़े",
+        "frequentwords": "बारंबार शब्द",
+        "loadtextfailed": "यह पाठ लोड नहीं किया जा सका।",
+        "loadchapterfailed": "यह अध्याय लोड नहीं किया जा सका।"
+      }
+    },
+    "names": {
+      "en": "Hindi",
+      "fr": "hindi",
+      "es": "Hindi",
+      "de": "Hindi",
+      "ru": "хинди",
+      "hi": "हिन्दी",
+      "ar": "الهندية",
+      "af": "Hindi",
+      "bn": "হিন্দি",
+      "id": "Bahasa Hindi",
+      "sw": "Kihindi",
+      "tr": "hintçe",
+      "ja": "ヒンディー語",
+      "zh-TW": "印地語",
+      "zh-CN": "印地语"
+    }
+  }
+}

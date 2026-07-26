@@ -1,0 +1,89 @@
+/* Highlighter Plugin */
+
+/* Menu button icon */
+.highlighter-toggle {
+	color: var(--color-primary);
+}
+
+.highlighter-toggle.active {
+	background-color: var(--color-highlight);
+	border-radius: 4px;
+}
+
+/* Body state when highlight mode is active */
+.highlighter-active .scroller-main {
+	cursor: url(../../css/images/cursor-highlighter.svg) 2 22, text;
+}
+
+/* Highlighted text marks */
+.user-highlight {
+	border-radius: 2px;
+	padding: 0 1px;
+	cursor: pointer;
+}
+
+/* Color palette popup */
+.highlighter-palette {
+	position: fixed;
+	z-index: var(--z-menu);
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 6px 8px;
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
+	border-radius: 20px;
+	box-shadow: var(--shadow-popup);
+}
+
+.highlighter-palette .color-swatch {
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	border: 2px solid transparent;
+	cursor: pointer;
+	transition: scale var(--transition-fast), border-color var(--transition-fast);
+}
+
+.highlighter-palette .color-swatch:hover {
+	scale: 1.2;
+	border-color: var(--color-text-muted);
+}
+
+.highlighter-palette .color-swatch.selected {
+	border-color: var(--color-text);
+}
+
+.highlighter-palette .eraser {
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	border: 2px solid var(--color-border);
+	background: var(--color-background);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	line-height: 1;
+	color: var(--color-text-muted);
+	transition: scale var(--transition-fast);
+}
+
+.highlighter-palette .eraser:hover {
+	scale: 1.2;
+	border-color: var(--color-error);
+	color: var(--color-error);
+}
+
+/* Jabbok theme adjustments */
+.theme-jabbok .highlighter-toggle.active,
+html.jabbok .highlighter-toggle.active {
+	background-color: var(--color-highlight);
+}
+
+/* Shiloh theme adjustments */
+.theme-shiloh .highlighter-toggle.active,
+html.shiloh .highlighter-toggle.active {
+	background-color: var(--color-highlight);
+}

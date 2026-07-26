@@ -1,0 +1,165 @@
+import { getConfig } from '../core/config.js';
+import { InfoWindow } from '../ui/InfoWindow.js';
+import { elem } from '../lib/helpers.esm.js';
+const hasTouch = 'ontouchend' in document;
+import { Reference } from '../bible/BibleReference.js';
+import { mixinEventEmitter } from '../common/EventEmitter.js';
+import { PlaceKeeper } from '../common/PlaceKeeper.js';
+import { TextNavigation } from '../common/TextNavigation.js';
+import { getText, loadSection } from '../texts/TextLoader.js';
+
+// Store global handlers for cross-plugin communication
+let handleBibleRefClick = null;
+let handleBibleRefMouseover = null;
+let handleBibleRefMouseout = null;
+
+const removeNotesFromVerse = (verse) => {
+  verse.querySelectorAll('.note').forEach((note) => {
+    note.parentNode.removeChild(note);
+  });
+};
+
+export const CrossReferencePopupPlugin = () => {
+  const config = getConfig();
+
+  if (!config.enableCrossReferencePopupPlugin) {
+    return {};
+  }
+
+  const referencePopup = InfoWindow('CrossReferencePopup');
+
+  const containerEl = referencePopup.container;
+  containerEl.classList.add('info-window-elevated');
+
+  const getFragmentidFromNode = (node) => {
+    const possibleTexts = [node.getAttribute('data-id'), node.getAttribute('title'), node.innerHTML];
+    let fragmentid = null;
+
+    for (const text of possibleTexts) {
+      if (text != null) {
+        const bref = new Reference(text.split(';')[0].trim());
+        if (typeof bref.toSection !== 'undefined') {
+          fragmentid = bref.toSection();
+          break;
+        }
+      }
+    }
+
+    return fragmentid;
+  };
+
+  handleBibleRefClick = function(e) {
+    const link = this;
+    const newfragmentid = getFragmentidFromNode(link);
+
+    const currentLocationData = PlaceKeeper.getFirstLocation();
+
+    // store the current one
+    if (currentLocationData?.fragmentid) {
+      TextNavigation.locationChange(currentLocationData.fragmentid);
+    }
+
+    if (newfragmentid != null && newfragmentid !== '') {
+      TextNavigation.locationChange(newfragmentid);
+
+      ext.trigger('globalmessage', {
+        type: 'globalmessage',
+        target: this,
+        data: {
+          messagetype: 'nav',
+          type: 'bible',
+          locationInfo: {
+            fragmentid: newfragmentid,
+            sectionid: newfragmentid.split('_')[0],
+            offset: 0
+          }
+        }
+      });
+    }
+  };
+
+  handleBibleRefMouseover = function(e, textid) {
+    const link = this;
+    const fragmentid = getFragmentidFromNode(link);
+
+    if (fragmentid !== null) {
+      const sectionid = fragmentid.split('_')[0];
+
+      if (typeof textid === 'undefined') {
+        const section = link.closest('.section');
+        if (section?.classList.contains('commentary')) {
+          const firstBibleSection = document.querySelector('.BibleWindow .section');
+          textid = firstBibleSection?.getAttribute('data-textid') ?? '';
+        } else if (section) {
+          textid = section.getAttribute('data-textid');
+        }
+      }
+
+      if (textid) {
+        getText(textid, (textInfo) => {
+          if (!textInfo) return;
+          loadSection(textInfo, sectionid, (contentNode) => {
+            const contentEl = typeof contentNode === 'string'
+              ? elem('div', { innerHTML: contentNode })
+              : contentNode;
+            if (!contentEl?.querySelectorAll) return;
+
+            const verseEls = contentEl.querySelectorAll(`.${fragmentid}`);
+            let html = '';
+
+            for (const verse of verseEls) {
+              const clone = verse.cloneNode(true);
+              removeNotesFromVerse(clone);
+              html += clone.innerHTML;
+            }
+
+            if (html === '') return;
+
+            referencePopup.body.innerHTML = html;
+            referencePopup.show();
+            referencePopup.position(link);
+          });
+        });
+      }
+    }
+  };
+
+  handleBibleRefMouseout = function(e) {
+    referencePopup.hide();
+  };
+
+  const windowsMain = document.querySelector('.windows-main');
+  if (windowsMain) {
+    windowsMain.addEventListener('click', (e) => {
+      const target = e.target.closest('.bibleref, .xt');
+      if (target) handleBibleRefClick.call(target, e);
+    });
+
+    if (!hasTouch) {
+      windowsMain.addEventListener('mouseover', (e) => {
+        const target = e.target.closest('.bibleref, .xt');
+        if (target) handleBibleRefMouseover.call(target, e);
+      });
+      windowsMain.addEventListener('mouseout', (e) => {
+        const target = e.target.closest('.bibleref, .xt');
+        if (target) handleBibleRefMouseout.call(target, e);
+      });
+    }
+  }
+
+  let ext = {
+    getData() {
+      return null;
+    }
+  };
+
+  mixinEventEmitter(ext);
+
+  return ext;
+};
+
+export const getBibleRefClickHandler = () => handleBibleRefClick;
+
+export const getBibleRefMouseoverHandler = () => handleBibleRefMouseover;
+
+export const getBibleRefMouseoutHandler = () => handleBibleRefMouseout;

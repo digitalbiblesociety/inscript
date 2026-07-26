@@ -1,0 +1,86 @@
+/** Positioned popup; uses the native popover API for click-off detection. */
+
+import { elem, offset } from '../lib/helpers.esm.js';
+import { mixinEventEmitter } from '../common/EventEmitter.js';
+
+export function InfoWindow(id = null) {
+  const close = elem('span', { className: 'close-button' });
+  const body = elem('div', { className: 'info-body' });
+  const container = elem('div', { className: 'info-window', popover: '' }, close, body);
+  if (id) container.id = id;
+
+  document.body.appendChild(container);
+
+  close.addEventListener('click', hide);
+
+  // Single source of the 'hide' event
+  container.addEventListener('toggle', (e) => {
+    if (e.newState === 'closed') {
+      ext.trigger('hide');
+    }
+  });
+
+  function show() {
+    container.showPopover();
+    ext.trigger('show');
+    return ext;
+  }
+
+  function hide() {
+    container.hidePopover();
+    return ext;
+  }
+
+  function center() {
+    const infoWidth = container.offsetWidth;
+    const infoHeight = container.offsetHeight;
+
+    container.style.top = (window.innerHeight / 2 - infoHeight / 2) + 'px';
+    container.style.left = (window.innerWidth / 2 - infoWidth / 2) + 'px';
+
+    return ext;
+  }
+
+  function position(targetEl) {
+    const tOffset = offset(targetEl);
+    const tHeight = targetEl.offsetHeight;
+    const infoWidth = container.offsetWidth;
+    const infoHeight = container.offsetHeight;
+    let left = tOffset.left - 20;
+    let top = tOffset.top + tHeight;
+
+    // Far left edge
+    if (left < 0) {
+      left = 0;
+    // Far right
+    } else if (left + infoWidth > window.innerWidth) {
+      left = window.innerWidth - infoWidth;
+    }
+
+    if (top + infoHeight > window.innerHeight) {
+      top = tOffset.top - infoHeight;
+    }
+
+    container.style.top = top + 'px';
+    container.style.left = left + 'px';
+    return ext;
+  }
+
+  function destroy() {
+    container.remove();
+  }
+
+  let ext = {
+    show,
+    hide,
+    container,
+    body,
+    position,
+    center,
+    destroy
+  };
+
+  mixinEventEmitter(ext);
+
+  return ext;
+}

@@ -1,0 +1,207 @@
+// Top search input for Bible references and text search
+
+import { elem } from '../lib/helpers.esm.js';
+import { Reference } from '../bible/BibleReference.js';
+import { getApp } from '../core/registry.js';
+import { getConfig } from '../core/config.js';
+import { PlaceKeeper } from '../common/PlaceKeeper.js';
+import { TextNavigation } from '../common/TextNavigation.js';
+import { t as i18nT } from '../lib/i18n.js';
+
+function getCurrentVersion() {
+  const app = getApp();
+  const config = getConfig();
+  let textid = config.newBibleWindowVersion;
+  const appSettings = app?.windowManager?.getSettings();
+
+  if (appSettings) {
+    for (const settings of appSettings) {
+      if (settings.windowType === 'BibleWindow' && settings.data?.textid) {
+        textid = settings.data.textid;
+        break;
+      }
+    }
+  }
+
+  return textid;
+}
+
+export function MainSearchBox(parentNode) {
+  const searchInput = elem('input', { type: 'search', className: 'i18n', id: 'main-search-input', autocomplete: 'off', dataset: { i18n: '[placeholder]menu.search.placeholder' } });
+  const searchButton = elem('input', { type: 'button', id: 'main-search-button', value: '', ariaLabel: i18nT('menu.search.placeholder') });
+  const searchBox = elem('div', { id: 'main-search-box' }, searchInput, searchButton);
+
+  const suggestions = elem('div', { id: 'main-search-suggestions', style: { display: 'none' } });
+
+  if (parentNode) {
+    parentNode.appendChild(searchBox);
+    parentNode.appendChild(suggestions);
+  }
+
+  let selectedIndex = 0;
+  let currentOptions = [];
+
+  const doSearch = (searchText) => {
+    const app = getApp();
+    PlaceKeeper.preservePlace(() => {
+      const textid = getCurrentVersion();
+      app?.windowManager?.add('SearchWindow', { searchtext: searchText, textid });
+    });
+    searchInput.value = '';
+    hideSuggestions();
+  };
+
+  const doNavigate = (reference) => {
+    const app = getApp();
+    const sectionid = reference.toSection();
+
+    // Navigate all Bible windows simultaneously
+    const bibleWindows = app?.windowManager?.getWindows()?.filter(w => w.className === 'BibleWindow') || [];
+
+    if (bibleWindows.length > 0) {
+      TextNavigation.locationChange(sectionid);
+      for (const win of bibleWindows) {
+        win.controller?.scroller?.load('text', sectionid);
+      }
+    }
+
+    searchInput.value = '';
+    hideSuggestions();
+  };
+
+  const hideSuggestions = () => {
+    suggestions.style.display = 'none';
+    suggestions.innerHTML = '';
+    currentOptions = [];
+    selectedIndex = 0;
+  };
+
+  const escapeHtml = (text) => {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  };
+
+  const updateSuggestions = () => {
+    const inputText = searchInput.value.trim();
+
+    if (!inputText) {
+      hideSuggestions();
+      return;
+    }
+
+    const textid = getCurrentVersion()?.replace(/^local:/, '') || '';
+    const reference = new Reference(inputText);
+    const hasValidReference = reference?.isValid?.();
+    const escapedInput = escapeHtml(inputText);
+
+    currentOptions = [];
+
+    currentOptions.push({
+      type: 'search',
+      text: inputText,
+      label: `Search "<strong>${escapedInput}</strong>" in ${textid}`
+    });
+
+    if (hasValidReference) {
+      currentOptions.push({
+        type: 'navigate',
+        reference,
+        label: `Go to <strong>${reference.toString()}</strong> in ${textid}`
+      });
+    }
+
+    selectedIndex = 0;
+
+    // Render options. opt.label is pre-built HTML (contains <strong>), so set innerHTML per row.
+    suggestions.replaceChildren(...currentOptions.map((opt, i) => elem('div', {
+      className: `suggestion-item${i === selectedIndex ? ' selected' : ''}`,
+      dataset: { index: i },
+      innerHTML: opt.label
+    })));
+
+    suggestions.style.display = 'block';
+  };
+
+  const selectOption = (index) => {
+    if (index < 0 || index >= currentOptions.length) return;
+
+    const option = currentOptions[index];
+    if (option.type === 'search') {
+      doSearch(option.text);
+    } else if (option.type === 'navigate') {
+      doNavigate(option.reference);
+    }
+  };
+
+  const updateSelection = (newIndex) => {
+    if (newIndex < 0) newIndex = currentOptions.length - 1;
+    if (newIndex >= currentOptions.length) newIndex = 0;
+
+    selectedIndex = newIndex;
+
+    const items = suggestions.querySelectorAll('.suggestion-item');
+    items.forEach((item, i) => {
+      item.classList.toggle('selected', i === selectedIndex);
+    });
+  };
+
+  searchInput.addEventListener('input', updateSuggestions);
+
+  searchInput.addEventListener('keydown', (e) => {
+    if (suggestions.style.display === 'none') return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      updateSelection(selectedIndex + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      updateSelection(selectedIndex - 1);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      selectOption(selectedIndex);
+    } else if (e.key === 'Escape') {
+      hideSuggestions();
+    }
+  });
+
+  searchInput.addEventListener('blur', () => {
+    // Delay to allow click on suggestion
+    setTimeout(hideSuggestions, 150);
+  });
+
+  searchInput.addEventListener('focus', () => {
+    if (searchInput.value.trim()) {
+      updateSuggestions();
+    }
+  });
+
+  suggestions.addEventListener('mousedown', (e) => {
+    const item = e.target.closest('.suggestion-item');
+    if (item) {
+      const index = parseInt(item.dataset.index, 10);
+      selectOption(index);
+    }
+  });
+
+  suggestions.addEventListener('mouseover', (e) => {
+    const item = e.target.closest('.suggestion-item');
+    if (item) {
+      const index = parseInt(item.dataset.index, 10);
+      updateSelection(index);
+    }
+  });
+
+  searchButton.addEventListener('click', () => {
+    if (currentOptions.length > 0) {
+      selectOption(selectedIndex);
+    } else {
+      const inputText = searchInput.value.trim();
+      if (inputText) {
+        doSearch(inputText);
+      }
+    }
+  });
+
+  return searchBox;
+}

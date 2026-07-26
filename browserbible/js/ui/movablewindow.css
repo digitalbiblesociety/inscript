@@ -1,0 +1,52 @@
+.movable-window {
+	z-index: var(--z-menu);
+	border-radius: 8px;
+	box-shadow: var(--shadow-sm);
+	overflow: hidden;
+	max-height: 80vh;
+}
+
+.movable-window:popover-open {
+	display: flex;
+	flex-direction: column;
+}
+
+.movable-window[popover] {
+	padding: 0;
+	border: 1px solid var(--color-border);
+}
+
+.movable-window::backdrop {
+	background: oklch(0 0 0 / 0.3);
+}
+
+.movable-header {
+	background: var(--color-background-alt);
+	color: var(--color-text);
+	padding: 0.5rem 0.75rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid var(--color-border);
+	flex-shrink: 0;
+}
+
+.movable-header-title {
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.movable-body {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	background: var(--color-background);
+	color: var(--color-text);
+}
+
+.movable-window .close-button {
+	position: relative;
+	inset: auto;
+	border-radius: 4px;
+	transition: background-color 0.2s;
+}

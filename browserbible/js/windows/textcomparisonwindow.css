@@ -1,0 +1,126 @@
+/* The header puts the passage input and the version pair on one row, wrapping
+   onto a second row (and growing) when the window is narrow instead of letting
+   the controls overflow onto the content below. */
+.window.TextComparisonWindow .window-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 5px;
+	height: auto;
+	min-height: 50px;
+}
+
+.window.TextComparisonWindow .window-header .app-input,
+.window.TextComparisonWindow .window-header .app-list {
+	margin: 0;
+}
+
+/* The two version buttons form a single segmented control. */
+.comparison-select-group {
+	display: flex;
+}
+
+.comparison-select-group .app-list {
+	width: 110px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Collapse the doubled border where the two buttons meet. */
+.comparison-select-group .app-list + .app-list {
+	margin-inline-start: -1px;
+}
+
+.comparison-nav-input {
+	cursor: pointer;
+}
+
+.comparison-main {
+	overflow: auto;
+	background: var(--color-background);
+	padding: 0 20px 20px;
+}
+
+.comparison-table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+/* Version abbreviations stay visible while the passage scrolls. */
+.comparison-table thead th {
+	position: sticky;
+	top: 0;
+	z-index: var(--z-base);
+	background: var(--color-background);
+	padding: 12px 24px 8px 0;
+	border-bottom: 1px solid var(--color-border);
+	font-family: var(--font-family-sans);
+	font-size: var(--font-size-sm);
+	letter-spacing: 0.04em;
+	color: var(--color-text-muted);
+	text-align: start;
+}
+
+.comparison-table td,
+.comparison-table tbody th {
+	vertical-align: top;
+	border-bottom: 1px solid color-mix(in oklab, var(--color-border) 45%, transparent);
+}
+
+.comparison-table tbody tr:last-child td,
+.comparison-table tbody tr:last-child th {
+	border-bottom: none;
+}
+
+/* Verse numbers */
+.comparison-table tbody th {
+	width: 1%;
+	padding: 14px 12px 12px 0;
+	font-family: var(--font-family-sans);
+	font-size: var(--font-size-sm);
+	font-weight: 600;
+	color: var(--color-text-muted);
+	text-align: end;
+	white-space: nowrap;
+}
+
+.comparison-table td {
+	padding: 12px 24px 12px 0;
+	font-family: var(--font-family-serif);
+	font-size: 17px;
+	line-height: 1.7;
+}
+
+.comparison-table thead th:last-child,
+.comparison-table td:last-child {
+	padding-inline-end: 0;
+}
+
+/* Words the comparison version adds or changes. */
+.comparison-table ins {
+	color: var(--color-primary);
+	background: color-mix(in oklab, var(--color-primary) 12%, transparent);
+	border-radius: 3px;
+	padding: 0 3px;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+	text-decoration: none;
+	font-style: italic;
+}
+
+/* Words only in the base version. */
+.comparison-table del {
+	color: var(--color-text-muted);
+	opacity: 0.75;
+	text-decoration: line-through;
+	text-decoration-thickness: 1px;
+}
+
+/* The diff emits a removed word and its replacement back-to-back with no
+   whitespace between them, so give the pair some breathing room. */
+.comparison-table del + ins,
+.comparison-table ins + del {
+	margin-inline-start: 0.35em;
+}

@@ -1,0 +1,282 @@
+{
+  "translation": {
+    "name": "اردو",
+    "a11y": {
+      "mainMenu": "مرکزی مینو",
+      "previousPassage": "پچھلا حوالہ",
+      "nextPassage": "اگلا حوالہ",
+      "closeWindow": "ونڈو بند کریں",
+      "linkWindow": "اس ونڈو کو مشترکہ نیویگیشن سے منسلک کریں",
+      "unlinkWindow": "اس ونڈو کو مشترکہ نیویگیشن سے الگ کریں",
+      "close": "بند کریں"
+    },
+    "menu": {
+      "labels": {
+        "about": "کے بارے میں",
+        "addwindow": "شامل کریں ونڈو",
+        "settings": "ترتیبات",
+        "feedback": "آپ کی رائے",
+        "options": "اختیارات"
+      },
+      "feedback": {
+        "name": "نام",
+        "email": "دوستوں کوارسال کریں",
+        "comments": "آپ کے تبصرے",
+        "feature": "نمایاں کریں تجاویز",
+        "bug": "بگ رپورٹ",
+        "other": "دیگر",
+        "send": "ارسال",
+        "thankyou": "آپ کے تبصرے کا شکریہ"
+      },
+      "search": {
+        "placeholder": "تلاش",
+        "suggestversion": "نئی ونڈو میں <strong>{0}</strong> کھولیں",
+        "suggestreference": "{1} میں <strong>{0}</strong> پر جائیں",
+        "suggestsearch": "{1} میں \"<strong>{0}</strong>\" تلاش کریں"
+      },
+      "config": {
+        "font": "فونٹ",
+        "settings": "ترتیبات",
+        "tools": "فورم کے اوزار",
+        "apocrypha": "اپوکرفہ کتب دکھائیں"
+      },
+      "reset": "ری سیٹ",
+      "commandpalette": {
+        "placeholder": "کوئی کمانڈ یا بائبل حوالہ ٹائپ کریں...",
+        "help_reference": "نیویگیٹ کرنے کے لیے بائبل حوالہ ٹائپ کریں",
+        "help_commands": "کمانڈز تلاش کرنے کے لیے > ٹائپ کریں",
+        "no_results": "کوئی نتیجہ نہیں ملا"
+      },
+      "themes": {
+        "default": "عمومی",
+        "shiloh": "شیلا",
+        "jabbok": "یبوق",
+        "gethsemane": "گتسمنی"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "ہائی لائٹ محفوظ نہیں ہو سکی: براؤزر کا اسٹوریج بھرا ہوا ہے یا دستیاب نہیں۔"
+      },
+      "visualfilters": {
+        "button": "بصری فلٹرز",
+        "title": "بصری فلٹرز",
+        "newfilter": "نیا فلٹر",
+        "strongsnumber": "مضبوط #",
+        "morphology": "morphology کے",
+        "style": "انداز"
+      },
+      "eng2p": {
+        "button": "انگریزی کے 2nd شخص تعدد",
+        "title": "انگریزی دوسری ہستی تعدد",
+        "description": "جدید انگریزی <em>واحد آپ</em> اور <em>جمع آپ</em> میں فرق نہیں کرتی، اس لیے یہ پلگ ان عبرانی اور یونانی شکلوں کی نمائندگی کے لیے علاقائی انگریزی مساوات استعمال کرتا ہے۔"
+      },
+      "lemmapopup": {
+        "findalloccurrences": "تمام واقعات تلاش (تقریبا __count__)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "بہرے کی بائبل"
+      },
+      "videobible": {
+        "label": "ویڈیو بائبل"
+      },
+      "bible": {
+        "label": "بائبل",
+        "recentlyused": "حال ہی میں استعمال کیا جاتا ہے",
+        "filter": "فلٹر ...",
+        "ot": "پرانا عہد نامہ",
+        "nt": "نئے عہد نامہ",
+        "dc": "Deuterocanonical کتب",
+        "more": "مزید",
+        "less": "کم",
+        "default": "نمایاں",
+        "languages": "زبانیں",
+        "countries": "ممالک",
+        "lemma": "یونانی/عبرانی",
+        "audio": "آڈیو دستیاب",
+        "prevversion": "پچھلا نسخہ",
+        "nextversion": "اگلا نسخہ",
+        "gotopassage": "حوالے پر جائیں",
+        "reference": "حوالہ",
+        "version": "نسخہ",
+        "versioninfo": "نسخے کی معلومات",
+        "versioninfoname": "{0} کی معلومات",
+        "loadinginfo": "معلومات لوڈ ہو رہی ہیں...",
+        "noinfo": "اس نسخے کے لیے کوئی اضافی معلومات دستیاب نہیں ہے۔"
+      },
+      "commentary": {
+        "label": "تفسیر"
+      },
+      "map": {
+        "label": "نقشہ جات",
+        "placeholder": "تلاش کریں ...",
+        "versenotloaded": "متن دستیاب نہیں",
+        "openinbible": "بائبل میں کھولیں",
+        "loading": "لوڈ ہو رہا ہے…",
+        "loadfailed": "نقشہ لوڈ کرنے میں ناکام",
+        "moreresults": "{count} مزید مماثلتیں",
+        "placesin": "{reference} میں مقامات",
+        "journeystops": "{count} پڑاؤ",
+        "journeynames": {
+          "abraham": "ابراہام کا سفر",
+          "jacob": "یعقوب کی روانگی اور واپسی",
+          "exodus": "خروج",
+          "ark": "عہد کے صندوق کے سفر",
+          "elijah": "ایلیاہ کے سفر",
+          "exile": "جلاوطنی اور واپسی",
+          "nativity": "ولادت اور مصر کی طرف روانگی",
+          "paul1": "پولس کا پہلا سفر",
+          "paul2": "پولس کا دوسرا سفر",
+          "paul3": "پولس کا تیسرا سفر",
+          "rome": "پولس کا روم کا سفر"
+        }
+      },
+      "search": {
+        "label": "تلاش",
+        "placeholder": "تلاش",
+        "button": "تلاش",
+        "results": "نتائج",
+        "verses": "آیات",
+        "options": "تلاش کے اختیارات",
+        "searchfailed": "تلاش ناکام ہو گئی۔ براہ کرم اپنا کنکشن چیک کریں اور دوبارہ کوشش کریں۔",
+        "noresults": "کوئی نتیجہ نہیں",
+        "loadingprogress": "لوڈ ہو رہا ہے: {progress} :: {label}"
+      },
+      "parallel": {
+        "label": "مماثلتیں",
+        "loading": "لوڈ ہورہا ہے ...",
+        "showall": "تمام دکھائیں",
+        "hideall": "تمام کو چھپانے کے",
+        "loadlistfailed": "مماثلتوں کی فہرست لوڈ کرنے میں ناکام",
+        "loadtextfailed": "بائبل کا متن لوڈ کرنے میں ناکام",
+        "loadpassagesfailed": "مماثل حوالہ جات لوڈ کرنے میں ناکام"
+      },
+      "media": {
+        "label": "میڈیا",
+        "videolanguage": "ویڈیو کی زبان",
+        "videolanguageauto": "بائبل متن کی زبان کے مطابق",
+        "videolanguagefilter": "زبان تلاش کریں",
+        "videolanguagenone": "کوئی مماثل زبان نہیں"
+      },
+      "notes": {
+        "label": "نوٹس",
+        "toggleSidebar": "سائیڈبار ٹوگل کریں",
+        "newNote": "نیا نوٹ",
+        "linkToVerse": "موجودہ آیت سے منسلک کریں",
+        "download": "نوٹس ڈاؤن لوڈ کریں",
+        "downloadMarkdown": "Markdown کے طور پر ڈاؤن لوڈ کریں",
+        "downloadText": "سادہ متن کے طور پر ڈاؤن لوڈ کریں",
+        "downloadRtf": "RTF کے طور پر ڈاؤن لوڈ کریں",
+        "downloadJson": "JSON کے بطور بیک اپ لیں",
+        "noNotesToDownload": "ڈاؤن لوڈ کرنے کے لیے کوئی نوٹ نہیں",
+        "import": "نوٹس درآمد کریں",
+        "importReadError": "منتخب کردہ فائل نہیں پڑھی جا سکی",
+        "importInvalid": "درست نوٹس بیک اپ فائل نہیں ہے",
+        "importNone": "فائل میں کوئی نوٹ نہیں ملا",
+        "imported": "{count} نوٹس درآمد کیے گئے",
+        "importMerged": "بیک اپ بحال ہو گیا: {added} شامل، {updated} اپ ڈیٹ، {skipped} غیر تبدیل شدہ",
+        "print": "نوٹس پرنٹ کریں",
+        "printCurrent": "موجودہ نوٹ پرنٹ کریں",
+        "printAll": "تمام نوٹس پرنٹ کریں",
+        "printAllTitle": "تمام نوٹس",
+        "printIncludeVerses": "آیت کا متن شامل کریں",
+        "printButton": "پرنٹ کریں",
+        "closeButton": "بند کریں",
+        "preparingPrint": "آیات کے ساتھ پرنٹ تیار کیا جا رہا ہے...",
+        "printError": "پرنٹ ناکام: براؤزر کنسول دیکھیں",
+        "popupBlocked": "پرنٹ ونڈو کو بلاک کر دیا گیا تھا۔ اس سائٹ کے لیے پاپ اپ کی اجازت دیں اور دوبارہ کوشش کریں۔",
+        "noNotesToPrint": "پرنٹ کرنے کے لیے کوئی نوٹ نہیں",
+        "selectToPrint": "پرنٹ کرنے کے لیے ایک نوٹ منتخب کریں",
+        "verseLabel": "آیت",
+        "modifiedLabel": "ترمیم شدہ",
+        "searchPlaceholder": "نوٹس تلاش کریں...",
+        "filterLabel": "نوٹس فلٹر کریں",
+        "filterAll": "تمام نوٹس",
+        "filterLinked": "آیت سے منسلک",
+        "filterStandalone": "خود مختار",
+        "filterReference": "موجودہ آیت",
+        "sortLabel": "نوٹس ترتیب دیں",
+        "sortModified": "حال ہی میں ترمیم شدہ",
+        "sortCreated": "حال ہی میں تخلیق شدہ",
+        "sortTitle": "عنوان کے لحاظ سے",
+        "titlePlaceholder": "نوٹ کا عنوان...",
+        "editorPlaceholder": "لکھنا شروع کریں...",
+        "bold": "موٹا (Ctrl+B)",
+        "italic": "ترچھا (Ctrl+I)",
+        "underline": "خط کشیدہ (Ctrl+U)",
+        "heading": "سرخی",
+        "paragraph": "پیراگراف",
+        "bulletList": "بلٹ فہرست",
+        "numberedList": "نمبر شدہ فہرست",
+        "pin": "نوٹ پن کریں",
+        "unpin": "نوٹ ان پن کریں",
+        "removeLink": "آیت کا لنک ہٹائیں",
+        "delete": "حذف کریں",
+        "deleteNote": "نوٹ حذف کریں",
+        "deleteConfirm": "یہ نوٹ حذف کریں؟",
+        "confirmOk": "ٹھیک ہے",
+        "confirmCancel": "منسوخ کریں",
+        "untitled": "بلا عنوان",
+        "noNoteSelected": "کوئی نوٹ منتخب نہیں",
+        "selectOrCreate": "فہرست سے کوئی نوٹ منتخب کریں یا نیا بنائیں",
+        "storageWarning": "نوٹس آپ کے براؤزر کے مقامی اسٹوریج میں محفوظ ہوتے ہیں اور اگر آپ براؤزر ڈیٹا صاف کریں تو ضائع ہو سکتے ہیں۔ انہیں ڈاؤن لوڈ → JSON کے بطور بیک اپ سے محفوظ کریں۔",
+        "noNotesFound": "کوئی مماثل نوٹ نہیں",
+        "emptyListHint": "ابھی کوئی نوٹ نہیں: شروع کرنے کے لیے ایک بنائیں",
+        "modified": "ترمیم شدہ: {date}",
+        "saved": "محفوظ ہو گیا",
+        "unsavedChanges": "غیر محفوظ تبدیلیاں",
+        "notSaved": "محفوظ نہیں ہوا: اسٹوریج بھری ہوئی ہے",
+        "saveFailed": "محفوظ کرنا ناکام",
+        "quotaError": "براؤزر اسٹوریج بھری ہونے کی وجہ سے نوٹس محفوظ نہیں کیے جا سکتے۔ JSON بیک اپ برآمد کریں، پھر کچھ نوٹس حذف کریں۔",
+        "corruptError": "محفوظ شدہ نوٹس پڑھے نہیں جا سکے۔ ناقابلِ مطالعہ ڈیٹا کا بیک اپ براؤزر اسٹوریج میں رکھا گیا۔",
+        "navigateToLink": "منسلک کرنے کے لیے کسی آیت پر جائیں",
+        "linkedTo": "{reference} سے منسلک",
+        "linkRemoved": "آیت کا لنک ہٹا دیا گیا",
+        "detectedRefs": "حوالہ جات:",
+        "goToReference": "{reference} پر جائیں"
+      },
+      "audio": {
+        "label": "آڈیو",
+        "options": "آڈیو کے اختیارات",
+        "synctext": "ہم آہنگی متن (بیٹا)",
+        "autoplay": "autoplay کے اگلا",
+        "drama": "ڈرامہ",
+        "nondrama": "غیر ڈرامہ",
+        "noaudiotitle": "کوئی آڈیو دستیاب نہیں",
+        "noaudiomessage": "اس بائبل نسخے میں آڈیو ریکارڈنگ نہیں ہے۔ براہ کرم آڈیو سپورٹ والا کوئی مختلف نسخہ منتخب کریں۔"
+      },
+      "comparison": {
+        "label": "کمپیریزن",
+        "invalidreference": "غلط بائبل حوالہ",
+        "nobibles": "اس حوالے کے لیے کوئی بائبل دستیاب نہیں۔ براہ کرم کوئی مختلف حوالہ یا بائبل نسخے منتخب کریں۔",
+        "onebible": "اس حوالے کے لیے صرف ایک بائبل نسخہ دستیاب ہے۔ براہ کرم کوئی دوسرا بائبل نسخہ منتخب کریں جس میں یہ کتاب موجود ہو۔",
+        "loadfailed": "حوالہ لوڈ کرنے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔"
+      },
+      "stats": {
+        "label": "اعداد و شمار",
+        "frequentwords": "کثرت سے استعمال ہونے والے الفاظ",
+        "loadtextfailed": "یہ متن لوڈ نہیں ہو سکا۔",
+        "loadchapterfailed": "یہ باب لوڈ نہیں ہو سکا۔"
+      }
+    },
+    "names": {
+      "en": "Urdu",
+      "fr": "ourdou",
+      "es": "urdu",
+      "de": "Urdu",
+      "ru": "урду",
+      "hi": "उर्दू",
+      "ar": "الأردية",
+      "af": "Oerdoe",
+      "bn": "উর্দু",
+      "id": "Bahasa Urdu",
+      "sw": "Kiurdu",
+      "tr": "Urduca",
+      "ja": "ウルドゥー語",
+      "zh-TW": "烏爾都語",
+      "zh-CN": "乌尔都语"
+    }
+  }
+}

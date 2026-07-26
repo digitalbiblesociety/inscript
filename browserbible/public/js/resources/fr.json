@@ -1,0 +1,282 @@
+{
+  "translation": {
+    "name": "Français",
+    "a11y": {
+      "mainMenu": "Menu principal",
+      "previousPassage": "Passage précédent",
+      "nextPassage": "Passage suivant",
+      "closeWindow": "Fermer la fenêtre",
+      "linkWindow": "Lier cette fenêtre à la navigation partagée",
+      "unlinkWindow": "Dissocier cette fenêtre de la navigation partagée",
+      "close": "Fermer"
+    },
+    "menu": {
+      "labels": {
+        "about": "Sur",
+        "addwindow": "Ajouter fenêtre",
+        "settings": "Paramètres",
+        "feedback": "Réaction",
+        "options": "Options"
+      },
+      "feedback": {
+        "name": "Nom",
+        "email": "Email",
+        "comments": "Vos commentaires",
+        "feature": "Caractéristique Suggestion",
+        "bug": "Rapport de Bug",
+        "other": "Autre",
+        "send": "Envoyer",
+        "thankyou": "Merci pour vos commentaires"
+      },
+      "search": {
+        "placeholder": "Recherche",
+        "suggestversion": "Ouvrir <strong>{0}</strong> dans une nouvelle fenêtre",
+        "suggestreference": "Aller à <strong>{0}</strong> dans {1}",
+        "suggestsearch": "Rechercher \"<strong>{0}</strong>\" dans {1}"
+      },
+      "config": {
+        "font": "Style",
+        "settings": "Paramètres",
+        "tools": "Outils",
+        "apocrypha": "Afficher les livres apocryphes"
+      },
+      "reset": "remettre",
+      "commandpalette": {
+        "placeholder": "Tapez une commande ou une référence biblique...",
+        "help_reference": "Tapez une référence biblique pour naviguer",
+        "help_commands": "Tapez > pour rechercher des commandes",
+        "no_results": "Aucun résultat trouvé"
+      },
+      "themes": {
+        "default": "Normal",
+        "shiloh": "Silo",
+        "jabbok": "Jabbok",
+        "gethsemane": "Gethsémané"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "Impossible d'enregistrer le surlignage : le stockage du navigateur est plein ou indisponible."
+      },
+      "visualfilters": {
+        "button": "Filtres visuels",
+        "title": "Filtres visuels",
+        "newfilter": "Nouveau filtre",
+        "strongsnumber": "De Strong #",
+        "morphology": "Morphologie",
+        "style": "Style"
+      },
+      "eng2p": {
+        "button": "Anglais 2ème personne pluriel",
+        "title": "Anglais Deuxième personne pluriel",
+        "description": "L'anglais moderne ne distingue pas entre <em>tu singulier</em> et <em>vous pluriel</em>, ce plugin utilise donc des équivalents anglais régionaux pour représenter les formes hébraïques et grecques."
+      },
+      "lemmapopup": {
+        "findalloccurrences": "Trouver toutes les occurrences (environ __count__)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "Bible des sourds"
+      },
+      "videobible": {
+        "label": "Vidéo Bible"
+      },
+      "bible": {
+        "label": "Bible",
+        "recentlyused": "Récemment utilisés",
+        "filter": "Filtrer ...",
+        "ot": "Ancien Testament",
+        "nt": "Le Nouveau Testament",
+        "dc": "Deutérocanoniques",
+        "more": "Plus",
+        "less": "Moins",
+        "default": "En vedette",
+        "languages": "Langues",
+        "countries": "Pays",
+        "lemma": "Grec/Hébreu",
+        "audio": "Audio disponible",
+        "prevversion": "Version précédente",
+        "nextversion": "Version suivante",
+        "gotopassage": "Aller au passage",
+        "reference": "Référence",
+        "version": "Version",
+        "versioninfo": "Informations sur la version",
+        "versioninfoname": "Informations sur {0}",
+        "loadinginfo": "Chargement des informations...",
+        "noinfo": "Aucune information supplémentaire n'est disponible pour cette version."
+      },
+      "commentary": {
+        "label": "Commentaire"
+      },
+      "map": {
+        "label": "Cartes",
+        "placeholder": "Recherche ...",
+        "versenotloaded": "Texte non disponible",
+        "openinbible": "Ouvrir dans la Bible",
+        "loading": "Chargement…",
+        "loadfailed": "Échec du chargement de la carte",
+        "moreresults": "{count} autres résultats",
+        "placesin": "Lieux dans {reference}",
+        "journeystops": "{count} étapes",
+        "journeynames": {
+          "abraham": "Le voyage d'Abraham",
+          "jacob": "La fuite et le retour de Jacob",
+          "exodus": "L'Exode",
+          "ark": "Les pérégrinations de l'Arche",
+          "elijah": "Les voyages d'Élie",
+          "exile": "L'Exil et le retour",
+          "nativity": "La Nativité et la fuite en Égypte",
+          "paul1": "Le premier voyage de Paul",
+          "paul2": "Le deuxième voyage de Paul",
+          "paul3": "Le troisième voyage de Paul",
+          "rome": "Le voyage de Paul à Rome"
+        }
+      },
+      "search": {
+        "label": "Recherche",
+        "placeholder": "Recherche",
+        "button": "Recherche",
+        "results": "Résultats",
+        "verses": "versets",
+        "options": "options de recherche",
+        "searchfailed": "Échec de la recherche. Veuillez vérifier votre connexion et réessayer.",
+        "noresults": "Aucun résultat",
+        "loadingprogress": "Chargement : {progress} :: {label}"
+      },
+      "parallel": {
+        "label": "Parallels",
+        "loading": "Chargement ...",
+        "showall": "Tout afficher",
+        "hideall": "Masquer tout",
+        "loadlistfailed": "Échec du chargement de la liste des parallèles",
+        "loadtextfailed": "Échec du chargement du texte biblique",
+        "loadpassagesfailed": "Échec du chargement des passages parallèles"
+      },
+      "media": {
+        "label": "Médias",
+        "videolanguage": "Langue de la vidéo",
+        "videolanguageauto": "Comme le texte biblique",
+        "videolanguagefilter": "Rechercher une langue",
+        "videolanguagenone": "Aucune langue correspondante"
+      },
+      "notes": {
+        "label": "Remarques",
+        "toggleSidebar": "Afficher/masquer la barre latérale",
+        "newNote": "Nouvelle note",
+        "linkToVerse": "Lier au verset actuel",
+        "download": "Télécharger les notes",
+        "downloadMarkdown": "Télécharger au format Markdown",
+        "downloadText": "Télécharger en texte brut",
+        "downloadRtf": "Télécharger au format RTF",
+        "downloadJson": "Sauvegarder au format JSON",
+        "noNotesToDownload": "Aucune note à télécharger",
+        "import": "Importer des notes",
+        "importReadError": "Impossible de lire le fichier sélectionné",
+        "importInvalid": "Fichier de sauvegarde de notes non valide",
+        "importNone": "Aucune note trouvée dans le fichier",
+        "imported": "{count} notes importées",
+        "importMerged": "Sauvegarde restaurée : {added} ajoutées, {updated} mises à jour, {skipped} inchangées",
+        "print": "Imprimer les notes",
+        "printCurrent": "Imprimer la note actuelle",
+        "printAll": "Imprimer toutes les notes",
+        "printAllTitle": "Toutes les notes",
+        "printIncludeVerses": "Inclure le texte des versets",
+        "printButton": "Imprimer",
+        "closeButton": "Fermer",
+        "preparingPrint": "Préparation de l'impression avec les versets...",
+        "printError": "Échec de l'impression : consultez la console du navigateur",
+        "popupBlocked": "La fenêtre d'impression a été bloquée. Autorisez les fenêtres contextuelles pour ce site et réessayez.",
+        "noNotesToPrint": "Aucune note à imprimer",
+        "selectToPrint": "Sélectionnez une note à imprimer",
+        "verseLabel": "Verset",
+        "modifiedLabel": "Modifiée",
+        "searchPlaceholder": "Rechercher des notes...",
+        "filterLabel": "Filtrer les notes",
+        "filterAll": "Toutes les notes",
+        "filterLinked": "Liées à un verset",
+        "filterStandalone": "Autonomes",
+        "filterReference": "Verset actuel",
+        "sortLabel": "Trier les notes",
+        "sortModified": "Récemment modifiées",
+        "sortCreated": "Récemment créées",
+        "sortTitle": "Par titre",
+        "titlePlaceholder": "Titre de la note...",
+        "editorPlaceholder": "Commencez à écrire...",
+        "bold": "Gras (Ctrl+B)",
+        "italic": "Italique (Ctrl+I)",
+        "underline": "Souligné (Ctrl+U)",
+        "heading": "Titre",
+        "paragraph": "Paragraphe",
+        "bulletList": "Liste à puces",
+        "numberedList": "Liste numérotée",
+        "pin": "Épingler la note",
+        "unpin": "Désépingler la note",
+        "removeLink": "Supprimer le lien vers le verset",
+        "delete": "Supprimer",
+        "deleteNote": "Supprimer la note",
+        "deleteConfirm": "Supprimer cette note ?",
+        "confirmOk": "OK",
+        "confirmCancel": "Annuler",
+        "untitled": "Sans titre",
+        "noNoteSelected": "Aucune note sélectionnée",
+        "selectOrCreate": "Sélectionnez une note dans la liste ou créez-en une nouvelle",
+        "storageWarning": "Les notes sont stockées dans le stockage local de votre navigateur et peuvent être perdues si vous effacez les données du navigateur. Sauvegardez-les via Télécharger → Sauvegarder au format JSON.",
+        "noNotesFound": "Aucune note correspondante",
+        "emptyListHint": "Aucune note pour le moment : créez-en une pour commencer",
+        "modified": "Modifiée : {date}",
+        "saved": "Enregistrée",
+        "unsavedChanges": "Modifications non enregistrées",
+        "notSaved": "Non enregistrée : le stockage est plein",
+        "saveFailed": "Échec de l'enregistrement",
+        "quotaError": "Impossible d'enregistrer les notes car le stockage du navigateur est plein. Exportez une sauvegarde JSON, puis supprimez quelques notes.",
+        "corruptError": "Les notes enregistrées n'ont pas pu être lues. Une sauvegarde des données illisibles a été conservée dans le stockage du navigateur.",
+        "navigateToLink": "Accédez à un verset pour le lier",
+        "linkedTo": "Liée à {reference}",
+        "linkRemoved": "Lien vers le verset supprimé",
+        "detectedRefs": "Références :",
+        "goToReference": "Aller à {reference}"
+      },
+      "audio": {
+        "label": "Audio",
+        "options": "Options audio",
+        "synctext": "Synchronisation du texte (beta)",
+        "autoplay": "Autoplay Suivant",
+        "drama": "Drame",
+        "nondrama": "Non Drame",
+        "noaudiotitle": "Aucun audio disponible",
+        "noaudiomessage": "Cette version de la Bible ne dispose pas d'enregistrements audio. Veuillez sélectionner une autre version prenant en charge l'audio."
+      },
+      "comparison": {
+        "label": "Comparaison",
+        "invalidreference": "Référence biblique non valide",
+        "nobibles": "Aucune Bible disponible pour ce passage. Veuillez sélectionner un autre passage ou d'autres versions de la Bible.",
+        "onebible": "Une seule version de la Bible est disponible pour ce passage. Veuillez sélectionner une autre version de la Bible contenant ce livre.",
+        "loadfailed": "Échec du chargement du passage. Veuillez réessayer."
+      },
+      "stats": {
+        "label": "Statistiques",
+        "frequentwords": "Mots fréquents",
+        "loadtextfailed": "Impossible de charger ce texte.",
+        "loadchapterfailed": "Impossible de charger ce chapitre."
+      }
+    },
+    "names": {
+      "en": "French",
+      "fr": "français",
+      "es": "Francés",
+      "de": "Französisch",
+      "ru": "французский",
+      "hi": "फ़्रेंच",
+      "ar": "الفرنسية",
+      "af": "Frans",
+      "bn": "ফরাসি",
+      "id": "Bahasa Prancis",
+      "sw": "Kifaransa",
+      "tr": "fransızca",
+      "ja": "フランス語",
+      "zh-TW": "法語",
+      "zh-CN": "法语"
+    }
+  }
+}

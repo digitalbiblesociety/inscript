@@ -1,0 +1,634 @@
+import { getConfig } from '../core/config.js';
+import { EventEmitterMixin } from '../common/EventEmitter.js';
+import { BOOK_DATA } from '../bible/BibleData.js';
+import { getShowApocrypha, isApocryphalSection } from '../bible/Apocrypha.js';
+import { loadSection, getText } from './TextLoader.js';
+import { escapeRegExp, highlightTextMatches } from '../lib/textHighlighter.js';
+
+export const SearchTools = {
+  isAsciiRegExp: /^[\x20-\x7E]*$/gi,
+  isLemmaRegExp: /[GgHh]\d{1,6}/g,
+  HASHSIZE: 20,
+
+  createSearchTerms(searchText, isLemmaSearch) {
+    const searchTermsRegExp = [];
+
+    if (isLemmaSearch) {
+      const strongNumbers = searchText.split(' ');
+
+      for (const part of strongNumbers) {
+        searchTermsRegExp.push(
+          new RegExp(`s=["'](\\w\\d{1,4}[a-z]?\\s)?(G|H)?${escapeRegExp(part.substr(1))}[a-z]?(\\s\\w\\d{1,4}[a-z]?)?["']`, 'gi')
+        );
+      }
+    } else if (searchText.substring(0, 1) === '"' && searchText.substring(searchText.length - 1) === '"') {
+      // Check for quoted search "jesus christ"
+      let withoutQuotes = escapeRegExp(searchText.substring(1, searchText.length - 1));
+      withoutQuotes = withoutQuotes.replace(/\s/g, '(\\s?(<(.|\\n)*?>)?\\s?)?');
+
+      searchTermsRegExp.push(new RegExp(`\\b(${withoutQuotes})\\b`, 'gi'));
+    } else {
+      // ASCII characters have predictable word boundaries
+      SearchTools.isAsciiRegExp.lastIndex = 0;
+
+      if (SearchTools.isAsciiRegExp.test(searchText)) {
+        let andSearchParts = searchText.split(/\s+AND\s+|\s+/gi);
+
+        andSearchParts = andSearchParts.filter((item, index, arr) => arr.indexOf(item) === index);
+
+        for (const part of andSearchParts) {
+          searchTermsRegExp.push(new RegExp(`\\b(${escapeRegExp(part)})\\b`, 'gi'));
+        }
+      } else {
+        const words = SearchTools.splitWords(searchText);
+
+        for (const word of words) {
+          searchTermsRegExp.push(new RegExp(escapeRegExp(word), 'gi'));
+        }
+      }
+    }
+
+    return searchTermsRegExp;
+  },
+
+  /**
+   * Build boundary-matching regexes used to highlight original-language words
+   * for a lemma search. Each regex matches a Strong's number as a whole token
+   * inside a space-separated s attribute value (e.g. "G25" matches s="G3588 G25"
+   * but not s="G250"). Returns one regex per Strong's number in searchText.
+   */
+  createLemmaHighlightRegExps(searchText) {
+    return String(searchText)
+      .trim()
+      .split(/\s+/)
+      .filter((part) => /^[GH]?\d{1,6}[a-z]?$/i.test(part))
+      .map((part) => {
+        const num = part.replace(/^[GH]/i, '').replace(/[a-z]$/i, '');
+        return new RegExp(`(^|\\s)(G|H)?${num}[a-z]?($|\\s)`, 'i');
+      });
+  },
+
+  splitWords(input) {
+    const removeRegChars = ['\\', '^', '$', '.', '|', '?', '*', '+', '(', ')', '[', ']', '{', '}'];
+    const otherRemoveChars = [
+      // Roman
+      ',', ';', '!', '-', '–', '―', '—', '~', ':', '"', '/', "'s", "'s", "'", "'", "'", '"', '"', '¿', '<', '>', '&',
+      // Chinese
+      '。', '：', '，', '"', '"', '）', '（', '~', '「', '」'
+    ];
+    const punctuation = [...removeRegChars, ...otherRemoveChars];
+    const innerWordExceptions = ["'", "'", '-'];
+    const words = [];
+    let word = '';
+
+    const addWord = () => {
+      if (word !== '') {
+        words.push(word);
+      }
+      word = '';
+    };
+
+    input = String(input);
+
+    input = input.replace(/('s)/gi, '');
+
+    for (let i = 0, il = input.length; i < il; i++) {
+      const letter = input.charAt(i);
+      const charCode = input.charCodeAt(i);
+      const isFirstChar = (i === 0);
+      const isLastChar = (i === il - 1);
+      const isPunctuation = punctuation.indexOf(letter) > -1;
+      const isWhitespace = letter === ' ';
+      const isLetter = !(isWhitespace || isPunctuation);
+
+      if (isLetter) {
+        word += letter;
+
+        if (((charCode >= 0x4E00) && (charCode <= 0x9FFF)) ||
+            ((charCode >= 0x3400) && (charCode <= 0x4DFF)) ||
+            ((charCode >= 0x20000) && (charCode <= 0x2A6DF))) {
+          addWord();
+        }
+      } else if (!isFirstChar && !isLastChar &&
+                 innerWordExceptions.indexOf(letter) > -1 &&
+                 punctuation.indexOf(input[i - 1]) === -1 &&
+                 punctuation.indexOf(input[i + 1]) === -1) {
+        word += letter;
+      } else {
+        addWord();
+      }
+    }
+
+    addWord();
+
+    return words.filter((item, index, arr) => arr.indexOf(item) === index);
+  },
+
+  hashWord(word) {
+    let hash = 0;
+    for (const char of word) {
+      hash += char.charCodeAt(0);
+      hash %= SearchTools.HASHSIZE;
+    }
+    return hash;
+  }
+};
+
+class SearchIndexLoader {
+  constructor() {
+    this._events = {};
+
+    const config = getConfig();
+    this.baseContentPath = `${config.baseContentUrl}${config.textsPath}/`;
+    this.isStemEnabled = true;
+
+    this.textInfo = null;
+    this.searchTerms = [];
+    this.searchTermsIndex = -1;
+    this.isLemmaSearch = false;
+    this.stemmingData = {};
+    this.stemInfo = [];
+    this.searchDivisions = [];
+    this.loadedIndexes = [];
+    this.loadedResults = [];
+    this.searchType = 'AND';
+  }
+
+  loadIndexes(newTextInfo, divisions, searchText, isLemma) {
+    this.isLemmaSearch = isLemma;
+    this.textInfo = newTextInfo;
+    this.searchDivisions = divisions;
+
+    this.searchTerms = SearchTools.splitWords(searchText);
+
+    this.searchTermsIndex = -1;
+    this.loadedIndexes = [];
+    this.loadedResults = [];
+    this.stemInfo = [];
+    this.stemmingData = isLemma ? null : {};
+
+    this.searchType = /\bOR\b/gi.test(searchText) ? 'OR' : 'AND';
+
+    if (this.isStemEnabled && !isLemma) {
+      this.loadStemmingData();
+    } else {
+      this.loadNextIndex();
+    }
+  }
+
+  loadStemmingData() {
+    const stemUrl = `${this.baseContentPath}${this.textInfo.id}/index/stems.json`;
+
+    fetch(stemUrl)
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        this.stemmingData = data;
+        this.loadNextIndex();
+      })
+      .catch(() => {
+        this.stemmingData = null;
+        this.loadNextIndex();
+      });
+  }
+
+  loadNextIndex() {
+    this.searchTermsIndex++;
+
+    if (this.searchTermsIndex < this.searchTerms.length) {
+      this.loadSearchTermIndex(this.searchTerms[this.searchTermsIndex]);
+    } else {
+      this.processIndexes();
+    }
+  }
+
+  loadSearchTermIndex(searchTerm) {
+    let indexUrl = '';
+    let key = '';
+    let hash = '';
+    let stem = '';
+    let useStem = false;
+
+    if (this.isLemmaSearch) {
+      key = searchTerm.toUpperCase();
+      const letter = key.substring(0, 1);
+      const firstNumber = searchTerm.length >= 5 ? searchTerm.substring(1, 2) : '0';
+      indexUrl = `${this.baseContentPath}${this.textInfo.id}/indexlemma/_${letter.toUpperCase()}${firstNumber}000.json`;
+    } else {
+      key = searchTerm.toLowerCase();
+      stem = this.isStemEnabled && this.stemmingData != null ? this.stemmingData[key] : null;
+      useStem = stem != null;
+
+      if (useStem) {
+        hash = SearchTools.hashWord(stem);
+        indexUrl = `${this.baseContentPath}${this.textInfo.id}/index/_stems_${hash}.json`;
+      } else {
+        hash = SearchTools.hashWord(key);
+        indexUrl = `${this.baseContentPath}${this.textInfo.id}/index/_${hash}.json`;
+      }
+    }
+
+    fetch(indexUrl)
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        let fragments = null;
+
+        if (useStem) {
+          fragments = data[stem]?.fragmentids;
+          if (data[stem]?.words) {
+            this.stemInfo.push({
+              word: key,
+              stem,
+              words: data[stem].words
+            });
+          }
+        } else {
+          fragments = data[key];
+        }
+
+        this.loadedIndexes.push(fragments ?? []);
+        this.loadNextIndex();
+      })
+      .catch(() => {
+        this.loadedIndexes.push(null);
+        this.loadNextIndex();
+      });
+  }
+
+  mergeOrIndexes() {
+    const fragmentids = this.loadedIndexes.flat();
+    const sections = this.textInfo.sections;
+
+    const parseFragment = (fid) => {
+      const [sectionid, num] = fid.split('_');
+      return { sectionid, sectionIndex: sections.indexOf(sectionid), fragmentNum: parseInt(num, 10) };
+    };
+
+    return fragmentids.sort((a, b) => {
+      const fa = parseFragment(a), fb = parseFragment(b);
+      return (fa.sectionIndex - fb.sectionIndex) || (fa.fragmentNum - fb.fragmentNum);
+    });
+  }
+
+  intersectAndIndexes() {
+    const indexes = this.loadedIndexes;
+    if (indexes.length === 1) return indexes[0];
+    if (indexes.length === 0) return [];
+    return indexes[0].filter(val => indexes.slice(1).every(idx => idx.includes(val)));
+  }
+
+  groupBySection(fragmentids) {
+    const results = [];
+    const divisions = this.searchDivisions;
+    const showApocrypha = getShowApocrypha();
+
+    for (const fid of fragmentids) {
+      if (!fid) continue;
+      const sectionid = fid.split('_')[0];
+      const bookCode = sectionid.substring(0, 2);
+
+      if (!showApocrypha && isApocryphalSection(sectionid)) continue;
+      if (divisions.length > 0 && !divisions.includes(bookCode)) continue;
+
+      const existing = results.find(r => r.sectionid === sectionid);
+      if (existing) existing.fragmentids.push(fid);
+      else results.push({ sectionid, fragmentids: [fid] });
+    }
+    return results;
+  }
+
+  processIndexes() {
+    let fragmentids = [];
+    this.loadedResults = [];
+
+    if (this.loadedIndexes.length > 0 && this.loadedIndexes.every(idx => idx == null)) {
+      this.loadedIndexes = [];
+    } else {
+      this.loadedIndexes = this.loadedIndexes.map(idx => idx ?? []);
+    }
+
+    if (this.loadedIndexes.length > 0) {
+      fragmentids = this.searchType === 'OR' ? this.mergeOrIndexes() : this.intersectAndIndexes();
+      this.loadedResults = this.groupBySection(fragmentids);
+    }
+
+    this.trigger('complete', {
+      type: 'complete',
+      target: this,
+      data: {
+        loadedIndexes: this.loadedIndexes,
+        loadedResults: this.loadedResults,
+        fragmentids,
+        stemInfo: this.stemInfo
+      }
+    });
+  }
+}
+
+Object.assign(SearchIndexLoader.prototype, EventEmitterMixin);
+
+export class TextSearch {
+  constructor() {
+    this._events = {};
+
+    const config = getConfig();
+    this.baseContentPath = `${config.baseContentUrl}${config.textsPath}/`;
+    this.isLemmaRegExp = /[GgHh]\d{1,6}/g;
+
+    this.isSearching = false;
+    this.canceled = false;
+    this.searchText = '';
+    this.searchTextid = '';
+    this.searchDivisions = [];
+    this.textInfo = null;
+    this.isLemmaSearch = false;
+    this.startTime = null;
+    this.searchTermsRegExp = [];
+    this.searchIndexesData = [];
+    this.searchIndexesCurrentIndex = 0;
+    this.searchType = 'AND';
+    this.searchFinalResults = [];
+
+    this.searchIndexLoader = new SearchIndexLoader();
+    this.searchIndexLoader.on('complete', (e) => this.indexesLoaded(e));
+  }
+
+  start(textid, divisions, text) {
+    if (this.isSearching) {
+      return false;
+    }
+    this.isSearching = true;
+
+    this.searchText = text.trim();
+    this.searchTextid = textid;
+    this.searchDivisions = divisions;
+    this.textInfo = getText(this.searchTextid);
+
+    this.canceled = false;
+    this.startTime = new Date();
+    this.searchFinalResults = [];
+    this.searchTermsRegExp = [];
+    this.searchIndexesData = [];
+    this.searchIndexesCurrentIndex = 0;
+    this.searchType = /\bOR\b/gi.test(text) ? 'OR' : 'AND';
+
+    this.isLemmaRegExp.lastIndex = 0;
+    this.isLemmaSearch = this.isLemmaRegExp.test(this.searchText);
+    this.searchTermsRegExp = SearchTools.createSearchTerms(text, this.isLemmaSearch);
+
+    const config = getConfig();
+    if (config.serverSearchPath !== '' &&
+        (window.location.protocol !== 'file:' || config.baseContentUrl !== '')) {
+      this.startServerSearch(this.textInfo, this.searchDivisions, this.searchText, this.isLemmaSearch);
+    } else {
+      this.searchIndexLoader.loadIndexes(this.textInfo, this.searchDivisions, this.searchText, this.isLemmaSearch);
+    }
+
+    return true;
+  }
+
+  startServerSearch(textInfo, searchDivisions, searchText, isLemmaSearch) {
+    const config = getConfig();
+
+    const params = new URLSearchParams({
+      textid: textInfo.id,
+      search: searchText.toLowerCase(),
+      divisions: searchDivisions.join(','),
+      date: (new Date()).toString()
+    });
+
+    const searchUrl = config.serverSearchPath.startsWith('http')
+      ? config.serverSearchPath
+      : `${config.baseContentUrl}${config.serverSearchPath}`;
+
+    fetch(`${searchUrl}?${params.toString()}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data?.results) {
+          if (data.stem_words?.length > 0) {
+            this.searchType = 'OR';
+            this.searchTermsRegExp = [];
+
+            for (const word of data.stem_words) {
+              this.searchTermsRegExp.push(new RegExp(`\\b(${word})\\b`, 'gi'));
+            }
+          }
+
+          const showApocrypha = getShowApocrypha();
+          for (const result of data.results) {
+            const fragmentid = Object.keys(result)[0];
+            if (!showApocrypha && isApocryphalSection(fragmentid.split('_')[0])) continue;
+            const html = result[fragmentid];
+            this.searchFinalResults.push({ fragmentid, html });
+          }
+
+          this.trigger('complete', {
+            type: 'complete',
+            target: this,
+            data: {
+              results: this.searchFinalResults,
+              searchIndexesData: this.searchIndexesData,
+              searchTermsRegExp: this.searchTermsRegExp,
+              isLemmaSearch: this.isLemmaSearch
+            }
+          });
+        } else {
+          this.trigger('complete', {
+            type: 'complete',
+            target: this,
+            data: {
+              results: null,
+              searchIndexesData: this.searchIndexesData,
+              searchTermsRegExp: this.searchTermsRegExp,
+              isLemmaSearch: this.isLemmaSearch
+            }
+          });
+        }
+
+        this.isSearching = false;
+      })
+      .catch(error => {
+        console.error('error:serverSearch', error);
+        this.isSearching = false;
+
+        this.trigger('complete', {
+          type: 'complete',
+          target: this,
+          data: {
+            results: null,
+            searchIndexesData: this.searchIndexesData,
+            searchTermsRegExp: this.searchTermsRegExp,
+            isLemmaSearch: this.isLemmaSearch
+          }
+        });
+      });
+  }
+
+  buildBruteForceIndex() {
+    return this.textInfo.sections.map(sectionid => {
+      const bookCode = sectionid.substr(0, 2);
+      const chapterNum = parseInt(sectionid.substr(2), 10);
+      const verseCount = BOOK_DATA[bookCode]?.chapters?.[chapterNum - 1] ?? 0;
+      const fragmentids = Array.from({ length: verseCount }, (_, i) => `${sectionid}_${i + 1}`);
+      return { sectionid, fragmentids };
+    });
+  }
+
+  buildStemRegexps(stemInfo) {
+    return stemInfo.flatMap(info => info.words.map(word => new RegExp(`\\b(${word})\\b`, 'gi')));
+  }
+
+  indexesLoaded(e) {
+    if (!e.data?.loadedIndexes) return;
+
+    if (e.data.loadedIndexes.length === 0) {
+      this.searchIndexesData = this.buildBruteForceIndex();
+      this.searchIndexesCurrentIndex = -1;
+      this.loadNextSectionid();
+      return;
+    }
+
+    this.trigger('indexcomplete', {
+      type: 'indexcomplete',
+      target: this,
+      data: { searchIndexesData: e.data.loadedResults }
+    });
+
+    if (e.data.stemInfo?.length > 0) {
+      this.searchType = 'OR';
+      this.searchTermsRegExp = this.buildStemRegexps(e.data.stemInfo);
+    }
+
+    this.searchIndexesData = e.data.loadedResults;
+    this.searchIndexesCurrentIndex = -1;
+    this.loadNextSectionid();
+  }
+
+  loadNextSectionid() {
+    this.searchIndexesCurrentIndex++;
+
+    if (this.searchIndexesCurrentIndex > this.searchIndexesData.length) {
+      this.isSearching = false;
+    } else if (this.searchIndexesCurrentIndex === this.searchIndexesData.length) {
+      this.trigger('complete', {
+        type: 'complete',
+        target: this,
+        data: {
+          results: this.searchFinalResults,
+          searchIndexesData: this.searchIndexesData,
+          searchTermsRegExp: this.searchTermsRegExp,
+          isLemmaSearch: this.isLemmaSearch
+        }
+      });
+
+      this.isSearching = false;
+    } else {
+      const sectionData = this.searchIndexesData[this.searchIndexesCurrentIndex];
+      const sectionid = sectionData?.sectionid ?? null;
+      const fragmentids = sectionData?.fragmentids ?? null;
+
+      if (!sectionData) {
+        this.loadNextSectionid();
+        return;
+      }
+
+      this.trigger('load', {
+        type: 'load',
+        target: this,
+        data: {
+          sectionid,
+          index: this.searchIndexesCurrentIndex,
+          total: this.searchIndexesData.length
+        }
+      });
+
+      loadSection(this.textInfo, sectionid, (content) => {
+        const temp = document.createElement('div');
+        if (typeof content === 'string') {
+          temp.innerHTML = content;
+        } else {
+          const contentEl = content?.nodeType ? content : content?.[0];
+          if (contentEl) temp.appendChild(contentEl.cloneNode(true));
+        }
+
+        for (const fragmentid of fragmentids) {
+          const fragmentNodes = temp.querySelectorAll(`.${fragmentid}`);
+
+          let html = '';
+
+          fragmentNodes.forEach(el => {
+            const clone = el.cloneNode(true);
+            clone.querySelectorAll('.note, .cf, .v-num, .verse-num').forEach(note => {
+              note.parentNode.removeChild(note);
+            });
+            html += `${clone.innerHTML} `;
+          });
+
+          if (fragmentNodes.length > 0) {
+            const result = this.findMatchesInVerse(html);
+
+            if (result.foundMatch) {
+              this.searchFinalResults.push({ fragmentid, html: result.html });
+            }
+          }
+        }
+
+        this.loadNextSectionid();
+      }, () => {
+        this.loadNextSectionid();
+      });
+    }
+  }
+
+  findMatchesInVerse(html) {
+    let processedHtml = html;
+    let foundMatch = false;
+    const regMatches = new Array(this.searchTermsRegExp.length);
+
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    const text = temp.textContent;
+
+    for (let j = 0, jl = this.searchTermsRegExp.length; j < jl; j++) {
+      this.searchTermsRegExp[j].lastIndex = 0;
+
+      if (this.isLemmaSearch) {
+        if (this.searchTermsRegExp[j].test(processedHtml)) {
+          regMatches[j] = true;
+          foundMatch = true;
+        }
+      } else {
+        if (this.searchTermsRegExp[j].test(text)) {
+          regMatches[j] = true;
+          foundMatch = true;
+        }
+        this.searchTermsRegExp[j].lastIndex = 0;
+      }
+    }
+
+    if (this.searchType === 'AND') {
+      let foundAll = true;
+      for (const match of regMatches) {
+        if (match !== true) {
+          foundAll = false;
+          break;
+        }
+      }
+      foundMatch = foundAll;
+    }
+
+    if (foundMatch && !this.isLemmaSearch) {
+      highlightTextMatches(temp, this.searchTermsRegExp);
+      processedHtml = temp.innerHTML;
+    }
+
+    return { html: processedHtml, foundMatch };
+  }
+}
+
+Object.assign(TextSearch.prototype, EventEmitterMixin);

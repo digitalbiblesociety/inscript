@@ -1,0 +1,16 @@
+# Security headers for the deployed app.
+#
+# This file is the Cloudflare Pages / Netlify convention and is copied into
+# dist/ by the build. If the site is served by nginx/Apache/other, translate
+# these into that server's config instead (the header names/values are the same).
+#
+# The Content-Security-Policy is injected into index.html as a <meta> tag at
+# build time (see vite.config.js injectCsp), so it is enforced even on hosts
+# that ignore this file. The headers below are the ones a <meta> tag cannot set.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin

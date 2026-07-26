@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Verse Detection Plugin Demo</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+			line-height: 1.6;
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			background: #f5f5f5;
+		}
+
+		h1 {
+			color: #333;
+			border-bottom: 2px solid #4a90d9;
+			padding-bottom: 10px;
+		}
+
+		h2 {
+			color: #555;
+			margin-top: 30px;
+		}
+
+		.demo-section {
+			background: white;
+			border-radius: 8px;
+			padding: 20px;
+			margin: 20px 0;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+
+		.input-section {
+			margin-bottom: 20px;
+		}
+
+		textarea {
+			width: 100%;
+			height: 120px;
+			padding: 12px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			font-size: 14px;
+			resize: vertical;
+		}
+
+		button {
+			background: #4a90d9;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 14px;
+			margin-right: 10px;
+			margin-top: 10px;
+		}
+
+		button:hover {
+			background: #357abd;
+		}
+
+		button.secondary {
+			background: #6c757d;
+		}
+
+		button.secondary:hover {
+			background: #5a6268;
+		}
+
+		.output-section {
+			margin-top: 20px;
+			padding: 15px;
+			background: #f9f9f9;
+			border-radius: 4px;
+			border: 1px solid #eee;
+		}
+
+		.output-section h3 {
+			margin-top: 0;
+			color: #666;
+			font-size: 14px;
+			text-transform: uppercase;
+		}
+
+		#results {
+			font-size: 16px;
+		}
+
+		#detectedList {
+			font-family: monospace;
+			font-size: 13px;
+			white-space: pre-wrap;
+		}
+
+		.language-selector {
+			margin-bottom: 15px;
+		}
+
+		.language-selector label {
+			margin-right: 10px;
+		}
+
+		.language-selector select {
+			padding: 8px;
+			border-radius: 4px;
+			border: 1px solid #ddd;
+		}
+
+		.sample-texts {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: 10px;
+		}
+
+		.sample-text {
+			padding: 10px;
+			background: #e8f4fc;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 13px;
+		}
+
+		.sample-text:hover {
+			background: #d4ebf9;
+		}
+
+		.sample-text strong {
+			display: block;
+			margin-bottom: 5px;
+			color: #333;
+		}
+
+		/* Verse styling from plugin */
+		.verse-link {
+			color: #4a90d9;
+			text-decoration: underline;
+			text-decoration-style: dotted;
+			cursor: pointer;
+		}
+
+		.verse-link:hover {
+			text-decoration-style: solid;
+		}
+
+		.verse-detected {
+			background-color: rgba(255, 235, 59, 0.3);
+			border-radius: 2px;
+			padding: 0 2px;
+		}
+
+		/* Stats */
+		.stats {
+			display: flex;
+			gap: 20px;
+			margin-top: 15px;
+		}
+
+		.stat {
+			background: #e8f4fc;
+			padding: 10px 15px;
+			border-radius: 4px;
+		}
+
+		.stat-value {
+			font-size: 24px;
+			font-weight: bold;
+			color: #4a90d9;
+		}
+
+		.stat-label {
+			font-size: 12px;
+			color: #666;
+		}
+	</style>
+</head>
+<body>
+	<h1>Verse Detection Plugin Demo</h1>
+
+	<div class="demo-section">
+		<h2>Configuration</h2>
+		<div class="language-selector">
+			<label for="language">Primary Language:</label>
+			<select id="language">
+				<option value="en">English</option>
+				<option value="es">Spanish (Español)</option>
+				<option value="pt">Portuguese (Português)</option>
+				<option value="fr">French (Français)</option>
+				<option value="de">German (Deutsch)</option>
+				<option value="ru">Russian (Русский)</option>
+				<option value="ar">Arabic (العربية)</option>
+				<option value="hi">Hindi (हिन्दी)</option>
+				<option value="zh">Chinese (中文)</option>
+				<option value="id">Indonesian</option>
+			</select>
+
+			<label for="loadAllLanguages" style="margin-left: 15px;">
+				<input type="checkbox" id="loadAllLanguages"> Load all languages (for mixed content)
+			</label>
+
+			<label for="mode">Display Mode:</label>
+			<select id="mode">
+				<option value="both">Both (Link + Popup)</option>
+				<option value="link">Link Only</option>
+				<option value="popup">Popup Only</option>
+			</select>
+		</div>
+
+		<div style="margin-top: 15px;">
+			<label for="appBaseUrl">App Base URL:</label>
+			<input type="text" id="appBaseUrl" value="https://inscript.org" style="width: 250px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;" placeholder="https://inscript.org">
+
+			<label for="defaultTextId" style="margin-left: 15px;">Default Version:</label>
+			<input type="text" id="defaultTextId" value="webbe" style="width: 100px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;" placeholder="webbe">
+		</div>
+
+		<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+			<strong style="display: block; margin-bottom: 10px;">Content Source (Chapter Files)</strong>
+			<label for="contentBaseUrl">Content Base URL:</label>
+			<input type="text" id="contentBaseUrl" value="https://inscript.bible.cloud/content/texts" style="width: 300px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+
+			<div style="margin-top: 10px;">
+				<label for="dynamicTextSelection">
+					<input type="checkbox" id="dynamicTextSelection" checked> <strong>Dynamic text selection</strong> (load versions from index)
+				</label>
+			</div>
+
+			<label for="autoTextId" style="margin-left: 15px;">
+				<input type="checkbox" id="autoTextId" checked> Auto-select by language
+			</label>
+
+			<div id="currentTextId" style="margin-top: 8px; font-size: 12px; color: #666;">
+				Current text: <span id="textIdDisplay">loading...</span>
+			</div>
+
+			<div id="availableVersions" style="margin-top: 10px; padding: 10px; background: #f0f7ff; border-radius: 4px; font-size: 12px; display: none;">
+				<strong>Available versions for selected language:</strong>
+				<div id="versionsList" style="margin-top: 5px;"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="demo-section">
+		<h2>Input Text</h2>
+		<div class="input-section">
+			<textarea id="inputText" placeholder="Enter text containing Bible verse references...">In John 3:16, we read about God's love for the world. This is echoed in Rom 8:28 and 1 John 4:8. For wisdom, see Proverbs 3:5-6 and Psalm 23. The story of creation is found in Genesis 1:1-2:3.</textarea>
+		</div>
+		<button onclick="processText()">Detect Verses</button>
+		<button class="secondary" onclick="clearAll()">Clear</button>
+	</div>
+
+	<div class="demo-section">
+		<h2>Sample Texts</h2>
+		<div class="sample-texts">
+			<div class="sample-text" onclick="useSample('en')">
+				<strong>English</strong>
+				Read John 3:16 and Matt 5:3-12 for the Beatitudes. See also Ps 23 and Rev 21:4.
+			</div>
+			<div class="sample-text" onclick="useSample('es')">
+				<strong>Español</strong>
+				Lee Juan 3:16 y Mateo 5:3-12. También Salmos 23 y Apocalipsis 21:4.
+			</div>
+			<div class="sample-text" onclick="useSample('pt')">
+				<strong>Português</strong>
+				Leia João 3:16 e Mateus 5:3-12. Veja também Salmos 23 e Apocalipse 21:4.
+			</div>
+			<div class="sample-text" onclick="useSample('zh')">
+				<strong>中文</strong>
+				请阅读约翰福音 3:16 和马太福音 5:3-12。也请看诗篇 23 和启示录 21:4。
+			</div>
+			<div class="sample-text" onclick="useSample('ru')">
+				<strong>Русский</strong>
+				Читайте Иоанн 3:16 и Матфей 5:3-12. Смотрите также Псалом 23 и Откровение 21:4.
+			</div>
+			<div class="sample-text" onclick="useSample('mixed')">
+				<strong>Mixed Languages</strong>
+				John 3:16 (English), Juan 3:16 (Spanish), 約翰福音 3:16 (Chinese), Иоанн 3:16 (Russian)
+			</div>
+		</div>
+	</div>
+
+	<div class="demo-section">
+		<h2>Hover Popup Demo</h2>
+		<p style="color: #666; margin-bottom: 15px;">Hover over the verse references below to see popups with verse content. Click to navigate to the verse in the app.</p>
+		<div id="hoverDemo" class="output-section" style="font-size: 16px; line-height: 1.8;">
+			<em>Process text above to see hover-enabled verse links here...</em>
+		</div>
+		<div style="margin-top: 15px;">
+			<h4 style="margin-bottom: 10px;">Popup Settings</h4>
+			<label><input type="checkbox" id="showVerseNumbers" checked> Show verse numbers</label>
+			<label style="margin-left: 15px;"><input type="checkbox" id="showHeader" checked> Show header</label>
+			<label style="margin-left: 15px;">
+				Delay: <input type="number" id="popupDelay" value="300" style="width: 60px; padding: 4px;"> ms
+			</label>
+		</div>
+	</div>
+
+	<div class="demo-section">
+		<h2>Results</h2>
+		<div class="output-section">
+			<h3>Processed Text (with links)</h3>
+			<div id="results">
+				<em>Enter text and click "Detect Verses" to see results...</em>
+			</div>
+		</div>
+
+		<div class="stats" id="stats" style="display:none;">
+			<div class="stat">
+				<div class="stat-value" id="verseCount">0</div>
+				<div class="stat-label">Verses Detected</div>
+			</div>
+			<div class="stat">
+				<div class="stat-value" id="bookCount">0</div>
+				<div class="stat-label">Unique Books</div>
+			</div>
+		</div>
+
+		<div class="output-section">
+			<h3>Detected References</h3>
+			<div id="detectedList">
+				<em>Detection details will appear here...</em>
+			</div>
+		</div>
+	</div>
+
+	<script type="module">
+		import { initVerseDetection, createVersePopup } from './index.js';
+
+		let verseSystem = null;
+		let popup = null;
+
+		// Language display names for UI (not used for content fetching)
+		const languageNames = {
+			'en': 'English', 'es': 'Spanish', 'pt': 'Portuguese', 'fr': 'French',
+			'de': 'German', 'ru': 'Russian', 'ar': 'Arabic', 'hi': 'Hindi',
+			'zh': 'Chinese', 'id': 'Indonesian'
+		};
+
+		// Update text ID display based on language (called after popup init)
+		function updateTextIdDisplay() {
+			const language = document.getElementById('language').value;
+			const autoTextId = document.getElementById('autoTextId').checked;
+			const dynamicTextSelection = document.getElementById('dynamicTextSelection').checked;
+			const defaultTextIdInput = document.getElementById('defaultTextId');
+			const textIdDisplay = document.getElementById('textIdDisplay');
+			const availableVersionsDiv = document.getElementById('availableVersions');
+			const versionsListDiv = document.getElementById('versionsList');
+
+			if (popup && dynamicTextSelection) {
+				// Get dynamic mapping from popup
+				const mapping = popup.getTextIdMapping();
+				const textId = mapping[language] || mapping['en'] || 'ENGWEB';
+
+				if (autoTextId) {
+					defaultTextIdInput.value = textId;
+					textIdDisplay.textContent = textId;
+				} else {
+					textIdDisplay.textContent = defaultTextIdInput.value || textId;
+				}
+
+				// Show available versions for this language
+				const availableTexts = popup.getTextsForLanguage(language);
+				if (availableTexts.length > 0) {
+					availableVersionsDiv.style.display = 'block';
+					versionsListDiv.innerHTML = availableTexts.map(t =>
+						`<span style="display: inline-block; background: #fff; padding: 2px 8px; margin: 2px; border-radius: 3px; border: 1px solid #ddd; cursor: pointer;" onclick="selectVersion('${t.id}')">${t.abbr || t.id}</span>`
+					).join('');
+				} else {
+					availableVersionsDiv.style.display = 'none';
+				}
+			} else {
+				// No dynamic loading - show current value
+				const langName = languageNames[language] || language;
+				textIdDisplay.textContent = defaultTextIdInput.value || '(none)';
+				availableVersionsDiv.style.display = 'none';
+			}
+		}
+
+		// Select a specific version from the available list
+		window.selectVersion = function(textId) {
+			document.getElementById('defaultTextId').value = textId;
+			document.getElementById('autoTextId').checked = false;
+			updateTextIdDisplay();
+			if (document.getElementById('inputText').value) {
+				processText();
+			}
+		};
+
+		// Initialize the verse detection system
+		async function initSystem() {
+			const language = document.getElementById('language').value;
+			const mode = document.getElementById('mode').value;
+			const appBaseUrl = document.getElementById('appBaseUrl').value;
+			const autoTextId = document.getElementById('autoTextId').checked;
+			const dynamicTextSelection = document.getElementById('dynamicTextSelection').checked;
+			const showVerseNumbers = document.getElementById('showVerseNumbers').checked;
+			const showHeader = document.getElementById('showHeader').checked;
+			const popupDelay = parseInt(document.getElementById('popupDelay').value) || 300;
+			const loadAllLanguages = document.getElementById('loadAllLanguages').checked;
+
+			// Content source configuration
+			const contentBaseUrl = document.getElementById('contentBaseUrl').value;
+
+			// Get default text ID (will be updated after dynamic load)
+			let defaultTextId = document.getElementById('defaultTextId').value;
+
+			// Destroy existing popup if any
+			if (popup) {
+				popup.destroy();
+			}
+
+			// Build content source config with dynamic text selection
+			const contentSourceConfig = {
+				type: 'remote',
+				baseUrl: contentBaseUrl,
+				textsIndexUrl: 'https://inscript.bible.cloud/content/texts/texts.json',
+				textId: autoTextId ? null : defaultTextId,
+				autoSelectByLanguage: autoTextId,
+				dynamicTextSelection: dynamicTextSelection,
+				// Preferred versions by language (used when dynamic loading is enabled)
+				preferredTextIdsByLanguage: {
+					'en': 'ENGWEB',     // World English Bible
+					'es': 'SPNRVG',     // Reina Valera Gomez
+					'pt': 'PORBLS',     // Portuguese
+					'fr': 'FRALSG',     // Louis Segond
+				},
+				// Text IDs will be populated from the texts index
+				textIdsByLanguage: {},
+				pathTemplate: '{baseUrl}/{textId}/{sectionId}.html'
+			};
+
+			verseSystem = await initVerseDetection(null, {
+				appBaseUrl: appBaseUrl,
+				defaultTextId: defaultTextId,
+				displayMode: mode,
+				contentSource: contentSourceConfig,
+				language: {
+					autoDetect: false,
+					primary: language,
+					additional: loadAllLanguages ? 'all' : ['en']
+				},
+				link: {
+					useHashNavigation: true,
+					openInNewTab: true
+				},
+				versionLinking: {
+					includeVersion: true,
+					versionParam: 'version'
+				},
+				popup: {
+					showDelay: popupDelay,
+					showVerseNumbers: showVerseNumbers,
+					showHeader: showHeader
+				}
+			});
+
+			// Create popup for demo (this will load the texts index dynamically)
+			popup = createVersePopup({
+				popup: {
+					showDelay: popupDelay,
+					showVerseNumbers: showVerseNumbers,
+					showHeader: showHeader,
+					maxWidth: 400,
+					maxHeight: 250
+				},
+				contentSource: contentSourceConfig,
+				language: {
+					primary: language,
+					additional: loadAllLanguages ? 'all' : ['en']
+				},
+				defaultTextId: autoTextId ? null : defaultTextId
+			});
+			await popup.init(null);
+
+			// Set available text languages in the verse system based on loaded texts
+			const textIdMapping = popup.getTextIdMapping();
+			verseSystem.setAvailableTextLanguages(textIdMapping);
+
+			// Update display after dynamic loading completes
+			updateTextIdDisplay();
+
+			// Log the loaded mapping for debugging
+			if (dynamicTextSelection) {
+				console.log('Dynamic text ID mapping:', popup.getTextIdMapping());
+				console.log('Available languages:', popup.getAvailableLanguages());
+			}
+		}
+
+		// Process the input text
+		window.processText = async function() {
+			await initSystem();
+
+			const inputText = document.getElementById('inputText').value;
+
+			// Process text with links
+			const linkedText = verseSystem.processText(inputText);
+
+			// Display results
+			document.getElementById('results').innerHTML = linkedText;
+
+			// Also display in hover demo section
+			const hoverDemo = document.getElementById('hoverDemo');
+			hoverDemo.innerHTML = linkedText;
+
+			// Attach popup handlers to hover demo
+			if (popup) {
+				popup.attach(hoverDemo);
+			}
+
+			// Get detected verses for stats
+			const verses = verseSystem.detectVerses(inputText);
+
+			// Display stats
+			document.getElementById('stats').style.display = 'flex';
+			document.getElementById('verseCount').textContent = verses.length;
+
+			const uniqueBooks = new Set(verses.map(v => v.book));
+			document.getElementById('bookCount').textContent = uniqueBooks.size;
+
+			// Display detected list with more details
+			const detailsList = verses.map(v => {
+				return `${v.original} → ${v.book} ${v.reference}
+  Book: ${v.book}
+  Variation: ${v.bookVariation}
+  Chapters: ${JSON.stringify(v.chapters)}`;
+			}).join('\n\n');
+
+			document.getElementById('detectedList').textContent =
+				verses.length > 0 ? detailsList : 'No verse references detected.';
+		};
+
+		// Clear all
+		window.clearAll = function() {
+			document.getElementById('inputText').value = '';
+			document.getElementById('results').innerHTML = '<em>Enter text and click "Detect Verses" to see results...</em>';
+			document.getElementById('hoverDemo').innerHTML = '<em>Process text above to see hover-enabled verse links here...</em>';
+			document.getElementById('detectedList').textContent = '<em>Detection details will appear here...</em>';
+			document.getElementById('stats').style.display = 'none';
+		};
+
+		// Sample texts
+		const samples = {
+			en: 'Read John 3:16 and Matt 5:3-12 for the Beatitudes. See also Ps 23 and Rev 21:4.',
+			es: 'Lee Juan 3:16 y Mateo 5:3-12. También Salmos 23 y Apocalipsis 21:4.',
+			pt: 'Leia João 3:16 e Mateus 5:3-12. Veja também Salmos 23 e Apocalipse 21:4.',
+			zh: '请阅读约翰福音 3:16 和马太福音 5:3-12。也请看诗篇 23 和启示录 21:4。',
+			ru: 'Читайте Иоанн 3:16 и Матфей 5:3-12. Смотрите также Псалом 23 и Откровение 21:4.',
+			mixed: 'John 3:16 (English), Juan 3:16 (Spanish), 约翰福音 3:16 (Chinese), Иоанн 3:16 (Russian)'
+		};
+
+		window.useSample = async function(lang) {
+			document.getElementById('inputText').value = samples[lang];
+			if (lang === 'mixed') {
+				// Enable all languages for mixed content
+				document.getElementById('loadAllLanguages').checked = true;
+			} else if (lang !== 'en') {
+				document.getElementById('language').value = lang;
+			}
+			await processText();
+		};
+
+		// Config change handlers
+		document.getElementById('language').addEventListener('change', async () => {
+			updateTextIdDisplay();
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		document.getElementById('mode').addEventListener('change', async () => {
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		document.getElementById('appBaseUrl').addEventListener('change', async () => {
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		document.getElementById('defaultTextId').addEventListener('change', async () => {
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		// Popup settings handlers
+		document.getElementById('showVerseNumbers').addEventListener('change', async () => {
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		document.getElementById('showHeader').addEventListener('change', async () => {
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		document.getElementById('popupDelay').addEventListener('change', async () => {
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		// Content source config handlers
+		document.getElementById('contentBaseUrl').addEventListener('change', async () => {
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		document.getElementById('autoTextId').addEventListener('change', async () => {
+			updateTextIdDisplay();
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		document.getElementById('dynamicTextSelection').addEventListener('change', async () => {
+			await initSystem();
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		document.getElementById('loadAllLanguages').addEventListener('change', async () => {
+			if (document.getElementById('inputText').value) {
+				await processText();
+			}
+		});
+
+		// Initialize on load
+		initSystem();
+	</script>
+</body>
+</html>
