@@ -162,13 +162,11 @@ export function TextNavigator() {
   function setActiveBook(bookid, currentFragmentid) {
     activeBookId = bookid;
 
-    // Scroll the book to the top of the list. offsetTop is relative to the
-    // positioned popover (not the scroll container), so measure the delta
-    // between the book and the container viewport instead.
+    // offsetTop, not client rects: this runs in the same task as showPopover(),
+    // while the open transition still has the popover scaled.
     const divNode = changer.querySelector('.divisionid-' + bookid);
     if (divNode) {
-      const delta = divNode.getBoundingClientRect().top - divisionsEl.getBoundingClientRect().top;
-      divisionsEl.scrollTop = Math.max(0, divisionsEl.scrollTop + delta - 8);
+      divisionsEl.scrollTop = Math.max(0, divNode.offsetTop - divisionsEl.offsetTop - 8);
     }
 
     if (!isEnglishText() || filterInput.value.trim()) return;

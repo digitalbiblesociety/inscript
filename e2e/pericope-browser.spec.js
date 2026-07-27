@@ -56,6 +56,24 @@ test.describe('passages column (right of the books)', () => {
     expect(delta).toBeLessThan(24);
   });
 
+  // Unlike the click path above, this positions the list while the popover is
+  // still scaled by its open transition.
+  test('opens with the current book at the top of the book list', async ({ page, makeUrl }) => {
+    const { navigator } = await openNavigator(page, makeUrl({ w1: 'bible', t1: 'ENGWEB', v1: 'RM8_28' }));
+
+    await expect(navigator.locator('.divisionid-RM')).toBeVisible();
+    await page.waitForTimeout(300); // let the open transition settle at scale 1
+
+    const delta = await page.evaluate(() => {
+      const d = document.querySelector('.text-navigator:not(.verse-navigator) .divisionid-RM');
+      const c = document.querySelector('.text-navigator:not(.verse-navigator) .text-navigator-divisions');
+      return d.getBoundingClientRect().top - c.getBoundingClientRect().top;
+    });
+
+    expect(delta).toBeGreaterThanOrEqual(0);
+    expect(delta).toBeLessThan(24);
+  });
+
   test('the filter searches passages across books and jumps', async ({ page, makeUrl }) => {
     const { nav, navigator } = await openNavigator(page, makeUrl({ w1: 'bible', t1: 'ENGWEB', v1: 'JN3_16' }));
 

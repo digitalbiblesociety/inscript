@@ -195,7 +195,9 @@
 	margin: 0;
 	opacity: 0.5;
 	cursor: pointer;
-	transition: opacity var(--transition-fast);
+	transition:
+		opacity var(--transition-fast),
+		scale var(--duration-fast) var(--ease-out);
 	vertical-align: middle;
 }
 

@@ -67,10 +67,15 @@ test.describe('guided tour', () => {
     await page.evaluate(() => {
       window.__minDim = 1;
       const tick = () => {
-        const ring = document.querySelector('.tour-layer .tour-ring');
+        const layer = document.querySelector('.tour-layer');
+        const ring = layer?.querySelector('.tour-ring');
         if (ring && document.body.classList.contains('tour-active')) {
-          const opacity = Number(getComputedStyle(ring).opacity);
-          if (opacity < window.__minDim) window.__minDim = opacity;
+          // The scrim is the ring's box-shadow, and the tour lifts its layer by
+          // hiding and re-showing it, so an unrendered frame is no dim at all.
+          const dim = layer.matches(':popover-open')
+            ? Number(getComputedStyle(layer).opacity) * Number(getComputedStyle(ring).opacity)
+            : 0;
+          if (dim < window.__minDim) window.__minDim = dim;
         }
         requestAnimationFrame(tick);
       };

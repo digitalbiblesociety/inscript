@@ -117,10 +117,10 @@
 	text-decoration: underline;
 }
 
-
 .woc,
 .wj {
 	color: var(--color-red-letter);
+	font-style: normal;
 }
 
 .yhwh,

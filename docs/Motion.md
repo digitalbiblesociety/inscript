@@ -29,8 +29,9 @@ so the rest of the UI can use the same two.
 - Never fade an element that is carrying a scrim. The guided tour dims the page
   with the spotlight's own `box-shadow`, so fading the spotlight takes the
   overlay off the whole page and reads as a flash of white. Fade what is on the
-  overlay, not the overlay itself. `e2e/guided-tour.spec.js` samples the
-  spotlight's opacity every frame of a run and fails if it ever drops.
+  overlay, not the overlay itself. `e2e/guided-tour.spec.js` samples the overlay
+  every frame of a run and fails if the dim ever drops, counting a frame painted
+  with the layer out of the render tree as no dim at all.
 - `prefers-reduced-motion` is honoured globally by the guard at the foot of
   `windows.css`, which zeroes every duration with `!important`. Anything that
   needs more than a zero duration to behave (an animation with a delay, say)
@@ -40,7 +41,7 @@ so the rest of the UI can use the same two.
 
 | Part | Motion |
 |------|--------|
-| Every popover: main menu, version chooser, passage navigator, version info, settings, search options, media popup | Fade with a 2% scale up, on open and on close |
+| Every popover: main menu, version chooser, passage navigator, version info, settings, search options, media popup | Fade with a 2% scale up, on open and on close, the backdrop fading with it |
 | A new panel | Fade with a 1% scale up |
 | A new window tab | Fade and scale, on the spring curve, so the pair reads as one movement |
 | Search and reference suggestions | Fade and drop in under the box that produced them |
@@ -60,6 +61,15 @@ Every menu and dialog in the app is a native popover, so a single rule in
   it a popover vanishes on close with no exit.
 - `@starting-style` supplies the from-state, because on the frame a popover opens
   it has no previous state to transition from.
+- `::backdrop` gets its own fade. A popover's `opacity` does not apply to its
+  backdrop, so without one the scrim behind Settings or the version info dialog
+  would snap on and off while the panel fades.
+
+A component stylesheet that redeclares `transition` on a control listed in
+motion.css wins the whole shorthand and drops the shared motion with it. Append
+`scale var(--duration-fast) var(--ease-out)` to keep the press feedback.
+`e2e/motion.spec.js` reads the computed `transition-property` of every pressable
+control and fails if one of them has lost `scale`.
 
 The movement is `scale`, not `translate`, for two reasons. The version chooser and
 the version info dialog already use `translate` to centre themselves, and window

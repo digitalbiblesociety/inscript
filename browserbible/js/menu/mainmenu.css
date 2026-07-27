@@ -123,7 +123,9 @@
 	font-size: 11px;
 	color: var(--color-text);
 	border-radius: 6px;
-	transition: background-color 0.15s ease;
+	transition:
+		background-color 0.15s ease,
+		scale var(--duration-fast) var(--ease-out);
 }
 
 .main-menu-icon {

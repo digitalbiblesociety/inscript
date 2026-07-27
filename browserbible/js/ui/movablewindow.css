@@ -48,5 +48,7 @@
 	position: relative;
 	inset: auto;
 	border-radius: 4px;
-	transition: background-color 0.2s;
+	transition:
+		background-color 0.2s,
+		scale var(--duration-fast) var(--ease-out);
 }

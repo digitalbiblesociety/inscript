@@ -20,6 +20,22 @@
   }
 }
 
+/* A popover's opacity does not reach its backdrop, so the scrim needs its own. */
+[popover]:not(.tour-layer):not(#demo-cursor)::backdrop {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+[popover]:not(.tour-layer):not(#demo-cursor):popover-open::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  [popover]:not(.tour-layer):not(#demo-cursor):popover-open::backdrop {
+    opacity: 0;
+  }
+}
+
 @keyframes panel-in {
   from {
     opacity: 0;
@@ -56,11 +72,12 @@
   animation: drop-in var(--duration-fast) var(--ease-out);
 }
 
+/* A later stylesheet redeclaring `transition` on one of these wins the whole
+   shorthand, so it has to list scale too. */
 .close-button,
 .link-button,
 .header-icon,
 .main-menu-item,
-.window-tab,
 #main-menu-button,
 #main-search-button,
 #main-back-button,

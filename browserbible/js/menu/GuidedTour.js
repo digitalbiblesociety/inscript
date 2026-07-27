@@ -899,11 +899,23 @@ export function GuidedTour() {
     (requested !== '0' && !seen && config.enableGuidedTourAutostart === true);
 
   if (shouldAutostart) {
-    waitFor(() => $('.window.BibleWindow .section .verse, .window.BibleWindow .section .v'), { timeout: 20000 })
-      .then(() => sleep(600))
-      .then(() => {
-        if (!document.body.classList.contains('compact-ui')) start();
-      });
+    // ?tour=1 runs anywhere; the unprompted tour skips compact layouts, which
+    // hide most of what it points at.
+    const explicit = requested === '1';
+
+    (async () => {
+      const loaded = await waitFor(
+        () => $('.window.BibleWindow .section .verse, .window.BibleWindow .section .v'),
+        { timeout: 20000 }
+      );
+      if (!loaded) {
+        if (explicit) console.warn('[tour] no text loaded in time, tour not started');
+        return;
+      }
+      if (!explicit && document.body.classList.contains('compact-ui')) return;
+      await sleep(600);
+      start();
+    })();
   }
 
   const api = {
