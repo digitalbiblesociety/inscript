@@ -1,0 +1,20 @@
+# Cloudflare Pages project configuration.
+#
+# This file only declares *what* is deployed. The build itself (build command,
+# root directory, and the build watch paths that keep non-app commits from
+# triggering a deploy) is still configured in the Pages dashboard — Cloudflare
+# does not read any of those from here. See docs/Deployment-Cloudflare.md.
+#
+# NOTE: once a Pages project adopts a Wrangler config file, this file becomes
+# the source of truth and the matching dashboard fields become read-only. That
+# is why the build needs no dashboard environment variables at all:
+#   - Node version  -> .node-version
+#   - pnpm version  -> "packageManager" in package.json
+#   - site profile  -> derived from CF_PAGES_BRANCH in vite.config.js
+#     (main -> the 'inscript' profile, any other branch -> the 'dev' profile)
+
+name = "inscript"
+compatibility_date = "2026-07-26"
+
+# Relative to this file. vite.config.js has root: 'browserbible', outDir: 'dist'.
+pages_build_output_dir = "./browserbible/dist"

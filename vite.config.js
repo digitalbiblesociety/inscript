@@ -12,6 +12,10 @@ import { compression } from 'vite-plugin-compression2';
 // `pnpm knip`. Computing it from import.meta.url works everywhere.
 const rootDir = dirname(fileURLToPath(import.meta.url));
 
+// Which Cloudflare Pages branch is production. Must match the "Production
+// branch" set on the Pages project; every other branch builds as a preview.
+const PAGES_PRODUCTION_BRANCH = 'main';
+
 // Content-Security-Policy for built output only. Injected via transformIndexHtml
 // at build time (not in `vite dev`, whose HMR client needs inline/eval scripts).
 // script-src 'self' is the key mitigation: the app injects remote HTML (Bible
@@ -73,12 +77,24 @@ function copyPublicExcludingTexts() {
 }
 
 export default defineConfig(({ command }) => {
-  // Default the site profile by command so an accidental `vite build` / `pnpm
-  // build` can never ship a dev bundle: builds default to the production
-  // ('inscript') profile (no sourcemaps, texts excluded, prod window/feature
-  // gating), while `vite dev` (serve) defaults to 'dev'. Override either with
-  // an explicit SITE env var (e.g. SITE=dev vite build).
-  const siteProfile = process.env.SITE || (command === 'build' ? 'inscript' : 'dev');
+  // Site profile resolution, highest precedence first:
+  //
+  //  1. An explicit SITE env var (e.g. SITE=dev vite build).
+  //  2. On Cloudflare Pages (CF_PAGES=1), the deployment branch: the production
+  //     branch gets the production profile, every branch preview gets 'dev', so
+  //     previews carry the full window set and sourcemaps. Deriving this from
+  //     CF_PAGES_BRANCH rather than a dashboard env var keeps it in version
+  //     control and works even though adopting wrangler.toml makes the
+  //     dashboard's variables read-only. See docs/Deployment-Cloudflare.md.
+  //  3. The command, so an accidental `vite build` / `pnpm build` can never ship
+  //     a dev bundle: builds default to production ('inscript'), `vite dev`
+  //     (serve) defaults to 'dev'.
+  const cfPagesProfile = process.env.CF_PAGES
+    ? (process.env.CF_PAGES_BRANCH === PAGES_PRODUCTION_BRANCH ? 'inscript' : 'dev')
+    : null;
+  const siteProfile = process.env.SITE
+    || cfPagesProfile
+    || (command === 'build' ? 'inscript' : 'dev');
   const siteConfig = JSON.parse(readFileSync(`./sites/${siteProfile}.json`, 'utf-8'));
 
   // `vite dev` (serve) talks to a locally-run proxy; builds bake the deployed
@@ -192,7 +208,11 @@ export default defineConfig(({ command }) => {
   plugins: [
     injectCsp(),
     siteProfile !== 'dev' && copyPublicExcludingTexts(),
-    compression({ algorithms: ['gzip', 'brotliCompress'] })
+    // Precompressed siblings are for hosts that serve them directly (nginx
+    // gzip_static, Apache mod_deflate). Cloudflare Pages compresses responses
+    // itself and never serves a .gz/.br sibling, so on Pages they would only
+    // double the asset count and upload time.
+    !process.env.CF_PAGES && compression({ algorithms: ['gzip', 'brotliCompress'] })
   ].filter(Boolean)
   };
 });

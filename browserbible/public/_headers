@@ -1,4 +1,4 @@
-# Security headers for the deployed app.
+# Security and caching headers for the deployed app.
 #
 # This file is the Cloudflare Pages / Netlify convention and is copied into
 # dist/ by the build. If the site is served by nginx/Apache/other, translate
@@ -14,3 +14,35 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
   Cross-Origin-Opener-Policy: same-origin
+
+# Caching.
+#
+# Deliberately no Cache-Control in the /* block above: every matching rule is
+# applied and same-named headers are combined, so a global Cache-Control would
+# collide with the per-path values below instead of being overridden by them.
+#
+# Nothing in this build is content-hashed — vite.config.js pins the entry to
+# js/bundle.js and strips hashes from css/font/image names — so no asset can be
+# cached immutably. Code and markup must revalidate on every load or a deploy
+# would not reach returning visitors; fonts and images get a real max-age
+# because their bytes are stable even though their names are not.
+
+/js/bundle.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/css/main.css
+  Cache-Control: public, max-age=0, must-revalidate
+
+/fonts/*
+  Cache-Control: public, max-age=2592000
+
+/images/*
+  Cache-Control: public, max-age=2592000
+
+/img/*
+  Cache-Control: public, max-age=2592000
+
+# Bundled data (maps, parallels, media manifests) ships with the build and
+# changes with it, so keep this short enough that a deploy propagates quickly.
+/content/*
+  Cache-Control: public, max-age=3600

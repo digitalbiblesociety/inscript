@@ -55,6 +55,10 @@ pnpm build:dev    # dev build: sourcemaps + local texts bundled, all windows on.
 API proxies to be reachable from the deploy origin (the proxies are CORS-locked
 to a specific origin), so serve it from the configured host.
 
+Deployment is Cloudflare Pages via its Git integration — `pnpm run build:cf`,
+output `browserbible/dist`, with the profile derived from the branch. See
+[docs/Deployment-Cloudflare.md](docs/Deployment-Cloudflare.md).
+
 ## Testing
 
 ```bash
