@@ -18,8 +18,6 @@ import { createLocationIcon, getLocationTypeName } from './icon-library.js';
 export const repositionAllMarkers = (overlay, viewBox, containerRect) => {
   if (!overlay || !containerRect || !containerRect.width) return;
   const t = getViewTransform(viewBox, containerRect);
-  // Skips hidden markers — nearly all of them in passage mode. Safe because
-  // every unhide path (filter, decluster, highlight) repositions again after.
   overlay.querySelectorAll('.map-marker:not(.filtered-out):not(.clustered), .map-cluster, .journey-stop').forEach(el => {
     if (el._svgX === undefined) return;
     const x = t.offsetX + (el._svgX - viewBox.x) * t.scale - el._anchorX;
@@ -90,20 +88,9 @@ export const resetMarkerOpacity = (overlay) => {
   });
 };
 
-/**
- * Label deconfliction using getBoundingClientRect for accurate screen-space bounds.
- * Higher-tier (lower number) markers get label priority. Overlapping labels stay
- * hidden until hover.
- *
- * Performance: uses a read-then-write pattern to avoid layout thrashing.
- *   1. WRITE — strip all label-shown classes in one pass
- *   2. READ  — batch all getBoundingClientRect calls (one forced layout total)
- *   3. WRITE — add label-shown to non-overlapping labels in one pass
- */
 export const deconflictLabels = (overlay) => {
   if (!overlay) return;
 
-  // Pass 1: WRITE — collect labels and clear shown state
   const items = [];
   overlay.querySelectorAll('.map-marker').forEach(marker => {
     if (marker.classList.contains('filtered-out') ||
@@ -125,13 +112,11 @@ export const deconflictLabels = (overlay) => {
   // Lower tier number = more important = gets label priority
   items.sort((a, b) => a.tier - b.tier);
 
-  // Pass 2: READ — batch all rect reads (single forced layout)
   const rects = items.map(item => {
     const r = item.label.getBoundingClientRect();
     return r.width ? { left: r.left, right: r.right, top: r.top, bottom: r.bottom } : null;
   });
 
-  // Pass 3: WRITE — greedy placement, show non-overlapping labels
   const placed = [];
   for (let i = 0; i < items.length; i++) {
     const r = rects[i];

@@ -31,8 +31,6 @@ describe('searchLocations', () => {
   });
 
   it('breaks score ties by verse count', () => {
-    // Duplicate names exist in the real data (e.g. two Antiochs) — both score
-    // as exact matches, so the one mentioned in more verses ranks first.
     const antiochs = [
       { name: 'Antioch', verses: ['AC13_14'] },
       { name: 'Antioch', verses: ['AC11_19', 'AC11_26', 'GL2_11'] }

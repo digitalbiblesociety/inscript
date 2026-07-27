@@ -685,8 +685,6 @@ export class VersePopup {
 		const ref = target.dataset.verseRef;
 		if (!ref || !this.popup) return;
 
-		// What the user actually clicked — preserves the original-language form
-		// ("Juan 3:16", "João 3:16") rather than the canonical English book name.
 		const displayRef = target.textContent?.trim() || ref;
 
 		const detectedLang = target.dataset.detectedLang ?? this.config.language?.primary ?? 'en';
@@ -980,8 +978,6 @@ export class VersePopup {
 	private displayContent(reference: string, content: string, canonicalReference?: string): void {
 		if (!this.popup) return;
 
-		// Store the canonical form for social sharing — recipients should see
-		// "John 3:16" in share URLs/text regardless of which language the user clicked.
 		this.currentReference = canonicalReference ?? reference;
 		this.currentContent = content;
 

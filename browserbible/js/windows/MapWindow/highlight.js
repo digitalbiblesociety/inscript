@@ -87,8 +87,6 @@ export function highlightLocations(markersGroup, locationDataByVerse, sectionid 
     }
     if (nameByMatch.size === 0) return;
 
-    // Longest-first alternation so "Abel-beth-maacah" wins over "Abel".
-    // Right boundary is (?!\w), not \b — names can end in a non-word character.
     const patterns = [...nameByMatch.keys()]
       .sort((a, b) => b.length - a.length)
       .map(escapeRegExp);

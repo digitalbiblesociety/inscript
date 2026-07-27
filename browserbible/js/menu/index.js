@@ -21,6 +21,7 @@ import { ConfigUrl } from './ConfigUrl.js';
 import { LanguageSetting } from './LanguageSetting.js';
 import { ApocryphaSetting } from './ApocryphaSetting.js';
 import { CommandPalette } from './CommandPalette.js';
+import { GuidedTour } from './GuidedTour.js';
 
 registerMenuComponent('MainMenuButton', MainMenuButton);
 registerMenuComponent('NavigationButtons', NavigationButtons);
@@ -28,6 +29,7 @@ registerMenuComponent('MainSearchBox', MainSearchBox);
 registerMenuComponent('FullScreenButton', FullScreenButton);
 registerMenuComponent('AddWindowButton', AddWindowButton);
 registerMenuComponent('ConfigButton', ConfigButton);
+registerMenuComponent('GuidedTour', GuidedTour);
 registerMenuComponent('AboutScreen', AboutScreen);
 registerMenuComponent('Feedback', Feedback);
 registerMenuComponent('RestoreButton', RestoreButton);

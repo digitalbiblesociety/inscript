@@ -3,6 +3,7 @@ import { i18n } from './lib/i18n.js';
 import { getConfig, updateConfig, getCustomConfig } from './core/config.js';
 import registry, { getApp, VERSION } from './core/registry.js';
 import { App } from './core/App.js';
+import { getGuidedTour } from './menu/GuidedTour.js';
 
 // Imported for side effects: each barrel self-registers with the registry.
 import './resources/index.js';
@@ -165,6 +166,7 @@ if (typeof window !== 'undefined') {
     registry,
     getApp,
     helpers,
-    i18n
+    i18n,
+    tour: getGuidedTour
   };
 }

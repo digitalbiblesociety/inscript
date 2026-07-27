@@ -1,9 +1,3 @@
-/**
- * Deep-link tests — URL parameters land users on the right passage.
- * Runs in both remote and local profiles. Profile-specific text ids are
- * provided so each profile uses content that's actually available.
- */
-
 import { test, expect } from './fixtures.js';
 
 const profileText = {

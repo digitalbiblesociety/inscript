@@ -13,6 +13,11 @@
 
 .command-palette-backdrop.open {
   display: flex;
+  animation: fade-in var(--duration-fast) var(--ease-out);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
 }
 
 .command-palette {
@@ -23,7 +28,7 @@
   border-radius: 12px;
   box-shadow: 0 16px 48px oklch(0 0 0 / 0.3);
   overflow: hidden;
-  animation: command-palette-in 0.15s ease;
+  animation: command-palette-in var(--duration-normal) var(--ease-out);
 }
 
 @keyframes command-palette-in {

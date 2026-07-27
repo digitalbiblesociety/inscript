@@ -26,10 +26,6 @@ test.describe('window reorder', () => {
     let comparisonBox = await comparison.boundingBox();
     expect(bibleBox.x).toBeLessThan(comparisonBox.x);
 
-    // Start in the empty header area right of the nav controls. Dragging by
-    // just over half the neighbor's width pushes the window's edge past the
-    // neighbor's midpoint — the swap must fire even though the pointer stays
-    // well short of that midpoint.
     const innerBox = await headerInner.boundingBox();
     const startX = innerBox.x + innerBox.width * 0.7;
     const startY = innerBox.y + innerBox.height / 2;

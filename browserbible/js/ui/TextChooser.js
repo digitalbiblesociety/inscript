@@ -53,8 +53,6 @@ export function TextChooser() {
   let target = null;
   let selectedTextInfo = null;
   let listData = null;
-  // When set (a lang/lang3 code), only texts in that language are listed —
-  // e.g. the comparison window's second version, which must match the first.
   let langFilter = null;
 
   let processedData = []; // Flat array of {type: 'header'|'text', data, searchText, langHeader}
@@ -282,8 +280,6 @@ export function TextChooser() {
     storeRecentlyUsed(textid);
     textChooser.hidePopover();
 
-    // `target` is shared chooser state and may point at a different window
-    // by the time getText resolves — capture it now.
     const clickTarget = target;
     getText(textid, function(data) {
       selectedTextInfo = data;
@@ -307,9 +303,6 @@ export function TextChooser() {
     AppSettings.setValue(recentlyUsedKey, recentlyUsed);
   }
 
-  // Cache of the heavy language-grouped portion. Keyed on (textType, listData
-  // identity). Only invalidated when those change — recentlyUsed / current-lang
-  // updates only rebuild the small pinned-top sections.
   let groupedCache = null;
   let groupedCacheKey = null;
   // Cache of the full processedData. Skips even the cheap concat if nothing relevant changed.
@@ -400,8 +393,6 @@ export function TextChooser() {
       }
     }
 
-    // With a language filter, the whole list is one language already — a
-    // pinned current-language section would just duplicate it.
     if (langFilter) return result;
 
     const currentLang = selectedTextInfo?.langNameEnglish

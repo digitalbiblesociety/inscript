@@ -514,8 +514,10 @@ export function Scroller(node) {
 
       insertContent(loadType, content);
 
-      if (loadType === 'text' && targetFragmentid) {
-        scrollTo(targetFragmentid);
+      if (loadType === 'text') {
+        if (targetFragmentid) {
+          scrollTo(targetFragmentid);
+        }
         locationInfo = null;
         updateLocationInfo();
       }

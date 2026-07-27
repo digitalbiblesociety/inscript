@@ -185,7 +185,7 @@
         "printButton": "Print",
         "closeButton": "Close",
         "preparingPrint": "Preparing print with verses...",
-        "printError": "Print failed — see browser console",
+        "printError": "Print failed. See the browser console.",
         "popupBlocked": "The print window was blocked. Allow popups for this site and try again.",
         "noNotesToPrint": "No notes to print",
         "selectToPrint": "Select a note to print",
@@ -223,11 +223,11 @@
         "selectOrCreate": "Select a note from the list or create a new one",
         "storageWarning": "Notes are stored in your browser's local storage and may be lost if you clear browser data. Back them up with Download → Back up as JSON.",
         "noNotesFound": "No matching notes",
-        "emptyListHint": "No notes yet — create one to get started",
+        "emptyListHint": "No notes yet. Create one to get started.",
         "modified": "Modified: {date}",
         "saved": "Saved",
         "unsavedChanges": "Unsaved changes",
-        "notSaved": "Not saved — storage is full",
+        "notSaved": "Not saved. Storage is full.",
         "saveFailed": "Save failed",
         "quotaError": "Notes can't be saved because browser storage is full. Export a JSON backup, then delete some notes.",
         "corruptError": "Saved notes could not be read. A backup of the unreadable data was kept in browser storage.",
@@ -259,6 +259,119 @@
         "frequentwords": "Frequent Words",
         "loadtextfailed": "Unable to load this text.",
         "loadchapterfailed": "Unable to load this chapter."
+      }
+    },
+    "tour": {
+      "launch": "Guided Tour",
+      "progress": "Step {current} of {total}",
+      "buttons": {
+        "next": "Next",
+        "back": "Back",
+        "done": "Done",
+        "skip": "Skip tour",
+        "exit": "Close tour"
+      },
+      "steps": {
+        "welcome": {
+          "title": "Welcome to inScript",
+          "body": "inScript is a Bible study workspace that runs in your browser. It offers 1,300+ translations in 1,100+ languages, with commentary, search, audio, and images.<br><br>Press <kbd>&rarr;</kbd> for the next step, <kbd>&larr;</kbd> to go back, and <kbd>Esc</kbd> to close the tour."
+        },
+        "topbar": {
+          "title": "The toolbar",
+          "body": "The top bar holds the menu, the back and forward buttons, the search box, and full screen. Everything below it is a panel."
+        },
+        "mainmenu": {
+          "title": "The main menu",
+          "body": "Click the logo or the menu button to open it. Use it to add panels and to open Settings, About, and this tour."
+        },
+        "addwindow": {
+          "title": "Add a panel",
+          "body": "Click an entry to open a panel beside the current ones. Choose another translation, a commentary, a search, gospel parallels, a text comparison, statistics, images and video, or audio."
+        },
+        "reference": {
+          "title": "The current passage",
+          "body": "Each Bible panel shows its passage at the top left. Click it to go somewhere else."
+        },
+        "navigator": {
+          "title": "Go to a passage",
+          "body": "Books are grouped by division, each in its own colour. Click a book to list its chapters. Type in the filter box to find a book, a chapter, or a named passage."
+        },
+        "navigate": {
+          "title": "Panels move together",
+          "body": "Selecting Genesis 1 moved both Bible panels. Linked panels share one location, so a translation, its commentary, and its audio stay on the same verse."
+        },
+        "versions": {
+          "title": "Change translation",
+          "body": "Click <strong>&lsaquo;</strong> or <strong>&rsaquo;</strong> to step through related editions without leaving the passage. Click the name to open the full list."
+        },
+        "textchooser": {
+          "title": "Choose a translation",
+          "body": "The list holds 1,300+ translations in more than 1,100 languages, grouped by language with the ones you use most at the top. Type to filter by language name or abbreviation."
+        },
+        "versioninfo": {
+          "title": "Translation details",
+          "body": "Every translation lists its publisher, copyright, and description."
+        },
+        "linked": {
+          "title": "Link and unlink panels",
+          "body": "Click the chain icon to stop a panel following the others. Click it again to relink."
+        },
+        "layout": {
+          "title": "Resize and reorder",
+          "body": "Drag the divider to resize panels. Drag a panel header left or right to reorder them. Your panels and their contents return on your next visit."
+        },
+        "search": {
+          "title": "Search or go to a reference",
+          "body": "Type a reference such as <kbd>John 3:16</kbd> to go straight there. Type a word or phrase to search the current translation. Then choose one of the two suggestions."
+        },
+        "searchresults": {
+          "title": "Search results",
+          "body": "Results appear in context, grouped by book. The bar at the top shows where the matches fall. Click a result to send every linked panel to that verse.<br><br>This search covers the four Gospels. Limit any search to the books you choose."
+        },
+        "commentary": {
+          "title": "Commentary",
+          "body": "Read public domain commentaries from Matthew Henry, Jamieson-Fausset-Brown, Calvin, Barnes, Wesley, and others. The commentary follows the verse you are reading."
+        },
+        "comparison": {
+          "title": "Compare translations",
+          "body": "See one passage in two translations with the differences marked."
+        },
+        "parallels": {
+          "title": "Gospel parallels",
+          "body": "Read the same episode in each Gospel, arranged in columns."
+        },
+        "statistics": {
+          "title": "Word statistics",
+          "body": "See word frequencies and a word cloud for the text on screen."
+        },
+        "media": {
+          "title": "Images and video",
+          "body": "View artwork, photography, and film for the current passage, including the JESUS film and the LUMO Gospels."
+        },
+        "audio": {
+          "title": "Audio",
+          "body": "Listen to audio Bibles in many languages. The text follows verse by verse as it is read."
+        },
+        "settings": {
+          "title": "Settings",
+          "body": "Set the reading typeface and text size, change the interface language, and switch chapter and verse numbers, section headings, footnotes, words of Christ, and justified text on or off."
+        },
+        "theme": {
+          "title": "Reading themes",
+          "body": "Choose Normal, Shiloh, Jabbok, or Gethsemane. Until you choose one, inScript follows your system setting."
+        },
+        "deeplink": {
+          "title": "Share this workspace",
+          "body": "Copy this link to reopen the same panels, the same translations, and the same passage."
+        },
+        "palette": {
+          "title": "Keyboard commands",
+          "body": "Press <kbd>Ctrl</kbd>+<kbd>K</kbd> or <kbd>&#8984;</kbd>+<kbd>K</kbd> to open the command palette. Type a reference to go there, or type <kbd>&gt;</kbd> to search commands for panels, themes, fonts, and toggles."
+        },
+        "finish": {
+          "title": "Tour complete",
+          "body": "Open this tour again from the main menu, or press <kbd>Ctrl</kbd>+<kbd>K</kbd> and choose <strong>Guided Tour</strong>."
+        }
       }
     },
     "names": {

@@ -43,7 +43,6 @@ test.describe('passages column (right of the books)', () => {
   test('selecting a book scrolls it to the top of the book list', async ({ page, makeUrl }) => {
     const { navigator } = await openNavigator(page, makeUrl({ w1: 'bible', t1: 'ENGWEB', v1: 'JN3_16' }));
 
-    // 1 Samuel — a book with many chapters, where the old offsetTop math overshot
     await navigator.locator('.text-navigator-division[data-id="S1"]').click();
     await page.waitForTimeout(400); // let the chapter grid animate open
 
@@ -74,8 +73,6 @@ test.describe('passages column (right of the books)', () => {
 
     await navigator.locator('.text-navigator-filter').fill('abraham');
 
-    // "abraham" matches passages in Genesis, 1 Chronicles, John, Romans —
-    // those books stay visible on the left; non-matching books are hidden.
     for (const id of ['GN', 'R1', 'JN', 'RM']) {
       await expect(navigator.locator(`.text-navigator-division[data-id="${id}"]`)).toBeVisible();
     }

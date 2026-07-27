@@ -17,6 +17,8 @@ and bundled with [Vite](https://vitejs.dev/).
 - Highlighting, Greek/Hebrew lemma popups, cross-references, and visual filters.
 - Custom i18n for the UI in 13 languages.
 - Deep-linkable state via the URL query string.
+- A guided tour of the whole feature set, which doubles as the script for the
+  recorded demo walkthrough.
 
 ## Quick start
 
@@ -55,7 +57,7 @@ pnpm build:dev    # dev build: sourcemaps + local texts bundled, all windows on.
 API proxies to be reachable from the deploy origin (the proxies are CORS-locked
 to a specific origin), so serve it from the configured host.
 
-Deployment is Cloudflare Pages via its Git integration — `pnpm run build:cf`,
+Deployment is Cloudflare Pages via its Git integration: `pnpm run build:cf`,
 output `browserbible/dist`, with the profile derived from the branch. See
 [docs/Deployment-Cloudflare.md](docs/Deployment-Cloudflare.md).
 
@@ -72,11 +74,27 @@ E2E tests run in two profiles across Chromium/Firefox/WebKit: `*-remote`
 (content from the CDN) and `*-local` (`?custom=local`, content from the
 extracted starter pack).
 
+## Demo walkthrough
+
+The app ships a guided tour of its features (main menu → **Guided Tour**, or
+`?tour=1`). The same tour is what `pnpm demo` records, as a video plus a
+screenshot per step, into `demo-output/`:
+
+```bash
+pnpm demo                                        # boot a server and record
+pnpm demo -- --gif                               # also write an animated GIF
+pnpm demo -- --url https://inscript.org/ --content none   # record the live site
+```
+
+One list of steps drives both, so the video can't describe a feature the app no
+longer has. See [docs/Guided-Tour.md](docs/Guided-Tour.md).
+
 ## Project layout
 
 - `browserbible/js/` application source (see `CLAUDE.md` for the module map and
   path aliases).
-- `browserbible/css/` global styles and theme variables.
+- `browserbible/css/` global styles, theme variables, and the shared motion
+  layer (see [docs/Motion.md](docs/Motion.md)).
 - `browserbible/public/` static content, i18n resources, and media.
 - `verse-detection/` standalone TypeScript package for detecting Bible
   references in text (workspace dependency).

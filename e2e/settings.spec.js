@@ -1,9 +1,3 @@
-/**
- * Theme and font-size settings — verify body class transitions when settings
- * change. Clicks happen on the in-DOM elements directly (the settings panel
- * is in the DOM regardless of popover visibility).
- */
-
 import { test, expect } from './fixtures.js';
 
 test.describe('settings', () => {

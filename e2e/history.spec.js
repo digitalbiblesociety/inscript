@@ -1,8 +1,3 @@
-/**
- * Browser back/forward — navigations through TextNavigation create history
- * entries; popstate restores them.
- */
-
 import { test, expect } from './fixtures.js';
 
 test.describe('navigation history', () => {

@@ -1,8 +1,3 @@
-/**
- * Window add/remove lifecycle — adding via the public API and closing via the
- * close button.
- */
-
 import { test, expect } from './fixtures.js';
 
 test.describe('window lifecycle', () => {

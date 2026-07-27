@@ -113,7 +113,7 @@ export class MapPanel {
     this._onVerseClick = null; // optional callback(sectionid, fragmentid)
     this._onSettingsChange = null; // optional callback(lat, lon)
     this._verseTextLookup = null; // optional (verseId: string) => string | null
-    this._onLocationOpen = null; // optional callback(location, colocated, verseTextLookup) — bypasses popover
+    this._onLocationOpen = null;
     this._detailTextid = null; // optional Bible text id for hydrating detail verse snippets
   }
 
@@ -140,7 +140,6 @@ export class MapPanel {
       : null;
     const willRecenter = !!locations && locations.length > 0;
 
-    // centerOnBounds runs a full decoration pass itself — skip the interim one
     this._filterMarkers({ updateScales: !willRecenter });
     if (willRecenter) centerOnBounds(this, locations);
   }
@@ -289,11 +288,6 @@ export class MapPanel {
     this._eventListeners.push({ el, event, handler });
   }
 
-  /**
-   * Called by pan-zoom.js on every pan frame.
-   * Translates the entire overlay by the actual screen-pixel delta — one DOM write,
-   * no per-marker work, no reflows. Leaflet uses the same technique on its marker pane.
-   */
   panMarkersBy(dx, dy) {
     if (!this.markersOverlay) return;
     this._panOffset.x += dx;
@@ -306,13 +300,6 @@ export class MapPanel {
     refit(this);
   }
 
-  /**
-   * Called by pan-zoom.js after zoom or pan end — resets the overlay and
-   * recalculates all positions. With `defer: true` (used during wheel/pinch
-   * bursts), markers reposition immediately but the expensive decoration pass
-   * (re-clustering + label deconfliction) waits for a short settle timer —
-   * the same technique Leaflet uses during continuous zoom.
-   */
   updateMarkerScales({ defer = false } = {}) {
     if (!this.markersOverlay) return;
 
@@ -415,7 +402,6 @@ export class MapPanel {
       this.markersOverlay = document.createElement('div');
       this.markersOverlay.className = 'map-markers-overlay';
 
-      // Keyboard-operable map surface (arrow keys pan, +/− zoom — see pan-zoom.js)
       this.container.tabIndex = 0;
       this.container.setAttribute('role', 'application');
       this.container.setAttribute('aria-label',
@@ -528,7 +514,6 @@ export class MapPanel {
         // Pins named in the rendered Bible text stay visible through passage/era filters
         show = true;
       } else if (isPassageMode && this.state.currentReference && marker.locationData) {
-        // Verse IDs are always BOOKCH_V — require the separator so "PS1" can't match "PS119_5"
         show = marker.locationData.verses.some(v => v.startsWith(this.state.currentReference + '_'));
       } else if (!isPassageMode && this.state.exploreEra !== 'all' && marker.locationData) {
         const era = marker.locationData._era;
@@ -544,7 +529,6 @@ export class MapPanel {
   _openLocation(location) {
     MarkerRenderer.fadeMarkers(this.markersOverlay, location);
 
-    // Never zoom OUT when opening a pin — if already zoomed in past level 6, just pan.
     const level6Width = SVG_WIDTH / 6;
     if (this.viewBox.width > level6Width) {
       centerOn(this, location.coordinates[0], location.coordinates[1], 6);
@@ -612,7 +596,6 @@ export class MapPanel {
       }
     });
 
-    // Cluster click — zoom to expand
     this.addListener(this.container, 'click', (e) => {
       const cluster = e.target.closest('.map-cluster');
       if (cluster && cluster._clusterData) {
@@ -648,7 +631,6 @@ export class MapPanel {
       }
     }
 
-    // Truly co-located pins — no amount of zooming will separate them
     if (maxDist < COLOCATED_EPSILON) {
       this._openLocation(locations[0]);
       return;
@@ -664,9 +646,6 @@ export class MapPanel {
     const clusterRadiusSvg = CLUSTER_RADIUS_PX * zoomScale * this.viewBox.width / containerWidth;
 
     if (maxDist <= clusterRadiusSvg) {
-      // centerOnBounds wasn't tight enough — compute the viewBox width that guarantees
-      // separation and zoom there directly (one click, no second click needed).
-      // Formula (for viewBox.width < SVG_WIDTH/6): W < sqrt(d * SVG_WIDTH * cW / (6 * R))
       const separationWidth = Math.max(
         Math.sqrt(maxDist * SVG_WIDTH * containerWidth / (6 * CLUSTER_RADIUS_PX)) * CLUSTER_BREAK_MARGIN,
         30

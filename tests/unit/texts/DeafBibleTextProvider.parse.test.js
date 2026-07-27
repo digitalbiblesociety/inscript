@@ -46,7 +46,6 @@ const RAW = {
         low: 'https://video.dbs.org/DeafBible/chapters_low/ase_american-sign-language/g_0001_360.mp4',
         cover: 'https://video.dbs.org/DeafBible/covers/ase_american-sign-language/g_0001.webp'
       }),
-      // Same starting chapter as the next passage — must be grouped into GN2.
       mediaItem({ book: 'Genesis', reference: 'Genesis 2:5-25', title: 'Man and Woman', high: 'https://video.dbs.org/a/g2a.mp4' }),
       mediaItem({ book: 'Genesis', reference: 'Genesis 2:18-24', title: 'Marriage', high: 'https://video.dbs.org/a/g2b.mp4' }),
       mediaItem({ book: 'John', reference: 'John 1:1-18', title: 'The Word', high: 'https://video.dbs.org/a/j1.mp4' })

@@ -130,10 +130,6 @@ export const NT_BOOKS_OSIS = ["Matt","Mark","Luke","John","Acts","Rom","1Cor","2
 export const NT_BOOKS_USFM = ["MAT","MRK","LUK","JHN","ACT","ROM","1CO","2CO","GAL","EPH","PHP","COL","1TH","2TH","1TI","2TI","TIT","PHM","HEB","JAS","1PE","2PE","1JN","2JN","3JN","JUD","REV"];
 export const NT_BOOKS = ["MT","MK","LK","JN","AC","RM","C1","C2","GL","EP","PP","CL","H1","H2","T1","T2","TT","PM","HB","JM","P1","P2","J1","J2","J3","JD","RV"];
 
-// Apocrypha / deuterocanonical books — full USFM 3.0 non-canonical set, 35 books, all three arrays aligned.
-// Order follows the USFM 3.0 numbering: 68-87, then A4-A6, B2-C3.
-// Note: ADE/AddEsth ("Additions to Esther") is intentionally excluded — USFM 3.0 deprecated it
-// in favor of ESG (Esther Greek). The BOOK_DATA.AE entry is retained for backward compatibility.
 export const AP_BOOKS_OSIS = ["Tob","Jdt","EsthGr","Wis","Sir","Bar","EpJer","PrAzar","Sus","Bel","1Macc","2Macc","3Macc","4Macc","1Esd","2Esd","PrMan","Ps151","Odes","PssSol","EzraApoc","5Ezra","6Ezra","DanGr","5ApocSyrPss","2Bar","EpBar","Jub","1En","1Meq","2Meq","3Meq","Reproof","4Bar","EpLao"];
 export const AP_BOOKS_USFM = ["TOB","JDT","ESG","WIS","SIR","BAR","LJE","S3Y","SUS","BEL","1MA","2MA","3MA","4MA","1ES","2ES","MAN","PS2","ODA","PSS","EZA","5EZ","6EZ","DAG","PS3","2BA","LBA","JUB","ENO","1MQ","2MQ","3MQ","REP","4BA","LAO"];
 export const AP_BOOKS      = ["TB", "JT", "EG",   "WS", "SR", "BR", "LJ", "PA", "SN", "BL","M1", "M2", "M3", "M4", "E1", "E2", "PN", "PX", "OA","SP",  "EA",     "E5",   "E6",   "DG",  "P3",        "B2", "LB",  "JE", "N1","Q1", "Q2", "Q3", "RP",    "B4", "LL"];

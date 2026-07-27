@@ -1,0 +1,80 @@
+[popover]:not(.tour-layer):not(#demo-cursor) {
+  opacity: 0;
+  scale: 0.98;
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    scale var(--duration-fast) var(--ease-out),
+    overlay var(--duration-fast) allow-discrete,
+    display var(--duration-fast) allow-discrete;
+}
+
+[popover]:not(.tour-layer):not(#demo-cursor):popover-open {
+  opacity: 1;
+  scale: 1;
+}
+
+@starting-style {
+  [popover]:not(.tour-layer):not(#demo-cursor):popover-open {
+    opacity: 0;
+    scale: 0.98;
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    scale: 0.99;
+  }
+}
+
+.window {
+  animation: panel-in var(--duration-normal) var(--ease-out);
+}
+
+@keyframes tab-in {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+.window-tab {
+  animation: tab-in var(--duration-slow) var(--ease-spring);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+}
+
+#main-search-suggestions {
+  animation: drop-in var(--duration-fast) var(--ease-out);
+}
+
+.close-button,
+.link-button,
+.header-icon,
+.main-menu-item,
+.window-tab,
+#main-menu-button,
+#main-search-button,
+#main-back-button,
+#main-forward-button {
+  transition: scale var(--duration-fast) var(--ease-out);
+}
+
+.close-button:active,
+.link-button:active,
+.header-icon:active,
+.main-menu-item:active,
+#main-menu-button:active,
+#main-search-button:active,
+#main-back-button:active:not(.inactive),
+#main-forward-button:active:not(.inactive) {
+  scale: 0.92;
+}

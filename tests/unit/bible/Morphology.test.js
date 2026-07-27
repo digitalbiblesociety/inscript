@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { robinson, OSHB, Greek, Hebrew, morphology } from '@bible/Morphology.js';
 
-describe('robinson (Greek) — verbs', () => {
+describe('robinson (Greek): verbs', () => {
   it('formats a 5-char tense/voice/mood/person/number', () => {
     expect(robinson.format('V-PAI-3S')).toBe('verb: present, active, indicative, 3rd, singular');
   });
@@ -21,7 +21,7 @@ describe('robinson (Greek) — verbs', () => {
   });
 });
 
-describe('robinson — nouns and adjectives', () => {
+describe('robinson: nouns and adjectives', () => {
   it('formats a noun (case, number, gender)', () => {
     expect(robinson.format('N-NSM')).toBe('noun: nominative, singular, masculine');
   });
@@ -35,7 +35,7 @@ describe('robinson — nouns and adjectives', () => {
   });
 });
 
-describe('robinson — pronouns', () => {
+describe('robinson: pronouns', () => {
   it('formats personal pronoun with person', () => {
     expect(robinson.format('P-1NS')).toBe('personal pronoun: 1st, nominative, singular');
     expect(robinson.format('P-2GP')).toBe('personal pronoun: 2nd, genitive, plural');
@@ -46,7 +46,7 @@ describe('robinson — pronouns', () => {
   });
 });
 
-describe('robinson — particles, conjunctions, indeclinables', () => {
+describe('robinson: particles, conjunctions, indeclinables', () => {
   it('formats interrogative particle PRT-I', () => {
     expect(robinson.format('PRT-I')).toBe('particle: interogative');
   });
@@ -60,7 +60,7 @@ describe('robinson — particles, conjunctions, indeclinables', () => {
   });
 });
 
-describe('robinson — getPartofSpeech', () => {
+describe('robinson: getPartofSpeech', () => {
   it('returns the readable name', () => {
     expect(robinson.getPartofSpeech('V')).toBe('verb');
     expect(robinson.getPartofSpeech('CONJ')).toBe('conjunction');
@@ -71,7 +71,7 @@ describe('robinson — getPartofSpeech', () => {
   });
 });
 
-describe('OSHB (Hebrew) — verbs', () => {
+describe('OSHB (Hebrew): verbs', () => {
   it('formats a Hebrew qal perfect 3ms', () => {
     expect(OSHB.format('HVqp3ms')).toBe('verb: qal, perfect (qatal), third, masculine, singular');
   });
@@ -86,7 +86,7 @@ describe('OSHB (Hebrew) — verbs', () => {
   });
 });
 
-describe('OSHB — non-verb parts of speech', () => {
+describe('OSHB: non-verb parts of speech', () => {
   it('formats a Hebrew noun', () => {
     expect(OSHB.format('HNcfsa')).toBe('noun: common, feminine, singular, absolute');
   });

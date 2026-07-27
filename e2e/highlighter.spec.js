@@ -1,13 +1,3 @@
-/**
- * HighlighterPlugin — verifies that a highlight stored in localStorage is
- * restored to the DOM on a fresh load. This is the user-perceived contract:
- * "highlight a verse, come back later, see it again."
- *
- * We seed localStorage rather than simulating a text selection (which is
- * brittle in headless browsers) — the restore path is what the user
- * experiences and is the meaningful thing to verify.
- */
-
 import { test, expect } from './fixtures.js';
 
 test.describe('highlighter persistence', () => {

@@ -209,8 +209,6 @@
 	font-weight: bold;
 }
 
-/* Verse Navigator — third level (verse grid) */
-
 /* Fade non-selected chapter numbers when a chapter is picked */
 .verse-navigator .has-verse-selection .text-navigator-section {
 	opacity: 0.5;

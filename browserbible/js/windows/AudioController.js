@@ -363,7 +363,6 @@ export function AudioController(id, container, toggleButton, scroller) {
       if (currentVerse !== lastTimestampVerse) {
         lastTimestampVerse = currentVerse;
 
-        // Match by fragment id, not DOM position — verse numbers can have gaps.
         const verseEl = sectionNode.querySelector(`.v[data-id="${sectionid}_${currentVerse}"]`);
 
         setReadingVerse(verseEl);

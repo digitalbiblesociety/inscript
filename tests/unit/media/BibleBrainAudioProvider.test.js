@@ -70,7 +70,7 @@ describe('selectAudioFileset', () => {
 
   it('skips an id-less fileset without throwing and picks a valid one', () => {
     const withMissingId = [
-      { type: 'audio', size: 'NT' }, // no id — must not throw on .includes
+      { type: 'audio', size: 'NT' },
       { id: 'NT_PLAIN', type: 'audio', size: 'NT' }
     ];
     expect(selectAudioFileset(withMissingId, 'JN', 'audio').id).toBe('NT_PLAIN');

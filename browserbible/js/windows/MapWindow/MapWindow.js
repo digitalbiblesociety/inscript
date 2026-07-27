@@ -247,7 +247,6 @@ class MapWindowComponent extends BaseWindow {
     const name = span.getAttribute('data-location-name') || span.textContent;
     const verseid = span.closest('.verse, .v')?.getAttribute('data-id');
 
-    // Resolve via the verse context first — location names are not unique (e.g. Antioch)
     const location =
       (verseid && this.mapPanel.locationDataByVerse?.[verseid]?.find(l => l.name === name)) ||
       this.mapPanel.locationData.find(l => l.name === name);
@@ -423,8 +422,6 @@ class MapWindowComponent extends BaseWindow {
     }
 
     const isPassage = this.mapPanel.state.mode === 'passage';
-    // Count locations in the current passage/era set. Clustered markers still count —
-    // they're shown inside a cluster badge, not hidden (only `.filtered-out` is hidden).
     const visibleCount = this.refs.mapContainer
       .querySelectorAll('.map-marker:not(.filtered-out)').length;
 
@@ -443,8 +440,6 @@ class MapWindowComponent extends BaseWindow {
   // --- Detail panel ---
 
   showDetail(location, colocated, verseTextLookup) {
-    // Only move focus when the user is already working inside this window —
-    // a passive textload must not steal focus from elsewhere in the app.
     const hadFocusInside = this.contains(document.activeElement);
 
     // A location opened while the journey stop list is up (stop badge or row
@@ -642,12 +637,6 @@ class MapWindowComponent extends BaseWindow {
       if (this.mapPanel) this.mapPanel._detailTextid = e.data.textid;
     }
 
-    // The Bible text a detail hydrates from can arrive AFTER a detail is already
-    // open — most often when this map is the leftmost window, created before the
-    // Bible window replies to its content request. A detail opened in that gap
-    // hydrates against a fallback (or absent) text and its verse rows can end up
-    // stuck on "not available". When the real text id first becomes known, or it
-    // later changes, retry those rows so they resolve against the right text.
     if (e.data.textid && e.data.textid !== prevTextid) {
       this.rehydrateOpenDetail();
     }

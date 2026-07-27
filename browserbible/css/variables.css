@@ -53,6 +53,12 @@
   --transition-normal: 0.25s ease;
   --transition-slow:   0.4s ease;
 
+  --duration-fast:   0.15s;
+  --duration-normal: 0.22s;
+  --duration-slow:   0.32s;
+  --ease-out:    cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
   --z-base:        1;      /* sticky headers, base ordering within a panel */
   --z-above:       2;      /* active tabs, content above base */
   --z-panel:       3;      /* info panels, audio controller over content */
@@ -173,7 +179,6 @@ html.gethsemane {
     --color-footnote:           oklch(0.7184 0.0817 263.9);
     --color-toolbar-background: oklch(0 0 0);
 
-    /* Division colors — same as jabbok */
     --color-division-pentateuch:       oklch(0.65 0.10 144);
     --color-division-historical:       oklch(0.65 0.10 216);
     --color-division-wisdom:           oklch(0.65 0.10 324);

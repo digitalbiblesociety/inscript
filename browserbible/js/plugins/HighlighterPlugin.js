@@ -395,7 +395,6 @@ export const HighlighterPlugin = () => {
       setTimeout(() => {
         const selection = window.getSelection();
 
-        // No selection — check if clicking an existing highlight to edit
         if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
           const existingMark = e.target.closest('.user-highlight');
           if (existingMark) {
@@ -415,7 +414,6 @@ export const HighlighterPlugin = () => {
           return;
         }
 
-        // Text selection — show palette for new highlight
         const range = selection.getRangeAt(0);
         const ancestor = range.commonAncestorContainer;
         const verse = ancestor.nodeType === Node.TEXT_NODE

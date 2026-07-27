@@ -5,6 +5,7 @@ import AppSettings from '../common/AppSettings.js';
 import { PlaceKeeper } from '../common/PlaceKeeper.js';
 import { TextNavigation } from '../common/TextNavigation.js';
 import { getWindowIcon } from '../core/windowIcons.js';
+import { getGuidedTour } from './GuidedTour.js';
 import { elem } from '../lib/helpers.esm.js';
 
 const toSlug = (str) => str.replace(/\s+/g, '-').toLowerCase();
@@ -300,6 +301,17 @@ export function CommandPalette() {
           }
         }
         close();
+      }
+    });
+
+    registerCommand({
+      name: 'Guided Tour',
+      keywords: ['tour', 'guide', 'walkthrough', 'tutorial', 'help', 'intro'],
+      category: 'action',
+      icon: getWindowIcon('tour'),
+      execute() {
+        close();
+        getGuidedTour()?.start();
       }
     });
 

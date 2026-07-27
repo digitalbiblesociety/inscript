@@ -21,8 +21,8 @@
 # applied and same-named headers are combined, so a global Cache-Control would
 # collide with the per-path values below instead of being overridden by them.
 #
-# Nothing in this build is content-hashed — vite.config.js pins the entry to
-# js/bundle.js and strips hashes from css/font/image names — so no asset can be
+# Nothing in this build is content-hashed: vite.config.js pins the entry to
+# js/bundle.js and strips hashes from css/font/image names, so no asset can be
 # cached immutably. Code and markup must revalidate on every load or a deploy
 # would not reach returning visitors; fonts and images get a real max-age
 # because their bytes are stable even though their names are not.

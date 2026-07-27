@@ -1,18 +1,11 @@
-/**
- * Language switching — calling i18n.setLng changes <html lang> and re-translates
- * elements with [data-i18n] attributes. Bypasses the menu UI and exercises the
- * underlying mechanism through the debug global.
- */
-
 import { test, expect } from './fixtures.js';
 
 test.describe('i18n', () => {
   test('default language is English with ltr direction', async ({ page, appPath }) => {
     await page.goto(appPath);
 
-    // i18n.init is async; wait for it to set <html lang> before reading.
-    await expect.poll(async () => page.evaluate(() => document.documentElement.lang)).toBe('en');
-    expect(await page.evaluate(() => document.documentElement.dir)).toBe('ltr');
+    await expect.poll(async () => page.evaluate(() => document.documentElement.dir)).toBe('ltr');
+    expect(await page.evaluate(() => document.documentElement.lang)).toBe('en');
   });
 
   test('switching to Spanish updates <html lang> and translated elements', async ({ page, appPath }) => {

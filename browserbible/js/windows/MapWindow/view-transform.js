@@ -1,17 +1,3 @@
-/**
- * Maps SVG (viewBox) coordinates to and from on-screen container pixels.
- *
- * The SVG is rendered with preserveAspectRatio="xMidYMid slice" (cover): the viewBox
- * is scaled to FILL the container with no letterbox, cropping whatever overflows.
- * A single uniform scale plus a centring offset (≤ 0 when content overflows) describes
- * that mapping — markers (HTML overlay) and pointer math must use the same transform
- * as the SVG so they stay pixel-aligned with the basemap. Combined with viewBox-aspect
- * tracking (so the crop is near-zero) and a strict viewBox clamp (so the viewBox never
- * leaves the map), this guarantees the map always fills the panel with no empty bars
- * and no out-of-map void.
- */
-
-/** `scale` is screen px per SVG unit; `offsetX/Y` centre it, going negative on overflow. */
 export const getViewTransform = (viewBox, containerRect) => {
   const scale = Math.max(
     containerRect.width / viewBox.width,

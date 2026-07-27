@@ -2,21 +2,21 @@
 
 ## Context
 
-The `.info-window` media popup (created by `MediaLibraryPlugin` via `InfoWindow('mediapopup')`) lists image thumbnails for a verse. Clicking one currently opens the raw image in a **new browser tab** (`<a href target="_blank">`). Instead, a click should open/focus that exact image inside the **MediaWindow** gallery — switching it to the right chapter if needed, and opening a MediaWindow if none exists.
+The `.info-window` media popup (created by `MediaLibraryPlugin` via `InfoWindow('mediapopup')`) lists image thumbnails for a verse. Clicking one currently opens the raw image in a **new browser tab** (`<a href target="_blank">`). Instead, a click should open/focus that exact image inside the **MediaWindow** gallery, switching it to the right chapter if needed, and opening a MediaWindow if none exists.
 
 Scope: image popups only. Video/JFM popups play inline in the popup, have no item list, and stay as-is.
 
 ## Files to modify
 
-1. `browserbible/js/plugins/MediaLibraryPlugin.js` — popup rendering + click handling
-2. `browserbible/js/windows/MediaWindow.js` — gallery item identity + `selectMediaItem()`
-3. `browserbible/js/core/WindowManager.js` — small `activate(id)` helper
+1. `browserbible/js/plugins/MediaLibraryPlugin.js`: popup rendering + click handling
+2. `browserbible/js/windows/MediaWindow.js`: gallery item identity + `selectMediaItem()`
+3. `browserbible/js/core/WindowManager.js`: small `activate(id)` helper
 
 ## Changes
 
 ### 1. MediaLibraryPlugin.js
 
-- **`showImagePopup` (line 41)**: pass `verseid` and `sectionid` in from the click handler in `setupMediaEvents` (line 128–147; `verseid` is already computed there; get `sectionid` from `icon.closest('.section')?.getAttribute('data-id')` — more robust than `verseid.split('_')[0]` and guaranteed to match the later DOM lookup). Keep the `<a href>` (modifier-click still opens the raw image) and add identity data attributes to each anchor: `data-folder`, `data-filename`, `data-verseid`, `data-sectionid`.
+- **`showImagePopup` (line 41)**: pass `verseid` and `sectionid` in from the click handler in `setupMediaEvents` (line 128–147; `verseid` is already computed there; get `sectionid` from `icon.closest('.section')?.getAttribute('data-id')`, which is more robust than `verseid.split('_')[0]` and guaranteed to match the later DOM lookup). Keep the `<a href>` (modifier-click still opens the raw image) and add identity data attributes to each anchor: `data-folder`, `data-filename`, `data-verseid`, `data-sectionid`.
 - **Delegated click handler** on `mediaPopup.body`, attached once at plugin init:
   - scope to `e.target.closest('.inline-image-library-thumbs a')` so video popups are never affected;
   - bail on `e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0` (preserve open-in-new-tab);
@@ -39,18 +39,18 @@ Scope: image popups only. Video/JFM popups play inline in the popup, have no ite
 
 - **`createGalleryItem` (line 503)**: add `folder: mediaLibrary.folder`, `filename: mediaInfo.filename`, and `verseid` (pass `verseid` through from `renderVerseInto`, line 459, which already has it).
 - **Extract `setFilter(type, enabled)`**: sets `state.filters[type]`, toggles the button's `active` class, clears `currentSectionId` (defeats the early-return at line 320), calls `processContent()`. Use it from the existing filter-button handler (line 113–121) and from the retry below.
-- **New `selectMediaItem({ sectionid, verseid, folder, filename })`** — the single public entry point:
+- **New `selectMediaItem({ sectionid, verseid, folder, filename })`** is the single public entry point:
   1. If `this.mediaLibraries` is not loaded yet (also covers a not-yet-initialized component), stash as `this.pendingSelect` and return.
   2. If `this.state.currentSectionId !== sectionid`: set `this.contentToProcess = document.querySelector('.section[data-id="${sectionid}"]')` and `processContent()` (same DOM-lookup path `handleMessage` uses for `nav`, line 186).
   3. Find the gallery index with a match ladder: exact `folder`+`filename` → same `folder` + filename with the `-color` suffix stripped (the gallery skips `-color` variants at line 474 but the popup shows them) → first item with same `verseid` → give up gracefully (thumbs stay rendered, no gallery opened).
   4. If nothing matched and `!this.state.filters.art`: `setFilter('art', true)` and retry the ladder once.
   5. `showGalleryItem(index)`, then scroll the selected thumb into view: `.media-library-thumbs a.selected` → `scrollIntoView({ block: 'nearest' })`.
 - **`init` (line 154)**, inside the `getMediaLibraries` callback: `const select = this.pendingSelect ?? this.initData?.select` (initData is assigned before `appendChild`, WindowManager.js:100/103, so it's available here). If `select` and the section exists in the DOM → `selectMediaItem(select)`; otherwise keep the existing `contentToProcess` / `requestCurrentContent()` logic (fallback prevents a permanently blank new window if the section vanished). Clear `pendingSelect` after consuming.
-- `getData()` intentionally does not persist `select` — the focus request is transient.
+- `getData()` intentionally does not persist `select`, because the focus request is transient.
 
 ### 3. WindowManager.js
 
-- **New `activate(id)` method**: find the window by id (guard unknown ids), remove `active` from all `.window, .window-tab`, add to the target's `node` and `tab` — same logic as the tab-click handler (line 125–131). Needed for compact-ui where `.window.active` controls stacking; harmless no-op visually in desktop layout.
+- **New `activate(id)` method**: find the window by id (guard unknown ids), remove `active` from all `.window, .window-tab`, add to the target's `node` and `tab`, the same logic as the tab-click handler (line 125–131). Needed for compact-ui where `.window.active` controls stacking; harmless no-op visually in desktop layout.
 
 ## Verification
 

@@ -49,7 +49,6 @@ export function indexLocationsByVerse(locationData) {
 
 export function getLocationsForReference(locationData, sectionid) {
   if (!sectionid || !locationData) return [];
-  // Verse IDs are always BOOKCH_V — require the separator so "PS1" can't match "PS119_5"
   return locationData.filter(loc =>
     loc.verses.some(v => v.startsWith(sectionid + '_'))
   );

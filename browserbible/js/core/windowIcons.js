@@ -12,6 +12,7 @@ import highlighterSvg from '../../css/images/highlighter.svg?raw';
 import gearSvg from '../../css/images/gear-black.svg?raw';
 import mapSvg from '../../css/images/map.svg?raw';
 import aboutSvg from '../../css/images/about.svg?raw';
+import tourSvg from '../../css/images/tour.svg?raw';
 
 const windowIcons = {
   BibleWindow: bibleSvg,
@@ -28,6 +29,7 @@ const windowIcons = {
   highlighter: highlighterSvg,
   settings: gearSvg,
   about: aboutSvg,
+  tour: tourSvg,
 };
 
 export function getWindowIcon(className) {

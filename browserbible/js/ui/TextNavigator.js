@@ -182,7 +182,6 @@ export function TextNavigator() {
     const q = filterInput.value.trim().toLowerCase();
 
     if (isEnglishText() && q) {
-      // Passage search — right shows matches, left shows the books they're in.
       showOnlyBooks(renderSearchResults(q));
     } else {
       filterBooks(q);

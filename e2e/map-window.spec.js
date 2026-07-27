@@ -23,7 +23,6 @@ test.describe('map window', () => {
 
     const map = page.locator('.window.MapWindow');
     await expect(map).toBeVisible({ timeout: 15_000 });
-    // Direct child only — every marker also contains an inline <svg> icon
     const svg = map.locator('.svg-map-container > svg');
     await expect(svg).toBeVisible({ timeout: 15_000 });
 

@@ -30,7 +30,7 @@ describe('TextLoader.getProviderName / getTextid / getProviderId', () => {
   });
 });
 
-describe('TextLoader.loadSection — caching and dispatch', () => {
+describe('TextLoader.loadSection: caching and dispatch', () => {
   it('dispatches to the named provider on first load', async () => {
     const { registerTextProvider, loadSection } = await import('@texts/TextLoader.js');
     const provider = fakeProvider();
@@ -65,8 +65,6 @@ describe('TextLoader.loadSection — caching and dispatch', () => {
       providerName: 'fake',
       sections: ['JN3', 'JN4', 'JN5'] // canonical names
     };
-    // Caller asks for the same chapter — fallback path is exercised when the
-    // requested id matches by chapter number.
     await new Promise(resolve => loadSection(textInfo, 'JN03', resolve));
     expect(provider.loadSection).toHaveBeenCalledWith('ENGKJV', 'JN3', expect.any(Function), expect.any(Function));
   });

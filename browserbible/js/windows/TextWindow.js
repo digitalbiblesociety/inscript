@@ -291,10 +291,6 @@ export class TextWindowComponent extends BaseWindow {
     this.broadcastNav(sectionid, fragmentid);
   }
 
-  // Announce an explicit navigation (navigator pick or typed reference) to the
-  // other linked windows. Scroll-driven nav sync only fires on user scrolls —
-  // programmatic scrolls are suppressed to prevent echo loops — so without this
-  // the other windows wouldn't follow until the next manual scroll.
   broadcastNav(sectionid, fragmentid) {
     this.trigger('globalmessage', {
       type: 'globalmessage',
@@ -546,10 +542,6 @@ export class TextWindowComponent extends BaseWindow {
     }
   }
 
-  // Refresh the reference input and announce this window's state. Wired to
-  // every scroller event ('scroll' fires per tick), so skip the settingschange
-  // unless the location or version actually changed — downstream it rewrites
-  // document.title and schedules a settings save.
   updateTextnav(locationInfo = null) {
     // On 'locationchange' the scroller triggers before committing the new
     // location, so getLocationInfo() is stale; prefer the event payload.

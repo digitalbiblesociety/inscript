@@ -497,7 +497,6 @@ export async function initVerseDetection(
 			}
 		);
 
-		// Collect before mutating — replacing nodes mid-walk invalidates the walker.
 		const nodesToProcess: Text[] = [];
 		let node: Node | null;
 		while ((node = walker.nextNode())) {

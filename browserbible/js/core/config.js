@@ -109,6 +109,7 @@ const defaultConfig = {
   settingToggleDefaults: [true, true, true, true, true, true, false],
   enableFeedback: false,
   feedbackUrl: '',
+  enableGuidedTourAutostart: false,
   windowTypesOrder: [],
   disabledWindowTypes: (typeof __DISABLED_WINDOW_TYPES__ !== 'undefined') ? __DISABLED_WINDOW_TYPES__ : [],
   _disabledFeatures: (typeof __DISABLED_FEATURES__ !== 'undefined') ? __DISABLED_FEATURES__ : [],
@@ -129,6 +130,9 @@ const defaultConfig = {
 };
 
 const customConfigs = {
+  demo: {
+    serverSearchPath: ''
+  },
   local: {
     baseContentUrl: '',
     localAudioEnabled: true,

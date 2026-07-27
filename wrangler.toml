@@ -2,7 +2,7 @@
 #
 # This file only declares *what* is deployed. The build itself (build command,
 # root directory, and the build watch paths that keep non-app commits from
-# triggering a deploy) is still configured in the Pages dashboard — Cloudflare
+# triggering a deploy) is still configured in the Pages dashboard. Cloudflare
 # does not read any of those from here. See docs/Deployment-Cloudflare.md.
 #
 # NOTE: once a Pages project adopts a Wrangler config file, this file becomes

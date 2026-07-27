@@ -19,7 +19,6 @@ export interface ContentSourceConfig {
 	dynamicTextSelection: boolean;
 	/** Priority list per language; an array gives fallback order */
 	preferredTextIdsByLanguage: Record<string, string | string[]>;
-	/** Auto-populated at runtime — set priorities via preferredTextIdsByLanguage instead */
 	textIdsByLanguage: Record<string, string>;
 	/** Placeholders: {baseUrl}, {textId}, {sectionId} */
 	pathTemplate: string;

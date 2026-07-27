@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Reference } from '@bible/BibleReference.js';
 import BibleReferenceDefault from '@bible/BibleReference.js';
 
-describe('Reference — string parsing', () => {
+describe('Reference: string parsing', () => {
   it('parses "John 3:16"', () => {
     const r = Reference('John 3:16');
     expect(r).toMatchObject({ bookid: 'JN', chapter1: 3, verse1: 16, chapter2: -1, verse2: -1, language: 'eng' });
@@ -68,7 +68,7 @@ describe('Reference — string parsing', () => {
   });
 });
 
-describe('Reference — short codes', () => {
+describe('Reference: short codes', () => {
   it('parses "JN3_16" → John 3:16', () => {
     const r = Reference('JN3_16');
     expect(r).toMatchObject({ bookid: 'JN', chapter1: 3, verse1: 16 });
@@ -80,7 +80,7 @@ describe('Reference — short codes', () => {
   });
 });
 
-describe('Reference — component constructor', () => {
+describe('Reference: component constructor', () => {
   it('accepts (bookid, chapter, verse)', () => {
     const r = Reference('JN', 3, 16);
     expect(r).toMatchObject({ bookid: 'JN', chapter1: 3, verse1: 16, chapter2: -1, verse2: -1 });
@@ -97,7 +97,7 @@ describe('Reference — component constructor', () => {
   });
 });
 
-describe('Reference — clamping & normalization', () => {
+describe('Reference: clamping & normalization', () => {
   it('clamps a chapter past the book max to the last chapter', () => {
     // John has 21 chapters
     const r = Reference('John 99:1');
@@ -123,7 +123,7 @@ describe('Reference — clamping & normalization', () => {
   });
 });
 
-describe('Reference — methods', () => {
+describe('Reference: methods', () => {
   it('isValid() reflects parse success', () => {
     expect(Reference('John 3:16').isValid()).toBe(true);
     expect(Reference('JN', 3).isValid()).toBe(true);

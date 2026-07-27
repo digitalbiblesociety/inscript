@@ -61,7 +61,6 @@ function flattenHtmlChapterized(textDir) {
     const from = join(subDir, name);
     const to = join(textDir, name);
     if (existsSync(to)) {
-      // Don't clobber — leaves the conflict in place for manual review.
       console.warn(`  skip (target exists): ${to}`);
       continue;
     }
@@ -141,7 +140,7 @@ async function main() {
   console.log(`  wrote ${result.count} entries to texts.json`);
 
   if (process.env.SKIP_REZIP === '1') {
-    console.log('\nSKIP_REZIP=1 — skipping zip step.');
+    console.log('\nSKIP_REZIP=1: skipping zip step.');
     return;
   }
 

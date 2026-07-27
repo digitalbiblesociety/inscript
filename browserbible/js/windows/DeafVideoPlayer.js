@@ -120,7 +120,7 @@ export function DeafVideoPlayer(node) {
       sectionid: currentItem.sectionid,
       fragmentid: currentItem.fragmentid,
       label: currentItem.reference,
-      labelLong: `${currentItem.book} — ${currentItem.reference}`,
+      labelLong: `${currentItem.reference} (${currentItem.book})`,
       offset: 0
     };
 

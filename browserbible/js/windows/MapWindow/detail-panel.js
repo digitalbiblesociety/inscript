@@ -93,19 +93,9 @@ function renderVerseList(verseItems) {
   }).join('');
 }
 
-/**
- * Fill pending verse rows with text fetched on demand via TextLoader.
- * Rows are grouped by section; the first EAGER_HYDRATE_SECTIONS sections load
- * immediately, the rest when scrolled into view. Failed or absent verses show
- * an i18n'd "not available" message — never a silent blank.
- *
- * A null `textid` falls back to the first rendered Bible section text, then the
- * configured default version. `loadSectionFn` is injectable for tests.
- */
 export function hydrateVerseTexts(containerEl, textid, loadSectionFn = loadSection) {
   if (!containerEl) return;
 
-  // Re-hydration replaces the content — drop any observer watching stale rows
   containerEl._hydrateObserver?.disconnect();
   containerEl._hydrateObserver = null;
 
@@ -145,7 +135,6 @@ export function hydrateVerseTexts(containerEl, textid, loadSectionFn = loadSecti
     loadSectionFn(resolvedTextid, sectionid, (contentEl) => {
       for (const { span, row } of entries) {
         const fragmentid = row.getAttribute('data-fragmentid');
-        // A verse can be split across elements (e.g. paragraph breaks) — join them
         const parts = [...contentEl.querySelectorAll(`.${CSS.escape(fragmentid)}`)]
           .map(cleanVerseText).filter(Boolean);
         fill(span, parts.length ? parts.join(' ') : null);

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createVerseDetector } from '@verse-detection/VerseDetectionPlugin.ts';
 
-describe('createVerseDetector — English detection', () => {
+describe('createVerseDetector: English detection', () => {
   const detector = createVerseDetector({ language: 'en' });
 
   it('detects a single English reference', () => {
@@ -43,7 +43,7 @@ describe('createVerseDetector — English detection', () => {
   });
 });
 
-describe('createVerseDetector — other languages', () => {
+describe('createVerseDetector: other languages', () => {
   it('detects a Spanish reference', () => {
     const detector = createVerseDetector({ language: 'es' });
     const verses = detector.detectVerses('Lee Juan 3:16 hoy.');

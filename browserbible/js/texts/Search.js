@@ -470,7 +470,12 @@ export class TextSearch {
   }
 
   buildBruteForceIndex() {
-    return this.textInfo.sections.map(sectionid => {
+    const divisions = this.searchDivisions ?? [];
+    const sections = divisions.length > 0
+      ? this.textInfo.sections.filter(sectionid => divisions.includes(sectionid.substring(0, 2)))
+      : this.textInfo.sections;
+
+    return sections.map(sectionid => {
       const bookCode = sectionid.substr(0, 2);
       const chapterNum = parseInt(sectionid.substr(2), 10);
       const verseCount = BOOK_DATA[bookCode]?.chapters?.[chapterNum - 1] ?? 0;

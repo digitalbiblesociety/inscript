@@ -1,12 +1,3 @@
-/**
- * Pericope source data — `reference: title` pairs in canonical order.
- *
- * Reference is the internal 2-char book shortCode followed by
- * `chapter.verse` (e.g. "GN1.1" = Genesis 1:1, "S116.14" = 1 Samuel 16:14).
- * Numbered books carry a digit in the code (S1, S2, K1, K2, R1, R2, ...).
- *
- * Parsed into navigable records by Pericopes.js.
- */
 export const PERICOPE_DATA = {
   "GN1.1": "Creation",
   "GN2.4": "The First Humans",

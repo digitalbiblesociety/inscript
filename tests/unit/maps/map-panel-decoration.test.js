@@ -49,7 +49,7 @@ describe('updateMarkerScales deferred decoration', () => {
     const panel = makePanel();
 
     panel.updateMarkerScales({ defer: true });
-    panel.updateMarkerScales(); // sync — decorates now, cancels the timer
+    panel.updateMarkerScales();
     expect(panel.markersOverlay.querySelectorAll('.map-cluster')).toHaveLength(1);
 
     const decorateSpy = vi.spyOn(panel, '_decorateMarkers');

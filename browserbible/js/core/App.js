@@ -176,10 +176,6 @@ export class App {
     AppSettings.setValue(this.settingsKey, settings);
   }
 
-  /**
-   * Broadcast a message to all windows and plugins.
-   * Unlinked windows neither broadcast nor receive — they function independently.
-   */
   handleGlobalMessage(e) {
     const windows = this.windowManager.getWindows();
 

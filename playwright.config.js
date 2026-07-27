@@ -13,11 +13,6 @@ export default defineConfig({
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
   },
-  // Each browser runs twice — once against the remote inscript.bible.cloud
-  // content (default config) and once against the local starter pack served
-  // from browserbible/public/content/texts/. The "local" projects depend on
-  // the starter pack having been downloaded; globalSetup handles this unless
-  // SKIP_STARTER_PACK=1 is set.
   projects: [
     { name: 'chromium-remote', metadata: { profile: 'remote' }, use: { ...devices['Desktop Chrome'] } },
     { name: 'firefox-remote',  metadata: { profile: 'remote' }, use: { ...devices['Desktop Firefox'] } },

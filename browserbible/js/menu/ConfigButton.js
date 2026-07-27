@@ -5,7 +5,7 @@ import { getWindowIcon } from '../core/windowIcons.js';
 
 /** Create the settings button and its config dialog. */
 export function ConfigButton() {
-  const configButton = elem('div', { className: 'main-menu-item' },
+  const configButton = elem('div', { className: 'main-menu-item', id: 'main-menu-settings-button' },
     elem('span', { className: 'main-menu-icon', innerHTML: getWindowIcon('settings') || '' }),
     elem('span', { className: 'i18n', dataset: { i18n: '[html]menu.labels.settings' } })
   );

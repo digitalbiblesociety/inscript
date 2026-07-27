@@ -1,25 +1,10 @@
-/**
- * Bible Brain karaoke audio: a Bible window loaded from Bible Brain (ENGESV)
- * exposes audio with verse timestamps. As audio plays, the current verse gets
- * the `.audio-reading` highlight and the text auto-scrolls to it.
- *
- * This drives the controller's timeupdate handler deterministically by
- * overriding the <audio> element's currentTime and dispatching 'timeupdate' —
- * so it exercises the real DOM, the real /timestamps data (fetched through the
- * proxy), and the real highlight/scroll logic without relying on headless audio
- * decoding. Requires the key-hiding proxy running on :8787 (dev-server.mjs).
- *
- * Chromium only, and skipped automatically if Bible Brain audio doesn't become
- * available (e.g. the proxy isn't running).
- */
-
 import { test, expect } from './fixtures.js';
 
 // Reference by provider id so it resolves to Bible Brain unambiguously (a bare
 // "ENGESV" can collide with / fall back to the local provider). This is the same
 // providerid form the text chooser produces.
 const TEXT = 'biblebrain:ENGESV'; // text_plain NT/OT + timestamped audio (ENGESVN1DA)
-const SECTION = 'JN3';            // John 3 — 37 timestamps in the NT audio fileset
+const SECTION = 'JN3';
 
 test.describe('Bible Brain karaoke audio', () => {
   test.skip(({ browserName }) => browserName !== 'chromium', 'audio path tested in chromium only');
@@ -29,13 +14,10 @@ test.describe('Bible Brain karaoke audio', () => {
 
     await page.goto(makeUrl({ w1: 'bible', t1: TEXT, v1: `${SECTION}_1` }));
 
-    // John 3 text from Bible Brain renders (manifest + chapter load can be slow).
-    // If it never loads, Bible Brain isn't reachable (no proxy on :8787 / no key,
-    // e.g. in CI) — skip rather than fail.
     const section = page.locator(`.section[data-id="${SECTION}"]`).first();
     const available = await section.waitFor({ state: 'visible', timeout: 90_000 })
       .then(() => true).catch(() => false);
-    test.skip(!available, 'Bible Brain not reachable — is the key-hiding proxy running on :8787?');
+    test.skip(!available, 'Bible Brain not reachable. Is the key-hiding proxy running on :8787?');
     await expect(section.locator('.v').first()).toBeVisible({ timeout: 30_000 });
 
     // Audio detected for this text → the ear/toggle button is shown.

@@ -74,7 +74,7 @@ describe('canon arrays cross-reference BOOK_DATA', () => {
   });
 });
 
-describe('apocrypha — USFM 3.0 conformance', () => {
+describe('apocrypha: USFM 3.0 conformance', () => {
   it('every short code in AP_BOOKS exists in BOOK_DATA', () => {
     for (const id of AP_BOOKS) {
       expect(BOOK_DATA[id], `BOOK_DATA[${id}] missing`).toBeDefined();

@@ -21,12 +21,6 @@ function containerAspect(component) {
   return (r.width > 0 && r.height > 0) ? r.width / r.height : SVG_WIDTH / SVG_HEIGHT;
 }
 
-/**
- * Size the viewBox to the *container's* aspect ratio so the map always fills the
- * panel with no letterbox, then clamp to the full map extent. Width drives; height
- * follows the container. The zoom-out limit is therefore "the full map height fills
- * the viewport" (or full width, whichever the map runs out of first) — never smaller.
- */
 export function setViewBoxSize(component, width) {
   const ca = containerAspect(component);
   let w = Math.max(MIN_VIEW_WIDTH, width);
@@ -52,8 +46,6 @@ export function refit(component) {
  * so the map can never be panned to show negative space when fully zoomed out.
  */
 export function constrainViewBox(viewBox) {
-  // Strict clamp to the map extent — panning/zooming can never reveal empty space
-  // (bars) beyond the map content.
   viewBox.x = Math.max(0, Math.min(SVG_WIDTH - viewBox.width, viewBox.x));
   viewBox.y = Math.max(0, Math.min(SVG_HEIGHT - viewBox.height, viewBox.y));
 }
@@ -93,12 +85,10 @@ export function zoomBy(component, factor) {
   zoomAtPoint(component, rect.width / 2, rect.height / 2, factor, { rect });
 }
 
-/** Fully zoomed out — the viewBox already spans the map in one dimension. */
 export function isAtMinZoom(component) {
   return component.viewBox.width >= SVG_WIDTH || component.viewBox.height >= SVG_HEIGHT;
 }
 
-/** Fully zoomed in — the viewBox width is at its lower clamp. */
 export function isAtMaxZoom(component) {
   return component.viewBox.width <= MIN_VIEW_WIDTH;
 }
@@ -155,8 +145,6 @@ export function centerOnBounds(component, locations) {
   let vw = svgWidth + padX * 2;
   let vh = svgHeight + padY * 2;
 
-  // Match the container's aspect so the map fills the panel without letterbox.
-  // Expand the shorter dimension to fit — locations always remain fully visible.
   const ca = containerAspect(component);
   if (vw / vh > ca) {
     vh = vw / ca;
@@ -372,7 +360,7 @@ function setupKeyboard(component) {
         }
         break;
       default:
-        return; // unhandled key — don't preventDefault
+        return;
     }
     e.preventDefault();
   });

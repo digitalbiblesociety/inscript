@@ -61,13 +61,6 @@ export function filterVisibleBooks(ids) {
   return ids.filter((id) => !isApocryphalSection(id));
 }
 
-/**
- * Walk `sections` from `sectionid` in `direction` (+1 next / -1 prev) past any
- * apocryphal sections, returning the first non-apocryphal section id — or null
- * if the run reaches the end of the text. Returns `sectionid` unchanged when it
- * isn't apocryphal or isn't found in the list. (Pure: callers decide, via the
- * setting, whether to skip at all.)
- */
 export function skipApocryphalSection(sectionid, direction, sections) {
   if (!sectionid || !isApocryphalSection(sectionid)) return sectionid;
   if (!Array.isArray(sections)) return sectionid;

@@ -21,9 +21,6 @@ test.describe('two-window navigation', () => {
     await page.locator('#main-search-input').press('ArrowDown');
     await page.locator('#main-search-input').press('Enter');
 
-    // Each Bible window panel should now have at least one section whose
-    // data-id references Genesis 1. The Scroller pre-loads adjacent chapters,
-    // so don't require every section to match — just at least one per window.
     await expect.poll(async () => {
       const perWindow = await page.locator('.window.BibleWindow').evaluateAll(panels =>
         panels.map(panel =>
@@ -98,7 +95,6 @@ test.describe('two-window navigation', () => {
     );
     const before = await scrollTops();
 
-    // Wheel-scroll at the current pointer position — no mousemove involved.
     for (let i = 0; i < 6; i++) {
       await page.mouse.wheel(0, 400);
       await page.waitForTimeout(100);

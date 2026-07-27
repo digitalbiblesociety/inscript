@@ -8,7 +8,6 @@ describe('TextNavigation', () => {
   beforeEach(() => {
     app = { handleGlobalMessage: vi.fn() };
     setApp(app);
-    // Reset internal state — singleton persists across tests in this file.
     TextNavigation.locations = [];
     TextNavigation.locationIndex = -1;
     TextNavigation.clearListeners?.();

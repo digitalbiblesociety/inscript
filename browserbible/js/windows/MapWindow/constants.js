@@ -58,7 +58,6 @@ export const WHEEL_ZOOM_FACTOR = 1.1;
 // Fraction of the viewBox panned per arrow-key press
 export const KEY_PAN_FRACTION = 0.15;
 
-// Cluster radius in screen pixels — markers within this distance merge into clusters
 export const CLUSTER_RADIUS_PX = 60;
 
 // Markers closer than this many SVG units are treated as the same geographic
@@ -69,7 +68,6 @@ export const COLOCATED_EPSILON = 0.5;
 // cluster click reliably zooms past the radius where the cluster re-forms
 export const CLUSTER_BREAK_MARGIN = 0.75;
 
-// Icon sizes for each tier (in pixels) — must match CSS .map-marker[data-tier] .map-marker-icon
 export const ICON_SIZES = {
   1: 28,
   2: 22,

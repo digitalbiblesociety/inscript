@@ -26,6 +26,8 @@ registerCustomConfig('myorg', { customCssUrl: 'myorg.css', enableRestore: true }
 | `?w1=bible&t1=ENGWEB&v1=JN1_1` | | Open window 1 as a Bible with text and verse |
 | `?eng2p=highlight` | | Set English 2nd-person-plural mode |
 | `?eng2pshow=true` | | Show the Eng2p dialog on startup |
+| `?tour=1` | | Start the guided tour once the first passage has loaded |
+| `?tour=0` | | Suppress the guided tour, including first-run autostart |
 
 Window parameters (`w`, `t`, `v`, `s`) can be numbered 1 through 4 for up to four windows.
 
@@ -151,6 +153,7 @@ regenerated with `pnpm build-dbs-video-media`.
 | `enableRestore` | boolean | `false` | Show a reset-to-defaults button. |
 | `enableFeedback` | boolean | `false` | Show the feedback form button. |
 | `feedbackUrl` | string | `''` | Endpoint for feedback submissions. |
+| `enableGuidedTourAutostart` | boolean | `false` | Open the guided tour by itself for a visitor who has never seen it. The tour is always available from the main menu, the command palette, and `?tour=1`; this only controls whether it opens unprompted. See [Guided-Tour.md](Guided-Tour.md). |
 
 ### Theme & Typography
 

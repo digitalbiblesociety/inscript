@@ -53,9 +53,6 @@ function injectCsp() {
   };
 }
 
-// Production builds exclude the (gitignored) starter-pack texts from public/ —
-// deployed sites load texts from baseContentUrl, and copying them balloons
-// dist to several hundred MB. Dev-profile builds keep them for local content.
 function copyPublicExcludingTexts() {
   const publicDir = resolve(rootDir, 'browserbible/public');
   const textsDir = resolve(publicDir, 'content/texts');
@@ -118,8 +115,6 @@ export default defineConfig(({ command }) => {
 
     emptyOutDir: true,
 
-    // Sourcemaps only in dev-profile builds — production builds (SITE=inscript)
-    // must not ship .map files exposing the source
     sourcemap: siteProfile === 'dev',
 
     cssMinify: 'lightningcss',

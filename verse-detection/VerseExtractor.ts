@@ -19,7 +19,6 @@ export function processVerseContent(verseEl: HTMLElement, footnotes: ExtractedFo
 	// Work on a clone; the caller's chapter DOM must survive intact.
 	const clone = verseEl.cloneNode(true) as HTMLElement;
 
-	// Drop the source verse numbers — extractVerses renders its own.
 	clone.querySelectorAll('.v-num, .verse-num').forEach(el => el.remove());
 
 	clone.querySelectorAll('.note, .cf').forEach(note => {
