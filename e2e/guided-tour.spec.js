@@ -91,6 +91,73 @@ test.describe('guided tour', () => {
     expect(await page.evaluate(() => window.__minDim)).toBe(1);
   });
 
+  test('shows each card before that step acts', async ({ page, makeUrl, profile }) => {
+    test.setTimeout(240_000);
+
+    await bootTour(page, makeUrl, profile);
+
+    await page.evaluate(() => {
+      window.__order = [];
+      const seen = new Set();
+      const mark = (event) => {
+        if (seen.has(event)) return;
+        seen.add(event);
+        window.__order.push(event);
+      };
+      const tick = () => {
+        const step = document.querySelector('.tour-layer')?.dataset.step;
+        if (step && document.body.classList.contains('tour-active')) mark(`card:${step}`);
+
+        if (document.querySelector('.window.BibleWindow .section[data-id="GN1"]')) mark('acted:navigate');
+        if (document.querySelector('#main-search-input')?.value) mark('acted:search');
+        if (document.querySelector('.command-palette-input')?.value) mark('acted:palette');
+
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+
+    await page.evaluate(async () => {
+      const tour = window.BrowserBible.tour();
+      let state = await tour.start();
+      while (state.active && !state.done) state = await tour.next();
+    });
+
+    const order = await page.evaluate(() => window.__order);
+
+    for (const id of ['navigate', 'search', 'palette']) {
+      const card = order.indexOf(`card:${id}`);
+      const acted = order.indexOf(`acted:${id}`);
+      expect(card, `step "${id}" never showed its card`).toBeGreaterThan(-1);
+      expect(acted, `step "${id}" never acted`).toBeGreaterThan(-1);
+      expect(card, `step "${id}" acted before its card was up`).toBeLessThan(acted);
+    }
+  });
+
+  test('arrow keys still work after a step types in a field', async ({ page, makeUrl, profile }) => {
+    await bootTour(page, makeUrl, profile);
+
+    const ids = await page.evaluate(() => window.BrowserBible.tour().getSteps().map(s => s.id));
+    const at = ids.indexOf('search');
+
+    const state = await page.evaluate(i => window.BrowserBible.tour().start({ from: i }), at);
+    expect(state.id).toBe('search');
+    expect(await page.evaluate(() => document.activeElement?.id),
+      'the search step is meant to leave focus in the input').toBe('main-search-input');
+
+    await page.keyboard.press('ArrowLeft');
+    await expect.poll(() => page.evaluate(() => window.BrowserBible.tour().getState().id),
+      { timeout: 30_000 }).toBe(ids[at - 1]);
+
+    // Typing in the field hands the arrows back to it.
+    await page.evaluate(i => window.BrowserBible.tour().goTo(i), at);
+    await page.locator('#main-search-input').click();
+    await page.keyboard.type('s');
+    await page.keyboard.press('ArrowLeft');
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => window.BrowserBible.tour().getState().id)).toBe('search');
+  });
+
   test('leaves the workspace as it found it', async ({ page, makeUrl, profile }) => {
     test.setTimeout(240_000);
 

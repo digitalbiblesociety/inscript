@@ -27,6 +27,10 @@ Press <kbd>→</kbd> and <kbd>←</kbd> to move between steps. <kbd>Esc</kbd> cl
 whatever the app has open first, such as a menu, the version chooser, or the
 command palette, and leaves the tour on the next press.
 
+Steps that type leave focus in the app's own field, the search box for one, and
+the arrow keys still move between steps while it sits there. Typing in that field
+or clicking anywhere hands the arrows back to the app.
+
 The tour does not block the app. Everything behind the card stays clickable, and
 each step sets up its own screen, so clicking around mid-tour cannot strand it.
 
@@ -125,12 +129,18 @@ A step is an entry in `TOUR_STEPS` plus its copy in
   async enter({ addWindow }) {          // set the screen up before the card shows
     await addWindow('ParallelsWindow');
   },
+  async demo({ $, click }) {},         // optional, acts once the card is up
   async exit() {}                      // optional, runs on the way out either way
 }
 ```
 
-- `enter` receives helpers: `$`, `sleep`, `waitFor`, `click`, `typeInto`,
-  `dragBy`, `addWindow`, `trackNewWindows`, `remember`, `recall`.
+- `enter` and `demo` receive the same helpers: `$`, `sleep`, `waitFor`, `click`,
+  `typeInto`, `dragBy`, `addWindow`, `trackNewWindows`, `remember`, `recall`.
+- Put in `enter` only what has to exist for the spotlight to land, such as
+  opening the popover or panel the step points at. Anything the reader is meant
+  to watch happen goes in `demo`, which runs after the card and spotlight have
+  arrived. The spotlight follows its subject while a `demo` runs, so an action
+  that moves what it points at, like the splitter drag, stays lit.
 - Panels opened through `addWindow` or `trackNewWindows` close again when the
   step is left, so the tour does not end with a dozen panels open.
 - Use `remember` and `recall` for anything else a step changes and should put
@@ -151,6 +161,11 @@ pnpm exec playwright test --project=chromium-remote guided-tour
 ```
 
 ## Pacing
+
+Each step reads before it acts. The card and spotlight land, then a short beat
+later the step's `demo` plays, so the reader is looking at the passage, the
+search box, or the splitter before it moves. Steps with nothing to demonstrate
+simply hold.
 
 Steps wait on the app rather than on the clock. `waitForPanel()` watches for a
 new panel's `.loading-indicator` to clear, so a commentary that loads quickly

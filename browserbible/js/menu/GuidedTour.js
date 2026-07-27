@@ -7,6 +7,7 @@ import AppSettings from '../common/AppSettings.js';
 import { t } from '../lib/i18n.js';
 
 const SETTINGS_KEY = 'guided-tour';
+const DEMO_LEAD_MS = 520;
 
 let tourInstance = null;
 
@@ -58,8 +59,11 @@ function click(el) {
   el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
 }
 
+let tourField = null;
+
 async function typeInto(el, text, delay = 40) {
   if (!el) return;
+  tourField = el;
   el.focus();
   el.value = '';
   for (const char of text) {
@@ -179,6 +183,8 @@ const TOUR_STEPS = [
         click(inBible('.text-nav')());
         await waitFor(() => $('.text-navigator')?.matches(':popover-open'));
       }
+    },
+    async demo() {
       click(await waitFor('.text-navigator .text-navigator-division.divisionid-GN'));
       const chapter = await waitFor('.text-navigator .text-navigator-section.section-GN1');
       await sleep(220);
@@ -206,6 +212,8 @@ const TOUR_STEPS = [
       if (!$('.text-chooser')?.matches(':popover-open')) click(inBible('.text-list')());
       await waitFor(() => $('.text-chooser')?.matches(':popover-open'));
       await sleep(200);
+    },
+    async demo({ $ }) {
       await typeInto($('.text-chooser .text-chooser-filter-text'), 'spanish', 34);
       await sleep(260);
     },
@@ -240,10 +248,8 @@ const TOUR_STEPS = [
     placement: 'right',
     pad: 3,
     available: () => $('.window-splitter') !== null,
-    async enter({ $ }) {
-      const splitter = $('.window-splitter');
-      await sleep(120);
-      await dragBy(splitter, 110);
+    async demo({ $ }) {
+      await dragBy($('.window-splitter'), 110);
       await sleep(240);
       await dragBy($('.window-splitter'), -110);
       await sleep(120);
@@ -254,8 +260,10 @@ const TOUR_STEPS = [
     target: '#main-search-box',
     placement: 'bottom',
     focus: false,
-    async enter({ $ }) {
+    async enter() {
       closeAppPopovers();
+    },
+    async demo({ $ }) {
       await typeInto($('#main-search-input'), 'shepherd', 34);
       await sleep(260);
     },
@@ -374,6 +382,8 @@ const TOUR_STEPS = [
       if (!$('#config-window')?.matches(':popover-open')) $('#config-window')?.showPopover();
       await sleep(160);
       remember('theme', $('#config-themes .config-theme-toggle-selected')?.dataset.themename ?? 'default');
+    },
+    async demo({ $ }) {
       click($('#config-theme-jabbok'));
       await sleep(340);
     },
@@ -408,6 +418,8 @@ const TOUR_STEPS = [
       pressKey(document, 'k', { ctrlKey: true });
       await waitFor(() => $('.command-palette-backdrop.open'));
       await sleep(220);
+    },
+    async demo({ $ }) {
       await typeInto($('.command-palette-input'), '> theme', 45);
       await sleep(300);
     },
@@ -767,6 +779,35 @@ export function GuidedTour() {
     closeStepWindows(step);
   };
 
+  const play = async (step, token) => {
+    if (!step?.demo) return;
+
+    await sleep(prefersReducedMotion() ? 0 : DEMO_LEAD_MS);
+    if (token !== transition) return;
+
+    let following = true;
+    const follow = () => {
+      if (!following) return;
+      position();
+      requestAnimationFrame(follow);
+    };
+    requestAnimationFrame(follow);
+
+    entering = step;
+    try {
+      await step.demo(context);
+    } catch (e) {
+      console.warn(`[tour] demo "${step.id}" failed:`, e);
+    } finally {
+      entering = null;
+      following = false;
+    }
+    if (token !== transition) return;
+
+    raise();
+    position();
+  };
+
   const goTo = async (target, direction = 1) => {
     if (!active) return state();
     if (target < 0) return state();
@@ -808,6 +849,7 @@ export function GuidedTour() {
       await sleep(prefersReducedMotion() ? 0 : 40);
       if (token !== transition) return state();
       position();
+      await play(step, token);
       return state();
     }
 
@@ -843,6 +885,7 @@ export function GuidedTour() {
     const step = steps[index];
     active = false;
     index = -1;
+    tourField = null;
     await leave(step);
     hide();
     document.body.classList.remove('tour-active');
@@ -873,18 +916,27 @@ export function GuidedTour() {
       return;
     }
 
-    const typing = e.target instanceof HTMLElement &&
-      (e.target.matches('input, textarea, select, [contenteditable]'));
-    if (typing) return;
+    const arrow = e.key === 'ArrowRight' || e.key === 'ArrowLeft';
+    const field = e.target instanceof HTMLElement &&
+      e.target.matches('input, textarea, select, [contenteditable]') ? e.target : null;
 
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      next();
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      prev();
+    if (field) {
+      if (field !== tourField) return;
+      if (!arrow || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) {
+        tourField = null;
+        return;
+      }
     }
+
+    if (!arrow) return;
+
+    e.preventDefault();
+    if (field) e.stopPropagation();
+    if (e.key === 'ArrowRight') next();
+    else prev();
   }, true);
+
+  document.addEventListener('pointerdown', () => { tourField = null; }, true);
 
   onActivate(menuButton, () => {
     closeAppPopovers();
