@@ -8,7 +8,6 @@ import { getText, loadTexts, displayAbbr } from '../texts/TextLoader.js';
 import { TextNavigation } from '../common/TextNavigation.js';
 import { t as i18nT } from '../lib/i18n.js';
 import { versionHasSection, probeOrder } from './versionCycle.js';
-import infoSvg from '../../css/images/info.svg?raw';
 import audioEarSvg from '../../css/images/audio-ear.svg?raw';
 
 export { registerWindowComponent } from './BaseWindow.js';
@@ -60,8 +59,8 @@ export class TextWindowComponent extends BaseWindow {
               <button type="button" class="version-arrow version-prev" tabindex="-1" title="${i18nT('windows.bible.prevversion')}" aria-label="${i18nT('windows.bible.prevversion')}">&lsaquo;</button>
               <div class="app-list text-list"></div>
               <button type="button" class="version-arrow version-next" tabindex="-1" title="${i18nT('windows.bible.nextversion')}" aria-label="${i18nT('windows.bible.nextversion')}">&rsaquo;</button>
+              <span class="version-info info-button" title="${i18nT('windows.bible.versioninfo')}">i</span>
             </span>
-            <span class="header-icon info-button"></span>
             <span class="header-icon audio-button"></span>
           </div>
         </div>
@@ -80,7 +79,6 @@ export class TextWindowComponent extends BaseWindow {
       </div>
     `;
 
-    this.querySelector('.info-button').innerHTML = infoSvg;
     this.querySelector('.audio-button').innerHTML = audioEarSvg;
   }
 

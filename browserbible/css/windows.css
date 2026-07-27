@@ -77,6 +77,7 @@ body {
 	margin: 0;
 	padding: 0;
 	border-right: solid 1px var(--color-border);
+	container: window / inline-size;
 }
 
 .window-splitter {
@@ -270,6 +271,43 @@ body.window-reordering .windows-header {
 	opacity: 0.6;
 }
 
+.window .window-header .scroller-header-inner,
+.window .window-header .audio-window-header-inner {
+	display: flex;
+	align-items: center;
+	padding-right: 66px;
+}
+
+.window .window-header .text-nav {
+	flex: 0 1 auto;
+	width: 180px;
+	min-width: 50px;
+	margin-right: 0;
+}
+
+.window .window-header .text-nav + * {
+	margin-left: -1px;
+}
+
+.window .window-header .header-icon {
+	flex-shrink: 0;
+}
+
+@container window (width < 230px) {
+	.window .link-button {
+		display: none;
+	}
+
+	.window .close-container {
+		width: 40px;
+	}
+
+	.window .window-header .scroller-header-inner,
+	.window .window-header .audio-window-header-inner {
+		padding-right: 34px;
+	}
+}
+
 .header-icon {
 	margin: 3px;
 	width: 24px;
@@ -338,6 +376,10 @@ body.window-reordering .windows-header {
 	.compact-ui .window .window-header .app-list {
 		padding: 5px  20px 5px 5px;
 		height: 25px;
+	}
+
+	.compact-ui .window .window-header .text-nav {
+		min-width: 50px;
 	}
 
 	.compact-ui .window .window-header {
