@@ -10,8 +10,22 @@ import { mixinEventEmitter } from '../common/EventEmitter.js';
 import { i18n } from '../lib/i18n.js';
 import { BOOK_DATA, OT_BOOKS, NT_BOOKS, AP_BOOKS, addNames, numbers as bibleNumbers } from '../bible/BibleData.js';
 import { Reference } from '../bible/BibleReference.js';
-import { getPericopesByBook } from '../bible/Pericopes.js';
+import { loadPericopesByBook } from '../bible/Pericopes.js';
 import { getShowApocrypha } from '../bible/Apocrypha.js';
+
+// Lazy pericope data shared by all navigators; render paths stay synchronous
+// and see empty data until the chunk arrives.
+let pericopeGroups = null; // [{bookid, pericopes}] or null until loaded
+let pericopeMap = null;
+
+function ensurePericopes(onReady) {
+  if (pericopeGroups) return;
+  loadPericopesByBook().then(groups => {
+    pericopeGroups = groups;
+    pericopeMap = new Map(groups.map(g => [g.bookid, g.pericopes]));
+    onReady?.();
+  });
+}
 
 export function TextNavigator() {
   let container = null;
@@ -48,13 +62,8 @@ export function TextNavigator() {
     return lang === 'eng' || lang === 'en' || lang.startsWith('eng-') || lang.startsWith('en-');
   }
 
-  let pericopeMap = null;
   function getPericopeMap() {
-    if (!pericopeMap) {
-      pericopeMap = new Map();
-      for (const { bookid, pericopes } of getPericopesByBook()) pericopeMap.set(bookid, pericopes);
-    }
-    return pericopeMap;
+    return pericopeMap ?? new Map();
   }
 
   function sectionFilter() {
@@ -95,7 +104,7 @@ export function TextNavigator() {
     const has = sectionFilter();
     const bookIds = new Set();
     const frag = document.createDocumentFragment();
-    for (const { bookid, pericopes } of getPericopesByBook()) {
+    for (const { bookid, pericopes } of pericopeGroups ?? []) {
       if (textInfo?.divisions && !textInfo.divisions.includes(bookid)) continue;
       const bookName = BOOK_DATA[bookid]?.name ?? bookid;
       const bookMatch = bookName.toLowerCase().includes(q);
@@ -159,8 +168,10 @@ export function TextNavigator() {
 
   // Make `bookid` the active book: position the book list on it and, for English
   // texts, refresh the passages column to match (unless a search is active).
+  let lastFragmentid = null;
   function setActiveBook(bookid, currentFragmentid) {
     activeBookId = bookid;
+    lastFragmentid = currentFragmentid ?? null;
 
     // offsetTop, not client rects: this runs in the same task as showPopover(),
     // while the open transition still has the popover scaled.
@@ -300,6 +311,17 @@ export function TextNavigator() {
 
     // English texts get the passages column to the right of the books
     const english = isEnglishText();
+    if (english) {
+      ensurePericopes(() => {
+        // Data arrived after opening: repaint the passages column.
+        if (!changer.matches(':popover-open') || !isEnglishText()) return;
+        if (filterInput.value.trim()) {
+          applyFilter();
+        } else if (activeBookId) {
+          setActiveBook(activeBookId, lastFragmentid);
+        }
+      });
+    }
     changer.classList.toggle('text-navigator-2col', english);
     pericopesEl.style.display = english ? '' : 'none';
     filterInput.placeholder = english ? 'Filter books or passages…' : 'Filter books…';
@@ -543,6 +565,9 @@ export function TextNavigator() {
   function setTextInfo(value) {
     textInfo = value;
     if (!textInfo) return;
+
+    // Warm the pericope chunk before first open.
+    if (isEnglishText()) ensurePericopes();
 
     if (textInfo.divisionNames) {
       addNames(textInfo.lang, textInfo.divisions, textInfo.divisionNames);

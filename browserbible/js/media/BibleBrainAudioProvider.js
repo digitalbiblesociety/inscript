@@ -1,7 +1,7 @@
 import { BaseAudioProvider } from './BaseAudioProvider.js';
 import { getConfig } from '../core/config.js';
 import { NT_BOOKS, BOOK_DATA } from '../bible/BibleData.js';
-import { linkedAudioFor } from '../data/biblebrainDuplicates.js';
+import { linkedAudioFor, loadAudioAssociations } from '../data/biblebrainDuplicates.js';
 
 const PLAIN_TYPE = 'audio';
 const DRAMA_TYPE = 'audio_drama';
@@ -185,6 +185,7 @@ export class LinkedBibleBrainAudioProvider extends BibleBrainAudioProvider {
   async getAudioInfo(textInfo) {
     if (!isEnabled(getConfig())) return null;
 
+    await loadAudioAssociations();
     const audioFilesets = linkedAudioFor(textInfo)?.audioFilesets;
     if (!Array.isArray(audioFilesets) || audioFilesets.length === 0) return null;
 

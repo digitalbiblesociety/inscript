@@ -16,13 +16,16 @@ export const getAllPlugins = () => Array.from(plugins.entries());
  * `config` carries {param, className, WindowClass, displayName, paramKeys?}:
  * `param` is the URL parameter name ('bible'), `className` the CSS class
  * ('BibleWindow'), and `WindowClass` a factory or web component class.
+ * `loadWindowClass` (an async `() => import(...)`) may replace `WindowClass`
+ * to keep the window's code out of the entry bundle.
  */
 export const registerWindowType = (config) => {
-  const { param, className, WindowClass, displayName, paramKeys = {}, init } = config;
+  const { param, className, WindowClass, loadWindowClass, displayName, paramKeys = {}, init } = config;
   windowTypes.set(param, {
     param,
     className,
     WindowClass,
+    loadWindowClass,
     displayName,
     paramKeys,
     init

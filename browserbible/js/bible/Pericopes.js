@@ -7,7 +7,6 @@
  * `chapter.verse` (e.g. `S116.14` = 1 Samuel 16:14, `GN1.1` = Genesis 1:1).
  */
 
-import { PERICOPE_DATA } from './pericopesData.js';
 import { BOOK_DATA } from './BibleData.js';
 
 /**
@@ -44,19 +43,25 @@ function parsePericopes(rows) {
   return out;
 }
 
-/** All pericopes in source order (canonical book/chapter/verse order). */
-const PERICOPES = parsePericopes(PERICOPE_DATA);
-
 /**
  * Group pericopes by book id, preserving canonical book order.
  */
-export function getPericopesByBook() {
+function groupByBook(pericopes) {
   const groups = new Map();
-  for (const p of PERICOPES) {
+  for (const p of pericopes) {
     if (!groups.has(p.bookid)) groups.set(p.bookid, []);
     groups.get(p.bookid).push(p);
   }
   return [...groups.entries()]
     .map(([bookid, pericopes]) => ({ bookid, pericopes }))
     .sort((a, b) => (BOOK_DATA[a.bookid]?.sortOrder ?? 999) - (BOOK_DATA[b.bookid]?.sortOrder ?? 999));
+}
+
+let loadPromise = null;
+
+/** Lazy-loads the ~75 kB data module; resolves to [{bookid, pericopes}] in canonical order. */
+export function loadPericopesByBook() {
+  loadPromise ??= import('./pericopesData.js')
+    .then(m => groupByBook(parsePericopes(m.PERICOPE_DATA)));
+  return loadPromise;
 }

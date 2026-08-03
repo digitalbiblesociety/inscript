@@ -1,6 +1,10 @@
 /**
  * Imported once (`import './windows/index.js'`) purely for the side effect of
  * registering every window type with the registry. Nothing imports its members.
+ *
+ * Only TextWindow is static (a Bible window opens every startup); the rest use
+ * `loadWindowClass` loaders so each window is its own lazy chunk. Metadata
+ * stays eager so menus and URL parsing need no window code.
  */
 
 import { registerWindowType } from '../core/registry.js';
@@ -8,15 +12,6 @@ import { registerWindowType } from '../core/registry.js';
 import { getConfig } from '../core/config.js';
 
 import { BibleWindow, CommentaryWindow } from './TextWindow.js';
-import { SearchWindow } from './SearchWindow.js';
-import { AudioWindow } from './AudioWindow.js';
-import { ParallelsWindow } from './ParallelsWindow.js';
-import { TextComparisonWindow } from './TextComparisonWindow.js';
-import { StatisticsWindow } from './StatisticsWindow.js';
-import { DeafBibleWindow } from './DeafBibleWindow.js';
-import { MediaWindow } from './MediaWindow.js';
-import { MapWindow } from './MapWindow/MapWindow.js';
-import { NotesWindow } from './NotesWindow.js';
 
 const config = getConfig();
 registerWindowType({
@@ -30,7 +25,7 @@ registerWindowType({
 registerWindowType({
   param: 'search',
   className: 'SearchWindow',
-  WindowClass: SearchWindow,
+  loadWindowClass: () => import('./SearchWindow.js').then(m => m.SearchWindow),
   displayName: 'Search',
   paramKeys: { textid: 't', searchtext: 's', divisions: 'd' }
 });
@@ -38,7 +33,7 @@ registerWindowType({
 registerWindowType({
   param: 'audio',
   className: 'AudioWindow',
-  WindowClass: AudioWindow,
+  loadWindowClass: () => import('./AudioWindow.js').then(m => m.AudioWindow),
   displayName: 'Audio',
   paramKeys: { textid: 't', fragmentid: 'v' }
 });
@@ -46,7 +41,7 @@ registerWindowType({
 registerWindowType({
   param: 'parallel',
   className: 'ParallelsWindow',
-  WindowClass: ParallelsWindow,
+  loadWindowClass: () => import('./ParallelsWindow.js').then(m => m.ParallelsWindow),
   displayName: 'Parallels',
   paramKeys: { textid: 't', parallelid: 'p' }
 });
@@ -54,7 +49,7 @@ registerWindowType({
 registerWindowType({
   param: 'comparison',
   className: 'TextComparisonWindow',
-  WindowClass: TextComparisonWindow,
+  loadWindowClass: () => import('./TextComparisonWindow.js').then(m => m.TextComparisonWindow),
   displayName: 'Comparison',
   paramKeys: { sourceId: 't', targetId: 'u', fragmentid: 'f' },
   init: {
@@ -67,7 +62,7 @@ registerWindowType({
 registerWindowType({
   param: 'stats',
   className: 'StatisticsWindow',
-  WindowClass: StatisticsWindow,
+  loadWindowClass: () => import('./StatisticsWindow.js').then(m => m.StatisticsWindow),
   displayName: 'Statistics',
   paramKeys: {}
 });
@@ -75,7 +70,7 @@ registerWindowType({
 registerWindowType({
   param: 'deafbible',
   className: 'DeafBibleWindow',
-  WindowClass: DeafBibleWindow,
+  loadWindowClass: () => import('./DeafBibleWindow.js').then(m => m.DeafBibleWindow),
   displayName: 'Deaf Bible',
   paramKeys: { textid: 't', fragmentid: 'v' }
 });
@@ -83,7 +78,7 @@ registerWindowType({
 registerWindowType({
   param: 'media',
   className: 'MediaWindow',
-  WindowClass: MediaWindow,
+  loadWindowClass: () => import('./MediaWindow.js').then(m => m.MediaWindow),
   displayName: 'Media',
   paramKeys: { videoLanguage: 'vl' }
 });
@@ -91,7 +86,7 @@ registerWindowType({
 registerWindowType({
   param: 'map',
   className: 'MapWindow',
-  WindowClass: MapWindow,
+  loadWindowClass: () => import('./MapWindow/MapWindow.js').then(m => m.MapWindow),
   displayName: 'Map',
   paramKeys: { latitude: 'lat', longitude: 'lon', journey: 'j' }
 });
@@ -107,7 +102,7 @@ registerWindowType({
 registerWindowType({
   param: 'notes',
   className: 'NotesWindow',
-  WindowClass: NotesWindow,
+  loadWindowClass: () => import('./NotesWindow.js').then(m => m.NotesWindow),
   displayName: 'Notes',
   paramKeys: { noteId: 'n', filter: 'f', sort: 'o' }
 });

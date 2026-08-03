@@ -75,15 +75,22 @@ class Window {
       .filter(el => el !== this.tab && el.matches('.window-tab'))
       .forEach(sibling => sibling.classList.remove('active'));
 
-    const WindowType = getWindowTypeByClassName(className);
-    if (WindowType && WindowType.WindowClass) {
-      const isWebComponent = WindowType.WindowClass.prototype instanceof HTMLElement;
+    // The shell is built synchronously; a lazy controller attaches later.
+    // Messages arriving before then are buffered and replayed on attach.
+    this.initData = data || {};
+    this._pendingMessages = [];
+    this._closed = false;
+
+    const attachController = (WindowClass) => {
+      if (this._closed) return;
+
+      const isWebComponent = WindowClass.prototype instanceof HTMLElement;
 
       if (isWebComponent) {
-        const tagName = WindowType.WindowClass._tagName;
+        const tagName = WindowClass._tagName;
         this.controller = (tagName && customElements.get(tagName))
           ? document.createElement(tagName)
-          : new WindowType.WindowClass();
+          : new WindowClass();
         this.controller.parentInfo = { node: this.node, tab: this.tab };
         this.controller.windowId = id;
         this.controller.initData = data || {};
@@ -91,19 +98,45 @@ class Window {
         this.controller.setAttribute('init-data', JSON.stringify(data || {}));
         this.node.appendChild(this.controller);
       } else {
-        this.controller = WindowType.WindowClass(id, this, data);
+        this.controller = WindowClass(id, this, data);
       }
+
+      if (this.controller?.on) {
+        this.controller.on('settingschange', e => this.trigger('settingschange', e));
+        this.controller.on('globalmessage', e => {
+          e.id = id;
+          this.trigger('globalmessage', e);
+        });
+      }
+
+      const queued = this._pendingMessages;
+      this._pendingMessages = null;
+      for (const e of queued) {
+        this.controller?.trigger?.('message', e);
+      }
+    };
+
+    const WindowType = getWindowTypeByClassName(className);
+    if (WindowType?.WindowClass) {
+      attachController(WindowType.WindowClass);
+      this.ready = Promise.resolve(this);
+    } else if (WindowType?.loadWindowClass) {
+      this.ready = WindowType.loadWindowClass()
+        .then(WindowClass => {
+          WindowType.WindowClass = WindowClass; // cache: next open is synchronous
+          attachController(WindowClass);
+          // Deferred so async connectedCallbacks have rendered their refs
+          // and a size() error isn't swallowed by the catch below.
+          setTimeout(() => manager.app?.resize?.(), 10);
+          return this;
+        })
+        .catch(err => {
+          console.error(`Failed to load window "${className}"`, err);
+          return this;
+        });
     } else {
       console.error(`Window type "${className}" not found`);
       return;
-    }
-
-    if (this.controller?.on) {
-      this.controller.on('settingschange', e => this.trigger('settingschange', e));
-      this.controller.on('globalmessage', e => {
-        e.id = id;
-        this.trigger('globalmessage', e);
-      });
     }
 
     this.node.addEventListener('mouseenter', this._handleFocus.bind(this));
@@ -128,7 +161,11 @@ class Window {
     mixinEventEmitter(this);
 
     this.on('message', e => {
-      this.controller?.trigger?.('message', e);
+      if (this._pendingMessages) {
+        this._pendingMessages.push(e);
+      } else {
+        this.controller?.trigger?.('message', e);
+      }
 
       if (e.data?.labelTab) {
         const tabSpan = this.tab.querySelector('span');
@@ -176,12 +213,14 @@ class Window {
   }
 
   getData() {
-    const data = this.controller?.getData() ?? {};
+    // initData fallback keeps the settings save from persisting {} mid-load.
+    const data = this.controller?.getData() ?? this.initData ?? {};
     if (!this.linked) data.linked = false;
     return data;
   }
 
   close() {
+    this._closed = true;
     this.controller?.close?.();
     this.controller = null;
 

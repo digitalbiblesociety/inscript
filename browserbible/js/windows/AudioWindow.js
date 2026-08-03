@@ -5,7 +5,7 @@ import { AudioController } from './AudioController.js';
 import { getGlobalTextChooser } from '../ui/TextChooser.js';
 import { getGlobalTextNavigator } from '../ui/TextNavigator.js';
 import { getText, getTextInfoData, displayAbbr } from '../texts/TextLoader.js';
-import { hasLinkedAudio } from '../data/biblebrainDuplicates.js';
+import { hasLinkedAudio, loadAudioAssociations } from '../data/biblebrainDuplicates.js';
 import { t as i18nT } from '../lib/i18n.js';
 
 const hasTouch = 'ontouchend' in document;
@@ -222,6 +222,8 @@ class AudioWindowComponent extends BaseWindow {
   }
 
   async loadInitialText() {
+    await loadAudioAssociations();
+
     const initData = this.initData || {};
 
     const fragmentid = initData.fragmentid || this.config.newWindowFragmentid || 'JN1_1';

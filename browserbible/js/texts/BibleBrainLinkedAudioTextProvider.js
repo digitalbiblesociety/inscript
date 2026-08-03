@@ -7,7 +7,7 @@
 
 import { getConfig } from '../core/config.js';
 import { getTextInfoData } from './TextLoader.js';
-import { hasLinkedAudio } from '../data/biblebrainDuplicates.js';
+import { hasLinkedAudio, loadAudioAssociations } from '../data/biblebrainDuplicates.js';
 
 const providerName = 'biblebrain-linked-audio';
 
@@ -20,13 +20,15 @@ function getTextManifest(callback) {
     return;
   }
 
-  for (const entry of getTextInfoData() || []) {
-    if (!entry.hasAudio && hasLinkedAudio(entry)) {
-      entry.hasAudio = true;
+  loadAudioAssociations().then(() => {
+    for (const entry of getTextInfoData() || []) {
+      if (!entry.hasAudio && hasLinkedAudio(entry)) {
+        entry.hasAudio = true;
+      }
     }
-  }
 
-  callback(null);
+    callback(null);
+  });
 }
 
 export const BibleBrainLinkedAudioTextProvider = {

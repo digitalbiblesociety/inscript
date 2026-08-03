@@ -721,6 +721,8 @@ export function GuidedTour() {
         addedWindowIds.set(step.id, owned);
       }
 
+      // Lazy window controllers attach async; wait before poking content.
+      if (win.ready) await win.ready;
       await waitFor(() => document.querySelector(`.window.${className}`));
       return win;
     },

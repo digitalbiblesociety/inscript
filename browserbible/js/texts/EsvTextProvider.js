@@ -41,6 +41,25 @@ const escapeHtml = (s) => String(s)
   .replace(/</g, '&lt;')
   .replace(/>/g, '&gt;');
 
+const SKIPPED_INLINE = ['footnote', 'crossref', 'audio', 'extra_text', 'copyright'];
+// Passage reference headings, footnote blocks and audio links are turned
+// off in the request; drop any that show up anyway.
+const SKIPPED_BLOCK = ['extra_text', 'footnotes', 'audio'];
+const hasSkippedClass = (cls, skipList) => skipList.some(c => cls.contains(c));
+
+// Inline styling wrappers as [open, close] pairs; "small-caps" marks the
+// divine name and .nog is the app's small-caps style.
+const WRAP_WOC = ['<span class="woc">', '</span>'];
+const WRAP_NOG = ['<span class="nog">', '</span>'];
+const WRAP_ITALIC = ['<i>', '</i>'];
+
+const inlineWrapper = (node, cls) => {
+  if (cls.contains('woc')) return WRAP_WOC;
+  if (cls.contains('small-caps')) return WRAP_NOG;
+  if (node.tagName === 'I' || node.tagName === 'EM') return WRAP_ITALIC;
+  return null;
+};
+
 export function parseEsvPassageHtml(passageHtml, sectionid) {
   const doc = new DOMParser().parseFromString(passageHtml, 'text/html');
   const html = [];
@@ -76,22 +95,22 @@ export function parseEsvPassageHtml(passageHtml, sectionid) {
   const verseNumHtml = () =>
     `<span class="v-num v-${currentVerseNum}">${escapeHtml(currentVerseNum)}&nbsp;</span>`;
 
-  const SKIPPED_INLINE = ['footnote', 'crossref', 'audio', 'extra_text', 'copyright'];
+  const inlineText = (text) => {
+    if (!text) return;
+    if (!openVerse && text.trim() === '') return;
+    ensureVerseOpen();
+    html.push(escapeHtml(text));
+  };
 
   const walkInline = (node) => {
     if (node.nodeType === Node.TEXT_NODE) {
-      const text = node.nodeValue ?? '';
-      if (!text) return;
-      if (!openVerse && text.trim() === '') return;
-      ensureVerseOpen();
-      html.push(escapeHtml(text));
+      inlineText(node.nodeValue ?? '');
       return;
     }
 
     if (node.nodeType !== Node.ELEMENT_NODE) return;
     const cls = node.classList;
-
-    if (SKIPPED_INLINE.some(c => cls.contains(c))) return;
+    if (hasSkippedClass(cls, SKIPPED_INLINE)) return;
     if (node.tagName === 'BR') return;
 
     if (isVerseMarker(node)) {
@@ -102,33 +121,15 @@ export function parseEsvPassageHtml(passageHtml, sectionid) {
       return;
     }
 
-    if (cls.contains('woc')) {
+    // Wrapped inline content keeps its styling span; any other inline tag
+    // (anchors, spans) keeps its content and drops the tag.
+    const [open, close] = inlineWrapper(node, cls) ?? [];
+    if (open) {
       ensureVerseOpen();
-      html.push('<span class="woc">');
-      for (const child of node.childNodes) walkInline(child);
-      html.push('</span>');
-      return;
+      html.push(open);
     }
-
-    // "small-caps" marks the divine name; .nog is the app's small-caps style.
-    if (cls.contains('small-caps')) {
-      ensureVerseOpen();
-      html.push('<span class="nog">');
-      for (const child of node.childNodes) walkInline(child);
-      html.push('</span>');
-      return;
-    }
-
-    if (node.tagName === 'I' || node.tagName === 'EM') {
-      ensureVerseOpen();
-      html.push('<i>');
-      for (const child of node.childNodes) walkInline(child);
-      html.push('</i>');
-      return;
-    }
-
-    // Any other inline tag (anchors, spans): keep its content, drop the tag.
     for (const child of node.childNodes) walkInline(child);
+    if (close) html.push(close);
   };
 
   // Poetry: <p class="line-group"> holds <span class="line"> / <span
@@ -136,15 +137,18 @@ export function parseEsvPassageHtml(passageHtml, sectionid) {
   // becomes its own q/q2 div; a marker before a line is buffered so the number
   // renders inside that line's div.
   const walkLineGroup = (el) => {
+    closeVerse();
     let pendingVerseNum = '';
-    let lineOpen = false;
 
-    const closeLine = () => {
-      if (lineOpen) {
-        closeVerse();
-        html.push('</div>');
-        lineOpen = false;
+    const renderLine = (line) => {
+      html.push(`<div class="${line.classList.contains('indent') ? 'q2' : 'q'}">`);
+      if (pendingVerseNum) {
+        html.push(pendingVerseNum);
+        pendingVerseNum = '';
       }
+      for (const lineChild of line.childNodes) walkInline(lineChild);
+      closeVerse();
+      html.push('</div>');
     };
 
     for (const child of el.childNodes) {
@@ -156,71 +160,61 @@ export function parseEsvPassageHtml(passageHtml, sectionid) {
       }
 
       if (child.nodeType === Node.ELEMENT_NODE && child.classList.contains('line')) {
-        closeLine();
-        html.push(`<div class="${child.classList.contains('indent') ? 'q2' : 'q'}">`);
-        lineOpen = true;
-        if (pendingVerseNum) {
-          html.push(pendingVerseNum);
-          pendingVerseNum = '';
-        }
-        for (const lineChild of child.childNodes) walkInline(lineChild);
-        closeLine();
+        renderLine(child);
         continue;
       }
 
       walkInline(child);
     }
+  };
 
-    closeLine();
+  const pushHeading = (node, className) => {
+    closeVerse();
+    const title = node.textContent.trim();
+    if (title) html.push(`<div class="${className}">${escapeHtml(title)}</div>`);
+  };
+
+  const walkParagraph = (node) => {
+    closeVerse();
+    html.push('<div class="p">');
+    for (const child of node.childNodes) walkInline(child);
+    closeVerse();
+    html.push('</div>');
+  };
+
+  const walkBlock = (node) => {
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    const tag = node.tagName;
+    const cls = node.classList;
+
+    if (hasSkippedClass(cls, SKIPPED_BLOCK)) return;
+
+    if (tag === 'H3') {
+      pushHeading(node, 's');
+      return;
+    }
+
+    if (cls.contains('psalm-title') || tag === 'H4') {
+      pushHeading(node, 'd');
+      return;
+    }
+
+    if (tag === 'P' && cls.contains('line-group')) {
+      walkLineGroup(node);
+      return;
+    }
+
+    if (tag === 'P') {
+      if (!node.querySelector('a.copyright')) walkParagraph(node);
+      return;
+    }
+
+    // block-indent and any other wrapper: recurse into its children.
+    walkBlocks(node.childNodes);
   };
 
   const walkBlocks = (nodes) => {
-    for (const node of nodes) {
-      if (node.nodeType !== Node.ELEMENT_NODE) continue;
-      const tag = node.tagName;
-      const cls = node.classList;
-
-      // Passage reference headings, footnote blocks and audio links are turned
-      // off in the request; drop any that show up anyway.
-      if (cls.contains('extra_text') || cls.contains('footnotes') || cls.contains('audio')) continue;
-
-      if (tag === 'H3') {
-        closeVerse();
-        const title = node.textContent.trim();
-        if (title) html.push(`<div class="s">${escapeHtml(title)}</div>`);
-        continue;
-      }
-
-      if (cls.contains('psalm-title') || tag === 'H4') {
-        closeVerse();
-        const title = node.textContent.trim();
-        if (title) html.push(`<div class="d">${escapeHtml(title)}</div>`);
-        continue;
-      }
-
-      if (cls.contains('block-indent')) {
-        walkBlocks(node.childNodes);
-        continue;
-      }
-
-      if (tag === 'P' && cls.contains('line-group')) {
-        closeVerse();
-        walkLineGroup(node);
-        continue;
-      }
-
-      if (tag === 'P') {
-        if (node.querySelector('a.copyright')) continue;
-        closeVerse();
-        html.push('<div class="p">');
-        for (const child of node.childNodes) walkInline(child);
-        closeVerse();
-        html.push('</div>');
-        continue;
-      }
-
-      walkBlocks(node.childNodes);
-    }
+    for (const node of nodes) walkBlock(node);
   };
 
   walkBlocks(doc.body.childNodes);
@@ -310,7 +304,7 @@ function getTextInfo(textid, callback) {
     return;
   }
 
-  if (!(info.divisions?.length > 0)) {
+  if (!info.divisions?.length) {
     addStaticStructure(info);
   }
 
@@ -372,7 +366,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
 
         const html = [];
 
-        html.push(`<div class="section chapter ${textid} ${bookid} ${sectionid} ${lang} " ` +
+        html.push(`<div class="section chapter ${textid} ${bookid} ${sectionid} ${lang}" ` +
           ` data-textid="${textid}"` +
           ` data-id="${sectionid}"` +
           ` data-nextid="${nextid}"` +
