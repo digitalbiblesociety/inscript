@@ -1,6 +1,19 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { loadStopwords, normalizeLang, tokenizeWords, wordKey } from '@lib/stopwords.js';
 import engWords from '../../../browserbible/public/content/stopwords/eng.json';
+import spaWords from '../../../browserbible/public/content/stopwords/spa.json';
+import porWords from '../../../browserbible/public/content/stopwords/por.json';
+import fraWords from '../../../browserbible/public/content/stopwords/fra.json';
+import hinWords from '../../../browserbible/public/content/stopwords/hin.json';
+import araWords from '../../../browserbible/public/content/stopwords/ara.json';
+import jpnWords from '../../../browserbible/public/content/stopwords/jpn.json';
+import korWords from '../../../browserbible/public/content/stopwords/kor.json';
+import zhoWords from '../../../browserbible/public/content/stopwords/zho.json';
+
+const WORD_LISTS = {
+  eng: engWords, spa: spaWords, por: porWords, fra: fraWords, hin: hinWords,
+  ara: araWords, jpn: jpnWords, kor: korWords, zho: zhoWords
+};
 
 describe('tokenizeWords', () => {
   it('splits on whitespace runs including newlines and tabs', () => {
@@ -160,13 +173,10 @@ describe('eng.json word list', () => {
 });
 
 describe('all language word lists', () => {
-  const dir = new URL('../../../browserbible/public/content/stopwords/', import.meta.url);
-
-  it.each(['eng', 'spa', 'por', 'fra', 'hin', 'ara', 'jpn', 'kor', 'zho'])(
+  it.each(Object.keys(WORD_LISTS))(
     '%s.json is a non-empty array of unique canonical entries',
-    async (code) => {
-      const { readFile } = await import('node:fs/promises');
-      const words = JSON.parse(await readFile(new URL(`${code}.json`, dir), 'utf8'));
+    (code) => {
+      const words = WORD_LISTS[code];
       expect(Array.isArray(words)).toBe(true);
       expect(words.length).toBeGreaterThan(50);
       expect(new Set(words).size).toBe(words.length);
@@ -176,8 +186,7 @@ describe('all language word lists', () => {
     }
   );
 
-  it('filters John 1:1 down to content words in each language', async () => {
-    const { readFile } = await import('node:fs/promises');
+  it('filters John 1:1 down to content words in each language', () => {
     const samples = {
       spa: ['En el principio era el Verbo, y el Verbo era con Dios.', ['verbo', 'dios', 'principio']],
       por: ['No princípio era o Verbo, e o Verbo estava com Deus.', ['verbo', 'deus', 'princípio']],
@@ -189,7 +198,7 @@ describe('all language word lists', () => {
       zho: ['太初有道，道與神同在，道就是神。', ['道', '神']]
     };
     for (const [code, [text, keep]] of Object.entries(samples)) {
-      const stopwords = new Set(JSON.parse(await readFile(new URL(`${code}.json`, dir), 'utf8')));
+      const stopwords = new Set(WORD_LISTS[code]);
       const survivors = tokenizeWords(text, code).map(wordKey).filter((k) => !stopwords.has(k));
       for (const k of keep) {
         expect(survivors, `${code}: ${k}`).toContain(wordKey(k));
