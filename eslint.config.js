@@ -15,7 +15,8 @@ export default [
         __DISABLED_WINDOW_TYPES__: 'readonly',
         __DISABLED_FEATURES__: 'readonly',
         __API_BIBLE_PROXY_BASE__: 'readonly',
-        __BIBLE_BRAIN_PROXY_BASE__: 'readonly'
+        __BIBLE_BRAIN_PROXY_BASE__: 'readonly',
+        __ESV_PROXY_BASE__: 'readonly'
       }
     },
     rules: {

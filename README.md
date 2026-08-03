@@ -28,7 +28,8 @@ Prerequisites: [Node.js](https://nodejs.org) and
 ```bash
 pnpm install
 pnpm fetch-starter-pack   # downloads ~95 MB of 17 freely shareable Bibles
-pnpm dev                  # start the Vite dev server on http://localhost:3000
+pnpm dev                  # Vite dev server on http://localhost:3000 plus the
+                          # local API proxy on http://localhost:8787 (see proxy/)
 ```
 
 The starter pack of 17 Bibles covers roughly 90% of the world's population. For

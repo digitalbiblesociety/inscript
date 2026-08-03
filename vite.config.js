@@ -105,6 +105,10 @@ export default defineConfig(({ command }) => {
     ? 'http://localhost:8787/fcbh/v4'
     : (siteConfig.bibleBrainProxyBase || '');
 
+  const esvProxyBase = command === 'serve'
+    ? 'http://localhost:8787/esv/v3'
+    : (siteConfig.esvProxyBase || 'https://api.inscript.org/esv/v3');
+
   return {
   root: 'browserbible',
 
@@ -156,6 +160,9 @@ export default defineConfig(({ command }) => {
 
   server: {
     port: 3000,
+    // The proxy worker's ALLOWED_ORIGINS only permits this exact origin; if
+    // 3000 is taken, fail instead of drifting to 3001 and getting CORS 403s.
+    strictPort: true,
     open: true,
     cors: true
   },
@@ -197,7 +204,8 @@ export default defineConfig(({ command }) => {
     __DISABLED_WINDOW_TYPES__: JSON.stringify(siteConfig.disabledWindowTypes),
     __DISABLED_FEATURES__: JSON.stringify(siteConfig.disabledFeatures),
     __API_BIBLE_PROXY_BASE__: JSON.stringify(apiBibleProxyBase),
-    __BIBLE_BRAIN_PROXY_BASE__: JSON.stringify(bibleBrainProxyBase)
+    __BIBLE_BRAIN_PROXY_BASE__: JSON.stringify(bibleBrainProxyBase),
+    __ESV_PROXY_BASE__: JSON.stringify(esvProxyBase)
   },
 
   plugins: [

@@ -7,6 +7,7 @@ import { registerTextProvider } from './TextLoader.js';
 import { LocalTextProvider } from './LocalTextProvider.js';
 import { BibleBrainTextProvider } from './BibleBrainTextProvider.js';
 import { ApiBibleTextProvider } from './ApiBibleTextProvider.js';
+import { EsvTextProvider } from './EsvTextProvider.js';
 import { CommentaryProvider } from './CommentaryProvider.js';
 import { DbsAudioTextProvider } from './DbsAudioTextProvider.js';
 import { DeafBibleTextProvider } from './DeafBibleTextProvider.js';
@@ -15,6 +16,7 @@ import { BibleBrainLinkedAudioTextProvider } from './BibleBrainLinkedAudioTextPr
 registerTextProvider('local', LocalTextProvider);
 registerTextProvider('biblebrain', BibleBrainTextProvider);
 registerTextProvider('apibible', ApiBibleTextProvider);
+registerTextProvider('esv', EsvTextProvider);
 registerTextProvider('commentary', CommentaryProvider);
 registerTextProvider('dbs-audio', DbsAudioTextProvider);
 registerTextProvider('deafbible', DeafBibleTextProvider);

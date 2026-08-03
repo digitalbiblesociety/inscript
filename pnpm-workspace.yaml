@@ -1,6 +1,8 @@
 packages:
   - "."
   - "verse-detection"
+  - "proxy"
 
 allowBuilds:
   esbuild: true
+  workerd: true

@@ -1,0 +1,20 @@
+{
+  "name": "inscript-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Worker that holds the API.Bible, Bible Brain, and ESV API keys for the inScript frontend.",
+  "author": "Digital Bible Society",
+  "license": "MIT",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.5",
+    "wrangler": "^4.0.0"
+  }
+}

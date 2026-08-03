@@ -28,15 +28,18 @@ const defaultConfig = {
   apiBibleProxyBase: (typeof __API_BIBLE_PROXY_BASE__ !== 'undefined')
     ? __API_BIBLE_PROXY_BASE__
     : 'http://localhost:8787/v1',
-  // FUMS fair-use reporting is all done server-side by the proxy, so there's no
-  // frontend FUMS config here.
-  // Which API.Bible Bible IDs to show (NIV, CSB, NLT). The proxy enforces the
-  // same list server-side.
+
+  // Which API.Bible Bible IDs to show (NIV, CSB, NLT)
   apiBibleIncludeIds: [
     '78a9f6124f344018-01', // NIV
     'a556c5305ee15c3f-01', // CSB
     'd6e14a625393b4da-01'  // NLT
   ],
+
+  esvEnabled: true,
+  esvProxyBase: (typeof __ESV_PROXY_BASE__ !== 'undefined')
+    ? __ESV_PROXY_BASE__
+    : 'http://localhost:8787/esv/v3',
 
   bibleBrainEnabled: true,
   bibleBrainProxyBase: (typeof __BIBLE_BRAIN_PROXY_BASE__ !== 'undefined')

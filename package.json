@@ -11,7 +11,9 @@
   "license": "MIT",
   "packageManager": "pnpm@10.23.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "pnpm run /^dev:/",
+    "dev:app": "vite",
+    "dev:proxy": "pnpm --dir proxy dev",
     "build": "SITE=inscript vite build",
     "build:dev": "SITE=dev vite build",
     "build:inscript": "SITE=inscript vite build",

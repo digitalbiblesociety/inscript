@@ -176,9 +176,18 @@ Precompressed `.gz`/`.br` siblings are skipped when `CF_PAGES` is set: Pages
 compresses responses itself and never serves them, so they would only double the
 asset count. Other hosts (nginx `gzip_static`) still get them.
 
-## The API proxy is separate
+## The API proxy deploys separately
 
-`apiBibleProxyBase` and `bibleBrainProxyBase` point at `https://api.inscript.org`,
-a separate Cloudflare Worker that holds the API.Bible and Bible Brain keys. It is
-not deployed by this project, and a Pages deploy does not update it. Local dev
-expects it on `http://localhost:8787`.
+`apiBibleProxyBase`, `bibleBrainProxyBase`, and `esvProxyBase` point at
+`https://api.inscript.org`, a Cloudflare Worker that holds the API.Bible,
+Bible Brain, and ESV API keys. Its source lives in this repo under `proxy/`
+(see `proxy/README.md`), but it is a separate deployment: a Pages deploy does
+not update it, and `wrangler deploy` from `proxy/` does not touch the
+frontend. Local dev expects it on `http://localhost:8787`; the root `pnpm dev`
+starts it alongside Vite (or run `pnpm dev` in `proxy/` alone). The ESV routes (`/esv/v3/passage/html/` and
+`/esv/v3/passage/search/`) forward to `https://api.esv.org/v3/` with the
+`Authorization: Token` header added.
+
+If the Pages project's build watch paths exclude non-app directories, add
+`proxy/*` to the exclusions so worker-only commits don't trigger a frontend
+deploy.

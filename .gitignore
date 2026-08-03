@@ -16,3 +16,6 @@ coverage/
 
 /starter-pack.zip
 demo-output/
+
+.DS_Store
+.pnpm-store/

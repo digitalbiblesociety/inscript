@@ -4,7 +4,8 @@
     "-lintignore"
   ],
   "ignoreWorkspaces": [
-    "verse-detection"
+    "verse-detection",
+    "proxy"
   ],
   "ignoreDependencies": [
     "@browserbible/verse-detection"
