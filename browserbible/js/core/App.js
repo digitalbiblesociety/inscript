@@ -1,6 +1,7 @@
 import { WindowManager } from './WindowManager.js';
 import { MainMenu } from '../menu/MainMenu.js';
 import AppSettings from '../common/AppSettings.js';
+import { WINDOW_SETTINGS_KEY } from '../common/settingsReset.js';
 import { elem } from '../lib/helpers.esm.js';
 import { getConfig } from './config.js';
 import {
@@ -14,7 +15,7 @@ import { PlaceKeeper } from '../common/PlaceKeeper.js';
 
 export class App {
   constructor() {
-    this.settingsKey = 'app-windows';
+    this.settingsKey = WINDOW_SETTINGS_KEY;
     this.windowManager = null;
     this.mainMenu = null;
     this.plugins = [];

@@ -254,11 +254,16 @@ export function getResource(lang) {
   return resources[lang] ?? null;
 }
 
+function clearLng() {
+  setCookie('i18next', '', -1);
+}
+
 export const i18n = {
   init,
   t,
   lng,
   setLng,
+  clearLng,
   translatePage,
   translateElement,
   isLoaded,

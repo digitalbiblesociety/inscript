@@ -104,6 +104,7 @@ const defaultConfig = {
     'Trebuchet': '"Trebuchet MS", Helvetica, sans-serif',
     'Verdana': 'Verdana, Geneva, sans-serif'
   },
+  enableSettingsReset: true,
   enableSettingToggles: true,
   settingToggleNames: ['Chapters', 'Verses', 'Titles', 'Notes', 'Words of Christ', 'Media', 'Justify'],
   settingToggleDefaults: [true, true, true, true, true, true, false],

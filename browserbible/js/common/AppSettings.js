@@ -51,6 +51,18 @@ class AppSettingsManager {
     const fullKey = this._getKey(key);
     delete this.storage[fullKey];
   }
+
+  clearAll() {
+    const prefix = getConfig().settingsPrefix;
+    if (!prefix) return 0;
+
+    const keys = Object.keys(this.storage).filter(key => key.startsWith(prefix));
+    for (const key of keys) {
+      delete this.storage[key];
+    }
+
+    return keys.length;
+  }
 }
 
 const AppSettings = new AppSettingsManager();

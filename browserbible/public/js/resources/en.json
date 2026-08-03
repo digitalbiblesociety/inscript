@@ -38,7 +38,11 @@
         "font": "Style",
         "settings": "Settings",
         "tools": "Options",
-        "apocrypha": "Show Apocryphal Books"
+        "apocrypha": "Show Apocryphal Books",
+        "reset": "Reset Settings",
+        "resetwarning": "Restore all settings to their defaults? Your notes and highlights are kept.",
+        "resetconfirm": "Reset",
+        "resetcancel": "Cancel"
       },
       "reset": "restore",
       "commandpalette": {

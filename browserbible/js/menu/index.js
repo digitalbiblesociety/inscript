@@ -20,6 +20,7 @@ import { ConfigToggles } from './ConfigToggles.js';
 import { ConfigUrl } from './ConfigUrl.js';
 import { LanguageSetting } from './LanguageSetting.js';
 import { ApocryphaSetting } from './ApocryphaSetting.js';
+import { ResetSettingsButton } from './ResetSettingsButton.js';
 import { CommandPalette } from './CommandPalette.js';
 import { GuidedTour } from './GuidedTour.js';
 
@@ -40,4 +41,5 @@ registerMenuComponent('LanguageSetting', LanguageSetting);
 registerMenuComponent('ApocryphaSetting', ApocryphaSetting);
 registerMenuComponent('ConfigToggles', ConfigToggles);
 registerMenuComponent('ConfigUrl', ConfigUrl);
+registerMenuComponent('ResetSettingsButton', ResetSettingsButton);
 registerMenuComponent('CommandPalette', CommandPalette);

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { AppSettings } from '@common/AppSettings.js';
+import { getConfig, updateConfig } from '@core/config.js';
 
 describe('AppSettings', () => {
   beforeEach(() => {
@@ -43,5 +44,42 @@ describe('AppSettings', () => {
     const fullKey = Object.keys(window.localStorage).find(k => k.endsWith('w5'));
     window.localStorage.setItem(fullKey, '{not json');
     expect(AppSettings.getValue('w5', { ok: false })).toEqual({ ok: false });
+  });
+
+  describe('clearAll', () => {
+    it('removes every stored setting and reports the count', () => {
+      AppSettings.setValue('config-theme', { themeName: 'jabbok' });
+      AppSettings.setValue('config-font-size', { fontSize: 24 });
+
+      expect(AppSettings.clearAll()).toBe(2);
+      expect(AppSettings.getValue('config-theme', { themeName: 'default' })).toEqual({ themeName: 'default' });
+      expect(AppSettings.getValue('config-font-size', { fontSize: 18 })).toEqual({ fontSize: 18 });
+    });
+
+    it('leaves notes and highlights alone', () => {
+      AppSettings.setValue('config-theme', { themeName: 'shiloh' });
+      window.localStorage.setItem('browserbible_notes', '{"version":1,"notes":[]}');
+      window.localStorage.setItem('browserbible_highlights', '{"ENGWEB":[]}');
+
+      AppSettings.clearAll();
+
+      expect(window.localStorage.getItem('browserbible_notes')).toBe('{"version":1,"notes":[]}');
+      expect(window.localStorage.getItem('browserbible_highlights')).toBe('{"ENGWEB":[]}');
+    });
+
+    it('refuses to run on a blank prefix rather than wiping unprefixed keys', () => {
+      const config = getConfig();
+      const prefix = config.settingsPrefix;
+      window.localStorage.setItem('browserbible_notes', 'keep me');
+
+      updateConfig({ settingsPrefix: '' });
+      try {
+        expect(AppSettings.clearAll()).toBe(0);
+      } finally {
+        updateConfig({ settingsPrefix: prefix });
+      }
+
+      expect(window.localStorage.getItem('browserbible_notes')).toBe('keep me');
+    });
   });
 });

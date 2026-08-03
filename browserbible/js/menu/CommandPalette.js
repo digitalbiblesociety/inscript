@@ -6,6 +6,8 @@ import { PlaceKeeper } from '../common/PlaceKeeper.js';
 import { TextNavigation } from '../common/TextNavigation.js';
 import { getWindowIcon } from '../core/windowIcons.js';
 import { getGuidedTour } from './GuidedTour.js';
+import { promptSettingsReset } from './ResetSettingsButton.js';
+import { resetWindowLayout } from '../common/settingsReset.js';
 import { elem } from '../lib/helpers.esm.js';
 
 const toSlug = (str) => str.replace(/\s+/g, '-').toLowerCase();
@@ -327,24 +329,20 @@ export function CommandPalette() {
     });
 
     registerCommand({
-      name: 'Restore Defaults',
-      keywords: ['restore', 'reset', 'defaults', 'clear'],
+      name: 'Reset Settings',
+      keywords: ['reset', 'settings', 'defaults', 'clear', 'theme', 'font'],
       category: 'action',
       execute() {
-        const config = getConfig();
-        if (config.windows !== undefined) {
-          const querystring = [];
-          for (const [i, win] of config.windows.entries()) {
-            querystring.push(`win${i + 1}=${win.type}`);
-            for (const key of Object.keys(win.data ?? {})) {
-              querystring.push(`${key}${i + 1}=${win.data[key]}`);
-            }
-          }
-          window.location.href = `${window.location.pathname}?${querystring.join('&')}`;
-        } else {
-          window.location.reload();
-        }
+        close();
+        promptSettingsReset();
       }
+    });
+
+    registerCommand({
+      name: 'Restore Default Windows',
+      keywords: ['restore', 'windows', 'layout', 'defaults'],
+      category: 'action',
+      execute: resetWindowLayout
     });
   };
 

@@ -1,0 +1,56 @@
+.config-reset-row {
+	margin-top: 0.75rem;
+	padding-top: 0.75rem;
+	border-top: 1px solid var(--color-border);
+}
+
+.config-reset-button,
+.config-reset-action {
+	font: inherit;
+	font-size: 0.85rem;
+	padding: 0.35rem 0.75rem;
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	background: var(--color-background);
+	color: var(--color-text-muted);
+	cursor: pointer;
+	transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.config-reset-button:hover,
+.config-reset-action:hover {
+	background: var(--color-background-hover);
+	border-color: var(--color-error);
+	color: var(--color-error);
+}
+
+.config-reset-button:focus-visible,
+.config-reset-action:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+.config-reset-warning {
+	margin: 0 0 0.5rem;
+	font-size: 0.8rem;
+	line-height: 1.4;
+	color: var(--color-text-muted);
+}
+
+.config-reset-actions {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.config-reset-action-confirm {
+	background: color-mix(in oklab, var(--color-error) 12%, var(--color-background));
+	border-color: var(--color-error);
+	color: var(--color-error);
+	font-weight: 600;
+}
+
+.config-reset-action-confirm:hover {
+	background: color-mix(in oklab, var(--color-error) 25%, var(--color-background));
+	border-color: var(--color-error);
+	color: var(--color-error);
+}
