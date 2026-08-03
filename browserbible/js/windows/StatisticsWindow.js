@@ -2,17 +2,19 @@ import { BaseWindow, AsyncHelpers, registerWindowComponent } from './BaseWindow.
 import { Reference } from '../bible/BibleReference.js';
 import { i18n } from '../lib/i18n.js';
 import { getApp } from '../core/registry.js';
-import { getText, loadSection } from '../texts/TextLoader.js';
+import { getText, loadSection, displayAbbr } from '../texts/TextLoader.js';
 import { renderWordCloud } from '../lib/SimpleWordCloud.js';
 import { escapeRegExp, highlightTextMatches } from '../lib/textHighlighter.js';
 import { loadStopwords, tokenizeWords, wordKey } from '../lib/stopwords.js';
+import { getShowApocrypha, skipApocryphalSection } from '../bible/Apocrypha.js';
 
 const INIT_DELAY_MS = 1500;
-const FONT_SIZE_MIN = 9;
-const FONT_SIZE_MAX = 24;
+const FONT_SIZE_MIN = 11;
+const FONT_SIZE_MAX = 26;
+const CASCADE_STAGGER_MS = 14;
+const CASCADE_STAGGER_MAX_MS = 600;
 
-// Greek stopwords (common articles/prepositions to exclude from statistics)
-const GREEK_STOPWORDS = ['G2532', 'G3588', 'G846', 'G1722', 'G1519', 'G1537', 'G1611'];
+const STRONGS_STOPWORDS = ['G2532', 'G3588', 'G846', 'G1722', 'G1519', 'G1537', 'G1611', 'H853'];
 
 const getTextAsync = (textId) => AsyncHelpers.promisifyWithError(getText, textId);
 const loadSectionAsync = (textInfo, sectionId) => AsyncHelpers.promisifyWithError(loadSection, textInfo, sectionId);
@@ -34,17 +36,23 @@ class StatisticsWindowComponent extends BaseWindow {
       sectionid: '',
       textInfo: null,
       wordStats: [],
+      lemmaTally: [],
       lemmaData: [],
       hasLemma: false
     };
 
     this._wordIndex = new Map();
+    this._lemmaIndex = new Map();
   }
 
   async render() {
     this.innerHTML = `
       <div class="window-header">
-        <span class="window-title i18n" data-i18n="[html]windows.stats.label"></span>
+        <span class="stats-chapter-cycler">
+          <button type="button" class="chapter-arrow chapter-prev" tabindex="-1" title="${i18n.t('windows.bible.prevchapter')}" aria-label="${i18n.t('windows.bible.prevchapter')}">&lsaquo;</button>
+          <span class="window-title i18n" data-i18n="[html]windows.stats.label"></span>
+          <button type="button" class="chapter-arrow chapter-next" tabindex="-1" title="${i18n.t('windows.bible.nextchapter')}" aria-label="${i18n.t('windows.bible.nextchapter')}">&rsaquo;</button>
+        </span>
       </div>
       <div class="window-main">
         <div class="statistics-content loading-indicator"></div>
@@ -58,10 +66,16 @@ class StatisticsWindowComponent extends BaseWindow {
     this.refs.header = this.$('.window-header');
     this.refs.main = this.$('.window-main');
     this.refs.statsMainNode = this.$('.statistics-content');
+    this.refs.chapterCycler = this.$('.stats-chapter-cycler');
+    this.refs.chapterPrev = this.$('.chapter-prev');
+    this.refs.chapterNext = this.$('.chapter-next');
   }
 
   attachEventListeners() {
     this.on('message', (e) => this.handleMessage(e));
+
+    this.addListener(this.refs.chapterPrev, 'click', () => this.cycleChapter(-1));
+    this.addListener(this.refs.chapterNext, 'click', () => this.cycleChapter(1));
   }
 
   async init() {
@@ -82,6 +96,7 @@ class StatisticsWindowComponent extends BaseWindow {
   }
 
   cleanup() {
+    this._pinnedWord = null;
     this.removeHighlights();
     super.cleanup();
   }
@@ -101,14 +116,17 @@ class StatisticsWindowComponent extends BaseWindow {
     if (tid === this.state.textid && sid === this.state.sectionid) return;
 
     this.removeHighlights();
+    this._pinnedWord = null;
     this._statsEpoch = (this._statsEpoch ?? 0) + 1;
     this._wordIndex = new Map();
+    this._lemmaIndex = new Map();
 
     Object.assign(this.state, {
       textid: tid,
       sectionid: sid,
       textInfo: null,
       wordStats: [],
+      lemmaTally: [],
       lemmaData: [],
       hasLemma: false
     });
@@ -139,12 +157,13 @@ class StatisticsWindowComponent extends BaseWindow {
       const bibleReference = Reference(this.state.sectionid);
       if (bibleReference) {
         bibleReference.language = data.lang;
-        const headerSpan = this.refs.header.querySelector('span');
+        const headerSpan = this.refs.header.querySelector('.window-title');
         if (headerSpan) {
-          headerSpan.innerHTML = `${bibleReference.toString()} (${data.abbr})`;
+          headerSpan.innerHTML = `${bibleReference.toString()} (${displayAbbr(data)})`;
         }
       }
 
+      this.updateChapterArrows();
       this.loadChapterInfo(epoch);
     } catch (err) {
       this.refs.statsMainNode.classList.remove('loading-indicator');
@@ -152,30 +171,70 @@ class StatisticsWindowComponent extends BaseWindow {
     }
   }
 
+  chapterTarget(direction) {
+    const sections = this.state.textInfo?.sections;
+    const current = this.state.sectionid;
+    if (!Array.isArray(sections) || !current) return null;
+
+    const idx = sections.indexOf(current);
+    if (idx === -1) return null;
+
+    const candidate = sections[idx + direction] ?? null;
+    if (candidate && !getShowApocrypha()) {
+      return skipApocryphalSection(candidate, direction, sections);
+    }
+    return candidate;
+  }
+
+  cycleChapter(direction) {
+    const target = this.chapterTarget(direction);
+    if (!target) return;
+
+    this.trigger('globalmessage', {
+      type: 'globalmessage',
+      target: this,
+      data: {
+        messagetype: 'nav',
+        type: 'bible',
+        locationInfo: { fragmentid: `${target}_1`, sectionid: target, offset: 0 }
+      }
+    });
+
+    this.startProcess(this.state.textid, target);
+  }
+
+  updateChapterArrows() {
+    const cycler = this.refs.chapterCycler;
+    if (!cycler) return;
+
+    const sections = this.state.textInfo?.sections;
+    const hasChapters = Array.isArray(sections) && sections.length > 1;
+    cycler.classList.toggle('has-chapters', hasChapters);
+    if (!hasChapters) return;
+
+    for (const [button, direction] of [[this.refs.chapterPrev, -1], [this.refs.chapterNext, 1]]) {
+      const atEnd = !this.chapterTarget(direction);
+      button.classList.toggle('inactive', atEnd);
+      button.setAttribute('aria-disabled', atEnd ? 'true' : 'false');
+    }
+  }
+
   processLemmaVerse(verse) {
     const stopwords = this._stopwords;
 
     verse.querySelectorAll('l[s]').forEach((lemma) => {
-      const word = lemma.innerHTML;
+      const strongsTokens = lemma.getAttribute('s').split(' ');
+      if (strongsTokens.every((s) => STRONGS_STOPWORDS.includes(s))) return;
 
-      // Lemma-tagged translations (e.g. ENGWEB) carry surface text in the
-      // target language; skip occurrences that are entirely stop words.
-      const tokens = tokenizeWords(lemma.textContent, this.state.textInfo.lang);
-      if (stopwords && tokens.length > 0 &&
-          tokens.every((t) => stopwords.has(wordKey(t)))) {
-        return;
-      }
+      const words = tokenizeWords(lemma.textContent, this.state.textInfo.lang)
+        .filter((word) => !stopwords?.has(wordKey(word)));
+      if (words.length === 0) return;
 
-      for (const strongs of lemma.getAttribute('s').split(' ')) {
-        if (GREEK_STOPWORDS.includes(strongs)) continue;
+      for (const word of words) this.countWord(word);
 
-        const entry = this.state.wordStats.find((wi) => wi.strongs === strongs);
-        if (entry) {
-          entry.count++;
-          if (!entry.words.includes(word)) entry.words.push(word);
-        } else {
-          this.state.wordStats.push({ strongs, word, words: [word], count: 1 });
-        }
+      for (const strongs of strongsTokens) {
+        if (STRONGS_STOPWORDS.includes(strongs)) continue;
+        this.tallyLemma(strongs, words);
       }
     });
   }
@@ -184,17 +243,37 @@ class StatisticsWindowComponent extends BaseWindow {
     const stopwords = this._stopwords;
 
     for (const word of tokenizeWords(verse.textContent, this.state.textInfo.lang)) {
-      const key = wordKey(word);
-      if (stopwords?.has(key)) continue;
+      if (stopwords?.has(wordKey(word))) continue;
+      this.countWord(word);
+    }
+  }
 
-      const entry = this._wordIndex.get(key);
-      if (entry) {
-        entry.count++;
-      } else {
-        const newEntry = { word, count: 1 };
-        this._wordIndex.set(key, newEntry);
-        this.state.wordStats.push(newEntry);
+  countWord(word) {
+    const key = wordKey(word);
+    const entry = this._wordIndex.get(key);
+
+    if (entry) {
+      entry.count++;
+      entry.formCounts[word] = (entry.formCounts[word] ?? 0) + 1;
+    } else {
+      const newEntry = { key, word, formCounts: { [word]: 1 }, count: 1 };
+      this._wordIndex.set(key, newEntry);
+      this.state.wordStats.push(newEntry);
+    }
+  }
+
+  tallyLemma(strongs, words) {
+    const tally = this._lemmaIndex.get(strongs);
+
+    if (tally) {
+      tally.count++;
+      for (const word of words) {
+        if (!tally.words.includes(word)) tally.words.push(word);
       }
+    } else {
+      const newTally = { strongs, words: [...new Set(words)], count: 1 };
+      this._lemmaIndex.set(strongs, newTally);
+      this.state.lemmaTally.push(newTally);
     }
   }
 
@@ -241,20 +320,27 @@ class StatisticsWindowComponent extends BaseWindow {
 
       this.state.wordStats.sort(byCountDescending);
 
+      for (const entry of this.state.wordStats) {
+        entry.word = Object.keys(entry.formCounts)
+          .sort((a, b) => entry.formCounts[b] - entry.formCounts[a])[0];
+      }
+
       const counts = this.state.wordStats.map((o) => o.count);
       const max = Math.max(...counts);
       const min = Math.min(...counts);
       const { dir } = this.state.textInfo;
 
+      const totalOccurrences = counts.reduce((sum, c) => sum + c, 0);
+      const summary = i18n.t('windows.stats.summary', [this.state.wordStats.length, totalOccurrences]);
+      resultsNode.querySelector('h3').insertAdjacentHTML(
+        'afterend',
+        `<div class="statistics-summary">${summary} <span class="statistics-summary-note">${i18n.t('windows.stats.commonfiltered')}</span></div>`
+      );
+
       const html = this.state.wordStats.map((wordInfo, i) => {
         const size = lerp(FONT_SIZE_MIN, FONT_SIZE_MAX, min, max, wordInfo.count);
-        let displayWord = wordInfo.words?.join(', ') ?? wordInfo.word;
-
-        if (wordInfo.strongs) {
-          displayWord = `<l s="${wordInfo.strongs}">${displayWord}</l>`;
-        }
-
-        return `<span class="word" style="font-size:${size}px" data-wordindex="${i}"><span dir="${dir}">${displayWord}</span> <span dir="ltr">(${wordInfo.count})</span></span>`;
+        const delay = Math.min(i * CASCADE_STAGGER_MS, CASCADE_STAGGER_MAX_MS);
+        return `<span class="word" style="font-size:${size}px;animation-delay:${delay}ms" data-wordindex="${i}"><span class="word-form" dir="${dir}">${this.escapeHtml(wordInfo.word)}</span> <span class="word-count" dir="ltr">(${wordInfo.count})</span></span>`;
       }).join('');
       const wordcloudData = this.state.wordStats.map((wi) => [wi.word, wi.count]);
 
@@ -263,12 +349,13 @@ class StatisticsWindowComponent extends BaseWindow {
       wordFrequenciesNode.classList.remove('loading-indicator');
 
       wordFrequenciesNode.querySelectorAll('.word').forEach((wordEl) => {
-        wordEl.addEventListener('mouseout', () => this.removeHighlights());
-        wordEl.addEventListener('mouseover', () => {
-          const index = parseInt(wordEl.getAttribute('data-wordindex'), 10);
-          const wordInfo = this.state.wordStats[index];
-          this.createHighlights(wordInfo);
-        });
+        const index = parseInt(wordEl.getAttribute('data-wordindex'), 10);
+        const wordInfo = this.state.wordStats[index];
+        const formEl = wordEl.querySelector('.word-form');
+
+        formEl.addEventListener('mouseout', () => this.previewEnd());
+        formEl.addEventListener('mouseover', () => this.createHighlights(wordInfo));
+        formEl.addEventListener('click', () => this.activateWord(wordInfo));
       });
 
       this.renderWordCloud(wordCloudNode, wordcloudData, min, max);
@@ -303,17 +390,21 @@ class StatisticsWindowComponent extends BaseWindow {
       weightFactor: (weight) => lerp(sizeMin, sizeMax, min, max, weight),
       list: wordcloudData,
       hover: (hoverWordInfo) => {
-        this.removeHighlights();
-        if (!hoverWordInfo) return;
+        if (!hoverWordInfo) {
+          this.previewEnd();
+          return;
+        }
 
         const wordInfo = this.state.wordStats.find((wi) => wi.word === hoverWordInfo[0]);
         if (wordInfo) this.createHighlights(wordInfo);
       },
+      click: (clickWordInfo) => {
+        const wordInfo = this.state.wordStats.find((wi) => wi.word === clickWordInfo[0]);
+        if (wordInfo) this.activateWord(wordInfo);
+      },
       color: (word, weight) => {
-        const rValue = Math.round(lerp(42, 22, min, max, weight));
-        const gValue = Math.round(lerp(133, 71, min, max, weight));
-        const bValue = Math.round(lerp(232, 123, min, max, weight));
-        return `rgb(${rValue},${gValue},${bValue})`;
+        const mutedPct = Math.round(lerp(70, 0, min, max, weight));
+        return `color-mix(in oklab, var(--color-primary), var(--color-text-muted) ${mutedPct}%)`;
       }
     });
   }
@@ -350,8 +441,7 @@ class StatisticsWindowComponent extends BaseWindow {
   }
 
   async loadAllLemmas() {
-    const results = await Promise.all(this.state.wordStats.map(async (wordInfo) => {
-      if (!wordInfo.strongs) return null;
+    const results = await Promise.all(this.state.lemmaTally.map(async (wordInfo) => {
       try {
         const response = await fetch(`${this.config.baseContentUrl}content/lexicons/strongs/entries/${wordInfo.strongs}.json`);
         if (!response.ok) return null;
@@ -380,15 +470,15 @@ class StatisticsWindowComponent extends BaseWindow {
   createHighlights(wordInfo) {
     this.removeHighlights();
 
+    const { lang } = this.state.textInfo ?? {};
+
     document.querySelectorAll(`.${this.state.sectionid}`).forEach((el) => {
-      if (wordInfo.strongs !== undefined) {
-        const target = wordInfo.strongs.toUpperCase();
-        const targetNum = target.replace(/^[GH]/, '');
-        el.querySelectorAll('l[s]').forEach((lEl) => {
-          const matches = lEl.getAttribute('s').toUpperCase().split(/\s+/).some((token) => {
-            const bare = token.replace(/[A-Z]$/, '');
-            return bare === target || bare.replace(/^[GH]/, '') === targetNum;
-          });
+      const lemmaEls = el.querySelectorAll('l');
+
+      if (lemmaEls.length) {
+        lemmaEls.forEach((lEl) => {
+          const matches = tokenizeWords(lEl.textContent, lang)
+            .some((token) => wordKey(token) === wordInfo.key);
           if (matches) {
             lEl.classList.add('highlight', 'highlight-stats', 'lemma-highlight');
           }
@@ -396,6 +486,34 @@ class StatisticsWindowComponent extends BaseWindow {
       } else {
         const r = new RegExp(`\\b${escapeRegExp(wordInfo.word)}\\b`, 'gi');
         highlightTextMatches(el, [r], 'highlight highlight-stats');
+      }
+    });
+
+    return document.querySelector('.BibleWindow .highlight-stats');
+  }
+
+  previewEnd() {
+    if (this._pinnedWord) {
+      this.createHighlights(this._pinnedWord);
+    } else {
+      this.removeHighlights();
+    }
+  }
+
+  activateWord(wordInfo) {
+    this._pinnedWord = wordInfo;
+
+    const firstMatch = this.createHighlights(wordInfo);
+    const fragmentid = firstMatch?.closest('.verse, .v')?.getAttribute('data-id');
+    if (!fragmentid) return;
+
+    this.trigger('globalmessage', {
+      type: 'globalmessage',
+      target: this,
+      data: {
+        messagetype: 'nav',
+        type: 'bible',
+        locationInfo: { fragmentid, sectionid: this.state.sectionid, offset: 0 }
       }
     });
   }

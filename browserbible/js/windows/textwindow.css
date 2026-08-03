@@ -197,6 +197,7 @@
 	text-overflow: ellipsis;
 }
 
+.window .chapter-arrow,
 .window .version-arrow,
 .window .version-info {
 	width: 22px;
@@ -216,8 +217,15 @@
 	justify-content: center;
 }
 
+.window .chapter-arrow,
 .window .version-arrow {
 	display: none;
+}
+
+.window .chapter-arrow.inactive {
+	opacity: 0.35;
+	cursor: default;
+	pointer-events: none;
 }
 
 .window .version-info {
@@ -239,6 +247,7 @@
 	margin-inline-start: -1px;
 }
 
+.window .chapter-arrow:hover,
 .window .version-arrow:hover,
 .window .version-info:hover {
 	color: var(--color-text);
@@ -247,6 +256,7 @@
 	z-index: var(--z-base);
 }
 
+.compact-ui .window .chapter-arrow,
 .compact-ui .window .version-arrow,
 .compact-ui .window .version-info {
 	height: 25px;

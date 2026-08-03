@@ -102,6 +102,8 @@
         "audio": "Audio available",
         "prevversion": "Previous version",
         "nextversion": "Next version",
+        "prevchapter": "Previous chapter",
+        "nextchapter": "Next chapter",
         "gotopassage": "Go to passage",
         "reference": "Reference",
         "version": "Version",
@@ -262,6 +264,8 @@
         "label": "Statistics",
         "frequentwords": "Frequent Words",
         "rarewords": "Rare Words",
+        "summary": "{0} unique words · {1} occurrences",
+        "commonfiltered": "(common words filtered)",
         "intro": "Open a Bible window to see statistics for its current chapter.",
         "loadtextfailed": "Unable to load this text.",
         "loadchapterfailed": "Unable to load this chapter."

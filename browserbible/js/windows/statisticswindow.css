@@ -4,33 +4,110 @@
 	margin: 0 0 15px;
 }
 
-.statistics-content h3 {
-	font-size: 90%;
+.window-header .stats-chapter-cycler {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+.stats-chapter-cycler .window-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.stats-chapter-cycler.has-chapters .chapter-arrow {
+	display: inline-flex;
 }
 
-.statistics-content .word {
-	display: inline-block;
-	padding: 2px 2px 2px 0;
-	margin: 0 6px 2px 0;
-    cursor: default;
+.statistics-content {
+	padding: 12px 16px;
 }
-.statistics-content .word:hover {
-	background: var(--color-highlight);
+
+.statistics-content h3 {
+	font-size: 78%;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--color-text-muted);
+	margin-bottom: 4px;
+}
+
+.statistics-summary {
+	font-size: 85%;
+	color: var(--color-text-muted);
+	margin-bottom: 8px;
+}
+.statistics-summary-note {
+	opacity: 0.7;
 }
 
 .statistics-results {
-	padding-left: 1em;
+	padding: 0;
+	line-height: 1.5;
+}
+.statistics-content .word {
+	display: inline-block;
+	padding: 1px 6px;
+	margin: 0 2px 3px 0;
+	cursor: default;
+	animation: stat-word-in var(--duration-normal) var(--ease-out) both;
+}
+.statistics-content .word-form {
+	padding: 1px 3px;
+	margin: 0 -3px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+.statistics-content .word-form:hover {
+	background: var(--color-highlight);
+}
+.statistics-content .word-count {
+	font-size: 70%;
+	color: var(--color-text-muted);
+}
+
+@keyframes stat-word-in {
+	from {
+		opacity: 0;
+		translate: 0 6px;
+	}
 }
 
 .statistics-wordcloud {
 	max-width: 100%;
 	display: block;
 	position: relative;
-	margin: 0 auto;
+	margin: 0 auto 12px;
 	box-sizing: border-box;
 }
 
-.statistics-wordcloud span:hover {
+.statistics-wordcloud .wordcloud-word {
+	animation: cloud-word-in var(--duration-slow) var(--ease-spring) both;
+	transition: transform var(--duration-fast) var(--ease-out);
+}
+.statistics-wordcloud .wordcloud-word:hover {
 	background: var(--color-highlight);
-    cursor: default;
+	cursor: default;
+}
+
+@keyframes cloud-word-in {
+	from {
+		opacity: 0;
+		scale: 0.4;
+	}
+}
+
+.statistics-rare-words table {
+	font-size: 90%;
+	border-collapse: collapse;
+}
+.statistics-rare-words td {
+	padding: 3px 10px 3px 0;
+	vertical-align: top;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.statistics-content .word,
+	.statistics-wordcloud .wordcloud-word {
+		animation: none;
+	}
 }
