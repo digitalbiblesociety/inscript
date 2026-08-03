@@ -5,6 +5,7 @@ import { getApp } from '../core/registry.js';
 import { getText, loadSection } from '../texts/TextLoader.js';
 import { renderWordCloud } from '../lib/SimpleWordCloud.js';
 import { escapeRegExp, highlightTextMatches } from '../lib/textHighlighter.js';
+import { loadStopwords, tokenizeWords, wordKey } from '../lib/stopwords.js';
 
 const INIT_DELAY_MS = 1500;
 const FONT_SIZE_MIN = 9;
@@ -15,26 +16,6 @@ const GREEK_STOPWORDS = ['G2532', 'G3588', 'G846', 'G1722', 'G1519', 'G1537', 'G
 
 const getTextAsync = (textId) => AsyncHelpers.promisifyWithError(getText, textId);
 const loadSectionAsync = (textInfo, sectionId) => AsyncHelpers.promisifyWithError(loadSection, textInfo, sectionId);
-
-const exclusions = {
-  "es": ["de"],
-  "chs": ["-", ":", ",", "。", "(", ")", "!", ";", "一", "?"],
-  "eng": [
-    "a", "abaft", "aboard", "about", "above", "absent", "across", "afore", "after",
-    "against", "along", "alongside", "amid", "amidst", "among", "amongst", "an",
-    "anenst", "apud", "around", "as", "aside", "astride", "at", "athwart", "atop",
-    "barring", "before", "behind", "below", "beneath", "beside", "besides", "between",
-    "beyond", "but", "by", "circa", "concerning", "despite", "down", "during", "except",
-    "excluding", "failing", "following", "for", "forenenst", "from", "given", "in",
-    "including", "inside", "into", "lest", "like", "minus", "modulo", "near", "next",
-    "notwithstanding", "of", "off", "on", "onto", "opposite", "out", "outside", "over",
-    "pace", "past", "per", "plus", "pro", "qua", "regarding", "round", "sans", "save",
-    "since", "than", "through", "throughout", "till", "to", "toward", "towards", "under",
-    "underneath", "unlike", "until", "unto", "up", "upon", "versus", "via", "with",
-    "within", "without", "worth", "the", "him", "his", "he", "she", "it", "her", "hers",
-    "and", "yet", "that", "was", "were", "be", "being", "been", "had", "its", "i"
-  ]
-};
 
 const byCountDescending = (a, b) => b.count - a.count;
 
@@ -56,6 +37,8 @@ class StatisticsWindowComponent extends BaseWindow {
       lemmaData: [],
       hasLemma: false
     };
+
+    this._wordIndex = new Map();
   }
 
   async render() {
@@ -93,7 +76,7 @@ class StatisticsWindowComponent extends BaseWindow {
         this.startProcess(bibleSettings.data.textid, bibleSettings.data.sectionid);
       } else {
         this.refs.statsMainNode.innerHTML =
-          '<div class="statistics-empty">Open a Bible window to see statistics for its current chapter.</div>';
+          `<div class="statistics-empty">${i18n.t('windows.stats.intro')}</div>`;
       }
     }, INIT_DELAY_MS);
   }
@@ -119,6 +102,7 @@ class StatisticsWindowComponent extends BaseWindow {
 
     this.removeHighlights();
     this._statsEpoch = (this._statsEpoch ?? 0) + 1;
+    this._wordIndex = new Map();
 
     Object.assign(this.state, {
       textid: tid,
@@ -169,8 +153,18 @@ class StatisticsWindowComponent extends BaseWindow {
   }
 
   processLemmaVerse(verse) {
+    const stopwords = this._stopwords;
+
     verse.querySelectorAll('l[s]').forEach((lemma) => {
       const word = lemma.innerHTML;
+
+      // Lemma-tagged translations (e.g. ENGWEB) carry surface text in the
+      // target language; skip occurrences that are entirely stop words.
+      const tokens = tokenizeWords(lemma.textContent, this.state.textInfo.lang);
+      if (stopwords && tokens.length > 0 &&
+          tokens.every((t) => stopwords.has(wordKey(t)))) {
+        return;
+      }
 
       for (const strongs of lemma.getAttribute('s').split(' ')) {
         if (GREEK_STOPWORDS.includes(strongs)) continue;
@@ -187,26 +181,19 @@ class StatisticsWindowComponent extends BaseWindow {
   }
 
   processTextVerse(verse) {
-    const { lang } = this.state.textInfo;
-    let verseText = verse.innerHTML.replace(/<.*?>/gi, '');
+    const stopwords = this._stopwords;
 
-    if (lang.startsWith('en')) {
-      verseText = verseText.replace(/[^A-Za-z\s]/g, '');
-    }
+    for (const word of tokenizeWords(verse.textContent, this.state.textInfo.lang)) {
+      const key = wordKey(word);
+      if (stopwords?.has(key)) continue;
 
-    const langExclusions = exclusions[lang];
-
-    for (const word of verseText.split(' ')) {
-      if (word === '' || langExclusions?.includes(word.toLowerCase())) continue;
-
-      const entry = this.state.wordStats.find(
-        (wi) => wi.word.toLowerCase() === word.toLowerCase()
-      );
-
+      const entry = this._wordIndex.get(key);
       if (entry) {
         entry.count++;
       } else {
-        this.state.wordStats.push({ word, count: 1 });
+        const newEntry = { word, count: 1 };
+        this._wordIndex.set(key, newEntry);
+        this.state.wordStats.push(newEntry);
       }
     }
   }
@@ -223,11 +210,15 @@ class StatisticsWindowComponent extends BaseWindow {
     const wordCloudNode = resultsNode.querySelector('.statistics-wordcloud');
 
     try {
-      const content = await loadSectionAsync(this.state.textInfo, this.state.sectionid);
+      const [content, stopwords] = await Promise.all([
+        loadSectionAsync(this.state.textInfo, this.state.sectionid),
+        loadStopwords(this.state.textInfo.lang)
+      ]);
       if (epoch !== this._statsEpoch) {
         resultsNode.remove();
         return;
       }
+      this._stopwords = stopwords;
 
       let contentEl = content;
       if (typeof content === 'string') {
@@ -329,7 +320,7 @@ class StatisticsWindowComponent extends BaseWindow {
 
   async loadLemmaInfo(epoch) {
     const lemmaNodeWrapper = this.createElement(`<div class="statistics-section statistics-rare-words">
-      <h3>Rare Words</h3>
+      <h3>${i18n.t('windows.stats.rarewords')}</h3>
       <div class="statistics-results loading-indicator"></div>
     </div>`);
     this.refs.statsMainNode.appendChild(lemmaNodeWrapper);

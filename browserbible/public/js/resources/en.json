@@ -261,6 +261,8 @@
       "stats": {
         "label": "Statistics",
         "frequentwords": "Frequent Words",
+        "rarewords": "Rare Words",
+        "intro": "Open a Bible window to see statistics for its current chapter.",
         "loadtextfailed": "Unable to load this text.",
         "loadchapterfailed": "Unable to load this chapter."
       }
@@ -392,6 +394,7 @@
       "sw": "Kiingereza",
       "tr": "ingilizce",
       "ja": "英語",
+      "ko": "영어",
       "zh-TW": "英語",
       "zh-CN": "英语"
     }

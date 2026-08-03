@@ -13,19 +13,19 @@
     "menu": {
       "labels": {
         "about": "Tentang",
-        "addwindow": "Tambahkan Jendela",
+        "addwindow": "Tambah jendela",
         "settings": "Pengaturan",
-        "feedback": "Umpan Balik",
-        "options": "Pilihan"
+        "feedback": "Umpan balik",
+        "options": "Opsi"
       },
       "feedback": {
         "name": "Nama",
         "email": "Email",
         "comments": "Komentar Anda",
-        "feature": "Fitur Saran",
-        "bug": "Bug Report",
-        "other": "Yang Lainnya",
-        "send": "Mengirim",
+        "feature": "Saran fitur",
+        "bug": "Laporan bug",
+        "other": "Lainnya",
+        "send": "Kirim",
         "thankyou": "Terima kasih atas tanggapan Anda"
       },
       "search": {
@@ -35,10 +35,14 @@
         "suggestsearch": "Cari \"<strong>{0}</strong>\" di {1}"
       },
       "config": {
-        "font": "Fon",
+        "font": "Gaya",
         "settings": "Pengaturan",
-        "tools": "Alat",
-        "apocrypha": "Tampilkan Kitab Apokrifa"
+        "tools": "Opsi",
+        "apocrypha": "Tampilkan kitab-kitab Apokrifa",
+        "reset": "Atur ulang pengaturan",
+        "resetwarning": "Kembalikan semua pengaturan ke nilai bawaan? Catatan dan sorotan Anda akan tetap disimpan.",
+        "resetconfirm": "Atur ulang",
+        "resetcancel": "Batal"
       },
       "reset": "ulang",
       "commandpalette": {
@@ -59,17 +63,17 @@
         "savefailed": "Sorotan tidak dapat disimpan: penyimpanan peramban penuh atau tidak tersedia."
       },
       "visualfilters": {
-        "button": "Visual Filter",
-        "title": "Visual Filter",
+        "button": "Filter visual",
+        "title": "Filter visual",
         "newfilter": "Filter baru",
-        "strongsnumber": "Strong #",
+        "strongsnumber": "No. Strong",
         "morphology": "Morfologi",
         "style": "Gaya"
       },
       "eng2p": {
-        "button": "English 2 Orang Plural",
-        "title": "English Kedua Orang Plural",
-        "description": "Bahasa Inggris modern tidak membedakan antara <em>kamu tunggal</em> dan <em>kamu jamak</em>, jadi plugin ini menggunakan padanan bahasa Inggris regional untuk mewakili bentuk Ibrani dan Yunani."
+        "button": "Orang kedua jamak bahasa Inggris",
+        "title": "Orang kedua jamak dalam bahasa Inggris",
+        "description": "Bahasa Inggris modern tidak membedakan <em>you tunggal</em> dan <em>you jamak</em>. Karena itu, plugin ini menggunakan padanan regional bahasa Inggris untuk mewakili bentuk bahasa Ibrani dan Yunani."
       },
       "lemmapopup": {
         "findalloccurrences": "Cari semua kejadian (sekitar __count__)"
@@ -77,24 +81,24 @@
     },
     "windows": {
       "deafbible": {
-        "label": "Alkitab Tuli"
+        "label": "Alkitab Bahasa Isyarat"
       },
       "videobible": {
-        "label": "Video Alkitab"
+        "label": "Alkitab Video"
       },
       "bible": {
         "label": "Alkitab",
         "recentlyused": "Baru Digunakan",
-        "filter": "Filter ...",
+        "filter": "Saring...",
         "ot": "Perjanjian Lama",
         "nt": "Perjanjian Baru",
-        "dc": "Deuterokanonika Books",
-        "more": "Lebih",
-        "less": "Kurang",
+        "dc": "Kitab-kitab Deuterokanonika",
+        "more": "Lainnya",
+        "less": "Lebih sedikit",
         "default": "Unggulan",
         "languages": "Bahasa",
         "countries": "Negara",
-        "lemma": "Yunani/Ibrani",
+        "lemma": "Popup bahasa Yunani/Ibrani",
         "audio": "Audio tersedia",
         "prevversion": "Versi sebelumnya",
         "nextversion": "Versi berikutnya",
@@ -107,14 +111,14 @@
         "noinfo": "Tidak ada informasi tambahan yang tersedia untuk versi ini."
       },
       "commentary": {
-        "label": "Komentar"
+        "label": "Tafsiran"
       },
       "map": {
         "label": "Peta",
-        "placeholder": "Cari ...",
+        "placeholder": "Cari...",
         "versenotloaded": "Teks tidak tersedia",
         "openinbible": "Buka di Alkitab",
-      "loadfailed": "Gagal memuat peta",
+        "loadfailed": "Gagal memuat peta",
         "loading": "Memuat…",
         "moreresults": "{count} kecocokan lagi",
         "placesin": "Tempat di {reference}",
@@ -135,8 +139,8 @@
       },
       "search": {
         "label": "Pencarian",
-        "placeholder": "Pencarian",
-        "button": "Pencarian",
+        "placeholder": "Cari",
+        "button": "Cari",
         "results": "Hasil",
         "verses": "ayat",
         "options": "Opsi pencarian",
@@ -145,10 +149,10 @@
         "loadingprogress": "Memuat: {progress} :: {label}"
       },
       "parallel": {
-        "label": "Parallels",
-        "loading": "Loading ...",
-        "showall": "Tampilkan Semua",
-        "hideall": "Sembunyikan Semua",
+        "label": "Bagian paralel",
+        "loading": "Memuat...",
+        "showall": "Tampilkan semua",
+        "hideall": "Sembunyikan semua",
         "loadlistfailed": "Gagal memuat daftar paralel",
         "loadtextfailed": "Gagal memuat teks Alkitab",
         "loadpassagesfailed": "Gagal memuat bagian paralel"
@@ -239,11 +243,11 @@
       },
       "audio": {
         "label": "Audio",
-        "options": "Audio Pilihan",
-        "synctext": "Sync Text (beta)",
-        "autoplay": "Autoplay Berikutnya",
-        "drama": "Drama",
-        "nondrama": "Non-Drama",
+        "options": "Opsi audio",
+        "synctext": "Sinkronkan teks (beta)",
+        "autoplay": "Putar berikutnya secara otomatis",
+        "drama": "Dramatisasi",
+        "nondrama": "Pembacaan biasa",
         "noaudiotitle": "Tidak Ada Audio Tersedia",
         "noaudiomessage": "Versi Alkitab ini tidak memiliki rekaman audio. Silakan pilih versi lain yang mendukung audio."
       },
@@ -256,9 +260,124 @@
       },
       "stats": {
         "label": "Statistik",
-        "frequentwords": "Kata-kata sering",
+        "frequentwords": "Kata yang sering muncul",
+        "rarewords": "Kata yang jarang muncul",
+        "intro": "Buka jendela Alkitab untuk melihat statistik pasal yang sedang ditampilkan.",
         "loadtextfailed": "Tidak dapat memuat teks ini.",
         "loadchapterfailed": "Tidak dapat memuat pasal ini."
+      }
+    },
+    "tour": {
+      "launch": "Tur terpandu",
+      "progress": "Langkah {current} dari {total}",
+      "buttons": {
+        "next": "Berikutnya",
+        "back": "Kembali",
+        "done": "Selesai",
+        "skip": "Lewati tur",
+        "exit": "Tutup tur"
+      },
+      "steps": {
+        "welcome": {
+          "title": "Selamat datang di inScript",
+          "body": "inScript adalah ruang kerja studi Alkitab yang berjalan di peramban Anda. Tersedia lebih dari 1.300 terjemahan dalam lebih dari 1.100 bahasa, beserta tafsiran, pencarian, audio, dan gambar.<br><br>Tekan <kbd>&rarr;</kbd> untuk langkah berikutnya, <kbd>&larr;</kbd> untuk kembali, dan <kbd>Esc</kbd> untuk menutup tur."
+        },
+        "topbar": {
+          "title": "Bilah alat",
+          "body": "Bilah atas memuat menu, tombol kembali dan maju, kotak pencarian, serta layar penuh. Semua yang ada di bawahnya adalah panel."
+        },
+        "mainmenu": {
+          "title": "Menu utama",
+          "body": "Klik logo atau tombol menu untuk membukanya. Gunakan menu ini untuk menambah panel serta membuka Pengaturan, Tentang, dan tur ini."
+        },
+        "addwindow": {
+          "title": "Tambah panel",
+          "body": "Klik salah satu item untuk membuka panel di samping panel yang ada. Pilih terjemahan lain, tafsiran, pencarian, bagian paralel Injil, perbandingan teks, statistik, gambar dan video, atau audio."
+        },
+        "reference": {
+          "title": "Bagian saat ini",
+          "body": "Setiap panel Alkitab menampilkan bagiannya di kiri atas. Klik bagian tersebut untuk berpindah ke tempat lain."
+        },
+        "navigator": {
+          "title": "Buka suatu bagian",
+          "body": "Kitab-kitab dikelompokkan menurut bagian, masing-masing dengan warna tersendiri. Klik sebuah kitab untuk melihat daftar pasalnya. Ketik di kotak filter untuk mencari kitab, pasal, atau bagian bernama."
+        },
+        "navigate": {
+          "title": "Panel bergerak bersama",
+          "body": "Saat Kejadian 1 dipilih, kedua panel Alkitab ikut berpindah. Panel yang tertaut berbagi lokasi yang sama, sehingga terjemahan, tafsiran, dan audionya tetap berada di ayat yang sama."
+        },
+        "versions": {
+          "title": "Ganti terjemahan",
+          "body": "Klik <strong>&lsaquo;</strong> atau <strong>&rsaquo;</strong> untuk menelusuri edisi terkait tanpa meninggalkan bagian tersebut. Klik namanya untuk membuka daftar lengkap."
+        },
+        "textchooser": {
+          "title": "Pilih terjemahan",
+          "body": "Daftar ini memuat lebih dari 1.300 terjemahan dalam lebih dari 1.100 bahasa, dikelompokkan menurut bahasa dengan terjemahan yang paling sering Anda gunakan di bagian atas. Ketik nama atau singkatan bahasa untuk memfilter."
+        },
+        "versioninfo": {
+          "title": "Detail terjemahan",
+          "body": "Setiap terjemahan mencantumkan penerbit, hak cipta, dan deskripsinya."
+        },
+        "linked": {
+          "title": "Tautkan dan pisahkan panel",
+          "body": "Klik ikon rantai agar sebuah panel berhenti mengikuti panel lain. Klik lagi untuk menautkannya kembali."
+        },
+        "layout": {
+          "title": "Ubah ukuran dan urutan",
+          "body": "Seret pembatas untuk mengubah ukuran panel. Seret kepala panel ke kiri atau kanan untuk mengubah urutannya. Panel dan isinya akan dipulihkan saat Anda berkunjung lagi."
+        },
+        "search": {
+          "title": "Cari atau buka sebuah referensi",
+          "body": "Ketik referensi seperti <kbd>Yohanes 3:16</kbd> untuk langsung membukanya. Ketik kata atau frasa untuk mencari dalam terjemahan saat ini. Lalu pilih salah satu dari dua saran."
+        },
+        "searchresults": {
+          "title": "Hasil pencarian",
+          "body": "Hasil ditampilkan dalam konteks dan dikelompokkan menurut kitab. Bilah di bagian atas menunjukkan letak kecocokan. Klik hasil untuk memindahkan setiap panel yang tertaut ke ayat tersebut.<br><br>Pencarian ini mencakup keempat Injil. Anda dapat membatasi pencarian apa pun pada kitab-kitab yang dipilih."
+        },
+        "commentary": {
+          "title": "Tafsiran",
+          "body": "Baca tafsiran domain publik karya Matthew Henry, Jamieson-Fausset-Brown, Calvin, Barnes, Wesley, dan lainnya. Tafsiran mengikuti ayat yang sedang Anda baca."
+        },
+        "comparison": {
+          "title": "Bandingkan terjemahan",
+          "body": "Lihat satu bagian dalam dua terjemahan dengan perbedaannya ditandai."
+        },
+        "parallels": {
+          "title": "Bagian paralel Injil",
+          "body": "Baca peristiwa yang sama dalam setiap Injil, disusun dalam kolom."
+        },
+        "statistics": {
+          "title": "Statistik kata",
+          "body": "Lihat frekuensi kata dan awan kata untuk teks di layar."
+        },
+        "media": {
+          "title": "Gambar dan video",
+          "body": "Lihat karya seni, fotografi, dan film untuk bagian saat ini, termasuk film JESUS dan Injil LUMO."
+        },
+        "audio": {
+          "title": "Audio",
+          "body": "Dengarkan Alkitab audio dalam banyak bahasa. Teks mengikuti pembacaan ayat demi ayat."
+        },
+        "settings": {
+          "title": "Pengaturan",
+          "body": "Atur jenis dan ukuran huruf bacaan, ubah bahasa antarmuka, serta aktifkan atau nonaktifkan nomor pasal dan ayat, judul bagian, catatan kaki, perkataan Kristus, dan teks rata kiri-kanan."
+        },
+        "theme": {
+          "title": "Tema baca",
+          "body": "Pilih Normal, Silo, Yabok, atau Getsemani. Sebelum Anda memilih salah satunya, inScript mengikuti pengaturan sistem Anda."
+        },
+        "deeplink": {
+          "title": "Bagikan ruang kerja ini",
+          "body": "Salin tautan ini untuk membuka kembali panel, terjemahan, dan bagian yang sama."
+        },
+        "palette": {
+          "title": "Perintah papan ketik",
+          "body": "Tekan <kbd>Ctrl</kbd>+<kbd>K</kbd> atau <kbd>&#8984;</kbd>+<kbd>K</kbd> untuk membuka palet perintah. Ketik referensi untuk membukanya, atau ketik <kbd>&gt;</kbd> untuk mencari perintah panel, tema, fon, dan sakelar."
+        },
+        "finish": {
+          "title": "Tur selesai",
+          "body": "Buka kembali tur ini dari menu utama, atau tekan <kbd>Ctrl</kbd>+<kbd>K</kbd> lalu pilih <strong>Tur terpandu</strong>."
+        }
       }
     },
     "names": {
@@ -275,6 +394,7 @@
       "sw": "Kiindonesia",
       "tr": "Endonezce",
       "ja": "インドネシア語",
+      "ko": "인도네시아어",
       "zh-TW": "印尼語",
       "zh-CN": "印尼语"
     }

@@ -12,5 +12,6 @@ export const AVAILABLE_LANGUAGES = [
   'ur',      // Urdu
   'id',      // Indonesian
   'de',      // German
-  'ja'       // Japanese
+  'ja',      // Japanese
+  'ko'       // Korean
 ];

@@ -13,16 +13,16 @@
     "menu": {
       "labels": {
         "about": "Acerca de",
-        "addwindow": "Añadir Ventana",
+        "addwindow": "Añadir ventana",
         "settings": "Ajustes",
-        "feedback": "Realimentación",
+        "feedback": "Comentarios",
         "options": "Opciones"
       },
       "feedback": {
         "name": "Nombre",
         "email": "Correo electrónico",
         "comments": "Sus comentarios",
-        "feature": "Característica Sugerencia",
+        "feature": "Sugerencia de función",
         "bug": "Informar de un error",
         "other": "Otro",
         "send": "Enviar",
@@ -35,12 +35,16 @@
         "suggestsearch": "Buscar \"<strong>{0}</strong>\" en {1}"
       },
       "config": {
-        "font": "Fuente",
-        "settings": "Configuración",
-        "tools": "Instrumentos",
-        "apocrypha": "Mostrar libros apócrifos"
+        "font": "Estilo",
+        "settings": "Ajustes",
+        "tools": "Opciones",
+        "apocrypha": "Mostrar libros apócrifos",
+        "reset": "Restablecer ajustes",
+        "resetwarning": "¿Restaurar todos los ajustes a sus valores predeterminados? Sus notas y resaltados se conservan.",
+        "resetconfirm": "Restablecer",
+        "resetcancel": "Cancelar"
       },
-      "reset": "reajustar",
+      "reset": "restaurar",
       "commandpalette": {
         "placeholder": "Escriba un comando o una referencia bíblica...",
         "help_reference": "Escriba una referencia bíblica para navegar",
@@ -59,16 +63,16 @@
         "savefailed": "No se pudo guardar el resaltado: el almacenamiento del navegador está lleno o no está disponible."
       },
       "visualfilters": {
-        "button": "Visual Filtros",
-        "title": "Visual Filtros",
+        "button": "Filtros visuales",
+        "title": "Filtros visuales",
         "newfilter": "Nuevo filtro",
-        "strongsnumber": "Strong #",
+        "strongsnumber": "N.º Strong",
         "morphology": "Morfología",
         "style": "Estilo"
       },
       "eng2p": {
         "button": "Inglés segunda persona del plural",
-        "title": "Inglés Segunda Persona del Plural",
+        "title": "Inglés: segunda persona del plural",
         "description": "El inglés moderno no distingue entre <em>tú singular</em> y <em>ustedes plural</em>, por lo que este complemento utiliza equivalentes regionales en inglés para representar las formas hebreas y griegas."
       },
       "lemmapopup": {
@@ -80,21 +84,21 @@
         "label": "Biblia para sordos"
       },
       "videobible": {
-        "label": "Video Biblia"
+        "label": "Biblia en video"
       },
       "bible": {
         "label": "Biblia",
-        "recentlyused": "Usados ​​recientemente",
-        "filter": "Filtro ...",
+        "recentlyused": "Usados recientemente",
+        "filter": "Filtrar...",
         "ot": "Antiguo Testamento",
         "nt": "Nuevo Testamento",
-        "dc": "Libros Deuterocanónicos",
+        "dc": "Libros deuterocanónicos",
         "more": "Más",
         "less": "Menos",
         "default": "Destacados",
-        "languages": "Idiomas",
-        "countries": "Países",
-        "lemma": "Griego/Hebreo",
+        "languages": "Idioma",
+        "countries": "País",
+        "lemma": "Popups griego/hebreo",
         "audio": "Audio disponible",
         "prevversion": "Versión anterior",
         "nextversion": "Versión siguiente",
@@ -110,8 +114,8 @@
         "label": "Comentario"
       },
       "map": {
-        "label": "Mapas",
-        "placeholder": "Buscar ...",
+        "label": "Mapa",
+        "placeholder": "Buscar...",
         "versenotloaded": "Texto no disponible",
         "openinbible": "Abrir en la Biblia",
         "loading": "Cargando…",
@@ -136,26 +140,26 @@
       "search": {
         "label": "Búsqueda",
         "placeholder": "Búsqueda",
-        "button": "Búsqueda",
+        "button": "Buscar",
         "results": "Resultados",
-        "verses": "versos",
-        "options": "Opciones de Búsqueda",
+        "verses": "versículos",
+        "options": "Opciones de búsqueda",
         "searchfailed": "La búsqueda falló. Compruebe su conexión e inténtelo de nuevo.",
         "noresults": "Sin resultados",
         "loadingprogress": "Cargando: {progress} :: {label}"
       },
       "parallel": {
-        "label": "Paralelas",
-        "loading": "Cargando ...",
+        "label": "Paralelos",
+        "loading": "Cargando...",
         "showall": "Mostrar todo",
         "hideall": "Ocultar todo",
-        "loadlistfailed": "No se pudo cargar la lista de paralelas",
+        "loadlistfailed": "No se pudo cargar la lista de paralelos",
         "loadtextfailed": "No se pudo cargar el texto bíblico",
         "loadpassagesfailed": "No se pudieron cargar los pasajes paralelos"
       },
       "media": {
-        "label": "Medios de comunicación",
-        "videolanguage": "Idioma del vídeo",
+        "label": "Multimedia",
+        "videolanguage": "Idioma del video",
         "videolanguageauto": "Igual que el texto bíblico",
         "videolanguagefilter": "Buscar un idioma",
         "videolanguagenone": "Ningún idioma coincide"
@@ -185,12 +189,12 @@
         "printButton": "Imprimir",
         "closeButton": "Cerrar",
         "preparingPrint": "Preparando la impresión con versículos...",
-        "printError": "Error de impresión: consulte la consola del navegador",
+        "printError": "Error de impresión: consulte la consola del navegador.",
         "popupBlocked": "La ventana de impresión fue bloqueada. Permita las ventanas emergentes para este sitio e inténtelo de nuevo.",
         "noNotesToPrint": "No hay notas para imprimir",
         "selectToPrint": "Seleccione una nota para imprimir",
         "verseLabel": "Versículo",
-        "modifiedLabel": "Modificado",
+        "modifiedLabel": "Modificada",
         "searchPlaceholder": "Buscar notas...",
         "filterLabel": "Filtrar notas",
         "filterAll": "Todas las notas",
@@ -224,15 +228,15 @@
         "storageWarning": "Las notas se guardan en el almacenamiento local de su navegador y pueden perderse si borra los datos del navegador. Haga una copia de seguridad con Descargar → Copia de seguridad como JSON.",
         "noNotesFound": "No hay notas coincidentes",
         "emptyListHint": "Aún no hay notas: cree una para empezar",
-        "modified": "Modificado: {date}",
-        "saved": "Guardado",
+        "modified": "Modificada: {date}",
+        "saved": "Guardada",
         "unsavedChanges": "Cambios sin guardar",
-        "notSaved": "No guardado: el almacenamiento está lleno",
+        "notSaved": "No guardada: el almacenamiento está lleno",
         "saveFailed": "Error al guardar",
         "quotaError": "No se pueden guardar las notas porque el almacenamiento del navegador está lleno. Exporte una copia de seguridad JSON y luego elimine algunas notas.",
         "corruptError": "No se pudieron leer las notas guardadas. Se conservó una copia de seguridad de los datos ilegibles en el almacenamiento del navegador.",
         "navigateToLink": "Navegue a un versículo para vincularlo",
-        "linkedTo": "Vinculado a {reference}",
+        "linkedTo": "Vinculada a {reference}",
         "linkRemoved": "Vínculo al versículo eliminado",
         "detectedRefs": "Referencias:",
         "goToReference": "Ir a {reference}"
@@ -241,9 +245,9 @@
         "label": "Audio",
         "options": "Opciones de audio",
         "synctext": "Sincronizar texto (beta)",
-        "autoplay": "Reproducción automática Siguiente",
-        "drama": "Drama",
-        "nondrama": "No drama",
+        "autoplay": "Reproducir siguiente automáticamente",
+        "drama": "Dramatizada",
+        "nondrama": "Narrada",
         "noaudiotitle": "Audio no disponible",
         "noaudiomessage": "Esta versión de la Biblia no tiene grabaciones de audio. Seleccione otra versión que disponga de audio."
       },
@@ -257,8 +261,123 @@
       "stats": {
         "label": "Estadísticas",
         "frequentwords": "Palabras frecuentes",
+        "rarewords": "Palabras poco frecuentes",
+        "intro": "Abra una ventana de la Biblia para ver las estadísticas de su capítulo actual.",
         "loadtextfailed": "No se pudo cargar este texto.",
         "loadchapterfailed": "No se pudo cargar este capítulo."
+      }
+    },
+    "tour": {
+      "launch": "Visita guiada",
+      "progress": "Paso {current} de {total}",
+      "buttons": {
+        "next": "Siguiente",
+        "back": "Atrás",
+        "done": "Terminar",
+        "skip": "Omitir la visita",
+        "exit": "Cerrar la visita"
+      },
+      "steps": {
+        "welcome": {
+          "title": "Bienvenido a inScript",
+          "body": "inScript es un espacio de estudio bíblico que funciona en su navegador. Ofrece más de 1.300 traducciones en más de 1.100 idiomas, con comentarios, búsqueda, audio e imágenes.<br><br>Pulse <kbd>&rarr;</kbd> para el paso siguiente, <kbd>&larr;</kbd> para volver atrás y <kbd>Esc</kbd> para cerrar la visita."
+        },
+        "topbar": {
+          "title": "La barra de herramientas",
+          "body": "La barra superior contiene el menú, los botones de atrás y adelante, el cuadro de búsqueda y la pantalla completa. Todo lo que está debajo es un panel."
+        },
+        "mainmenu": {
+          "title": "El menú principal",
+          "body": "Haga clic en el logotipo o en el botón de menú para abrirlo. Úselo para añadir paneles y para abrir Ajustes, Acerca de y esta visita."
+        },
+        "addwindow": {
+          "title": "Añadir un panel",
+          "body": "Haga clic en una entrada para abrir un panel junto a los actuales. Elija otra traducción, un comentario, una búsqueda, paralelos de los Evangelios, una comparación de textos, estadísticas, imágenes y video, o audio."
+        },
+        "reference": {
+          "title": "El pasaje actual",
+          "body": "Cada panel de la Biblia muestra su pasaje en la parte superior izquierda. Haga clic en él para ir a otro lugar."
+        },
+        "navigator": {
+          "title": "Ir a un pasaje",
+          "body": "Los libros están agrupados por sección, cada una con su propio color. Haga clic en un libro para ver sus capítulos. Escriba en el cuadro de filtro para encontrar un libro, un capítulo o un pasaje conocido."
+        },
+        "navigate": {
+          "title": "Los paneles se mueven juntos",
+          "body": "Al seleccionar Génesis 1 se movieron ambos paneles de la Biblia. Los paneles vinculados comparten una misma ubicación, de modo que una traducción, su comentario y su audio permanecen en el mismo versículo."
+        },
+        "versions": {
+          "title": "Cambiar de traducción",
+          "body": "Haga clic en <strong>&lsaquo;</strong> o <strong>&rsaquo;</strong> para recorrer ediciones relacionadas sin salir del pasaje. Haga clic en el nombre para abrir la lista completa."
+        },
+        "textchooser": {
+          "title": "Elegir una traducción",
+          "body": "La lista contiene más de 1.300 traducciones en más de 1.100 idiomas, agrupadas por idioma y con las que más usa al principio. Escriba para filtrar por nombre o abreviatura del idioma."
+        },
+        "versioninfo": {
+          "title": "Detalles de la traducción",
+          "body": "Cada traducción indica su editorial, sus derechos de autor y una descripción."
+        },
+        "linked": {
+          "title": "Vincular y desvincular paneles",
+          "body": "Haga clic en el icono de cadena para que un panel deje de seguir a los demás. Haga clic de nuevo para volver a vincularlo."
+        },
+        "layout": {
+          "title": "Cambiar tamaño y orden",
+          "body": "Arrastre el divisor para cambiar el tamaño de los paneles. Arrastre el encabezado de un panel a la izquierda o a la derecha para reordenarlos. Sus paneles y su contenido reaparecen en su próxima visita."
+        },
+        "search": {
+          "title": "Buscar o ir a una referencia",
+          "body": "Escriba una referencia como <kbd>Juan 3:16</kbd> para ir directamente allí. Escriba una palabra o frase para buscar en la traducción actual. Luego elija una de las dos sugerencias."
+        },
+        "searchresults": {
+          "title": "Resultados de búsqueda",
+          "body": "Los resultados aparecen en contexto, agrupados por libro. La barra superior muestra dónde se encuentran las coincidencias. Haga clic en un resultado para llevar todos los paneles vinculados a ese versículo.<br><br>Esta búsqueda abarca los cuatro Evangelios. Puede limitar cualquier búsqueda a los libros que elija."
+        },
+        "commentary": {
+          "title": "Comentario",
+          "body": "Lea comentarios de dominio público de Matthew Henry, Jamieson-Fausset-Brown, Calvino, Barnes, Wesley y otros. El comentario sigue el versículo que está leyendo."
+        },
+        "comparison": {
+          "title": "Comparar traducciones",
+          "body": "Vea un mismo pasaje en dos traducciones con las diferencias marcadas."
+        },
+        "parallels": {
+          "title": "Paralelos de los Evangelios",
+          "body": "Lea el mismo episodio en cada Evangelio, dispuesto en columnas."
+        },
+        "statistics": {
+          "title": "Estadísticas de palabras",
+          "body": "Vea la frecuencia de las palabras y una nube de palabras del texto en pantalla."
+        },
+        "media": {
+          "title": "Imágenes y video",
+          "body": "Vea arte, fotografía y cine sobre el pasaje actual, incluidos la película JESÚS y los Evangelios LUMO."
+        },
+        "audio": {
+          "title": "Audio",
+          "body": "Escuche Biblias en audio en muchos idiomas. El texto avanza versículo a versículo mientras se lee."
+        },
+        "settings": {
+          "title": "Ajustes",
+          "body": "Elija la tipografía y el tamaño del texto, cambie el idioma de la interfaz y active o desactive los números de capítulo y versículo, los títulos de sección, las notas al pie, las palabras de Cristo y el texto justificado."
+        },
+        "theme": {
+          "title": "Temas de lectura",
+          "body": "Elija Normal, Silo, Jaboc o Getsemaní. Hasta que elija uno, inScript sigue la configuración de su sistema."
+        },
+        "deeplink": {
+          "title": "Compartir este espacio de trabajo",
+          "body": "Copie este enlace para reabrir los mismos paneles, las mismas traducciones y el mismo pasaje."
+        },
+        "palette": {
+          "title": "Comandos de teclado",
+          "body": "Pulse <kbd>Ctrl</kbd>+<kbd>K</kbd> o <kbd>&#8984;</kbd>+<kbd>K</kbd> para abrir la paleta de comandos. Escriba una referencia para ir a ella, o escriba <kbd>&gt;</kbd> para buscar comandos de paneles, temas, tipografías y opciones."
+        },
+        "finish": {
+          "title": "Visita completada",
+          "body": "Vuelva a abrir esta visita desde el menú principal, o pulse <kbd>Ctrl</kbd>+<kbd>K</kbd> y elija <strong>Visita guiada</strong>."
+        }
       }
     },
     "names": {
@@ -275,6 +394,7 @@
       "sw": "Kihispania",
       "tr": "İspanyolca",
       "ja": "スペイン語",
+      "ko": "스페인어",
       "zh-TW": "西班牙語",
       "zh-CN": "西班牙语"
     }

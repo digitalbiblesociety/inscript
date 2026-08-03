@@ -1,0 +1,402 @@
+{
+  "translation": {
+    "name": "한국어",
+    "a11y": {
+      "mainMenu": "메인 메뉴",
+      "previousPassage": "이전 본문",
+      "nextPassage": "다음 본문",
+      "closeWindow": "창 닫기",
+      "linkWindow": "이 창을 공유 탐색에 연결",
+      "unlinkWindow": "이 창을 공유 탐색에서 분리",
+      "close": "닫기"
+    },
+    "menu": {
+      "labels": {
+        "about": "정보",
+        "addwindow": "창 추가",
+        "settings": "설정",
+        "feedback": "의견 보내기",
+        "options": "옵션"
+      },
+      "feedback": {
+        "name": "이름",
+        "email": "이메일",
+        "comments": "의견 내용",
+        "feature": "기능 제안",
+        "bug": "버그 신고",
+        "other": "기타",
+        "send": "보내기",
+        "thankyou": "소중한 의견을 보내 주셔서 감사합니다"
+      },
+      "search": {
+        "placeholder": "검색",
+        "suggestversion": "새 창에서 <strong>{0}</strong> 열기",
+        "suggestreference": "{1}의 <strong>{0}</strong>(으)로 이동",
+        "suggestsearch": "{1}에서 \"<strong>{0}</strong>\" 검색"
+      },
+      "config": {
+        "font": "스타일",
+        "settings": "설정",
+        "tools": "옵션",
+        "apocrypha": "외경 표시",
+        "reset": "설정 초기화",
+        "resetwarning": "모든 설정을 기본값으로 되돌리시겠습니까? 노트와 하이라이트는 유지됩니다.",
+        "resetconfirm": "초기화",
+        "resetcancel": "취소"
+      },
+      "reset": "복원",
+      "commandpalette": {
+        "placeholder": "명령어 또는 성경 구절을 입력하세요...",
+        "help_reference": "성경 구절을 입력하면 해당 본문으로 이동합니다",
+        "help_commands": "> 를 입력하면 명령어를 검색할 수 있습니다",
+        "no_results": "결과가 없습니다"
+      },
+      "themes": {
+        "default": "기본",
+        "shiloh": "실로",
+        "jabbok": "얍복",
+        "gethsemane": "겟세마네"
+      }
+    },
+    "plugins": {
+      "highlighter": {
+        "savefailed": "하이라이트를 저장할 수 없습니다. 브라우저 저장 공간이 가득 찼거나 사용할 수 없습니다."
+      },
+      "visualfilters": {
+        "button": "시각 필터",
+        "title": "시각 필터",
+        "newfilter": "새 필터",
+        "strongsnumber": "스트롱 번호",
+        "morphology": "형태론",
+        "style": "스타일"
+      },
+      "eng2p": {
+        "button": "영어 2인칭 복수",
+        "title": "영어 2인칭 복수",
+        "description": "현대 영어는 <em>단수 you</em>와 <em>복수 you</em>를 구분하지 않으므로, 이 플러그인은 히브리어와 그리스어의 형태를 나타내기 위해 지역 영어의 대응 표현을 사용합니다."
+      },
+      "lemmapopup": {
+        "findalloccurrences": "모든 용례 찾기 (약 __count__회)"
+      }
+    },
+    "windows": {
+      "deafbible": {
+        "label": "수어 성경"
+      },
+      "videobible": {
+        "label": "영상 성경"
+      },
+      "bible": {
+        "label": "성경",
+        "recentlyused": "최근 사용",
+        "filter": "필터...",
+        "ot": "구약",
+        "nt": "신약",
+        "dc": "제2경전",
+        "more": "더 보기",
+        "less": "접기",
+        "default": "추천",
+        "languages": "언어",
+        "countries": "국가",
+        "lemma": "그리스어/히브리어 팝업",
+        "audio": "오디오 지원",
+        "prevversion": "이전 역본",
+        "nextversion": "다음 역본",
+        "gotopassage": "본문으로 이동",
+        "reference": "구절",
+        "version": "역본",
+        "versioninfo": "역본 정보",
+        "versioninfoname": "{0} 정보",
+        "loadinginfo": "정보를 불러오는 중...",
+        "noinfo": "이 역본에 대한 추가 정보가 없습니다."
+      },
+      "commentary": {
+        "label": "주석"
+      },
+      "map": {
+        "label": "지도",
+        "placeholder": "검색...",
+        "versenotloaded": "본문을 사용할 수 없습니다",
+        "openinbible": "성경에서 열기",
+        "loading": "불러오는 중…",
+        "loadfailed": "지도를 불러오지 못했습니다",
+        "moreresults": "일치 항목 {count}개 더 보기",
+        "placesin": "{reference}의 지명",
+        "journeystops": "경유지 {count}곳",
+        "journeynames": {
+          "abraham": "아브라함의 여정",
+          "jacob": "야곱의 도피와 귀환",
+          "exodus": "출애굽 여정",
+          "ark": "언약궤의 이동 경로",
+          "elijah": "엘리야의 행적",
+          "exile": "포로와 귀환",
+          "nativity": "예수 탄생과 애굽 피난",
+          "paul1": "바울의 1차 전도 여행",
+          "paul2": "바울의 2차 전도 여행",
+          "paul3": "바울의 3차 전도 여행",
+          "rome": "바울의 로마 항해"
+        }
+      },
+      "search": {
+        "label": "검색",
+        "placeholder": "검색",
+        "button": "검색",
+        "results": "결과",
+        "verses": "절",
+        "options": "검색 옵션",
+        "searchfailed": "검색에 실패했습니다. 연결 상태를 확인하고 다시 시도해 주세요.",
+        "noresults": "결과 없음",
+        "loadingprogress": "불러오는 중: {progress} :: {label}"
+      },
+      "parallel": {
+        "label": "병행 구절",
+        "loading": "불러오는 중...",
+        "showall": "모두 표시",
+        "hideall": "모두 숨기기",
+        "loadlistfailed": "병행 구절 목록을 불러오지 못했습니다",
+        "loadtextfailed": "성경 본문을 불러오지 못했습니다",
+        "loadpassagesfailed": "병행 본문을 불러오지 못했습니다"
+      },
+      "media": {
+        "label": "미디어",
+        "videolanguage": "영상 언어",
+        "videolanguageauto": "성경 본문에 맞춤",
+        "videolanguagefilter": "언어 찾기",
+        "videolanguagenone": "일치하는 언어 없음"
+      },
+      "notes": {
+        "label": "노트",
+        "toggleSidebar": "사이드바 표시/숨기기",
+        "newNote": "새 노트",
+        "linkToVerse": "현재 절에 연결",
+        "download": "노트 다운로드",
+        "downloadMarkdown": "Markdown으로 다운로드",
+        "downloadText": "일반 텍스트로 다운로드",
+        "downloadRtf": "RTF로 다운로드",
+        "downloadJson": "JSON으로 백업",
+        "noNotesToDownload": "다운로드할 노트가 없습니다",
+        "import": "노트 가져오기",
+        "importReadError": "선택한 파일을 읽을 수 없습니다",
+        "importInvalid": "유효한 노트 백업 파일이 아닙니다",
+        "importNone": "파일에 노트가 없습니다",
+        "imported": "노트 {count}개를 가져왔습니다",
+        "importMerged": "백업이 복원되었습니다: 추가 {added}개, 업데이트 {updated}개, 변경 없음 {skipped}개",
+        "print": "노트 인쇄",
+        "printCurrent": "현재 노트 인쇄",
+        "printAll": "모든 노트 인쇄",
+        "printAllTitle": "모든 노트",
+        "printIncludeVerses": "성경 구절 본문 포함",
+        "printButton": "인쇄",
+        "closeButton": "닫기",
+        "preparingPrint": "구절 본문과 함께 인쇄를 준비하는 중...",
+        "printError": "인쇄에 실패했습니다. 브라우저 콘솔을 확인하세요.",
+        "popupBlocked": "인쇄 창이 차단되었습니다. 이 사이트의 팝업을 허용한 후 다시 시도해 주세요.",
+        "noNotesToPrint": "인쇄할 노트가 없습니다",
+        "selectToPrint": "인쇄할 노트를 선택하세요",
+        "verseLabel": "구절",
+        "modifiedLabel": "수정",
+        "searchPlaceholder": "노트 검색...",
+        "filterLabel": "노트 필터",
+        "filterAll": "모든 노트",
+        "filterLinked": "절에 연결됨",
+        "filterStandalone": "독립 노트",
+        "filterReference": "현재 절",
+        "sortLabel": "노트 정렬",
+        "sortModified": "최근 수정순",
+        "sortCreated": "최근 작성순",
+        "sortTitle": "제목순",
+        "titlePlaceholder": "노트 제목...",
+        "editorPlaceholder": "내용을 입력하세요...",
+        "bold": "굵게 (Ctrl+B)",
+        "italic": "기울임 (Ctrl+I)",
+        "underline": "밑줄 (Ctrl+U)",
+        "heading": "제목",
+        "paragraph": "단락",
+        "bulletList": "글머리 기호 목록",
+        "numberedList": "번호 매기기 목록",
+        "pin": "노트 고정",
+        "unpin": "노트 고정 해제",
+        "removeLink": "구절 연결 해제",
+        "delete": "삭제",
+        "deleteNote": "노트 삭제",
+        "deleteConfirm": "이 노트를 삭제하시겠습니까?",
+        "confirmOk": "확인",
+        "confirmCancel": "취소",
+        "untitled": "제목 없음",
+        "noNoteSelected": "선택된 노트가 없습니다",
+        "selectOrCreate": "목록에서 노트를 선택하거나 새 노트를 만드세요",
+        "storageWarning": "노트는 브라우저의 로컬 저장소에 저장되므로 브라우저 데이터를 삭제하면 사라질 수 있습니다. 다운로드 → JSON으로 백업 기능으로 백업해 두세요.",
+        "noNotesFound": "일치하는 노트가 없습니다",
+        "emptyListHint": "아직 노트가 없습니다. 새 노트를 만들어 시작해 보세요.",
+        "modified": "수정: {date}",
+        "saved": "저장됨",
+        "unsavedChanges": "저장되지 않은 변경 사항",
+        "notSaved": "저장되지 않았습니다. 저장 공간이 가득 찼습니다.",
+        "saveFailed": "저장 실패",
+        "quotaError": "브라우저 저장 공간이 가득 차서 노트를 저장할 수 없습니다. JSON 백업을 내보낸 후 일부 노트를 삭제해 주세요.",
+        "corruptError": "저장된 노트를 읽을 수 없습니다. 읽을 수 없는 데이터의 백업은 브라우저 저장소에 보관되었습니다.",
+        "navigateToLink": "연결하려면 원하는 절로 이동하세요",
+        "linkedTo": "{reference}에 연결됨",
+        "linkRemoved": "구절 연결이 해제되었습니다",
+        "detectedRefs": "참조 구절:",
+        "goToReference": "{reference}(으)로 이동"
+      },
+      "audio": {
+        "label": "오디오",
+        "options": "오디오 옵션",
+        "synctext": "본문 동기화 (베타)",
+        "autoplay": "다음 자동 재생",
+        "drama": "드라마 낭독",
+        "nondrama": "일반 낭독",
+        "noaudiotitle": "오디오 없음",
+        "noaudiomessage": "이 성경 역본에는 오디오 녹음이 없습니다. 오디오를 지원하는 다른 역본을 선택해 주세요."
+      },
+      "comparison": {
+        "label": "비교",
+        "invalidreference": "유효하지 않은 성경 구절입니다",
+        "nobibles": "이 본문에 사용할 수 있는 성경이 없습니다. 다른 본문이나 성경 역본을 선택해 주세요.",
+        "onebible": "이 본문에 사용할 수 있는 성경 역본이 하나뿐입니다. 이 책이 포함된 다른 성경 역본을 선택해 주세요.",
+        "loadfailed": "본문을 불러오지 못했습니다. 다시 시도해 주세요."
+      },
+      "stats": {
+        "label": "통계",
+        "frequentwords": "빈출 단어",
+        "rarewords": "저빈도 단어",
+        "intro": "성경 창을 열면 현재 장의 통계를 볼 수 있습니다.",
+        "loadtextfailed": "이 본문을 불러올 수 없습니다.",
+        "loadchapterfailed": "이 장을 불러올 수 없습니다."
+      }
+    },
+    "tour": {
+      "launch": "가이드 투어",
+      "progress": "{total}단계 중 {current}단계",
+      "buttons": {
+        "next": "다음",
+        "back": "이전",
+        "done": "완료",
+        "skip": "투어 건너뛰기",
+        "exit": "투어 닫기"
+      },
+      "steps": {
+        "welcome": {
+          "title": "inScript에 오신 것을 환영합니다",
+          "body": "inScript는 브라우저에서 실행되는 성경 연구 작업 공간입니다. 1,100개 이상의 언어로 된 1,300개 이상의 역본과 함께 주석, 검색, 오디오, 이미지를 제공합니다.<br><br><kbd>&rarr;</kbd> 키로 다음 단계로, <kbd>&larr;</kbd> 키로 이전 단계로 이동하고, <kbd>Esc</kbd> 키로 투어를 닫을 수 있습니다."
+        },
+        "topbar": {
+          "title": "도구 모음",
+          "body": "상단 바에는 메뉴, 뒤로/앞으로 버튼, 검색창, 전체 화면 버튼이 있습니다. 그 아래에 있는 것은 모두 패널입니다."
+        },
+        "mainmenu": {
+          "title": "메인 메뉴",
+          "body": "로고나 메뉴 버튼을 클릭하여 여세요. 패널을 추가하거나 설정, 정보, 이 투어를 열 때 사용합니다."
+        },
+        "addwindow": {
+          "title": "패널 추가",
+          "body": "항목을 클릭하면 현재 패널 옆에 새 패널이 열립니다. 다른 역본, 주석, 검색, 복음서 병행 구절, 본문 비교, 통계, 이미지와 영상, 오디오 중에서 선택하세요."
+        },
+        "reference": {
+          "title": "현재 본문",
+          "body": "각 성경 패널은 왼쪽 위에 현재 본문을 표시합니다. 이를 클릭하면 다른 본문으로 이동할 수 있습니다."
+        },
+        "navigator": {
+          "title": "본문으로 이동",
+          "body": "성경의 책들은 구분별로 묶여 있으며 각각 고유한 색으로 표시됩니다. 책을 클릭하면 장 목록이 나타납니다. 필터 상자에 입력하여 책, 장, 또는 이름이 붙은 본문을 찾으세요."
+        },
+        "navigate": {
+          "title": "패널이 함께 이동합니다",
+          "body": "창세기 1장을 선택하자 두 성경 패널이 모두 이동했습니다. 연결된 패널은 하나의 위치를 공유하므로 역본과 그 주석, 오디오가 같은 절에 머뭅니다."
+        },
+        "versions": {
+          "title": "역본 변경",
+          "body": "<strong>&lsaquo;</strong> 또는 <strong>&rsaquo;</strong>를 클릭하면 본문을 벗어나지 않고 관련 판본을 차례로 넘겨볼 수 있습니다. 이름을 클릭하면 전체 목록이 열립니다."
+        },
+        "textchooser": {
+          "title": "역본 선택",
+          "body": "목록에는 1,100개 이상의 언어로 된 1,300개 이상의 역본이 언어별로 묶여 있으며, 자주 사용하는 역본이 맨 위에 표시됩니다. 언어 이름이나 약어를 입력하여 필터링하세요."
+        },
+        "versioninfo": {
+          "title": "역본 상세 정보",
+          "body": "모든 역본에는 발행처, 저작권, 설명이 표시됩니다."
+        },
+        "linked": {
+          "title": "패널 연결과 해제",
+          "body": "체인 아이콘을 클릭하면 해당 패널이 다른 패널을 따라가지 않습니다. 다시 클릭하면 다시 연결됩니다."
+        },
+        "layout": {
+          "title": "크기 조절과 순서 변경",
+          "body": "구분선을 드래그하여 패널 크기를 조절하세요. 패널 머리글을 좌우로 드래그하면 순서가 바뀝니다. 패널과 그 내용은 다음 방문 시 그대로 복원됩니다."
+        },
+        "search": {
+          "title": "검색 또는 구절로 이동",
+          "body": "<kbd>요한복음 3:16</kbd>과 같은 구절을 입력하면 해당 본문으로 바로 이동합니다. 단어나 문구를 입력하면 현재 역본에서 검색합니다. 그런 다음 두 가지 제안 중 하나를 선택하세요."
+        },
+        "searchresults": {
+          "title": "검색 결과",
+          "body": "결과는 문맥과 함께 책별로 묶여 표시됩니다. 상단의 막대는 일치 항목이 어디에 분포하는지 보여 줍니다. 결과를 클릭하면 연결된 모든 패널이 해당 절로 이동합니다.<br><br>이 검색은 사복음서를 대상으로 합니다. 어떤 검색이든 원하는 책으로 범위를 제한할 수 있습니다."
+        },
+        "commentary": {
+          "title": "주석",
+          "body": "매튜 헨리, 제이미슨-포셋-브라운, 칼빈, 반즈, 웨슬리 등의 퍼블릭 도메인 주석을 읽을 수 있습니다. 주석은 읽고 있는 절을 따라갑니다."
+        },
+        "comparison": {
+          "title": "역본 비교",
+          "body": "한 본문을 두 역본으로 나란히 보며 차이점을 표시해 줍니다."
+        },
+        "parallels": {
+          "title": "복음서 병행 구절",
+          "body": "같은 사건을 각 복음서에서 열로 나란히 배치하여 읽을 수 있습니다."
+        },
+        "statistics": {
+          "title": "단어 통계",
+          "body": "화면에 표시된 본문의 단어 빈도와 단어 구름을 볼 수 있습니다."
+        },
+        "media": {
+          "title": "이미지와 영상",
+          "body": "현재 본문과 관련된 미술 작품, 사진, 영화를 볼 수 있으며, JESUS 영화와 LUMO 복음서도 포함되어 있습니다."
+        },
+        "audio": {
+          "title": "오디오",
+          "body": "여러 언어의 오디오 성경을 들을 수 있습니다. 낭독에 맞추어 본문이 절 단위로 따라갑니다."
+        },
+        "settings": {
+          "title": "설정",
+          "body": "읽기 글꼴과 글자 크기를 설정하고, 인터페이스 언어를 변경하며, 장·절 번호, 단락 제목, 각주, 그리스도의 말씀, 양쪽 정렬을 켜거나 끌 수 있습니다."
+        },
+        "theme": {
+          "title": "읽기 테마",
+          "body": "기본, 실로, 얍복, 겟세마네 중에서 선택하세요. 테마를 선택하기 전에는 inScript가 시스템 설정을 따릅니다."
+        },
+        "deeplink": {
+          "title": "작업 공간 공유",
+          "body": "이 링크를 복사하면 같은 패널, 같은 역본, 같은 본문을 그대로 다시 열 수 있습니다."
+        },
+        "palette": {
+          "title": "키보드 명령",
+          "body": "<kbd>Ctrl</kbd>+<kbd>K</kbd> 또는 <kbd>&#8984;</kbd>+<kbd>K</kbd>를 눌러 명령 팔레트를 여세요. 구절을 입력하면 해당 본문으로 이동하고, <kbd>&gt;</kbd>를 입력하면 패널, 테마, 글꼴, 표시 전환 명령을 검색할 수 있습니다."
+        },
+        "finish": {
+          "title": "투어 완료",
+          "body": "메인 메뉴에서 이 투어를 다시 열 수 있으며, <kbd>Ctrl</kbd>+<kbd>K</kbd>를 누르고 <strong>가이드 투어</strong>를 선택해도 됩니다."
+        }
+      }
+    },
+    "names": {
+      "en": "Korean",
+      "fr": "coréen",
+      "es": "coreano",
+      "de": "Koreanisch",
+      "ru": "корейский",
+      "hi": "कोरियाई",
+      "ar": "الكورية",
+      "af": "Koreaans",
+      "bn": "কোরিয়ান",
+      "id": "Bahasa Korea",
+      "sw": "Kikorea",
+      "tr": "Korece",
+      "ja": "韓国語",
+      "ko": "한국어",
+      "zh-TW": "韓語",
+      "zh-CN": "韩语"
+    }
+  }
+}

@@ -35,10 +35,14 @@
         "suggestsearch": "\"<strong>{0}</strong>\" in {1} suchen"
       },
       "config": {
-        "font": "Schriftart",
+        "font": "Stil",
         "settings": "Einstellungen",
-        "tools": "Werkzeuge",
-        "apocrypha": "Apokryphen anzeigen"
+        "tools": "Optionen",
+        "apocrypha": "Apokryphen anzeigen",
+        "reset": "Einstellungen zurücksetzen",
+        "resetwarning": "Alle Einstellungen auf die Standardwerte zurücksetzen? Ihre Notizen und Markierungen bleiben erhalten.",
+        "resetconfirm": "Zurücksetzen",
+        "resetcancel": "Abbrechen"
       },
       "reset": "zurücksetzen",
       "commandpalette": {
@@ -62,14 +66,14 @@
         "button": "Visuelle Filter",
         "title": "Visuelle Filter",
         "newfilter": "Neuer Filter",
-        "strongsnumber": "Strong #",
+        "strongsnumber": "Strong-Nr.",
         "morphology": "Morphologie",
         "style": "Stil"
       },
       "eng2p": {
-        "button": "2. Person Plural Englisch",
-        "title": "Englisch Zweite Person Plural",
-        "description": "Modernes Englisch unterscheidet nicht zwischen <em>du (Singular)</em> und <em>ihr (Plural)</em>, daher verwendet dieses Plugin regionale englische Entsprechungen zur Darstellung der hebräischen und griechischen Formen."
+        "button": "Englische 2. Person Plural",
+        "title": "Englische zweite Person Plural",
+        "description": "Modernes Englisch unterscheidet nicht zwischen <em>you im Singular</em> und <em>you im Plural</em>. Dieses Plugin verwendet daher regionale englische Entsprechungen, um die hebräischen und griechischen Formen wiederzugeben."
       },
       "lemmapopup": {
         "findalloccurrences": "Alle Vorkommen (etwa __count__)"
@@ -77,7 +81,7 @@
     },
     "windows": {
       "deafbible": {
-        "label": "Bibel für Taube"
+        "label": "Bibel für Gehörlose"
       },
       "videobible": {
         "label": "Video-Bibel"
@@ -85,15 +89,15 @@
       "bible": {
         "label": "Bibel",
         "recentlyused": "Zuletzt verwendet",
-        "filter": "Filter ...",
+        "filter": "Filtern ...",
         "ot": "Altes Testament",
         "nt": "Neues Testament",
         "dc": "Deuterokanonische Bücher",
         "more": "Mehr",
         "less": "Weniger",
         "default": "Empfohlen",
-        "languages": "Sprachen",
-        "countries": "Länder",
+        "languages": "Sprache",
+        "countries": "Land",
         "lemma": "Griechisch/Hebräisch-Popups",
         "audio": "Audio verfügbar",
         "prevversion": "Vorherige Version",
@@ -110,8 +114,8 @@
         "label": "Kommentar"
       },
       "map": {
-        "label": "Karten",
-        "placeholder": "Suche ...",
+        "label": "Karte",
+        "placeholder": "Suchen ...",
         "versenotloaded": "Text nicht verfügbar",
         "openinbible": "In der Bibel öffnen",
         "loading": "Wird geladen …",
@@ -135,8 +139,8 @@
       },
       "search": {
         "label": "Suche",
-        "placeholder": "Suche",
-        "button": "Suche",
+        "placeholder": "Suchen",
+        "button": "Suchen",
         "results": "Ergebnisse",
         "verses": "Verse",
         "options": "Suchoptionen",
@@ -240,8 +244,8 @@
       "audio": {
         "label": "Audio",
         "options": "Audio-Optionen",
-        "synctext": "Text synchron halten (beta)",
-        "autoplay": "Automatisch nächstes spielen",
+        "synctext": "Text synchronisieren (Beta)",
+        "autoplay": "Nächstes automatisch abspielen",
         "drama": "Dramatisiert",
         "nondrama": "Vorgelesen",
         "noaudiotitle": "Kein Audio verfügbar",
@@ -257,8 +261,123 @@
       "stats": {
         "label": "Statistiken",
         "frequentwords": "Häufige Wörter",
+        "rarewords": "Seltene Wörter",
+        "intro": "Öffnen Sie ein Bibelfenster, um Statistiken zum aktuellen Kapitel anzuzeigen.",
         "loadtextfailed": "Dieser Text konnte nicht geladen werden.",
         "loadchapterfailed": "Dieses Kapitel konnte nicht geladen werden."
+      }
+    },
+    "tour": {
+      "launch": "Geführte Tour",
+      "progress": "Schritt {current} von {total}",
+      "buttons": {
+        "next": "Weiter",
+        "back": "Zurück",
+        "done": "Fertig",
+        "skip": "Tour überspringen",
+        "exit": "Tour schließen"
+      },
+      "steps": {
+        "welcome": {
+          "title": "Willkommen bei inScript",
+          "body": "inScript ist ein Arbeitsbereich für das Bibelstudium, der in Ihrem Browser ausgeführt wird. Er bietet mehr als 1.300 Übersetzungen in über 1.100 Sprachen sowie Kommentare, Suche, Audio und Bilder.<br><br>Drücken Sie <kbd>&rarr;</kbd> für den nächsten Schritt, <kbd>&larr;</kbd>, um zurückzugehen, und <kbd>Esc</kbd>, um die Tour zu schließen."
+        },
+        "topbar": {
+          "title": "Die Werkzeugleiste",
+          "body": "Die obere Leiste enthält das Menü, die Zurück- und Vorwärtsschaltflächen, das Suchfeld und den Vollbildmodus. Alles darunter ist ein Fenster."
+        },
+        "mainmenu": {
+          "title": "Das Hauptmenü",
+          "body": "Klicken Sie auf das Logo oder die Menüschaltfläche, um es zu öffnen. Dort können Sie Fenster hinzufügen und Einstellungen, Informationen zu inScript sowie diese Tour öffnen."
+        },
+        "addwindow": {
+          "title": "Fenster hinzufügen",
+          "body": "Klicken Sie auf einen Eintrag, um neben den vorhandenen Fenstern ein weiteres zu öffnen. Wählen Sie eine andere Übersetzung, einen Kommentar, die Suche, Evangelienparallelen, einen Textvergleich, Statistiken, Bilder und Videos oder Audio."
+        },
+        "reference": {
+          "title": "Der aktuelle Abschnitt",
+          "body": "Jedes Bibelfenster zeigt oben links seinen aktuellen Abschnitt an. Klicken Sie darauf, um zu einer anderen Stelle zu wechseln."
+        },
+        "navigator": {
+          "title": "Zu einem Abschnitt wechseln",
+          "body": "Die Bücher sind nach Bereichen gruppiert, die jeweils eine eigene Farbe haben. Klicken Sie auf ein Buch, um seine Kapitel anzuzeigen. Geben Sie etwas in das Filterfeld ein, um ein Buch, ein Kapitel oder einen benannten Abschnitt zu finden."
+        },
+        "navigate": {
+          "title": "Fenster bewegen sich gemeinsam",
+          "body": "Durch die Auswahl von 1. Mose 1 wurden beide Bibelfenster verschoben. Verknüpfte Fenster teilen sich dieselbe Stelle, sodass eine Übersetzung, ihr Kommentar und ihr Audio beim selben Vers bleiben."
+        },
+        "versions": {
+          "title": "Übersetzung wechseln",
+          "body": "Klicken Sie auf <strong>&lsaquo;</strong> oder <strong>&rsaquo;</strong>, um durch verwandte Ausgaben zu blättern, ohne den Abschnitt zu verlassen. Klicken Sie auf den Namen, um die vollständige Liste zu öffnen."
+        },
+        "textchooser": {
+          "title": "Übersetzung auswählen",
+          "body": "Die Liste enthält mehr als 1.300 Übersetzungen in über 1.100 Sprachen. Sie sind nach Sprache gruppiert; die von Ihnen am häufigsten verwendeten stehen oben. Filtern Sie durch Eingabe eines Sprachnamens oder einer Abkürzung."
+        },
+        "versioninfo": {
+          "title": "Details zur Übersetzung",
+          "body": "Zu jeder Übersetzung werden Herausgeber, Urheberrecht und Beschreibung aufgeführt."
+        },
+        "linked": {
+          "title": "Fenster verknüpfen und trennen",
+          "body": "Klicken Sie auf das Kettensymbol, damit ein Fenster den anderen nicht mehr folgt. Klicken Sie erneut darauf, um es wieder zu verknüpfen."
+        },
+        "layout": {
+          "title": "Größe und Reihenfolge ändern",
+          "body": "Ziehen Sie die Trennlinie, um die Größe der Fenster zu ändern. Ziehen Sie einen Fensterkopf nach links oder rechts, um die Fenster neu anzuordnen. Ihre Fenster und deren Inhalte werden beim nächsten Besuch wiederhergestellt."
+        },
+        "search": {
+          "title": "Suchen oder zu einer Bibelstelle wechseln",
+          "body": "Geben Sie eine Bibelstelle wie <kbd>Johannes 3,16</kbd> ein, um direkt dorthin zu wechseln. Geben Sie ein Wort oder einen Ausdruck ein, um die aktuelle Übersetzung zu durchsuchen. Wählen Sie anschließend einen der beiden Vorschläge."
+        },
+        "searchresults": {
+          "title": "Suchergebnisse",
+          "body": "Die Ergebnisse werden im Zusammenhang und nach Buch gruppiert angezeigt. Die Leiste oben zeigt, wo die Treffer liegen. Klicken Sie auf ein Ergebnis, um alle verknüpften Fenster zu diesem Vers zu verschieben.<br><br>Diese Suche umfasst die vier Evangelien. Sie können jede Suche auf die von Ihnen ausgewählten Bücher beschränken."
+        },
+        "commentary": {
+          "title": "Kommentar",
+          "body": "Lesen Sie gemeinfreie Kommentare von Matthew Henry, Jamieson-Fausset-Brown, Calvin, Barnes, Wesley und anderen. Der Kommentar folgt dem Vers, den Sie gerade lesen."
+        },
+        "comparison": {
+          "title": "Übersetzungen vergleichen",
+          "body": "Zeigen Sie denselben Abschnitt in zwei Übersetzungen an und lassen Sie die Unterschiede hervorheben."
+        },
+        "parallels": {
+          "title": "Evangelienparallelen",
+          "body": "Lesen Sie dieselbe Begebenheit aus jedem Evangelium nebeneinander in Spalten."
+        },
+        "statistics": {
+          "title": "Wortstatistik",
+          "body": "Sehen Sie Worthäufigkeiten und eine Wortwolke für den angezeigten Text."
+        },
+        "media": {
+          "title": "Bilder und Videos",
+          "body": "Betrachten Sie Kunstwerke, Fotografien und Filme zum aktuellen Abschnitt, darunter den JESUS-Film und die LUMO-Evangelien."
+        },
+        "audio": {
+          "title": "Audio",
+          "body": "Hören Sie Audio-Bibeln in vielen Sprachen. Der Text folgt beim Vorlesen Vers für Vers."
+        },
+        "settings": {
+          "title": "Einstellungen",
+          "body": "Legen Sie Schriftart und Textgröße fest, ändern Sie die Oberflächensprache und schalten Sie Kapitel- und Versnummern, Abschnittsüberschriften, Fußnoten, Worte Christi und Blocksatz ein oder aus."
+        },
+        "theme": {
+          "title": "Lesethemen",
+          "body": "Wählen Sie Normal, Silo, Jabbok oder Gethsemane. Bis Sie eine Auswahl treffen, folgt inScript Ihrer Systemeinstellung."
+        },
+        "deeplink": {
+          "title": "Diesen Arbeitsbereich teilen",
+          "body": "Kopieren Sie diesen Link, um dieselben Fenster, dieselben Übersetzungen und denselben Abschnitt erneut zu öffnen."
+        },
+        "palette": {
+          "title": "Tastaturbefehle",
+          "body": "Drücken Sie <kbd>Strg</kbd>+<kbd>K</kbd> oder <kbd>&#8984;</kbd>+<kbd>K</kbd>, um die Befehlspalette zu öffnen. Geben Sie eine Bibelstelle ein, um dorthin zu wechseln, oder geben Sie <kbd>&gt;</kbd> ein, um Befehle für Fenster, Themen, Schriftarten und Umschalter zu suchen."
+        },
+        "finish": {
+          "title": "Tour abgeschlossen",
+          "body": "Öffnen Sie diese Tour erneut über das Hauptmenü oder drücken Sie <kbd>Strg</kbd>+<kbd>K</kbd> und wählen Sie <strong>Geführte Tour</strong>."
+        }
       }
     },
     "names": {
@@ -275,6 +394,7 @@
       "sw": "Kijerumani",
       "tr": "almanca",
       "ja": "ドイツ語",
+      "ko": "독일어",
       "zh-TW": "德語",
       "zh-CN": "德语"
     }

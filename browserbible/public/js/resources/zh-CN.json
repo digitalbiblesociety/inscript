@@ -32,23 +32,27 @@
         "placeholder": "搜索",
         "suggestversion": "在新窗口中打开 <strong>{0}</strong>",
         "suggestreference": "在 {1} 中转到 <strong>{0}</strong>",
-        "suggestsearch": "在 {1} 中搜索 \"<strong>{0}</strong>\""
+        "suggestsearch": "在 {1} 中搜索“<strong>{0}</strong>”"
       },
       "config": {
-        "font": "字体",
+        "font": "样式",
         "settings": "设置",
-        "tools": "工具",
-        "apocrypha": "显示次经书卷"
+        "tools": "选项",
+        "apocrypha": "显示次经书卷",
+        "reset": "重置设置",
+        "resetwarning": "要将所有设置恢复为默认值吗？您的笔记和高亮将会保留。",
+        "resetconfirm": "重置",
+        "resetcancel": "取消"
       },
-      "reset": "复位",
+      "reset": "恢复",
       "commandpalette": {
-        "placeholder": "输入命令或圣经引用……",
+        "placeholder": "输入命令或圣经引用…",
         "help_reference": "输入圣经引用以导航",
         "help_commands": "输入 > 搜索命令",
         "no_results": "未找到结果"
       },
       "themes": {
-        "default": "默认",
+        "default": "标准",
         "shiloh": "示罗",
         "jabbok": "雅博",
         "gethsemane": "客西马尼"
@@ -62,7 +66,7 @@
         "button": "视觉过滤器",
         "title": "视觉过滤器",
         "newfilter": "新过滤器",
-        "strongsnumber": "Strong's #",
+        "strongsnumber": "斯特朗编号",
         "morphology": "词形",
         "style": "样式"
       },
@@ -72,12 +76,12 @@
         "description": "现代英语不区分<em>单数的你</em>和<em>复数的你</em>，因此这个插件使用地区性英语等价词来表示希伯来语和希腊语形式。"
       },
       "lemmapopup": {
-        "findalloccurrences": "查找所有出现 (大约 __count__)"
+        "findalloccurrences": "查找所有出现之处（约 __count__ 处）"
       }
     },
     "windows": {
       "deafbible": {
-        "label": "聋人圣经"
+        "label": "手语圣经"
       },
       "videobible": {
         "label": "视频圣经"
@@ -85,33 +89,33 @@
       "bible": {
         "label": "圣经",
         "recentlyused": "最近使用",
-        "filter": "过滤器...",
+        "filter": "筛选…",
         "ot": "旧约",
-        "nt": "新约圣经",
-        "dc": "经书",
+        "nt": "新约",
+        "dc": "次经书卷",
         "more": "更多",
-        "less": "更少",
+        "less": "收起",
         "default": "推荐",
         "languages": "语言",
         "countries": "国家",
-        "lemma": "希腊语/希伯来语",
+        "lemma": "希腊文/希伯来文弹窗",
         "audio": "有音频",
-        "prevversion": "上一版本",
-        "nextversion": "下一版本",
+        "prevversion": "上一译本",
+        "nextversion": "下一译本",
         "gotopassage": "转到经文",
         "reference": "经文引用",
-        "version": "版本",
-        "versioninfo": "版本信息",
+        "version": "译本",
+        "versioninfo": "译本信息",
         "versioninfoname": "{0} 信息",
-        "loadinginfo": "正在加载信息……",
-        "noinfo": "此版本没有其他可用信息。"
+        "loadinginfo": "正在加载信息…",
+        "noinfo": "此译本没有其他可用信息。"
       },
       "commentary": {
-        "label": "解说"
+        "label": "解经"
       },
       "map": {
         "label": "地图",
-        "placeholder": "搜索...",
+        "placeholder": "搜索…",
         "versenotloaded": "文本不可用",
         "openinbible": "在圣经中打开",
         "loading": "加载中…",
@@ -123,7 +127,7 @@
           "abraham": "亚伯拉罕的旅程",
           "jacob": "雅各的逃亡与归回",
           "exodus": "出埃及",
-          "ark": "约柜的漂流",
+          "ark": "约柜的流转",
           "elijah": "以利亚的行程",
           "exile": "被掳与归回",
           "nativity": "耶稣降生与逃往埃及",
@@ -138,7 +142,7 @@
         "placeholder": "搜索",
         "button": "搜索",
         "results": "结果",
-        "verses": "诗",
+        "verses": "节",
         "options": "搜索选项",
         "searchfailed": "搜索失败，请检查您的网络连接后重试。",
         "noresults": "无结果",
@@ -146,7 +150,7 @@
       },
       "parallel": {
         "label": "平行经文",
-        "loading": "加载中...",
+        "loading": "加载中…",
         "showall": "显示全部",
         "hideall": "隐藏全部",
         "loadlistfailed": "加载平行经文列表失败",
@@ -161,7 +165,7 @@
         "videolanguagenone": "没有匹配的语言"
       },
       "notes": {
-        "label": "注意",
+        "label": "笔记",
         "toggleSidebar": "切换侧边栏",
         "newNote": "新建笔记",
         "linkToVerse": "链接到当前经文",
@@ -184,14 +188,14 @@
         "printIncludeVerses": "包含经文文本",
         "printButton": "打印",
         "closeButton": "关闭",
-        "preparingPrint": "正在准备带经文的打印……",
-        "printError": "打印失败，请查看浏览器控制台",
+        "preparingPrint": "正在准备带经文的打印…",
+        "printError": "打印失败，请查看浏览器控制台。",
         "popupBlocked": "打印窗口被拦截。请允许本站弹出窗口后重试。",
         "noNotesToPrint": "没有可打印的笔记",
         "selectToPrint": "请选择要打印的笔记",
         "verseLabel": "经文",
         "modifiedLabel": "修改时间",
-        "searchPlaceholder": "搜索笔记...",
+        "searchPlaceholder": "搜索笔记…",
         "filterLabel": "筛选笔记",
         "filterAll": "全部笔记",
         "filterLinked": "已链接到经文",
@@ -201,8 +205,8 @@
         "sortModified": "最近编辑",
         "sortCreated": "最近创建",
         "sortTitle": "按标题",
-        "titlePlaceholder": "笔记标题...",
-        "editorPlaceholder": "开始撰写...",
+        "titlePlaceholder": "笔记标题…",
+        "editorPlaceholder": "开始撰写…",
         "bold": "粗体 (Ctrl+B)",
         "italic": "斜体 (Ctrl+I)",
         "underline": "下划线 (Ctrl+U)",
@@ -223,11 +227,11 @@
         "selectOrCreate": "从列表中选择一条笔记，或新建一条",
         "storageWarning": "笔记存储在浏览器的本地存储中，清除浏览器数据时可能会丢失。请通过“下载 → 备份为 JSON”进行备份。",
         "noNotesFound": "没有匹配的笔记",
-        "emptyListHint": "还没有笔记，新建一条即可开始",
+        "emptyListHint": "还没有笔记，新建一条即可开始。",
         "modified": "修改时间：{date}",
         "saved": "已保存",
         "unsavedChanges": "有未保存的更改",
-        "notSaved": "未保存，存储空间已满",
+        "notSaved": "未保存，存储空间已满。",
         "saveFailed": "保存失败",
         "quotaError": "由于浏览器存储空间已满，无法保存笔记。请导出 JSON 备份，然后删除一些笔记。",
         "corruptError": "无法读取已保存的笔记。无法读取的数据备份已保留在浏览器存储中。",
@@ -242,23 +246,138 @@
         "options": "音频选项",
         "synctext": "同步文本（测试版）",
         "autoplay": "自动播放下一个",
-        "drama": "戏剧",
-        "nondrama": "非戏剧",
+        "drama": "戏剧版",
+        "nondrama": "朗读版",
         "noaudiotitle": "无可用音频",
-        "noaudiomessage": "此圣经版本没有音频录音。请选择其他支持音频的版本。"
+        "noaudiomessage": "此圣经译本没有音频录音。请选择其他支持音频的译本。"
       },
       "comparison": {
         "label": "对照",
         "invalidreference": "无效的圣经引用",
-        "nobibles": "此段经文没有可用的圣经版本。请选择其他段落或圣经版本。",
-        "onebible": "此段经文只有一个可用的圣经版本。请选择另一个包含此书卷的圣经版本。",
+        "nobibles": "此段经文没有可用的圣经译本。请选择其他段落或圣经译本。",
+        "onebible": "此段经文只有一个可用的圣经译本。请选择另一个包含此书卷的圣经译本。",
         "loadfailed": "加载经文失败，请重试。"
       },
       "stats": {
         "label": "统计",
         "frequentwords": "常用词",
+        "rarewords": "低频词",
+        "intro": "打开一个圣经窗口，即可查看其当前章的统计信息。",
         "loadtextfailed": "无法加载此文本。",
-        "loadchapterfailed": "无法加载此章节。"
+        "loadchapterfailed": "无法加载本章。"
+      }
+    },
+    "tour": {
+      "launch": "导览",
+      "progress": "第 {current} 步，共 {total} 步",
+      "buttons": {
+        "next": "下一步",
+        "back": "上一步",
+        "done": "完成",
+        "skip": "跳过导览",
+        "exit": "退出导览"
+      },
+      "steps": {
+        "welcome": {
+          "title": "欢迎使用 inScript",
+          "body": "inScript 是一个在浏览器中运行的圣经研读工作区，提供 1,100 多种语言的 1,300 多个译本，并配有注释、搜索、音频和图像。<br><br>按 <kbd>&rarr;</kbd> 进入下一步，按 <kbd>&larr;</kbd> 返回上一步，按 <kbd>Esc</kbd> 关闭导览。"
+        },
+        "topbar": {
+          "title": "工具栏",
+          "body": "顶部栏包含菜单、后退和前进按钮、搜索框以及全屏按钮。它下方的内容都是面板。"
+        },
+        "mainmenu": {
+          "title": "主菜单",
+          "body": "点击标志或菜单按钮即可打开主菜单。您可以用它添加面板，或打开设置、关于以及本导览。"
+        },
+        "addwindow": {
+          "title": "添加面板",
+          "body": "点击一个条目，即可在现有面板旁打开新面板。可选择另一个译本、注释、搜索、福音书平行经文、文本对照、统计、图像与视频或音频。"
+        },
+        "reference": {
+          "title": "当前经文",
+          "body": "每个圣经面板的左上方都会显示当前经文。点击它即可前往其他经文。"
+        },
+        "navigator": {
+          "title": "转到经文",
+          "body": "书卷按分组排列，每组各有颜色。点击某卷书即可列出其中各章。在筛选框中输入，可查找书卷、章或特定经文段落。"
+        },
+        "navigate": {
+          "title": "面板联动",
+          "body": "选择创世记 1 章后，两个圣经面板一同移动。已链接的面板共享同一位置，因此译本、注释和音频始终停留在同一节经文。"
+        },
+        "versions": {
+          "title": "更换译本",
+          "body": "点击 <strong>&lsaquo;</strong> 或 <strong>&rsaquo;</strong> 可在相关版本之间切换，而无需离开当前经文。点击名称可打开完整列表。"
+        },
+        "textchooser": {
+          "title": "选择译本",
+          "body": "列表包含 1,100 多种语言的 1,300 多个译本，按语言分组，您最常用的译本排在最前。输入语言名称或缩写即可筛选。"
+        },
+        "versioninfo": {
+          "title": "译本详情",
+          "body": "每个译本都列出其出版方、版权和简介。"
+        },
+        "linked": {
+          "title": "链接与取消链接面板",
+          "body": "点击链条图标，可让面板不再跟随其他面板。再次点击即可重新链接。"
+        },
+        "layout": {
+          "title": "调整大小与排序",
+          "body": "拖动分隔线可调整面板大小。左右拖动面板标题可重新排序。下次访问时，您的面板及其内容会原样恢复。"
+        },
+        "search": {
+          "title": "搜索或转到经文",
+          "body": "输入经文引用（如 <kbd>约翰福音 3:16</kbd>）可直接前往。输入词语或短语可在当前译本中搜索。然后从两个建议中选择一个。"
+        },
+        "searchresults": {
+          "title": "搜索结果",
+          "body": "结果按书卷分组，并附上下文显示。顶部的条形图显示匹配项的分布位置。点击某条结果，所有已链接的面板都会转到该节经文。<br><br>本次搜索涵盖四福音书。任何搜索都可限定在您选择的书卷范围内。"
+        },
+        "commentary": {
+          "title": "解经",
+          "body": "阅读马太·亨利、Jamieson-Fausset-Brown、加尔文、巴恩斯、卫斯理等人的公共领域注释。注释会跟随您正在阅读的经文。"
+        },
+        "comparison": {
+          "title": "对照译本",
+          "body": "在两个译本中查看同一段经文，并标出差异。"
+        },
+        "parallels": {
+          "title": "福音书平行经文",
+          "body": "以分栏方式阅读各福音书中的同一事件。"
+        },
+        "statistics": {
+          "title": "词语统计",
+          "body": "查看屏幕上文本的词频和词云。"
+        },
+        "media": {
+          "title": "图像与视频",
+          "body": "查看与当前经文相关的艺术作品、摄影和影片，包括《耶稣传》电影和 LUMO 福音书影片。"
+        },
+        "audio": {
+          "title": "音频",
+          "body": "聆听多种语言的有声圣经。经文会随朗读逐节跟进。"
+        },
+        "settings": {
+          "title": "设置",
+          "body": "设置阅读字体和文字大小，更改界面语言，并可开启或关闭章号和节号、小标题、脚注、基督之言以及两端对齐。"
+        },
+        "theme": {
+          "title": "阅读主题",
+          "body": "可选择标准、示罗、雅博或客西马尼。在您选择之前，inScript 会跟随系统设置。"
+        },
+        "deeplink": {
+          "title": "分享此工作区",
+          "body": "复制此链接，即可重新打开相同的面板、相同的译本和相同的经文。"
+        },
+        "palette": {
+          "title": "键盘命令",
+          "body": "按 <kbd>Ctrl</kbd>+<kbd>K</kbd> 或 <kbd>&#8984;</kbd>+<kbd>K</kbd> 打开命令面板。输入经文引用即可前往，或输入 <kbd>&gt;</kbd> 搜索面板、主题、字体和开关等命令。"
+        },
+        "finish": {
+          "title": "导览完成",
+          "body": "您可以随时从主菜单再次打开本导览，或按 <kbd>Ctrl</kbd>+<kbd>K</kbd> 并选择<strong>导览</strong>。"
+        }
       }
     },
     "names": {
@@ -275,6 +394,7 @@
       "sw": "Kichina",
       "tr": "Çince",
       "ja": "中国語",
+      "ko": "중국어",
       "zh-TW": "中文",
       "zh-CN": "中文"
     }
