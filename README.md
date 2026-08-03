@@ -1,112 +1,53 @@
-# BrowserBible v4 (inScript)
+# inScript
 
-Bible study software that runs entirely in the browser. Read, listen to, and
-search Bible translations in many languages, side by side, online or from local
-files. Created by [John Dyer](https://j.hn/) and maintained by the
-[Digital Bible Society](https://dbs.org).
+Bible study software that runs entirely in the browser: read, listen to, and search
+translations in many languages, side by side, online or from local files. Vanilla ES6
+with a plugin architecture, bundled with [Vite](https://vitejs.dev/). Created by
+[John Dyer](https://j.hn/), maintained by the [Digital Bible Society](https://dbs.org).
 
-Built with vanilla ES6 JavaScript (no framework), a plugin-based architecture,
-and bundled with [Vite](https://vitejs.dev/).
-
-## Features
-
-- Multiple linked, resizable windows: **Bible**, **Commentary**, **Search**,
-  **Parallels**, **Text Comparison**, **Statistics**, **Audio**, **Maps**
-  (with journeys), **Media**, **Notes**, and **Deaf Bible** video.
-- Pluggable text providers (local files, API.Bible, Bible Brain, commentaries).
-- Highlighting, Greek/Hebrew lemma popups, cross-references, and visual filters.
-- Custom i18n for the UI in 13 languages.
-- Deep-linkable state via the URL query string.
-- A guided tour of the whole feature set, which doubles as the script for the
-  recorded demo walkthrough.
+Linked, resizable windows for Bible, Commentary, Search, Parallels, Text Comparison,
+Statistics, Audio, Maps, Media, Notes, and Deaf Bible video. Pluggable text providers
+(local files, API.Bible, Bible Brain, commentaries), highlighting, Greek/Hebrew lemma
+popups, cross-references, UI in 13 languages, and deep-linkable state in the URL.
 
 ## Quick start
 
-Prerequisites: [Node.js](https://nodejs.org) and
-[pnpm](https://pnpm.io) (this is a pnpm workspace).
+Needs [Node.js](https://nodejs.org) and [pnpm](https://pnpm.io) (this is a pnpm workspace).
 
 ```bash
 pnpm install
-pnpm fetch-starter-pack   # downloads ~95 MB of 17 freely shareable Bibles
-pnpm dev                  # Vite dev server on http://localhost:3000 plus the
-                          # local API proxy on http://localhost:8787 (see proxy/)
+pnpm fetch-starter-pack   # ~95 MB, 17 Bibles reaching ~90% of the world's population
+pnpm dev                  # http://localhost:3000
 ```
 
-The starter pack of 17 Bibles covers roughly 90% of the world's population. For
-additional Bibles see [dbs.org](https://dbs.org),
+Texts are gitignored. For more, see [dbs.org](https://dbs.org),
 [ebible.org](https://ebible.org/find/), and [fetch.bible](https://fetch.bible).
-You can also fetch and unzip it manually:
 
-```bash
-wget https://bibles.dbs.org/_assets/starter-pack.zip && unzip starter-pack.zip
-```
+## Scripts
 
-## Build & deploy
+| Command | Purpose |
+|---|---|
+| `pnpm dev` | Dev server on port 3000 |
+| `pnpm build` | Production build. Deploy this. |
+| `pnpm build:dev` | Sourcemaps, local texts bundled, all windows enabled |
+| `pnpm test` | Vitest unit + integration, in jsdom |
+| `pnpm test:e2e` | Playwright across Chromium, Firefox, and WebKit |
+| `pnpm lint` | ESLint |
 
-Output goes to `browserbible/dist/` and targets ES2022. The build has two
-profiles selected by the `SITE` env var (`sites/{SITE}.json`), which also
-control which windows/features are enabled and which proxy URLs are baked in:
+Output lands in `browserbible/dist/` targeting ES2022. The `SITE` env var selects a
+profile from `sites/` (`inscript` for `build`, `dev` for `build:dev`) which gates
+windows and features and bakes in proxy URLs. Production loads texts from the content
+CDN, and its API proxies are CORS-locked to one origin, so serve it from the
+configured host.
 
-```bash
-pnpm build        # production (SITE=inscript): no sourcemaps, texts loaded
-                  # from the content CDN, prod window/feature gating. Deploy this.
-pnpm build:dev    # dev build: sourcemaps + local texts bundled, all windows on.
-```
-
-`vite.config.js` defaults any `vite build` to the production profile and any
-`vite dev` (serve) to `dev`. The production app expects its content CDN and
-API proxies to be reachable from the deploy origin (the proxies are CORS-locked
-to a specific origin), so serve it from the configured host.
-
-Deployment is Cloudflare Pages via its Git integration: `pnpm run build:cf`,
-output `browserbible/dist`, with the profile derived from the branch. See
-[docs/Deployment-Cloudflare.md](docs/Deployment-Cloudflare.md).
-
-## Testing
-
-```bash
-pnpm test          # Vitest unit + integration tests (jsdom)
-pnpm test:coverage # with coverage
-pnpm test:e2e      # Playwright end-to-end tests (auto-starts the dev server)
-pnpm lint          # ESLint
-```
-
-E2E tests run in two profiles across Chromium/Firefox/WebKit: `*-remote`
-(content from the CDN) and `*-local` (`?custom=local`, content from the
-extracted starter pack).
-
-## Demo walkthrough
-
-The app ships a guided tour of its features (main menu → **Guided Tour**, or
-`?tour=1`). The same tour is what `pnpm demo` records, as a video plus a
-screenshot per step, into `demo-output/`:
-
-```bash
-pnpm demo                                        # boot a server and record
-pnpm demo -- --gif                               # also write an animated GIF
-pnpm demo -- --url https://inscript.org/ --content none   # record the live site
-```
-
-One list of steps drives both, so the video can't describe a feature the app no
-longer has. See [docs/Guided-Tour.md](docs/Guided-Tour.md).
-
-## Project layout
-
-- `browserbible/js/` application source (see `CLAUDE.md` for the module map and
-  path aliases).
-- `browserbible/css/` global styles, theme variables, and the shared motion
-  layer (see [docs/Motion.md](docs/Motion.md)).
-- `browserbible/public/` static content, i18n resources, and media.
-- `verse-detection/` standalone TypeScript package for detecting Bible
-  references in text (workspace dependency).
-- `sites/` per-deployment build profiles.
-- `tools/` build-time content authoring scripts.
+E2E runs two profiles per browser: `*-remote` for CDN content, `*-local` for
+starter-pack content via `?custom=local`.
 
 ## Configuration
 
-Runtime options live in `browserbible/js/core/config.js` (see `docs/Configuration.md`).
-Presets are selectable at runtime with `?custom=<name>` (built-in: `dbs`,
-`local`), and user settings persist to `localStorage`.
+Runtime options live in `browserbible/js/core/config.js`, documented in
+[docs/Configuration.md](docs/Configuration.md). Presets apply at runtime via
+`?custom=<name>` (built-in: `local`), and user settings persist to `localStorage`.
 
 ## License
 
