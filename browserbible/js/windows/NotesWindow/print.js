@@ -110,7 +110,7 @@ function buildPrintHtml(title, notesHtml) {
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: Georgia, 'Times New Roman', serif;
+      font-family: 'Times New Roman', serif;
       font-size: 12pt;
       line-height: 1.6;
       color: #222;

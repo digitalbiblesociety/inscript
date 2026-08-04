@@ -98,9 +98,6 @@ const defaultConfig = {
   fontSizeDefault: 18,
   enableFontFamilySelector: true,
   fontFamilyStacks: {
-    'Cambria': 'Cambria, Georgia, serif',
-    'Georgia': 'Georgia, serif',
-    'Palatino': '"Palatino Linotype", "Book Antiqua", Palatino, serif',
     'Times': '"Times New Roman", Times, serif',
     'Arial': 'Arial, Helvetica, sans-serif',
     'Lucida': '"Lucida Sans Unicode", "Lucida Grande", sans-serif',

@@ -171,9 +171,6 @@ Default font stacks:
 
 | Display Name | CSS Stack |
 |-------------|-----------|
-| Cambria | `Cambria, Georgia, serif` |
-| Georgia | `Georgia, serif` |
-| Palatino | `"Palatino Linotype", "Book Antiqua", Palatino, serif` |
 | Times | `"Times New Roman", Times, serif` |
 | Arial | `Arial, Helvetica, sans-serif` |
 | Comic Sans | `"Comic Sans MS", cursive, sans-serif` |

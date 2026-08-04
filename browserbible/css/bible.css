@@ -46,6 +46,22 @@
 	font-family: var(--font-family-sans);
 }
 
+/* Parallel-passage references \r, \sr, \mr, e.g. "(Titus 1:10–16)".
+   (.reference is the legacy class name from older generated content.)
+   The .bibleref anchors inside them get link styling further down. */
+.section .r,
+.section .sr,
+.section .mr,
+.section .reference,
+.chapter .r,
+.chapter .sr,
+.chapter .mr,
+.chapter .reference {
+	font-style: italic;
+	font-size: 0.9em;
+	color: var(--color-text-muted);
+}
+
 
 
 .note,
@@ -123,9 +139,66 @@
 	font-style: normal;
 }
 
+/* Small caps: divine name \nd (plus legacy classes) and \sc */
 .yhwh,
-.nog {
+.nog,
+.nd,
+.sc {
 	font-variant: small-caps;
+}
+
+/* Character styles: translator addition \add, transliterated \tl,
+   signature \sig, book title \bk, quoted text \qt, emphasis \em/\it */
+.add,
+.tl,
+.sig,
+.bk,
+.qt,
+.em,
+.it {
+	font-style: italic;
+}
+
+.k {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.bd {
+	font-weight: bold;
+}
+
+.bdit {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.no {
+	font-weight: normal;
+	font-style: normal;
+	font-variant: normal;
+}
+
+.ord,
+.section .sup {
+	font-size: .7em;
+	vertical-align: super;
+}
+
+/* Inline quotation reference \rq (e.g. "(Isa 1:1)" after a quotation) */
+.section .rq {
+	display: block;
+	text-align: right;
+	font-style: italic;
+	font-size: .85em;
+	color: var(--color-text-muted);
+}
+
+/* Alternate verse number \va */
+.va {
+	font-size: .7em;
+	vertical-align: super;
+	color: var(--color-text-muted);
 }
 
 .chapter .note .text,
@@ -225,12 +298,45 @@ div.c + div.q .v-1 {
 
 
 
+/* Section headings \s..\s4 (and intro headings) */
 h3.is1,
 div.s,
-div.is1 {
+div.is1,
+.section .s1,
+.section .s2,
+.section .s3,
+.section .s4 {
 	color: var(--color-text);
 	font-weight: bold;
 	margin-top: 1em;
+}
+
+.section .s,
+.section .s1 {
+	font-size: 1.1em;
+}
+
+.section .s3,
+.section .s4 {
+	font-style: italic;
+	font-weight: normal;
+}
+
+/* Major section headings \ms..\ms3 */
+.section .ms,
+.section .ms1,
+.section .ms2,
+.section .ms3 {
+	font-weight: bold;
+	text-align: center;
+	font-size: 1.3em;
+	margin-top: 1.5em;
+	margin-bottom: .5em;
+}
+
+.section .ms2,
+.section .ms3 {
+	font-size: 1.1em;
 }
 
 .PS .s,
@@ -238,15 +344,76 @@ div.is1 {
 	text-align: center;
 }
 
+/* Descriptive title \d (Psalm superscriptions) and chapter description \cd */
+.section .cd {
+	font-style: italic;
+	font-size: .9em;
+	color: var(--color-text-muted);
+}
+
+/* Chapter label \cl ("Psalm 3" instead of a bare number) */
+.section .cl,
+.section .chapter-label {
+	font-weight: bold;
+	font-size: 1.3em;
+	margin-top: 1.5em;
+}
+
+/* Speaker \sp (Job, Song of Solomon) */
+.section .sp,
+.section .speaker {
+	font-style: italic;
+	font-weight: bold;
+	margin-top: .75em;
+}
+
+/* Acrostic heading \qa (Psalm 119 letters) */
+.section .qa {
+	font-weight: bold;
+	font-style: italic;
+	text-align: center;
+	margin-top: 1em;
+}
+
+/* Blank line \b and semantic dividers \sd* */
+.section .b,
+.section .blank-line {
+	height: .8em;
+}
+
+.section .sd,
+.section .sd1,
+.section .sd2,
+.section .sd3 {
+	height: 1.6em;
+}
+
+/* Poetry \q..\q4 and embedded poetry \qm..\qm3 */
 .section .q,
-.section .q1 {
+.section .q1,
+.section .qm,
+.section .qm1 {
 	padding-left: 3em;
 	text-indent: -1.5em;
 	position: relative;
 }
 
-.section .q2 {
+.section .q2,
+.section .qm2 {
 	padding-left: 4em;
+	text-indent: -1.5em;
+	position: relative;
+}
+
+.section .q3,
+.section .qm3 {
+	padding-left: 5em;
+	text-indent: -1.5em;
+	position: relative;
+}
+
+.section .q4 {
+	padding-left: 6em;
 	text-indent: -1.5em;
 	position: relative;
 }
@@ -266,15 +433,125 @@ div.is1 {
 	font-style: italic;
 }
 
+/* Poetry refrain \qr, centered line \qc, closing Hebrew note \qd */
+.section .qr {
+	text-align: right;
+	font-style: italic;
+}
+
+.section .qc {
+	text-align: center;
+}
+
+.section .qd {
+	font-style: italic;
+	font-size: .9em;
+	color: var(--color-text-muted);
+}
+
+/* Paragraph variants: continuation \m and \nb, indented \pi1-3 and \mi,
+   centered \pc, right-aligned \pr, closure \cls, embedded \pm \pmo \pmc \pmr */
+.section div.m,
+.section div.nb,
+.chapter div.m,
+.chapter div.nb {
+	text-indent: 0;
+	margin: 0;
+}
+
+.section .mi,
+.section .pi,
+.section .pi1,
+.section .pm,
+.section .pmo,
+.section .pmc {
+	margin-left: 1.5em;
+}
+
+.section .pi2 {
+	margin-left: 2.5em;
+}
+
+.section .pi3 {
+	margin-left: 3.5em;
+}
+
+.section .pc {
+	text-align: center;
+	text-indent: 0;
+}
+
+.section .pr,
+.section .cls,
+.section .pmr {
+	text-align: right;
+	text-indent: 0;
+}
+
+.section .lit {
+	text-align: right;
+	font-weight: bold;
+}
+
+/* Lists \lh, \li..\li4, \lf */
+.section ul {
+	list-style: none;
+	margin: .5em 0;
+	padding: 0;
+}
+
+.section .li,
+.section .li1 {
+	margin-left: 1.5em;
+}
+
+.section .li2 {
+	margin-left: 2.5em;
+}
+
+.section .li3 {
+	margin-left: 3.5em;
+}
+
+.section .li4 {
+	margin-left: 4.5em;
+}
+
+/* Tables \tr, \th*, \tc* */
+.section table {
+	border-collapse: collapse;
+	margin: .75em 0;
+}
+
+.section td,
+.section th {
+	padding: .15em 1em .15em 0;
+	vertical-align: top;
+	text-align: start;
+	font-weight: normal;
+}
+
+.section th {
+	font-style: italic;
+	color: var(--color-text-muted);
+}
+
+.section th[class^="thr"],
+.section td[class^="tcr"] {
+	text-align: end;
+}
+
 .c + .p,
 .c + p {
 	margin-top: 0;
 	text-indent: 0;
 }
 
+/* Descriptive title \d (Psalm superscriptions) */
 .d {
 	font-size: .8em;
 	text-align: center;
+	font-style: italic;
 }
 
 

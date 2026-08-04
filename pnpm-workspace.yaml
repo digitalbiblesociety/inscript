@@ -1,8 +1,12 @@
 packages:
-  - "."
-  - "verse-detection"
-  - "proxy"
+  - .
+  - verse-detection
+  - proxy
 
 allowBuilds:
   esbuild: true
   workerd: true
+
+ignoredBuiltDependencies:
+  - esbuild
+  - workerd
