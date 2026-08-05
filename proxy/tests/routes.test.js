@@ -43,6 +43,18 @@ describe('resolveUpstream', () => {
     });
   });
 
+  it('routes /fcbh/v4/bibles-all to the KV catalog, not upstream', () => {
+    expect(resolveUpstream('/fcbh/v4/bibles-all', '')).toEqual({ service: 'fcbh-catalog' });
+    expect(resolveUpstream('/fcbh/v4/bibles-all', '?page=2')).toEqual({ service: 'fcbh-catalog' });
+  });
+
+  it('still proxies the paginated /fcbh/v4/bibles list upstream', () => {
+    expect(resolveUpstream('/fcbh/v4/bibles', '?page=27')).toEqual({
+      service: 'fcbh',
+      url: 'https://4.dbt.io/api/bibles?page=27'
+    });
+  });
+
   it('maps the two ESV endpoints onto api.esv.org', () => {
     expect(resolveUpstream('/esv/v3/passage/html/', '?q=John+3')).toEqual({
       service: 'esv',

@@ -13,6 +13,7 @@ deploys the worker. Neither deploys the other.
 | Proxy path | Upstream | Auth added |
 |---|---|---|
 | `/abs/v1/*` (and `/v1/*` in dev) | `https://api.scripture.api.bible/v1/*` | `api-key` header |
+| `/fcbh/v4/bibles-all` | none: KV-cached daily catalog (see below) | n/a |
 | `/fcbh/v4/*` | `https://4.dbt.io/api/*` | `?v=4&key=` query params |
 | `/esv/v3/passage/html/`, `/esv/v3/passage/search/` | `https://api.esv.org/v3/passage/*` | `Authorization: Token` header |
 
@@ -20,6 +21,19 @@ Everything else is a 404. Only `GET`/`HEAD`/`OPTIONS` are accepted.
 
 Additional behavior:
 
+- **Cached Bible Brain catalog**: the upstream `/bibles` list is 60+ pages,
+  which made the frontend's catalog load painfully slow. A cron trigger
+  (every 15 min, no-op until the copy is ~4h old) crawls the whole list,
+  keeps only bibles with readable text (`text_plain`/`text_format` filesets),
+  prunes each entry to the fields the frontend uses, and stores the result in
+  the `CATALOG` KV namespace. `/fcbh/v4/bibles-all` serves it in one request
+  (`{ data, meta }`, `Cache-Control: max-age=3600`). While the cache is cold
+  (right after the first deploy) the endpoint answers 503 and warms itself in
+  the background; the frontend falls back to plain pagination. The crawl is
+  resumable in chunks of `CATALOG_PAGES_PER_RUN` pages (default 32) so it
+  stays under the free-plan limit of 50 subrequests per invocation, and the
+  catalog is only replaced once a crawl fully succeeds: a failed refresh
+  keeps the last good version serving.
 - **CORS**: browser origins are checked against `ALLOWED_ORIGINS` in
   `wrangler.toml` (exact origins plus a `https://*.inscript.pages.dev`
   wildcard for Pages previews). Disallowed origins get a 403.

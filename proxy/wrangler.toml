@@ -20,3 +20,10 @@ ALLOWED_ORIGINS = "https://inscript.org,https://www.inscript.org,https://dev.ins
 # API.Bible bible ids the proxy will serve (NIV, CSB, NLT). Must stay in sync
 # with config.apiBibleIncludeIds in the inscript frontend.
 API_BIBLE_IDS = "78a9f6124f344018-01,a556c5305ee15c3f-01,d6e14a625393b4da-01"
+
+[[kv_namespaces]]
+binding = "CATALOG"
+id = "304809faae9c4aeab4f282d310d35295"
+
+[triggers]
+crons = ["*/15 * * * *"]

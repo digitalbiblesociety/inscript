@@ -88,7 +88,21 @@ const fetchBiblesPage = async (base, page) => {
   return response.json();
 };
 
+const fetchCachedCatalog = async (base) => {
+  try {
+    const response = await fetch(`${base}/bibles-all`);
+    if (!response.ok) return null;
+    const data = (await response.json())?.data;
+    return Array.isArray(data) && data.length > 0 ? data : null;
+  } catch (_e) {
+    return null;
+  }
+};
+
 export async function fetchAllBibles(base) {
+  const cached = await fetchCachedCatalog(base);
+  if (cached) return cached;
+
   const first = await fetchBiblesPage(base, 1);
   const out = [...(first?.data ?? [])];
 

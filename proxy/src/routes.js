@@ -4,7 +4,7 @@
  */
 
 const API_BIBLE_HOST = 'https://api.scripture.api.bible';
-const BIBLE_BRAIN_HOST = 'https://4.dbt.io/api';
+export const BIBLE_BRAIN_HOST = 'https://4.dbt.io/api';
 const ESV_HOST = 'https://api.esv.org';
 
 // API.Bible.
@@ -35,6 +35,9 @@ export function resolveUpstream(pathname, search = '', { apiBibleIds = [] } = {}
   // Bible Brain (Faith Comes By Hearing), v4.
   const fcbhRest = strip('/fcbh/v4/');
   if (fcbhRest != null) {
+    if (fcbhRest === 'bibles-all') {
+      return { service: 'fcbh-catalog' };
+    }
     return { service: 'fcbh', url: `${BIBLE_BRAIN_HOST}/${fcbhRest}${search}` };
   }
 

@@ -10,6 +10,12 @@
  */
 
 import { resolveUpstream, matchOrigin } from './routes.js';
+import {
+  CATALOG_KEY,
+  WARMUP_LOCK_KEY,
+  advanceCatalogCrawl,
+  refreshCatalogIfStale
+} from './catalog.js';
 
 const sha256Hex = async (input) => {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
@@ -73,6 +79,27 @@ function maybeReportFums(text, request, ctx) {
   } catch (_e) { /* not JSON; nothing to report */ }
 }
 
+async function serveCatalog(env, ctx, corsHeaders) {
+  const kv = env.CATALOG;
+
+  const cached = kv ? await kv.get(CATALOG_KEY) : null;
+  if (cached != null) {
+    return new Response(cached, {
+      headers: { ...JSON_HEADERS, 'Cache-Control': 'public, max-age=3600', ...corsHeaders }
+    });
+  }
+
+  if (kv && await kv.get(WARMUP_LOCK_KEY) == null) {
+    await kv.put(WARMUP_LOCK_KEY, '1', { expirationTtl: 120 });
+    ctx.waitUntil(advanceCatalogCrawl(env));
+  }
+
+  return new Response(JSON.stringify({ error: 'catalog not ready' }), {
+    status: 503,
+    headers: { ...JSON_HEADERS, 'Retry-After': '60', ...corsHeaders }
+  });
+}
+
 async function relayUpstream(route, request, env, ctx, corsHeaders) {
   const upstreamUrl = new URL(route.url);
   const upstreamHeaders = new Headers({ 'Accept': 'application/json' });
@@ -132,6 +159,14 @@ export default {
       return new Response('Forbidden', { status: 403, headers: corsHeaders });
     }
 
+    if (route.service === 'fcbh-catalog') {
+      return serveCatalog(env, ctx, corsHeaders);
+    }
+
     return relayUpstream(route, request, env, ctx, corsHeaders);
+  },
+
+  async scheduled(_event, env, ctx) {
+    ctx.waitUntil(refreshCatalogIfStale(env));
   }
 };
