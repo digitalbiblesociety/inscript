@@ -9,7 +9,6 @@
 
 import { getConfig } from '../core/config.js';
 import { processTexts, removeProviderTexts } from './TextLoader.js';
-import { SearchTools } from './Search.js';
 import {
   BOOK_DATA,
   DEFAULT_BIBLE,
@@ -17,7 +16,15 @@ import {
   APOCRYPHAL_BIBLE,
   APOCRYPHAL_BIBLE_USFM
 } from '../bible/BibleData.js';
-import { toBcp47Lang } from '../lib/bcp47.js';
+import {
+  parseChapterContent,
+  buildAboutHtml,
+  buildStructureFromBooks,
+  renderApiBibleSection
+} from './ApiBibleChapterParser.js';
+import { createApiBibleSearchStarter } from './ApiBibleSearch.js';
+
+export { parseChapterContent };
 
 const providerName = 'apibible';
 const fullName = 'API.Bible';
@@ -105,135 +112,6 @@ const getTextInfoSync = (textid) => {
   return textData.find(text => text.providerid === providerid);
 };
 
-const escapeHtml = (s) => String(s)
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;');
-
-// Paragraph styles that are section headings rather than verse-bearing prose.
-const TITLE_STYLE = /^(s\d*|ms\d*|mr|sr|sp|d|qa|r)$/;
-
-const collectText = (items = []) => {
-  let out = '';
-  for (const item of items) {
-    if (item.type === 'text') out += item.text ?? '';
-    else if (item.items) out += collectText(item.items);
-  }
-  return out;
-};
-
-/**
- * Walk API.Bible USX-JSON `data.content` array into the app verse-span HTML:
- * paragraphs, titles and verse spans. Exported for unit testing; pure.
- */
-export function parseChapterContent(content, sectionid) {
-  const html = [];
-  let openVerse = false;
-  let currentVerseNum = null;
-
-  const closeVerse = () => {
-    if (openVerse) {
-      html.push('</span>');
-      openVerse = false;
-    }
-  };
-
-  // Reopen a verse span (no number marker) when a verse continues into a new
-  // paragraph or styled run.
-  const ensureVerseOpen = () => {
-    if (!openVerse && currentVerseNum != null) {
-      html.push(`<span class="v ${sectionid}_${currentVerseNum}" data-id="${sectionid}_${currentVerseNum}">`);
-      openVerse = true;
-    }
-  };
-
-  const startVerse = (item) => {
-    closeVerse();
-    const n = item.attrs.number;
-    currentVerseNum = n;
-    html.push(`<span class="v-num v-${n}">${escapeHtml(n)}&nbsp;</span>`);
-    html.push(`<span class="v ${sectionid}_${n}" data-id="${sectionid}_${n}">`);
-    openVerse = true;
-  };
-
-  const walkChar = (item, style) => {
-    ensureVerseOpen();
-    if (style === 'wj') {
-      html.push('<span class="wj">');
-      walkInline(item.items);
-      html.push('</span>');
-    } else {
-      walkInline(item.items);
-    }
-  };
-
-  const walkTag = (item) => {
-    const style = item.attrs?.style;
-
-    if (item.name === 'verse' && style === 'v') {
-      startVerse(item);
-      return;
-    }
-
-    if (item.name === 'note') {
-      return;
-    }
-
-    if (item.name === 'char') {
-      walkChar(item, style);
-      return;
-    }
-
-    if (item.items) walkInline(item.items);
-  };
-
-  const walkInline = (items = []) => {
-    for (const item of items) {
-      if (item.type === 'text') {
-        if (item.text) {
-          ensureVerseOpen();
-          html.push(escapeHtml(item.text));
-        }
-      } else if (item.type === 'tag') {
-        walkTag(item);
-      }
-    }
-  };
-
-  for (const block of content) {
-    if (block?.type !== 'tag' || block.name !== 'para') continue;
-    const style = block.attrs?.style ?? 'p';
-
-    if (TITLE_STYLE.test(style)) {
-      closeVerse();
-      const title = collectText(block.items).trim();
-      if (title) html.push(`<div class="s">${escapeHtml(title)}</div>`);
-      continue;
-    }
-
-    closeVerse();
-    html.push(`<div class="${style}">`);
-    walkInline(block.items);
-    closeVerse();
-    html.push('</div>');
-  }
-
-  closeVerse();
-  return html.join('');
-}
-
-const addBlankTargets = (html) => html.replace(/<a\s/gi, '<a target="_blank" rel="noopener" ');
-
-function buildAboutHtml(textInfo, details) {
-  return `<div class="about-text">
-  <h1>${escapeHtml(details?.nameLocal || details?.name || textInfo.name)}</h1>
-  <p class="about-language">${escapeHtml(details?.language?.name || textInfo.langName || '')}</p>
-  <div class="about-publisher">${addBlankTargets(details?.info || '')}</div>
-  <p class="about-copyright">${escapeHtml(details?.copyright || '')}</p>
-  <p class="about-source">Provided through <a href="https://api.bible" target="_blank" rel="noopener">API.Bible</a>.</p>
-</div>`;
-}
-
 function buildManifest() {
   const config = getConfig();
   const includeIds = config.apiBibleIncludeIds ?? [];
@@ -316,23 +194,7 @@ function getTextInfo(textid, callback) {
       return response.json();
     })
     .then(async data => {
-      info.divisions = [];
-      info.divisionNames = [];
-      info.sections = [];
-
-      for (const book of data.data) {
-        const dbsCode = usfmToDbsCode(book.id);
-        if (typeof dbsCode === 'undefined') continue;
-
-        info.divisions.push(dbsCode);
-        info.divisionNames.push(book.name);
-
-        for (const chapter of book.chapters ?? []) {
-          // The API includes a non-numeric "intro" pseudo-chapter; skip it.
-          if (!/^\d+$/.test(chapter.number)) continue;
-          info.sections.push(`${dbsCode}${chapter.number}`);
-        }
-      }
+      buildStructureFromBooks(info, data.data, usfmToDbsCode);
 
       const details = await detailsReq;
       info.aboutHtml = buildAboutHtml(info, details?.data);
@@ -360,9 +222,6 @@ function loadSection(textid, sectionid, callback, errorCallback) {
       return;
     }
 
-    const usfm = bookData.usfm;
-    const lang = textinfo.lang;
-    const dir = textinfo.dir ?? 'ltr';
     const sectionIndex = textinfo.sections.indexOf(sectionid);
     const previd = sectionIndex > 0 ? textinfo.sections[sectionIndex - 1] : null;
     const nextid = sectionIndex > -1 && sectionIndex < textinfo.sections.length - 1
@@ -371,7 +230,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
 
     const params = 'content-type=json&include-verse-numbers=true&include-titles=true' +
       '&include-notes=false&include-chapter-numbers=false';
-    const url = `${config.apiBibleProxyBase}/bibles/${textinfo.apiId}/chapters/${usfm}.${chapter}?${params}`;
+    const url = `${config.apiBibleProxyBase}/bibles/${textinfo.apiId}/chapters/${bookData.usfm}.${chapter}?${params}`;
 
     fetch(url)
       .then(response => {
@@ -386,29 +245,19 @@ function loadSection(textid, sectionid, callback, errorCallback) {
           return;
         }
 
-        const html = [];
-
-        html.push(`<div class="section chapter ${textid} ${bookid} ${sectionid} ${lang} " ` +
-          ` data-textid="${textid}"` +
-          ` data-id="${sectionid}"` +
-          ` data-nextid="${nextid}"` +
-          ` data-previd="${previd}"` +
-          ` lang="${toBcp47Lang(lang)}"` +
-          ` data-lang3="${lang}"` +
-          ` dir="${dir}"` +
-          `>`);
-
-        if (chapter === '1') {
-          const divIndex = textinfo.divisions.indexOf(bookid);
-          const bookName = divIndex > -1 ? textinfo.divisionNames[divIndex] : bookData.name;
-          html.push(`<div class="mt">${bookName}</div>`);
-        }
-
-        html.push(`<div class="c">${chapter}</div>`);
-        html.push(parseChapterContent(content, sectionid));
-        html.push('</div>');
-
-        callback(html.join(''));
+        const divIndex = textinfo.divisions.indexOf(bookid);
+        callback(renderApiBibleSection({
+          content,
+          textid,
+          sectionid,
+          bookid,
+          chapter,
+          lang: textinfo.lang,
+          dir: textinfo.dir ?? 'ltr',
+          previd,
+          nextid,
+          bookTitle: divIndex > -1 ? textinfo.divisionNames[divIndex] : bookData.name
+        }));
       })
       .catch(() => {
         failSection(errorCallback, textid, sectionid);
@@ -416,78 +265,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
   });
 }
 
-const highlightWords = (text, searchTermsRegExp) => {
-  // Escape first, then wrap matches: `text` is remote verse text and is
-  // injected into the results list via innerHTML (SearchWindow), so unescaped
-  // markup would render. Search terms are words, so escaping &<> before
-  // matching does not affect which words highlight.
-  let processedHtml = escapeHtml(text);
-
-  for (const regex of searchTermsRegExp) {
-    regex.lastIndex = 0;
-    processedHtml = processedHtml.replace(regex, match => `<span class="highlight">${match}</span>`);
-  }
-
-  return processedHtml;
-};
-
-function startSearch(textid, divisions, text, onSearchLoad, onSearchIndexComplete, onSearchComplete) {
-  const config = getConfig();
-  const info = getTextInfoSync(textid);
-
-  const e = {
-    type: 'complete',
-    target: this,
-    data: {
-      results: [],
-      searchIndexesData: [],
-      searchTermsRegExp: SearchTools.createSearchTerms(text, false),
-      isLemmaSearch: false
-    }
-  };
-
-  if (!info) {
-    onSearchComplete(e);
-    return;
-  }
-
-  const query = encodeURIComponent(text).replace(/%20/g, '+');
-  const url = `${config.apiBibleProxyBase}/bibles/${info.apiId}/search?query=${query}&limit=2000`;
-
-  fetch(url)
-    .then(response => {
-      if (isQuotaResponse(response)) throw new Error('quota_exceeded');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      const verses = data?.data?.verses ?? [];
-
-      for (const verse of verses) {
-        const dbsBookCode = usfmToDbsCode(verse.bookId);
-        if (!dbsBookCode) continue;
-
-        // verse.id is like "JHN.3.16"
-        const parts = verse.id.split('.');
-        const fragmentid = `${dbsBookCode}${parts[1]}_${parts[2]}`;
-
-        e.data.searchTermsRegExp[0].lastIndex = 0;
-        const hasMatch = e.data.searchTermsRegExp[0].test(verse.text);
-
-        if (hasMatch && (divisions.length === 0 || divisions.includes(dbsBookCode))) {
-          e.data.results.push({
-            fragmentid,
-            html: highlightWords(verse.text, e.data.searchTermsRegExp)
-          });
-        }
-      }
-
-      onSearchComplete(e);
-    })
-    .catch(() => {
-      onSearchComplete(e);
-    });
-}
+const startSearch = createApiBibleSearchStarter({ getTextInfoSync, isQuotaResponse, usfmToDbsCode });
 
 export const ApiBibleTextProvider = {
   name: providerName,

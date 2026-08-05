@@ -7,25 +7,27 @@
 import { BaseWindow, registerWindowComponent } from './BaseWindow.js';
 import { Reference } from '../bible/BibleReference.js';
 import { t } from '../lib/i18n.js';
-import { downloadNotes } from './NotesWindow/download.js';
-import { parseImportedFile } from './NotesWindow/upload.js';
-import { printNotes } from './NotesWindow/print.js';
 import { getSharedNotesStore } from './NotesWindow/NotesStore.js';
 import { filterAndSortNotes } from './NotesWindow/query.js';
 import { sanitizeHtml, stripHtml } from './NotesWindow/sanitize.js';
-import { detectReferences } from './NotesWindow/references.js';
 import { showNotice, showConfirm } from './NotesWindow/notice.js';
+import { selectSuggestion } from './NotesWindow/search.js';
+import { renderWindowStructure, renderNotesList } from './NotesWindow/render.js';
+import { attachNotesListeners } from './NotesWindow/Listeners.js';
 import {
-  updateSearchSuggestions,
-  hideSearchSuggestions,
-  updateSuggestionSelection,
-  selectSuggestion
-} from './NotesWindow/search.js';
+  applyStoreChange,
+  applyStoreError,
+  applyWindowMessage,
+  importNotesFile,
+  printCurrent,
+  printAll
+} from './NotesWindow/WindowActions.js';
 import {
-  renderWindowStructure,
-  renderNotesList,
-  renderDetectedRefs
-} from './NotesWindow/render.js';
+  syncEditorChrome,
+  applyEditorPaste,
+  clearEmptyEditorMarkup,
+  refreshDetectedRefs
+} from './NotesWindow/EditorView.js';
 
 const AUTOSAVE_DELAY_MS = 1000;
 const NARROW_WIDTH_PX = 480;
@@ -98,187 +100,7 @@ class NotesWindowComponent extends BaseWindow {
   }
 
   attachEventListeners() {
-    this.addListener(this.refs.sidebarToggle, 'click', () => this.toggleSidebar());
-    this.addListener(this.refs.newBtn, 'click', () => this.createNewNote());
-    this.addListener(this.refs.linkBtn, 'click', () => this.linkCurrentNote());
-
-    this.addListener(this.refs.downloadBtn, 'click', () => {
-      this.refs.downloadMenu.classList.toggle('visible');
-    });
-
-    this.addListener(this.refs.downloadMenu, 'click', (e) => {
-      const item = e.target.closest('.notes-download-item');
-      if (item) {
-        this.saveCurrentNote();
-        downloadNotes(this.store.getAll(), item.dataset.format);
-        this.refs.downloadMenu.classList.remove('visible');
-      }
-    });
-
-    this.addListener(document, 'click', (e) => {
-      if (!e.target.closest('.notes-download-container')) {
-        this.refs.downloadMenu.classList.remove('visible');
-      }
-      if (!e.target.closest('.notes-print-container')) {
-        this.refs.printMenu.classList.remove('visible');
-      }
-    });
-
-    this.addListener(this.refs.uploadBtn, 'click', () => {
-      this.refs.uploadInput.click();
-    });
-
-    this.addListener(this.refs.uploadInput, 'change', () => {
-      const file = this.refs.uploadInput.files[0];
-      if (file) {
-        this.importFile(file);
-        this.refs.uploadInput.value = '';
-      }
-    });
-
-    this.addListener(this.refs.printBtn, 'click', () => {
-      this.refs.printMenu.classList.toggle('visible');
-    });
-
-    this.addListener(this.refs.printMenu, 'click', (e) => {
-      const item = e.target.closest('.notes-print-item');
-      if (item) {
-        const action = item.dataset.action;
-        const includeVerseText = this.refs.printVersesCheckbox.checked;
-        this.refs.printMenu.classList.remove('visible');
-
-        if (action === 'current') {
-          this.printCurrentNote(includeVerseText);
-        } else if (action === 'all') {
-          this.printAllNotes(includeVerseText);
-        }
-      }
-    });
-
-    this.addListener(this.refs.filter, 'change', () => {
-      this.state.filterMode = this.refs.filter.value;
-      this.renderNotesList();
-      this.notifySettingsChange();
-    });
-
-    this.addListener(this.refs.sortSelect, 'change', () => {
-      this.state.sortMode = this.refs.sortSelect.value;
-      this.renderNotesList();
-      this.notifySettingsChange();
-    });
-
-    this.addListener(this.refs.search, 'input', () => {
-      this.state.searchQuery = this.refs.search.value;
-      updateSearchSuggestions(this.state, this.refs, this.store.getAll(), this.getPlainText);
-      this.renderNotesList();
-    });
-
-    this.addListener(this.refs.search, 'keydown', (e) => {
-      if (!this.refs.searchSuggestions.classList.contains('visible')) return;
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        updateSuggestionSelection(this.state, this.refs, this.state.selectedSuggestionIndex + 1);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        updateSuggestionSelection(this.state, this.refs, this.state.selectedSuggestionIndex - 1);
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        this.selectSuggestion(this.state.selectedSuggestionIndex);
-      } else if (e.key === 'Escape') {
-        hideSearchSuggestions(this.state, this.refs);
-      }
-    });
-
-    // Delay on blur so a click on a suggestion lands before the list hides
-    this.addListener(this.refs.search, 'blur', () => {
-      setTimeout(() => hideSearchSuggestions(this.state, this.refs), 150);
-    });
-
-    this.addListener(this.refs.search, 'focus', () => {
-      if (this.refs.search.value.trim()) {
-        updateSearchSuggestions(this.state, this.refs, this.store.getAll(), this.getPlainText);
-      }
-    });
-
-    // mousedown so the pick fires before the search input's blur
-    this.addListener(this.refs.searchSuggestions, 'mousedown', (e) => {
-      const item = e.target.closest('.notes-suggestion-item');
-      if (item) {
-        const index = parseInt(item.dataset.index, 10);
-        this.selectSuggestion(index);
-      }
-    });
-
-    this.addListener(this.refs.list, 'click', (e) => {
-      const pinBtn = e.target.closest('.notes-pin-btn');
-      if (pinBtn) {
-        const item = pinBtn.closest('.notes-list-item');
-        if (item) this.togglePinNote(item.dataset.noteId);
-        return;
-      }
-      const item = e.target.closest('.notes-list-item');
-      if (item) {
-        this.selectNote(item.dataset.noteId);
-      }
-    });
-
-    this.addListener(this.refs.titleInput, 'input', () => {
-      this.markDirty();
-      this.scheduleAutosave();
-    });
-
-    this.addListener(this.refs.unlinkBtn, 'click', () => this.unlinkCurrentNote());
-
-    this.addListener(this.refs.pinToggle, 'click', () => {
-      if (this.state.currentNoteId) this.togglePinNote(this.state.currentNoteId);
-    });
-
-    this.addListener(this.refs.deleteBtn, 'click', () => this.deleteCurrentNote());
-
-    this.addListener(this.refs.toolbar, 'click', (e) => {
-      const btn = e.target.closest('button');
-      if (btn) {
-        const command = btn.dataset.command;
-        const value = btn.dataset.value || null;
-        this.execFormatCommand(command, value);
-      }
-    });
-
-    this.addListener(this.refs.editor, 'input', () => {
-      this.normalizeEmptyEditor();
-      this.markDirty();
-      this.scheduleAutosave();
-    });
-
-    this.addListener(this.refs.editor, 'paste', (e) => this.handlePaste(e));
-
-    this.addListener(this.refs.detectedRefs, 'click', (e) => {
-      const chip = e.target.closest('.notes-ref-chip');
-      if (chip) {
-        this.navigateToReference(chip.dataset.fragmentid, chip.dataset.sectionid);
-      }
-    });
-
-    this.addListener(this.refs.editor, 'keydown', (e) => {
-      if (e.ctrlKey || e.metaKey) {
-        switch (e.key.toLowerCase()) {
-          case 'b':
-            e.preventDefault();
-            this.execFormatCommand('bold');
-            break;
-          case 'i':
-            e.preventDefault();
-            this.execFormatCommand('italic');
-            break;
-          case 'u':
-            e.preventDefault();
-            this.execFormatCommand('underline');
-            break;
-        }
-      }
-    });
-
+    attachNotesListeners(this);
     this.on('message', (e) => this.handleMessage(e));
   }
 
@@ -342,47 +164,11 @@ class NotesWindowComponent extends BaseWindow {
 
 
   handleStoreChange() {
-    this.renderNotesList();
-
-    const currentId = this.state.currentNoteId;
-    if (!currentId) return;
-
-    const note = this.store.get(currentId);
-    if (!note) {
-      // Deleted in another window/tab. With local edits pending, keep the
-      // buffer; the next autosave re-adds it through store.update().
-      if (!this.state.isDirty) {
-        this.state.currentNoteId = null;
-        this.updateEditorVisibility();
-        this.renderNotesList();
-      }
-      return;
-    }
-
-    // Skip editor refresh for this window's own writes and while the user
-    // has unsaved local edits (their keystrokes win).
-    if (this._selfChange || this.state.isDirty) return;
-
-    this.refs.titleInput.value = note.title || '';
-    this.refs.editor.innerHTML = sanitizeHtml(note.content || '');
-    this.normalizeEmptyEditor();
-    this.updateEditorChrome(note);
-    this.refs.modified.textContent = t('windows.notes.modified', { date: new Date(note.modified).toLocaleString() });
-    this.updateDetectedRefs();
+    applyStoreChange(this);
   }
 
   handleStoreError(e) {
-    if (e.code === 'quota') {
-      this.refs.status.textContent = t('windows.notes.notSaved');
-      if (!this._quotaNotified) {
-        this._quotaNotified = true;
-        showNotice(t('windows.notes.quotaError'));
-      }
-    } else if (e.code === 'corrupt') {
-      showNotice(t('windows.notes.corruptError'));
-    } else {
-      this.refs.status.textContent = t('windows.notes.saveFailed');
-    }
+    applyStoreError(this, e);
   }
 
   /** Mark store writes from this window so change events don't bounce back into the editor. */
@@ -397,17 +183,7 @@ class NotesWindowComponent extends BaseWindow {
 
 
   handleMessage(e) {
-    const data = e?.data;
-    if (!data) return;
-
-    if (data.messagetype === 'nav' && data.type === 'bible' && data.locationInfo) {
-      this.setCurrentReference(data.locationInfo.fragmentid || null);
-    } else if (data.messagetype === 'textload') {
-      // Covers replies to requestCurrentContent() and regular text loads.
-      // Carries the position and the Bible version (used to print verse text).
-      if (data.textid) this.state.currentTextId = data.textid;
-      if (data.fragmentid) this.setCurrentReference(data.fragmentid);
-    }
+    applyWindowMessage(this, e);
   }
 
   setCurrentReference(fragmentid) {
@@ -535,20 +311,8 @@ class NotesWindowComponent extends BaseWindow {
     this.notifySettingsChange();
   }
 
-  /** Sync the reference badge, unlink button, and pin toggle to a note. */
   updateEditorChrome(note) {
-    if (note.reference) {
-      this.refs.referenceBadge.textContent = note.referenceDisplay || note.reference;
-      this.refs.referenceBadge.classList.add('visible');
-      this.refs.unlinkBtn.classList.add('visible');
-    } else {
-      this.refs.referenceBadge.classList.remove('visible');
-      this.refs.unlinkBtn.classList.remove('visible');
-    }
-
-    this.refs.pinToggle.classList.toggle('active', !!note.pinned);
-    this.refs.pinToggle.title = t(note.pinned ? 'windows.notes.unpin' : 'windows.notes.pin');
-    this.refs.pinToggle.setAttribute('aria-pressed', String(!!note.pinned));
+    syncEditorChrome(this, note);
   }
 
   saveCurrentNote() {
@@ -656,82 +420,15 @@ class NotesWindowComponent extends BaseWindow {
 
 
   importFile(file) {
-    const reader = new FileReader();
-
-    reader.onerror = () => {
-      this.refs.status.textContent = t('windows.notes.importReadError');
-      showNotice(t('windows.notes.importReadError'));
-    };
-
-    reader.onload = () => {
-      let parsed;
-      try {
-        parsed = parseImportedFile(reader.result, file.name);
-      } catch {
-        this.refs.status.textContent = t('windows.notes.importInvalid');
-        showNotice(t('windows.notes.importInvalid'));
-        return;
-      }
-
-      const { notes, mode } = parsed;
-      if (notes.length === 0) {
-        this.refs.status.textContent = t('windows.notes.importNone');
-        return;
-      }
-
-      const result = this._withStoreWrite(() => this.store.importNotes(notes, { mode }));
-
-      if (mode === 'merge') {
-        this.refs.status.textContent = t('windows.notes.importMerged', {
-          added: result.added, updated: result.updated, skipped: result.skipped
-        });
-      } else {
-        this.refs.status.textContent = t('windows.notes.imported', { count: result.added });
-        this.selectNote(notes[0].id);
-      }
-    };
-
-    reader.readAsText(file);
+    importNotesFile(this, file);
   }
 
   printCurrentNote(includeVerseText) {
-    if (!this.state.currentNoteId) {
-      this.refs.status.textContent = t('windows.notes.selectToPrint');
-      return;
-    }
-
-    this.saveCurrentNote();
-    const note = this.store.get(this.state.currentNoteId);
-    if (!note) return;
-
-    this.refs.status.textContent = includeVerseText ? t('windows.notes.preparingPrint') : '';
-    printNotes([note], { includeVerseText, textId: this.state.currentTextId }).then(() => {
-      this.refs.status.textContent = '';
-    }).catch(err => {
-      console.error('[NotesWindow] printCurrentNote error:', err);
-      this.refs.status.textContent = t('windows.notes.printError');
-    });
+    printCurrent(this, includeVerseText);
   }
 
   printAllNotes(includeVerseText) {
-    this.saveCurrentNote();
-    const notes = this.store.getAll();
-    if (notes.length === 0) {
-      this.refs.status.textContent = t('windows.notes.noNotesToPrint');
-      return;
-    }
-
-    this.refs.status.textContent = includeVerseText ? t('windows.notes.preparingPrint') : '';
-    printNotes(notes, {
-      includeVerseText,
-      title: t('windows.notes.printAllTitle'),
-      textId: this.state.currentTextId
-    }).then(() => {
-      this.refs.status.textContent = '';
-    }).catch(err => {
-      console.error('[NotesWindow] printAllNotes error:', err);
-      this.refs.status.textContent = t('windows.notes.printError');
-    });
+    printAll(this, includeVerseText);
   }
 
 
@@ -758,42 +455,15 @@ class NotesWindowComponent extends BaseWindow {
   }
 
   handlePaste(e) {
-    e.preventDefault();
-    const html = e.clipboardData?.getData('text/html');
-    if (html) {
-      this.execFormatCommand('insertHTML', sanitizeHtml(html));
-      return;
-    }
-    const text = e.clipboardData?.getData('text/plain') || '';
-    if (text) this.execFormatCommand('insertText', text);
+    applyEditorPaste(this, e);
   }
 
-  /**
-   * contentEditable leaves a lone <br> (or an empty block) behind when all
-   * text is deleted, which defeats the :empty placeholder. Clear it.
-   */
   normalizeEmptyEditor() {
-    const html = this.refs.editor.innerHTML;
-    const trimmed = html.trim();
-    if (trimmed === '' || trimmed === '<br>' || trimmed === '<div><br></div>' || trimmed === '<p><br></p>') {
-      if (html !== '') this.refs.editor.innerHTML = '';
-    }
+    clearEmptyEditorMarkup(this);
   }
 
   updateDetectedRefs() {
-    const container = this.refs.detectedRefs;
-    container.innerHTML = '';
-
-    const note = this.state.currentNoteId ? this.store.get(this.state.currentNoteId) : null;
-    const refs = note ? detectReferences(this.store.getPlainText(note.id)) : [];
-    const fragment = renderDetectedRefs(refs);
-
-    if (fragment) {
-      container.appendChild(fragment);
-      container.classList.add('visible');
-    } else {
-      container.classList.remove('visible');
-    }
+    refreshDetectedRefs(this);
   }
 
 

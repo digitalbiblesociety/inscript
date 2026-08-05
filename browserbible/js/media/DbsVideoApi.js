@@ -18,25 +18,20 @@
  */
 
 import { getConfig } from '../core/config.js';
-import { ISO_639_3_TO_1 } from '../lib/bcp47.js';
+import {
+  resolveIsoCandidates,
+  buildCatalogIndex,
+  pickCatalogEntry,
+  normalizeTitle
+} from './DbsVideoCatalogData.js';
+import { languageNameFor, buildLanguageList } from './DbsVideoLanguageNames.js';
+
+export { resolveIsoCandidates, pickCatalogEntry, normalizeTitle } from './DbsVideoCatalogData.js';
 
 const DEFAULT_CATALOG_URL = 'https://dbs.org/data/video.json';
 const DEFAULT_META_URL = 'https://meta.dbs.org/data/data-video/video';
 
 const FALLBACK_ISO = 'eng';
-
-/**
- * ISO 639-1 -> every 639-3 code that maps to it, so a 2-letter text language
- * still finds a video. Several 639-1 codes are ambiguous (ar -> ara/arb,
- * zh -> zho/cmn, ...) and the catalog consistently files recordings under the
- * individual language rather than the macrolanguage, so all are tried.
- */
-const ISO_639_1_TO_3 = Object.entries(ISO_639_3_TO_1)
-  .reduce((map, [iso3, iso1]) => {
-    map[iso1] ??= [];
-    map[iso1].push(iso3);
-    return map;
-  }, {});
 
 // org -> iso3 -> catalog entries[], built once per session from one fetch.
 let indexPromise = null;
@@ -63,89 +58,6 @@ export function isDbsVideoEnabled() {
 }
 
 /**
- * Language codes to look for in the catalog, best first: drop any script/region
- * suffix ("eng-Latn-US" -> "eng") and widen a 2-letter code to every ISO 639-3
- * code it stands for.
- */
-export function resolveIsoCandidates(langCode) {
-  const primary = String(langCode ?? '').toLowerCase().split('-')[0];
-  if (!primary) return [];
-  if (primary.length === 2) return ISO_639_1_TO_3[primary] ?? [primary];
-  return [primary];
-}
-
-// The catalog abbreviates keys: i=iso, l=language, o=org, j=json file, k=video count.
-const catalogToEntry = (e) => ({
-  org: e.o ?? e.org ?? '',
-  iso: String(e.i ?? e.iso ?? '').toLowerCase(),
-  language: e.l ?? e.language ?? '',
-  file: e.j ?? e.file ?? '',
-  videoCount: Number(e.k ?? e.videos ?? 0)
-});
-
-/**
- * Pick one recording of a title for a language. Most languages have several
- * (e.g. "Spanish Castilian" and "Spanish Latin American"); prefer the most
- * complete edition, since a sparse one may not hold the chapter being asked
- * for, then the plainest language name, so the choice is stable.
- */
-export function pickCatalogEntry(entries) {
-  if (!entries?.length) return null;
-
-  return [...entries].sort((a, b) =>
-    b.videoCount - a.videoCount ||
-    a.language.length - b.language.length ||
-    a.language.localeCompare(b.language) ||
-    a.file.localeCompare(b.file)
-  )[0];
-}
-
-/**
- * Reduce a per-language title JSON to the chapters this app plays. Handles both
- * the current "sections[].items" shape and the legacy flat "chapters" one.
- *
- * A title may carry the same chapters several times over, once per audio
- * translation (LUMO Luke ships three); those sections repeat `n`, and the first
- * wins so the partner's primary listing is what plays.
- */
-export function normalizeTitle(raw) {
-  const items = Array.isArray(raw?.sections)
-    ? raw.sections.flatMap((section) => section?.items ?? [])
-    : (raw?.chapters ?? []);
-
-  const chapters = new Map();
-  for (const item of items) {
-    const number = Number(item?.n ?? item?.chapter);
-    if (!Number.isFinite(number) || chapters.has(number)) continue;
-
-    // Standard definition first (~5 MB/chapter vs ~70 MB), matching the Deaf
-    // Bible player's default; the high copy is the retry on playback error.
-    const low = item.media?.low?.url ?? item.web_url_low ?? '';
-    const high = item.media?.high?.url ?? item.web_url ?? '';
-    if (!low && !high) continue;
-
-    chapters.set(number, {
-      number,
-      title: String(item.title ?? '').trim(),
-      reference: String(item.reference ?? '').trim(),
-      description: String(item.description_short ?? item.description ?? '').trim(),
-      poster: item.cover ?? '',
-      duration: Number(item.duration_seconds ?? 0),
-      url: low || high,
-      urlAlt: low && high ? high : ''
-    });
-  }
-
-  return {
-    id: raw?.id ?? '',
-    iso: String(raw?.iso ?? '').toLowerCase(),
-    title: raw?.title_vernacular || raw?.title || '',
-    languageName: raw?.language?.name ?? '',
-    chapters
-  };
-}
-
-/**
  * Fetch the video catalog once and index every title by org, then language.
  * Resolves to an empty Map on failure so callers degrade to no video.
  */
@@ -159,26 +71,11 @@ function loadIndex(config) {
     })
     .then((data) => {
       const list = Array.isArray(data) ? data : (data?.videos ?? data?.titles ?? []);
-      const loaded = new Map();
-      const names = new Map();
-      for (const raw of list) {
-        const entry = catalogToEntry(raw);
-        if (!entry.org || !entry.iso || !entry.file) continue;
-        if (!loaded.has(entry.org)) loaded.set(entry.org, new Map());
-        const byLang = loaded.get(entry.org);
-        if (!byLang.has(entry.iso)) byLang.set(entry.iso, []);
-        byLang.get(entry.iso).push(entry);
-
-        if (entry.language) {
-          if (!names.has(entry.iso)) names.set(entry.iso, new Map());
-          const counts = names.get(entry.iso);
-          counts.set(entry.language, (counts.get(entry.language) ?? 0) + 1);
-        }
-      }
-      index = loaded;
+      const { byOrg, names } = buildCatalogIndex(list);
+      index = byOrg;
       namesByIso = names;
       languageLists.clear();
-      return loaded;
+      return byOrg;
     })
     .catch((error) => {
       console.warn('DBS video catalog error:', error.message);
@@ -224,52 +121,13 @@ export function hasDbsVideoEdition(org, langCode, { fallback = true } = {}) {
   return candidates.some((iso) => byLang.has(iso));
 }
 
-/** Intl.DisplayNames per UI locale, or null where the platform has none. */
-const displayNamesByLocale = new Map();
-function displayNames(locale) {
-  if (!displayNamesByLocale.has(locale)) {
-    let names = null;
-    try {
-      names = new Intl.DisplayNames([locale, 'en'], { type: 'language', fallback: 'code' });
-    } catch { /* unsupported locale or no Intl.DisplayNames */ }
-    displayNamesByLocale.set(locale, names);
-  }
-  return displayNamesByLocale.get(locale);
-}
-
-/**
- * The catalog's own name for a language. Editions disagree ('eng' appears as
- * "English", "English British", "English-American", ...), so take the name most
- * editions use, then the shortest, so the choice is stable and unadorned.
- */
-function plainestName(counts) {
-  return [...counts.entries()].sort((a, b) =>
-    b[1] - a[1] ||
-    a[0].length - b[0].length ||
-    a[0].localeCompare(b[0])
-  )[0][0];
-}
-
 /**
  * Human-readable name for one of the catalog's language codes: the reader's own
- * word for it where the platform knows the code (Intl names the ~180 languages
- * with an ISO 639-1 equivalent, plus 'cmn', 'spa' and friends), otherwise the
- * catalog's English name, which is all there is for most of the 2,600 languages
- * the catalog covers.
- * Returns the code itself when nothing names it.
+ * word for it where the platform knows the code, otherwise the catalog's English
+ * name. Returns the code itself when nothing names it.
  */
 export function getDbsVideoLanguageName(iso, locale = 'en') {
-  const code = String(iso ?? '').toLowerCase();
-  if (!code) return '';
-
-  let named = '';
-  try {
-    named = displayNames(locale)?.of(code) ?? '';
-  } catch { /* structurally invalid code */ }
-  if (named && named !== code) return named;
-
-  const counts = namesByIso?.get(code);
-  return counts?.size ? plainestName(counts) : code;
+  return languageNameFor(iso, locale, namesByIso);
 }
 
 /**
@@ -297,18 +155,7 @@ export function getDbsVideoLanguages(orgs, locale = 'en') {
     }
   }
 
-  const languages = [...titleCounts.entries()]
-    .map(([iso, titles]) => ({ iso, name: getDbsVideoLanguageName(iso, locale), titles }));
-
-  // Intl gives several codes the same name ('cmn' and 'zho' are both Chinese);
-  // tell those apart by code rather than offering two identical rows.
-  const nameCounts = languages.reduce((counts, language) =>
-    counts.set(language.name, (counts.get(language.name) ?? 0) + 1), new Map());
-  for (const language of languages) {
-    if (nameCounts.get(language.name) > 1) language.name += ` (${language.iso})`;
-  }
-
-  languages.sort((a, b) => a.name.localeCompare(b.name));
+  const languages = buildLanguageList(titleCounts, locale, namesByIso);
   languageLists.set(cacheKey, languages);
   return languages;
 }

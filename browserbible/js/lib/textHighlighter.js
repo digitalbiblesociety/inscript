@@ -2,16 +2,6 @@ export function escapeRegExp(str) {
   return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function highlightTextMatches(root, regexps, className = 'highlight') {
-  const skipSelector = '.' + className.trim().split(/\s+/).join('.');
-
-  for (const regex of regexps) {
-    for (const textNode of collectTextNodes(root, skipSelector)) {
-      highlightNodeMatches(textNode, regex, className);
-    }
-  }
-}
-
 function collectTextNodes(root, skipSelector) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
@@ -26,8 +16,8 @@ function collectTextNodes(root, skipSelector) {
   return textNodes;
 }
 
-function highlightNodeMatches(textNode, regex, className) {
-  const text = textNode.nodeValue;
+/** Returns null when the regex never matches, so the node is left untouched. */
+function buildHighlightFragment(text, regex, className) {
   regex.lastIndex = 0;
 
   let match;
@@ -47,10 +37,19 @@ function highlightNodeMatches(textNode, regex, className) {
     if (!regex.global) break;
   }
 
-  if (!frag) return;
-
-  if (lastIndex < text.length) {
+  if (frag && lastIndex < text.length) {
     frag.appendChild(document.createTextNode(text.slice(lastIndex)));
   }
-  textNode.parentNode.replaceChild(frag, textNode);
+  return frag;
+}
+
+export function highlightTextMatches(root, regexps, className = 'highlight') {
+  const skipSelector = '.' + className.trim().split(/\s+/).join('.');
+
+  for (const regex of regexps) {
+    for (const textNode of collectTextNodes(root, skipSelector)) {
+      const frag = buildHighlightFragment(textNode.nodeValue, regex, className);
+      if (frag) textNode.parentNode.replaceChild(frag, textNode);
+    }
+  }
 }

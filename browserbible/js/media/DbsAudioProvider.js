@@ -9,25 +9,21 @@
 
 import { BaseAudioProvider } from './BaseAudioProvider.js';
 import { getConfig } from '../core/config.js';
-import { OT_BOOKS, NT_BOOKS, BOOK_DATA } from '../bible/BibleData.js';
-
-/** Map DBS book number (1-66) to BrowserBible 2-char code */
-function dbsNumToCode(num) {
-  const n = typeof num === 'string' ? parseInt(num, 10) : num;
-  if (n >= 1 && n <= 39) return OT_BOOKS[n - 1];
-  if (n >= 40 && n <= 66) return NT_BOOKS[n - 40];
-  return null;
-}
+import { BOOK_DATA } from '../bible/BibleData.js';
+import {
+  parseBibleIndex,
+  parseTimingText,
+  nextDbsFragment,
+  prevDbsFragment
+} from './DbsAudioData.js';
 
 export function dbsAudioMatches(entry, textInfo) {
   const id = textInfo.id;
   const abbr = textInfo.abbr || textInfo.id;
 
-  return entry.abbr === id ||
-    entry.id === id ||
-    entry.davar_id === id ||
-    entry.abbr === abbr ||
-    entry.id === abbr;
+  const matchesId = [entry.abbr, entry.id, entry.davar_id].includes(id);
+  const matchesAbbr = entry.abbr === abbr || entry.id === abbr;
+  return matchesId || matchesAbbr;
 }
 
 export class DbsAudioProvider extends BaseAudioProvider {
@@ -78,45 +74,7 @@ export class DbsAudioProvider extends BaseAudioProvider {
       const response = await fetch(`${baseUrl}/${dbsId}/index.txt`);
       if (!response.ok) return null;
 
-      const text = await response.text();
-      const lines = text.trim().split('\n');
-
-      // Parse filenames: {bookNum}_{bookName}_{chapter}.mp3
-      const books = new Map();
-      const bookOrderSet = [];
-
-      for (const line of lines) {
-        const filename = line.trim();
-        if (!filename) continue;
-
-        const match = /^(\d+)_(.+?)_(\d+)\.mp3$/.exec(filename);
-        if (!match) continue;
-
-        const [, dbsNum, dbsName, chapterStr] = match;
-        const code = dbsNumToCode(dbsNum);
-        if (!code) continue;
-
-        const chapter = parseInt(chapterStr, 10);
-
-        if (!books.has(code)) {
-          books.set(code, {
-            dbsNum,
-            dbsName,
-            chapters: [],
-            chapterFiles: new Map()
-          });
-          bookOrderSet.push(code);
-        }
-
-        books.get(code).chapters.push(chapter);
-        books.get(code).chapterFiles.set(chapter, chapterStr);
-      }
-
-      for (const bookInfo of books.values()) {
-        bookInfo.chapters.sort((a, b) => a - b);
-      }
-
-      const result = { books, bookOrder: bookOrderSet };
+      const result = parseBibleIndex(await response.text());
       this._bibleCache.set(dbsId, result);
       return result;
     } catch (err) {
@@ -187,80 +145,17 @@ export class DbsAudioProvider extends BaseAudioProvider {
       const response = await fetch(`${baseUrl}/${dbsId}/timingfiles/${bookNum}_${chapterStr}.txt`);
       if (!response.ok) return null;
 
-      const text = await response.text();
-      const timestamps = [];
-
-      for (const line of text.trim().split('\n')) {
-        // Format: "Verse {n}\t{HH:MM:SS.ms}"
-        const match = /^Verse\s+(\d+)\t(\d+):(\d+):(\d+)\.(\d+)/.exec(line);
-        if (!match) continue;
-
-        const verse = parseInt(match[1], 10);
-        const hours = parseInt(match[2], 10);
-        const minutes = parseInt(match[3], 10);
-        const seconds = parseInt(match[4], 10);
-        const ms = parseInt(match[5], 10);
-
-        const time = hours * 3600 + minutes * 60 + seconds + ms / 1000;
-        timestamps.push({ verse, time });
-      }
-
-      return timestamps.length > 0 ? timestamps : null;
+      return parseTimingText(await response.text());
     } catch {
       return null;
     }
   }
 
   async getNextFragment(textInfo, audioInfo, fragmentid) {
-    const sectionid = fragmentid.split('_')[0];
-    const bookCode = sectionid.substring(0, 2);
-    const chapter = parseInt(sectionid.substring(2), 10);
-
-    const bookInfo = audioInfo.books.get(bookCode);
-    if (!bookInfo) return null;
-
-    const chapterIdx = bookInfo.chapters.indexOf(chapter);
-    if (chapterIdx < 0) return null;
-
-    if (chapterIdx < bookInfo.chapters.length - 1) {
-      const nextChapter = bookInfo.chapters[chapterIdx + 1];
-      return `${bookCode}${nextChapter}_1`;
-    }
-
-    const bookIdx = audioInfo.bookOrder.indexOf(bookCode);
-    if (bookIdx < 0 || bookIdx >= audioInfo.bookOrder.length - 1) return null;
-
-    const nextBookCode = audioInfo.bookOrder[bookIdx + 1];
-    const nextBookInfo = audioInfo.books.get(nextBookCode);
-    if (!nextBookInfo || nextBookInfo.chapters.length === 0) return null;
-
-    return `${nextBookCode}${nextBookInfo.chapters[0]}_1`;
+    return nextDbsFragment(audioInfo, fragmentid);
   }
 
   async getPrevFragment(textInfo, audioInfo, fragmentid) {
-    const sectionid = fragmentid.split('_')[0];
-    const bookCode = sectionid.substring(0, 2);
-    const chapter = parseInt(sectionid.substring(2), 10);
-
-    const bookInfo = audioInfo.books.get(bookCode);
-    if (!bookInfo) return null;
-
-    const chapterIdx = bookInfo.chapters.indexOf(chapter);
-    if (chapterIdx < 0) return null;
-
-    if (chapterIdx > 0) {
-      const prevChapter = bookInfo.chapters[chapterIdx - 1];
-      return `${bookCode}${prevChapter}_1`;
-    }
-
-    const bookIdx = audioInfo.bookOrder.indexOf(bookCode);
-    if (bookIdx <= 0) return null;
-
-    const prevBookCode = audioInfo.bookOrder[bookIdx - 1];
-    const prevBookInfo = audioInfo.books.get(prevBookCode);
-    if (!prevBookInfo || prevBookInfo.chapters.length === 0) return null;
-
-    const lastChapter = prevBookInfo.chapters[prevBookInfo.chapters.length - 1];
-    return `${prevBookCode}${lastChapter}_1`;
+    return prevDbsFragment(audioInfo, fragmentid);
   }
 }

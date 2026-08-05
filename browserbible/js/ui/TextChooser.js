@@ -1,595 +1,264 @@
 /** Bible version dropdown; virtual-scrolled to stay smooth over long lists. */
 
 import { elem, offset } from '../lib/helpers.esm.js';
-import { fuzzyIncludes, matchRanges } from '../lib/fuzzy.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import AppSettings from '../common/AppSettings.js';
-import { loadTexts, getText, displayAbbr } from '../texts/TextLoader.js';
-import { t as i18nT } from '../lib/i18n.js';
-import { getConfig } from '../core/config.js';
-import audioEarSvg from '../../css/images/audio-ear.svg?raw';
-import morphSvg from '../../css/images/morphology-gray-dark.svg?raw';
-import bibleApiLogoSvg from '../../public/img/bible-api_logo.svg?raw';
-import bibleBrainLogoSvg from '../../public/img/bible-brain_logo.svg?raw';
+import { getText, loadTexts } from '../texts/TextLoader.js';
+import {
+  buildFilteredIndices, buildGroupedData, buildPinnedTop, processTexts
+} from './TextChooserData.js';
+import { renderNow, renderVisible, ROW_HEIGHT, scheduleRender } from './TextChooserRows.js';
 
 const hasTouch = 'ontouchend' in document;
-const ROW_HEIGHT = 32; // Fixed row height for virtual scrolling
-const BUFFER_ROWS = 5; // Extra rows to render above/below viewport
+const RECENTLY_USED_KEY = 'texts-recently-used';
 
-const hasAudioContent = (text) =>
-  !!(text.hasAudio || text.audioDirectory || text.fcbh_audio_ot || text.fcbh_audio_nt);
+class TextChooserController {
+  constructor() {
+    this.textType = null;
+    this.target = null;
+    this.selectedTextInfo = null;
+    this.listData = null;
+    this.langFilter = null;
+    this.processedData = [];
+    this.filteredIndices = [];
+    this.scrollTop = 0;
+    this.filterText = '';
+    this.filterTokens = [];
+    this.rafId = null;
+    this.recentlyUsed = AppSettings.getValue(RECENTLY_USED_KEY, { recent: [] });
+    this.groupedCache = null;
+    this.groupedCacheKey = null;
+    this.processedDataKey = null;
+    this.cachedChooserWidth = 320;
+    this.buildUi();
+    mixinEventEmitter(this);
+    this.attachEvents();
+  }
 
-// Pre-parse SVG icons once; cloneNode per row instead of innerHTML parsing.
-const lemmaTemplate = (() => {
-  const span = document.createElement('span');
-  span.className = 'text-chooser-lemma';
-  span.innerHTML = morphSvg;
-  return span;
-})();
-const audioTemplate = (() => {
-  const span = document.createElement('span');
-  span.className = 'text-chooser-audio';
-  span.innerHTML = audioEarSvg;
-  return span;
-})();
-// API.Bible attribution badge, shown at the right of each API.Bible row.
-const apiBibleTemplate = (() => {
-  const span = document.createElement('span');
-  span.className = 'text-chooser-provider-apibible';
-  span.title = 'Powered by API.Bible';
-  span.innerHTML = bibleApiLogoSvg;
-  return span;
-})();
-const bibleBrainTemplate = (() => {
-  const span = document.createElement('span');
-  span.className = 'text-chooser-provider-biblebrain';
-  span.title = 'Powered by Bible Brain';
-  span.innerHTML = bibleBrainLogoSvg;
-  return span;
-})();
+  buildUi() {
+    const filter = elem('input', {
+      type: 'text', className: 'text-chooser-filter-text i18n',
+      dataset: { i18n: '[placeholder]windows.bible.filter' }
+    });
+    const scrollContent = elem('div', { className: 'text-chooser-scroll-content' });
+    const main = elem('div', { className: 'text-chooser-main' }, scrollContent);
+    const chooser = elem('div', {
+      className: 'text-chooser nav-drop-list', popover: 'auto'
+    }, elem('div', { className: 'text-chooser-header' }, filter), main);
+    document.body.appendChild(chooser);
+    this.refs = { filter, scrollContent, main, chooser };
+  }
+
+  attachEvents() {
+    const { filter, main, scrollContent, chooser } = this.refs;
+    filter.addEventListener('input', () => this.handleFilterInput());
+    filter.addEventListener('keydown', (event) => this.handleFilterKeydown(event));
+    main.addEventListener('scroll', () => this.handleScroll(), { passive: true });
+    scrollContent.addEventListener('click', (event) => {
+      const textid = event.target.closest('.text-chooser-row')?.getAttribute('data-id');
+      if (textid) this.selectText(textid);
+    });
+    chooser.addEventListener('toggle', (event) => this.handleToggle(event));
+    document.addEventListener('texts:provider-disabled', () => this.refresh());
+  }
+
+  clearFilter() {
+    this.refs.filter.value = '';
+    this.filterText = '';
+    this.filterTokens = [];
+    this.applyFilter();
+  }
+
+  handleFilterKeydown(event) {
+    if (event.key !== 'Enter') return;
+    const visible = this.filteredIndices.filter((index) => this.processedData[index].type === 'text');
+    if (visible.length === 1) {
+      this.selectText(this.processedData[visible[0]].data.id);
+      this.clearFilter();
+    }
+  }
+
+  handleFilterInput() {
+    const value = this.refs.filter.value.toLowerCase().trim();
+    if (value === this.filterText) return;
+    this.filterText = value;
+    this.filterTokens = value.split(/\s+/).filter(Boolean);
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    this.filteredIndices = this.filterText
+      ? this.buildFilteredIndices()
+      : this.processedData.map((_, index) => index);
+    this.updateScrollHeight();
+    this.scheduleRender();
+  }
+
+  buildFilteredIndices() {
+    return buildFilteredIndices(this);
+  }
+
+  handleScroll() {
+    this.scrollTop = this.refs.main.scrollTop;
+    this.scheduleRender();
+  }
+
+  scheduleRender() {
+    scheduleRender(this);
+  }
+
+  renderNow() {
+    renderNow(this);
+  }
+
+  renderVisible() {
+    renderVisible(this);
+  }
+
+  updateScrollHeight() {
+    this.refs.scrollContent.style.height = `${this.filteredIndices.length * ROW_HEIGHT}px`;
+  }
+
+  selectText(textid) {
+    this.storeRecentlyUsed(textid);
+    this.refs.chooser.hidePopover();
+    const clickTarget = this.target;
+    getText(textid, (data) => {
+      this.selectedTextInfo = data;
+      this.trigger('change', {
+        type: 'change', target: null,
+        data: { textInfo: data, textid, target: clickTarget }
+      });
+    });
+  }
+
+  storeRecentlyUsed(textInfo) {
+    if (this.textType !== 'bible') return;
+    const textid = typeof textInfo === 'string' ? textInfo : textInfo?.id;
+    if (!textid) return;
+    this.recentlyUsed.recent = this.recentlyUsed.recent.filter((id) => id !== textid);
+    this.recentlyUsed.recent.unshift(textid);
+    this.recentlyUsed.recent.splice(5);
+    AppSettings.setValue(RECENTLY_USED_KEY, this.recentlyUsed);
+  }
+
+  buildGroupedData() {
+    return buildGroupedData(this);
+  }
+
+  buildPinnedTop() {
+    return buildPinnedTop(this);
+  }
+
+  processTexts(data) {
+    processTexts(this, data);
+  }
+
+  setTarget(_container, target, textType, langFilter = null) {
+    const rerender = textType !== this.textType || langFilter !== this.langFilter;
+    this.target = target;
+    this.textType = textType;
+    this.langFilter = langFilter;
+    if (rerender && this.listData) this.processTexts(this.listData);
+  }
+
+  getTarget() {
+    return this.target;
+  }
+
+  getTextInfo() {
+    return this.selectedTextInfo;
+  }
+
+  setTextInfo(textInfo) {
+    this.selectedTextInfo = textInfo;
+    if (textInfo) this.storeRecentlyUsed(textInfo);
+    this.scheduleRender();
+  }
+
+  refresh() {
+    this.listData = null;
+    this.groupedCache = null;
+    this.groupedCacheKey = null;
+    this.processedData = [];
+    this.processedDataKey = null;
+    if (this.refs.chooser.matches(':popover-open')) {
+      loadTexts((data) => {
+        this.listData = data;
+        this.processTexts(data);
+        this.renderNow();
+      });
+    }
+  }
+
+  position() {
+    if (!this.target) return;
+    if (this.refs.chooser.offsetWidth) this.cachedChooserWidth = this.refs.chooser.offsetWidth;
+    const targetOffset = offset(this.target);
+    let left = targetOffset.left;
+    if (window.innerWidth < left + this.cachedChooserWidth) {
+      left = Math.max(0, window.innerWidth - this.cachedChooserWidth);
+    }
+    this.refs.chooser.style.top = `${targetOffset.top + this.target.offsetHeight + 10}px`;
+    this.refs.chooser.style.left = `${left}px`;
+  }
+
+  handleToggle(event) {
+    if (event.newState !== 'open') {
+      this.trigger('offclick', { type: 'offclick' });
+      return;
+    }
+    this.position();
+    if (!this.listData) {
+      this.refs.main.classList.add('loading-indicator');
+      loadTexts((data) => {
+        this.listData = data;
+        this.refs.main.classList.remove('loading-indicator');
+        this.processTexts(data);
+      });
+    } else {
+      this.recentlyUsed = AppSettings.getValue(RECENTLY_USED_KEY, { recent: [] });
+      this.processTexts(this.listData);
+    }
+    if (this.refs.filter.value) this.clearFilter();
+    this.refs.main.scrollTop = 0;
+    this.scrollTop = 0;
+    if (this.listData) this.renderNow();
+    if (!hasTouch) this.refs.filter.focus();
+  }
+
+  show() {
+    this.position();
+    this.refs.chooser.showPopover();
+  }
+
+  hide() {
+    this.refs.chooser.hidePopover();
+  }
+
+  toggle() {
+    if (!this.refs.chooser.matches(':popover-open')) this.position();
+    this.refs.chooser.togglePopover();
+  }
+
+  isVisible() {
+    return this.refs.chooser.matches(':popover-open');
+  }
+
+  node() {
+    return this.refs.chooser;
+  }
+
+  size() {}
+}
 
 export function TextChooser() {
-  let textType = null;
-  let target = null;
-  let selectedTextInfo = null;
-  let listData = null;
-  let langFilter = null;
-
-  let processedData = []; // Flat array of {type: 'header'|'text', data, searchText, langHeader}
-  let filteredIndices = []; // Indices into processedData that match filter
-  let scrollTop = 0;
-  let viewportHeight = 0;
-  let filterText = '';
-  let filterTokens = []; // filterText split into words; each must match (substring or fuzzy)
-  let rafId = null;
-
-  const recentlyUsedKey = 'texts-recently-used';
-  let recentlyUsed = AppSettings.getValue(recentlyUsedKey, { recent: [] });
-
-  const filter = elem('input', {
-    type: 'text',
-    className: 'text-chooser-filter-text i18n',
-    dataset: { i18n: '[placeholder]windows.bible.filter' }
-  });
-  const header = elem('div', { className: 'text-chooser-header' }, filter);
-  const scrollContent = elem('div', { className: 'text-chooser-scroll-content' });
-  const main = elem('div', { className: 'text-chooser-main' }, scrollContent);
-  const textChooser = elem('div', { className: 'text-chooser nav-drop-list', popover: 'auto' }, header, main);
-
-  document.body.appendChild(textChooser);
-
-  filter.addEventListener('input', handleFilterInput);
-  filter.addEventListener('keydown', handleFilterKeydown);
-  main.addEventListener('scroll', handleScroll, { passive: true });
-
-  // When a provider is disabled at runtime (e.g. API.Bible hits its monthly
-  // limit) it removes its texts and fires this event so an open chooser drops them.
-  document.addEventListener('texts:provider-disabled', refresh);
-
-  function clearFilter() {
-    filter.value = '';
-    filterText = '';
-    filterTokens = [];
-    applyFilter();
-  }
-
-  function handleFilterKeydown(e) {
-    if (e.key === 'Enter') {
-      const visibleTextRows = filteredIndices.filter(i => processedData[i].type === 'text');
-      if (visibleTextRows.length === 1) {
-        const item = processedData[visibleTextRows[0]];
-        selectText(item.data.id);
-        clearFilter();
-      }
-    }
-  }
-
-  function handleFilterInput() {
-    const newFilter = filter.value.toLowerCase().trim();
-    if (newFilter === filterText) return;
-
-    filterText = newFilter;
-    filterTokens = filterText.split(/\s+/).filter(Boolean);
-    applyFilter();
-  }
-
-  function applyFilter() {
-    if (filterText === '') {
-      filteredIndices = processedData.map((_, i) => i);
-    } else {
-      filteredIndices = buildFilteredIndices();
-    }
-
-    updateScrollHeight();
-    scheduleRender();
-  }
-
-  function buildFilteredIndices() {
-    const matchingHeaders = new Set();
-    const matchingTextIndices = new Set();
-
-    // First pass: find matching texts and their headers. Every filter word
-    // must match somewhere, as a substring or fuzzily (typo-tolerant).
-    for (let i = 0; i < processedData.length; i++) {
-      const item = processedData[i];
-      if (item.type !== 'text') continue;
-      if (filterTokens.every(token => fuzzyIncludes(item.searchText, item.searchWords, token))) {
-        matchingTextIndices.add(i);
-        matchingHeaders.add(item.langHeader);
-      }
-    }
-
-    // Second pass: collect headers and texts in order
-    const result = [];
-    for (let i = 0; i < processedData.length; i++) {
-      const item = processedData[i];
-      const isMatchingHeader = (item.type === 'header' || item.type === 'section-header') && matchingHeaders.has(item.data);
-      const isMatchingText = item.type === 'text' && matchingTextIndices.has(i);
-
-      if (isMatchingHeader || isMatchingText) {
-        result.push(i);
-      }
-    }
-
-    return result;
-  }
-
-  function handleScroll() {
-    scrollTop = main.scrollTop;
-    scheduleRender();
-  }
-
-  function scheduleRender() {
-    if (rafId) return;
-    rafId = requestAnimationFrame(() => {
-      rafId = null;
-      renderVisible();
-    });
-  }
-
-  function renderNow() {
-    if (rafId) {
-      cancelAnimationFrame(rafId);
-      rafId = null;
-    }
-    renderVisible();
-  }
-
-  function updateScrollHeight() {
-    const totalHeight = filteredIndices.length * ROW_HEIGHT;
-    scrollContent.style.height = `${totalHeight}px`;
-  }
-
-  function renderVisible() {
-    if (!processedData.length) return;
-
-    viewportHeight = main.clientHeight;
-    const startIndex = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER_ROWS);
-    const endIndex = Math.min(
-      filteredIndices.length,
-      Math.ceil((scrollTop + viewportHeight) / ROW_HEIGHT) + BUFFER_ROWS
-    );
-
-    const fragment = document.createDocumentFragment();
-
-    for (let i = startIndex; i < endIndex; i++) {
-      const dataIndex = filteredIndices[i];
-      const item = processedData[dataIndex];
-      const top = i * ROW_HEIGHT;
-
-      fragment.appendChild(createRowElement(item, top));
-    }
-
-    scrollContent.replaceChildren(fragment);
-  }
-
-  // Wrap the parts of `str` the current filter matched in <mark> elements.
-  // Returns the plain string when there is no filter or no match.
-  function highlighted(str) {
-    if (!filterTokens.length || !str) return str;
-    const ranges = matchRanges(str, filterTokens);
-    if (!ranges.length) return str;
-
-    const parts = [];
-    let pos = 0;
-    for (const [start, end] of ranges) {
-      if (start > pos) parts.push(str.slice(pos, start));
-      parts.push(elem('mark', { className: 'text-chooser-match' }, str.slice(start, end)));
-      pos = end;
-    }
-    if (pos < str.length) parts.push(str.slice(pos));
-    return parts;
-  }
-
-  function appendLangCode(row, item) {
-    if (item.langCode) {
-      row.appendChild(elem('span', { className: 'text-chooser-lang-code' }, item.langCode));
-    }
-  }
-
-  function appendBadges(row, text) {
-    if (text.hasLemma) {
-      row.appendChild(lemmaTemplate.cloneNode(true));
-    }
-    if (hasAudioContent(text)) {
-      row.appendChild(audioTemplate.cloneNode(true));
-    }
-    if (text.providerName === 'apibible') {
-      row.appendChild(apiBibleTemplate.cloneNode(true));
-    }
-    if (text.providerName === 'biblebrain') {
-      row.appendChild(bibleBrainTemplate.cloneNode(true));
-    }
-  }
-
-  function buildTextRow(row, item) {
-    const text = item.data;
-    const isSelected = selectedTextInfo && selectedTextInfo.id === text.id;
-
-    row.className = 'text-chooser-row' + (isSelected ? ' selected' : '');
-    row.dataset.id = text.id;
-
-    row.appendChild(elem('span', { className: 'text-chooser-abbr' }, highlighted(displayAbbr(text))));
-    row.appendChild(elem('span', { className: 'text-chooser-name' }, highlighted(text.name)));
-
-    appendBadges(row, text);
-  }
-
-  function createRowElement(item, top) {
-    const row = elem('div', {
-      style: { position: 'absolute', top: `${top}px`, left: '0', right: '0', height: `${ROW_HEIGHT}px` }
-    });
-
-    if (item.type === 'section-header') {
-      row.className = 'text-chooser-row-header text-chooser-section-header';
-      row.appendChild(elem('span', { className: 'name' }, item.data));
-      appendLangCode(row, item);
-    } else if (item.type === 'header') {
-      row.className = 'text-chooser-row-header';
-      row.dataset.langName = item.data;
-      row.appendChild(elem('span', { className: 'name' }, highlighted(item.data)));
-      appendLangCode(row, item);
-    } else {
-      buildTextRow(row, item);
-    }
-
-    return row;
-  }
-
-  scrollContent.addEventListener('click', (e) => {
-    const target = e.target.closest('.text-chooser-row');
-    if (target) {
-      const textid = target.getAttribute('data-id');
-      if (textid) {
-        selectText(textid);
-      }
-    }
-  });
-
-  function selectText(textid) {
-    storeRecentlyUsed(textid);
-    textChooser.hidePopover();
-
-    const clickTarget = target;
-    getText(textid, function(data) {
-      selectedTextInfo = data;
-      // textInfo is null when the provider fails to load the text's details;
-      // textid always identifies what was clicked.
-      ext.trigger('change', { type: 'change', target: null, data: { textInfo: selectedTextInfo, textid, target: clickTarget } });
-    });
-  }
-
-  function storeRecentlyUsed(textInfo) {
-    if (textType !== 'bible') return;
-
-    const textid = (typeof textInfo === 'string') ? textInfo : textInfo?.id;
-    if (!textid) return;
-    recentlyUsed.recent = recentlyUsed.recent.filter(t => t !== textid);
-    recentlyUsed.recent.unshift(textid);
-    while (recentlyUsed.recent.length > 5) {
-      recentlyUsed.recent.pop();
-    }
-
-    AppSettings.setValue(recentlyUsedKey, recentlyUsed);
-  }
-
-  let groupedCache = null;
-  let groupedCacheKey = null;
-  // Cache of the full processedData. Skips even the cheap concat if nothing relevant changed.
-  let processedDataKey = null;
-
-  // searchText for substring matches; searchWords for fuzzy (per-word) matches.
-  function buildSearchFields(text) {
-    const searchText = [text.name, text.abbr, text.langName || '', text.langNameEnglish || '']
-      .join(' ').toLowerCase();
-    return { searchText, searchWords: searchText.split(/\s+/).filter(Boolean) };
-  }
-
-  function buildGroupedData() {
-    const key = textType + '|' + (langFilter || '') + '|' + (listData ? listData.length : 0);
-    if (groupedCacheKey === key && groupedCache) return groupedCache;
-
-    const arrayOfTexts = listData.filter(t => {
-      if (langFilter && t.lang3 !== langFilter && t.lang !== langFilter) return false;
-      if (textType === 'audio') {
-        return hasAudioContent(t);
-      }
-      if (t.hasText === false) return false;
-      const thisTextType = t.type === undefined ? 'bible' : t.type;
-      return thisTextType === textType;
-    });
-
-    const langMap = new Map();
-    for (const text of arrayOfTexts) {
-      const langKey = text.langNameEnglish || text.langName || '';
-      if (!langMap.has(langKey)) {
-        langMap.set(langKey, []);
-      }
-      langMap.get(langKey).push(text);
-    }
-
-    const languages = Array.from(langMap.keys()).sort();
-    const result = [];
-
-    for (const langName of languages) {
-      const textsInLang = langMap.get(langName);
-      textsInLang.sort((a, b) => a.name.localeCompare(b.name));
-
-      const displayName = textsInLang[0].langNameEnglish || textsInLang[0].langName;
-
-      result.push({ type: 'header', data: displayName, langCode: textsInLang[0].lang || '' });
-
-      for (const text of textsInLang) {
-        result.push({
-          type: 'text',
-          data: text,
-          ...buildSearchFields(text),
-          langHeader: displayName
-        });
-      }
-    }
-
-    groupedCacheKey = key;
-    groupedCache = result;
-    // Side data for cheap pinned-top lookups
-    groupedCache.filteredArray = arrayOfTexts;
-    return result;
-  }
-
-  function buildPinnedTop() {
-    if (textType !== 'bible') return [];
-
-    const grouped = groupedCache;
-    const arrayOfTexts = grouped ? grouped.filteredArray : [];
-    const result = [];
-
-    if (recentlyUsed.recent.length > 0) {
-      const textMap = new Map(arrayOfTexts.map(t => [t.id, t]));
-      const recentTexts = recentlyUsed.recent
-        .map(id => textMap.get(id))
-        .filter(Boolean);
-
-      if (recentTexts.length > 0) {
-        const recentHeader = i18nT('windows.bible.recentlyused') || 'Recently Used';
-        result.push({ type: 'section-header', data: recentHeader, sectionType: 'recent' });
-        for (const text of recentTexts) {
-          result.push({
-            type: 'text',
-            data: text,
-            ...buildSearchFields(text),
-            langHeader: recentHeader
-          });
-        }
-      }
-    }
-
-    if (langFilter) return result;
-
-    const currentLang = selectedTextInfo?.langNameEnglish
-      || getConfig().pinnedLanguage
-      || 'English';
-    const currentLangTexts = arrayOfTexts.filter(
-      t => (t.langNameEnglish || t.langName || '') === currentLang
-    );
-    if (currentLangTexts.length > 0) {
-      result.push({
-        type: 'section-header',
-        data: currentLang,
-        sectionType: 'current-language',
-        langCode: currentLangTexts[0].lang || ''
-      });
-      currentLangTexts.sort((a, b) => a.name.localeCompare(b.name));
-      for (const text of currentLangTexts) {
-        result.push({
-          type: 'text',
-          data: text,
-          ...buildSearchFields(text),
-          langHeader: currentLang
-        });
-      }
-    }
-
-    return result;
-  }
-
-  function processTexts(data) {
-    if (!data) return;
-
-    const currentLang = selectedTextInfo?.langNameEnglish
-      || getConfig().pinnedLanguage
-      || 'English';
-    const key = textType + '|' + (langFilter || '') + '|' + listData.length + '|' + recentlyUsed.recent.join(',') + '|' + currentLang;
-    if (processedDataKey === key && processedData.length > 0) return;
-    processedDataKey = key;
-
-    const grouped = buildGroupedData();
-    const pinned = buildPinnedTop();
-    processedData = pinned.length ? pinned.concat(grouped) : grouped.slice();
-
-    filteredIndices = processedData.map((_, i) => i);
-    updateScrollHeight();
-    scheduleRender();
-  }
-
-  function setTarget(_container, _target, _textType, _langFilter = null) {
-    const needsRerender = _textType !== textType || _langFilter !== langFilter;
-    target = _target;
-    textType = _textType;
-    langFilter = _langFilter;
-
-    if (needsRerender && listData) {
-      processTexts(listData);
-    }
-  }
-
-  function setTextInfo(text) {
-    selectedTextInfo = text;
-    if (selectedTextInfo != null) {
-      storeRecentlyUsed(selectedTextInfo);
-    }
-    scheduleRender();
-  }
-
-  // Rebuild from the current manifest (e.g. after a provider is disabled),
-  // clearing caches so removed texts don't linger.
-  function refresh() {
-    listData = null;
-    groupedCache = null;
-    groupedCacheKey = null;
-    processedData = [];
-    processedDataKey = null;
-
-    if (textChooser.matches(':popover-open')) {
-      loadTexts((data) => {
-        listData = data;
-        processTexts(listData);
-        renderNow();
-      });
-    }
-  }
-
-  // Cached so we can position the popover *before* showPopover() runs;
-  // offsetWidth is 0 while the popover is closed (display: none).
-  // Default matches the width set in textchooser.css.
-  let cachedChooserWidth = 320;
-
-  function position() {
-    if (target == null) return;
-
-    if (textChooser.offsetWidth) {
-      cachedChooserWidth = textChooser.offsetWidth;
-    }
-
-    const targetOffset = offset(target);
-    const targetOuterHeight = target.offsetHeight;
-    const winWidth = window.innerWidth;
-
-    let top = targetOffset.top + targetOuterHeight + 10;
-    let left = targetOffset.left;
-
-    if (winWidth < left + cachedChooserWidth) {
-      left = winWidth - cachedChooserWidth;
-      if (left < 0) left = 0;
-    }
-
-    textChooser.style.top = top + 'px';
-    textChooser.style.left = left + 'px';
-  }
-
-  textChooser.addEventListener('toggle', (e) => {
-    if (e.newState === 'open') {
-      position();
-
-      if (!listData) {
-        main.classList.add('loading-indicator');
-        loadTexts(function(data) {
-          listData = data;
-          main.classList.remove('loading-indicator');
-          processTexts(listData);
-        });
-      }
-
-      if (listData) {
-        recentlyUsed = AppSettings.getValue(recentlyUsedKey, { recent: [] });
-        processTexts(listData);
-      }
-
-      if (filter.value !== '') {
-        clearFilter();
-      }
-
-      // Reset scroll on reopen so the new column's content isn't shown
-      // mid-scroll from the previous open.
-      main.scrollTop = 0;
-      scrollTop = 0;
-
-      // Render synchronously before the browser paints the popover; otherwise
-      // the popover briefly shows stale rows from the previous open.
-      if (listData) renderNow();
-
-      if (!hasTouch) {
-        filter.focus();
-      }
-    } else {
-      ext.trigger('offclick', { type: 'offclick' });
-    }
-  });
-
-  let ext = {
-    setTarget,
-    getTarget: () => target,
-    getTextInfo: () => selectedTextInfo,
-    setTextInfo,
-    // Position before showing so the popover paints at the right spot on the
-    // first frame; otherwise the toggle event (which fires post-paint) leaves
-    // a flicker at the prior open's position.
-    show: () => {
-      position();
-      textChooser.showPopover();
-    },
-    hide: () => textChooser.hidePopover(),
-    toggle: () => {
-      if (!textChooser.matches(':popover-open')) {
-        position();
-      }
-      textChooser.togglePopover();
-    },
-    isVisible: () => textChooser.matches(':popover-open'),
-    node: () => textChooser,
-    refresh,
-    size: () => {} // No-op, CSS handles sizing
-  };
-
-  mixinEventEmitter(ext);
-
-  return ext;
+  return new TextChooserController();
 }
 
 let globalTextChooser = null;
 
 export function getGlobalTextChooser() {
-  if (!globalTextChooser) {
-    globalTextChooser = TextChooser();
-  }
+  globalTextChooser ||= TextChooser();
   return globalTextChooser;
 }

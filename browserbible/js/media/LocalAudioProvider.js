@@ -8,22 +8,15 @@ export class LocalAudioProvider extends BaseAudioProvider {
 
   async getAudioInfo(textInfo) {
     const config = getConfig();
-    if (!config.localAudioEnabled) return null;
+    if (!config.localAudioEnabled || textInfo.audioDirectory === '') return null;
 
-    let checkDirectory = textInfo.id;
-
-    if (textInfo.audioDirectory !== undefined) {
-      if (textInfo.audioDirectory === '') {
-        return null;
-      }
-      checkDirectory = textInfo.audioDirectory;
-    }
+    const checkDirectory = textInfo.audioDirectory !== undefined
+      ? textInfo.audioDirectory
+      : textInfo.id;
 
     try {
       const response = await fetch(`${config.baseContentUrl}content/audio/${checkDirectory}/info.json`);
-      if (!response.ok) return null;
-
-      const audioInfo = await response.json();
+      const audioInfo = response.ok ? await response.json() : undefined;
       if (audioInfo === undefined) return null;
 
       audioInfo.type = 'local';

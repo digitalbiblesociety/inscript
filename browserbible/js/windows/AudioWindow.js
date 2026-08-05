@@ -12,6 +12,13 @@ const hasTouch = 'ontouchend' in document;
 
 const getTextAsync = (textId) => AsyncHelpers.promisify(getText, textId);
 
+const hasAudioSource = (textInfo) => {
+  const hasLocalAudio = textInfo.hasAudio || textInfo.audioDirectory;
+  const hasBibleBrainAudio = textInfo.fcbh_audio_ot || textInfo.fcbh_audio_nt ||
+    textInfo.biblebrain?.audioFilesets?.length > 0;
+  return hasLocalAudio || hasBibleBrainAudio || hasLinkedAudio(textInfo);
+};
+
 class AudioWindowComponent extends BaseWindow {
   constructor() {
     super();
@@ -254,10 +261,7 @@ class AudioWindowComponent extends BaseWindow {
    */
   _findBestAudioBible(activeBibleTextid) {
     const allTexts = getTextInfoData() || [];
-    const audioTexts = allTexts.filter(t =>
-      t.hasAudio || t.audioDirectory || t.fcbh_audio_ot || t.fcbh_audio_nt ||
-      t.biblebrain?.audioFilesets?.length > 0 || hasLinkedAudio(t)
-    );
+    const audioTexts = allTexts.filter(hasAudioSource);
 
     if (audioTexts.length === 0) return null;
 

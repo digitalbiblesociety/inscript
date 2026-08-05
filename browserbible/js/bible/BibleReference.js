@@ -15,7 +15,7 @@ const bookNameIndex = Object.entries(BOOK_DATA)
 export function Reference(...args) {
   if (typeof args[0] === 'string' && typeof args[1] === 'number') {
     const [bookid, chapter1, verse1 = -1, chapter2 = -1, verse2 = -1, language = 'eng'] = args;
-    return createRef(bookid, chapter1, verse1, chapter2, verse2, language);
+    return createRef({ bookid, chapter1, verse1, chapter2, verse2, language });
   }
 
   if (args.length > 2 || typeof args[0] !== 'string' || typeof args[1] === 'number') return null;
@@ -25,7 +25,7 @@ export function Reference(...args) {
 
   if (shortCodeRegex.test(input)) {
     const { bookid, chapter1, verse1 } = parseShortCode(input);
-    return createRef(bookid, chapter1, verse1, -1, -1, language);
+    return createRef({ bookid, chapter1, verse1, chapter2: -1, verse2: -1, language });
   }
 
   const match = findBook(input.toLowerCase());
@@ -35,7 +35,7 @@ export function Reference(...args) {
   const parsed = parseChapterVerse(remainder);
   const clamped = normalizeAndClamp(match.bookid, parsed.chapter1, parsed.verse1, parsed.chapter2, parsed.verse2);
 
-  return createRef(match.bookid, clamped.chapter1, clamped.verse1, clamped.chapter2, clamped.verse2, language);
+  return createRef({ bookid: match.bookid, ...clamped, language });
 }
 
 function parseShortCode(input) {
@@ -98,7 +98,7 @@ function normalizeAndClamp(bookid, c1, v1, c2, v2) {
   return { chapter1: c1, verse1: v1, chapter2: c2, verse2: v2 };
 }
 
-function createRef(bookid, chapter1, verse1, chapter2, verse2, language) {
+function createRef({ bookid, chapter1, verse1, chapter2, verse2, language }) {
   return {
     bookid, chapter1, verse1, chapter2, verse2, language,
     bookList: DEFAULT_BIBLE,

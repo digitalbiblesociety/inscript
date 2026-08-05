@@ -4,8 +4,8 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 
 import { MAP_BOUNDS, SVG_WIDTH, SVG_HEIGHT, PADDING } from '../browserbible/js/windows/MapWindow/constants.js';
-import { geoToSvg } from '../browserbible/js/windows/MapWindow/geo-utils.js';
 import { buildRelief } from './relief.mjs';
+import { polygonLayerPath, riverLayerPath } from './basemap-paths.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = join(__dirname, '..');
@@ -23,16 +23,6 @@ const LAYERS = {
   rivers: 'ne_10m_rivers_lake_centerlines'
 };
 
-const BBOX = {
-  minLon: MAP_BOUNDS.minLon,
-  maxLon: MAP_BOUNDS.maxLon,
-  minLat: MAP_BOUNDS.minLat,
-  maxLat: MAP_BOUNDS.maxLat
-};
-const SIMPLIFY_EPS = 0.008;
-const RIVER_EPS = 0.025;
-const RIVER_MAX_SCALERANK = 6;
-
 async function loadLayer(key) {
   await mkdir(CACHE_DIR, { recursive: true });
   const file = join(CACHE_DIR, `${LAYERS[key]}.json`);
@@ -46,142 +36,6 @@ async function loadLayer(key) {
     await writeFile(file, await res.text());
   }
   return JSON.parse(await readFile(file, 'utf8'));
-}
-
-const interpX = (a, b, cx) => [cx, a[1] + ((cx - a[0]) / (b[0] - a[0])) * (b[1] - a[1])];
-const interpY = (a, b, cy) => [a[0] + ((cy - a[1]) / (b[1] - a[1])) * (b[0] - a[0]), cy];
-
-function clipEdge(poly, inside, intersect) {
-  const out = [];
-  for (let i = 0; i < poly.length; i++) {
-    const cur = poly[i];
-    const prev = poly[(i + poly.length - 1) % poly.length];
-    const curIn = inside(cur);
-    const prevIn = inside(prev);
-    if (curIn) {
-      if (!prevIn) out.push(intersect(prev, cur));
-      out.push(cur);
-    } else if (prevIn) {
-      out.push(intersect(prev, cur));
-    }
-  }
-  return out;
-}
-
-function clipRing(ring) {
-  let p = ring;
-  p = clipEdge(p, c => c[0] >= BBOX.minLon, (a, b) => interpX(a, b, BBOX.minLon));
-  if (!p.length) return p;
-  p = clipEdge(p, c => c[0] <= BBOX.maxLon, (a, b) => interpX(a, b, BBOX.maxLon));
-  if (!p.length) return p;
-  p = clipEdge(p, c => c[1] >= BBOX.minLat, (a, b) => interpY(a, b, BBOX.minLat));
-  if (!p.length) return p;
-  p = clipEdge(p, c => c[1] <= BBOX.maxLat, (a, b) => interpY(a, b, BBOX.maxLat));
-  return p;
-}
-
-function clipSegment(x0, y0, x1, y1) {
-  let t0 = 0, t1 = 1;
-  const dx = x1 - x0, dy = y1 - y0;
-  const p = [-dx, dx, -dy, dy];
-  const q = [x0 - BBOX.minLon, BBOX.maxLon - x0, y0 - BBOX.minLat, BBOX.maxLat - y0];
-  for (let i = 0; i < 4; i++) {
-    if (p[i] === 0) {
-      if (q[i] < 0) return null;
-    } else {
-      const r = q[i] / p[i];
-      if (p[i] < 0) { if (r > t1) return null; if (r > t0) t0 = r; }
-      else { if (r < t0) return null; if (r < t1) t1 = r; }
-    }
-  }
-  return [[x0 + t0 * dx, y0 + t0 * dy], [x0 + t1 * dx, y0 + t1 * dy]];
-}
-
-function simplify(points, eps) {
-  if (points.length < 3) return points;
-  const sqEps = eps * eps;
-  const keep = new Uint8Array(points.length);
-  keep[0] = keep[points.length - 1] = 1;
-  const stack = [[0, points.length - 1]];
-  while (stack.length) {
-    const [s, e] = stack.pop();
-    let maxD = 0, idx = -1;
-    const [ax, ay] = points[s];
-    const [bx, by] = points[e];
-    const dx = bx - ax, dy = by - ay;
-    const len = dx * dx + dy * dy || 1e-12;
-    for (let i = s + 1; i < e; i++) {
-      const [px, py] = points[i];
-      const t = ((px - ax) * dx + (py - ay) * dy) / len;
-      const cx = ax + t * dx, cy = ay + t * dy;
-      const d = (px - cx) ** 2 + (py - cy) ** 2;
-      if (d > maxD) { maxD = d; idx = i; }
-    }
-    if (maxD > sqEps && idx !== -1) {
-      keep[idx] = 1;
-      stack.push([s, idx], [idx, e]);
-    }
-  }
-  return points.filter((_, i) => keep[i]);
-}
-
-const fmt = (n) => (Math.round(n * 10) / 10).toString();
-
-function ringToPath(ring) {
-  const proj = ring.map(([lon, lat]) => geoToSvg(lon, lat));
-  let d = `M${fmt(proj[0].x)},${fmt(proj[0].y)}`;
-  for (let i = 1; i < proj.length; i++) d += `L${fmt(proj[i].x)},${fmt(proj[i].y)}`;
-  return d + 'Z';
-}
-
-function* eachPolygon(geometry) {
-  if (!geometry) return;
-  if (geometry.type === 'Polygon') yield geometry.coordinates;
-  else if (geometry.type === 'MultiPolygon') yield* geometry.coordinates;
-}
-function* eachLine(geometry) {
-  if (!geometry) return;
-  if (geometry.type === 'LineString') yield geometry.coordinates;
-  else if (geometry.type === 'MultiLineString') yield* geometry.coordinates;
-}
-
-function polygonLayerPath(fc) {
-  let d = '';
-  let rings = 0;
-  for (const feature of fc.features) {
-    for (const polygon of eachPolygon(feature.geometry)) {
-      for (const ring of polygon) {
-        const clipped = clipRing(ring);
-        if (clipped.length < 4) continue;
-        const simplified = simplify(clipped, SIMPLIFY_EPS);
-        if (simplified.length < 4) continue;
-        d += ringToPath(simplified);
-        rings++;
-      }
-    }
-  }
-  return { d, rings };
-}
-
-function riverLayerPath(fc) {
-  let d = '';
-  let segs = 0;
-  for (const feature of fc.features) {
-    const rank = feature.properties?.scalerank;
-    if (typeof rank === 'number' && rank > RIVER_MAX_SCALERANK) continue;
-    for (const line of eachLine(feature.geometry)) {
-      const simplified = simplify(line, RIVER_EPS);
-      for (let i = 0; i < simplified.length - 1; i++) {
-        const seg = clipSegment(simplified[i][0], simplified[i][1], simplified[i + 1][0], simplified[i + 1][1]);
-        if (!seg) continue;
-        const a = geoToSvg(seg[0][0], seg[0][1]);
-        const b = geoToSvg(seg[1][0], seg[1][1]);
-        d += `M${fmt(a.x)},${fmt(a.y)}L${fmt(b.x)},${fmt(b.y)}`;
-        segs++;
-      }
-    }
-  }
-  return { d, segs };
 }
 
 async function main() {

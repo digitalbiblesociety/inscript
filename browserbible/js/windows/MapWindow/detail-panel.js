@@ -93,21 +93,14 @@ function renderVerseList(verseItems) {
   }).join('');
 }
 
-export function hydrateVerseTexts(containerEl, textid, loadSectionFn = loadSection) {
-  if (!containerEl) return;
-
-  containerEl._hydrateObserver?.disconnect();
-  containerEl._hydrateObserver = null;
-
-  const pending = containerEl.querySelectorAll('.verse-text-pending');
-  if (!pending.length) return;
-
-  const resolvedTextid = textid
+function resolveTextid(textid) {
+  return textid
     || document.querySelector('.BibleWindow .section[data-textid]')?.getAttribute('data-textid')
     || getConfig().newBibleWindowVersion;
-  if (!resolvedTextid) return;
+}
 
-  // Group pending rows by section so each section is fetched once
+/** Group pending rows by section so each section is fetched once. */
+function groupPendingBySection(pending) {
   const bySection = new Map();
   for (const span of pending) {
     const row = span.closest('.verse');
@@ -116,40 +109,39 @@ export function hydrateVerseTexts(containerEl, textid, loadSectionFn = loadSecti
     if (!bySection.has(sectionid)) bySection.set(sectionid, []);
     bySection.get(sectionid).push({ span, row });
   }
+  return bySection;
+}
 
-  const fill = (span, text) => {
-    span.classList.remove('verse-text-pending');
-    if (text) {
-      span.textContent = truncate(text);
-    } else {
-      span.classList.add('verse-text-missing');
-      span.textContent = i18n.t('windows.map.versenotloaded');
-    }
-  };
+function fillSnippet(span, text) {
+  span.classList.remove('verse-text-pending');
+  if (text) {
+    span.textContent = truncate(text);
+  } else {
+    span.classList.add('verse-text-missing');
+    span.textContent = i18n.t('windows.map.versenotloaded');
+  }
+}
 
-  const hydrateSection = (sectionid) => {
+function makeSectionHydrator(bySection, textid, loadSectionFn) {
+  return (sectionid) => {
     const entries = bySection.get(sectionid);
     if (!entries) return;
     bySection.delete(sectionid);
 
-    loadSectionFn(resolvedTextid, sectionid, (contentEl) => {
+    loadSectionFn(textid, sectionid, (contentEl) => {
       for (const { span, row } of entries) {
         const fragmentid = row.getAttribute('data-fragmentid');
         const parts = [...contentEl.querySelectorAll(`.${CSS.escape(fragmentid)}`)]
           .map(cleanVerseText).filter(Boolean);
-        fill(span, parts.length ? parts.join(' ') : null);
+        fillSnippet(span, parts.length ? parts.join(' ') : null);
       }
     }, () => {
-      for (const { span } of entries) fill(span, null);
+      for (const { span } of entries) fillSnippet(span, null);
     });
   };
+}
 
-  const sectionids = [...bySection.keys()];
-  sectionids.slice(0, EAGER_HYDRATE_SECTIONS).forEach(hydrateSection);
-
-  const lazySections = new Set(sectionids.slice(EAGER_HYDRATE_SECTIONS));
-  if (!lazySections.size) return;
-
+function observeLazySections(containerEl, bySection, lazySections, hydrateSection) {
   if (typeof IntersectionObserver !== 'function') {
     lazySections.forEach(hydrateSection);
     return;
@@ -159,8 +151,7 @@ export function hydrateVerseTexts(containerEl, textid, loadSectionFn = loadSecti
     for (const obs of observations) {
       if (!obs.isIntersecting) continue;
       observer.unobserve(obs.target); // done watching this row
-      const sectionid = obs.target.getAttribute('data-sectionid');
-      hydrateSection(sectionid); // no-op if already hydrated
+      hydrateSection(obs.target.getAttribute('data-sectionid')); // no-op if already hydrated
     }
     if (!bySection.size) observer.disconnect();
   }, { root: containerEl, rootMargin: '200px 0px' });
@@ -169,6 +160,30 @@ export function hydrateVerseTexts(containerEl, textid, loadSectionFn = loadSecti
     for (const { row } of bySection.get(sectionid)) observer.observe(row);
   }
   containerEl._hydrateObserver = observer;
+}
+
+export function hydrateVerseTexts(containerEl, textid, loadSectionFn = loadSection) {
+  if (!containerEl) return;
+
+  containerEl._hydrateObserver?.disconnect();
+  containerEl._hydrateObserver = null;
+
+  const pending = containerEl.querySelectorAll('.verse-text-pending');
+  if (!pending.length) return;
+
+  const resolvedTextid = resolveTextid(textid);
+  if (!resolvedTextid) return;
+
+  const bySection = groupPendingBySection(pending);
+  const hydrateSection = makeSectionHydrator(bySection, resolvedTextid, loadSectionFn);
+
+  const sectionids = [...bySection.keys()];
+  sectionids.slice(0, EAGER_HYDRATE_SECTIONS).forEach(hydrateSection);
+
+  const lazySections = new Set(sectionids.slice(EAGER_HYDRATE_SECTIONS));
+  if (lazySections.size) {
+    observeLazySections(containerEl, bySection, lazySections, hydrateSection);
+  }
 }
 
 export function createDetailPanel() {
@@ -215,33 +230,36 @@ export function buildDetailHTML(location, verseTextLookup = null, colocated = []
   `;
 }
 
+/** Position the popover near the clicked marker rect (screen coordinates). */
+function positionPanel(panel, anchorRect) {
+  const panelWidth = 300;
+  let top = anchorRect.bottom + 8;
+  let left = anchorRect.left + anchorRect.width / 2 - panelWidth / 2;
+
+  // Clamp to viewport
+  left = Math.max(8, Math.min(left, window.innerWidth - panelWidth - 8));
+
+  // If too close to bottom, show above
+  if (top + 200 > window.innerHeight) {
+    top = anchorRect.top - 8;
+    panel.style.transform = 'translateY(-100%)';
+  } else {
+    panel.style.transform = '';
+  }
+
+  panel.style.top = `${top}px`;
+  panel.style.left = `${left}px`;
+}
+
 /**
  * `anchorRect` is the clicked marker rect in screen coordinates.
  */
-export function openDetailPanel(panel, location, anchorRect, verseTextLookup = null, colocated = [], textid = null) {
+export function openDetailPanel({ panel, location, anchorRect = null, verseTextLookup = null, colocated = [], textid = null }) {
   panel._colocatedLocations = colocated;
   panel.innerHTML = buildDetailHTML(location, verseTextLookup, colocated);
   hydrateVerseTexts(panel, textid);
 
-  if (anchorRect) {
-    const panelWidth = 300;
-    let top = anchorRect.bottom + 8;
-    let left = anchorRect.left + anchorRect.width / 2 - panelWidth / 2;
-
-    // Clamp to viewport
-    left = Math.max(8, Math.min(left, window.innerWidth - panelWidth - 8));
-
-    // If too close to bottom, show above
-    if (top + 200 > window.innerHeight) {
-      top = anchorRect.top - 8;
-      panel.style.transform = 'translateY(-100%)';
-    } else {
-      panel.style.transform = '';
-    }
-
-    panel.style.top = `${top}px`;
-    panel.style.left = `${left}px`;
-  }
+  if (anchorRect) positionPanel(panel, anchorRect);
 
   // Keyboard activation reaches here without the pointerdown that would
   // light-dismiss an open popover; showPopover on a showing popover throws.

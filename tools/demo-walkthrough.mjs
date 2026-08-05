@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
 import { chromium } from '@playwright/test';
-import { spawn } from 'node:child_process';
 import { mkdir, rm, writeFile, readFile, rename, readdir, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { pad, startServer, CURSOR_SCRIPT, openApp, recordSteps } from './demo-recorder.mjs';
+import { makeGif } from './demo-gif.mjs';
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -101,179 +103,37 @@ Record a walkthrough of inScript by playing its in-app guided tour.
   --headed             Show the browser while recording
 `;
 
-const sleep = (ms) => new Promise(resolve => { setTimeout(resolve, ms); });
+async function regenerateGif(opts) {
+  const video = join(opts.out, 'inscript-walkthrough.webm');
+  if (!existsSync(video)) throw new Error(`No recording at ${video}. Run without --gif-only first.`);
 
-const pad = (n) => String(n).padStart(2, '0');
+  const gif = join(opts.out, opts.gifName);
+  console.log(`[demo] converting to GIF at ${opts.gifWidth}px / ${opts.gifFps}fps / ${opts.gifColors} colours…`);
+  await makeGif(video, gif, { width: opts.gifWidth, fps: opts.gifFps, colors: opts.gifColors });
 
-async function startServer({ port, site }) {
-  const child = spawn(
-    'pnpm',
-    ['exec', 'vite', '--port', String(port), '--strictPort', '--open', 'false'],
-    { cwd: rootDir, env: { ...process.env, SITE: site }, stdio: ['ignore', 'pipe', 'pipe'] }
-  );
-
-  let log = '';
-  child.stdout.on('data', d => { log += d; });
-  child.stderr.on('data', d => { log += d; });
-
-  const url = `http://localhost:${port}/`;
-  const deadline = Date.now() + 60_000;
-
-  for (;;) {
-    if (child.exitCode !== null) {
-      throw new Error(`vite exited with code ${child.exitCode}:\n${log}`);
-    }
-    try {
-      const response = await fetch(url);
-      if (response.ok) break;
-    } catch {
-      void 0;
-    }
-    if (Date.now() > deadline) throw new Error(`vite did not start on ${port}:\n${log}`);
-    await sleep(250);
+  const manifestPath = join(opts.out, 'walkthrough.json');
+  if (existsSync(manifestPath)) {
+    const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+    manifest.gif = opts.gifName;
+    await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    await writeFile(join(opts.out, 'index.html'), contactSheet(manifest));
   }
 
-  return { url, stop: () => child.kill('SIGTERM') };
+  const size = ((await stat(gif)).size / 1024 / 1024).toFixed(1);
+  console.log(`[demo] gif → ${gif}  (${size} MB)`);
 }
 
-const CURSOR_SCRIPT = `
-  (() => {
-    const draw = () => {
-      if (document.getElementById('demo-cursor')) return;
-      const style = document.createElement('style');
-      style.textContent = \`
-        #demo-cursor, #demo-cursor:popover-open {
-          position: fixed; inset: auto; left: -100px; top: -100px;
-          width: 22px; height: 22px; margin: -11px 0 0 -11px;
-          padding: 0; border-radius: 50%; overflow: visible;
-          pointer-events: none; background: oklch(0.62 0.17 254 / 0.4);
-          border: 2px solid oklch(1 0 0 / 0.95);
-          box-shadow: 0 1px 6px oklch(0 0 0 / 0.5);
-          transition: scale 0.12s ease;
-        }
-        #demo-cursor::backdrop { background: transparent; }
-        #demo-cursor.down { scale: 0.7; background: oklch(0.62 0.17 254 / 0.8); }
-        #demo-cursor .demo-ripple {
-          position: absolute; left: 50%; top: 50%;
-          width: 14px; height: 14px; margin: -7px 0 0 -7px;
-          border-radius: 50%; pointer-events: none;
-          border: 2px solid oklch(0.62 0.17 254 / 0.9);
-          animation: demo-ripple 0.55s ease-out forwards;
-        }
-        @keyframes demo-ripple { to { scale: 3.4; opacity: 0; } }
-      \`;
-      document.head.appendChild(style);
-
-      const dot = document.createElement('div');
-      dot.id = 'demo-cursor';
-      dot.popover = 'manual';
-      document.body.appendChild(dot);
-
-      const raise = () => {
-        try {
-          if (dot.matches(':popover-open')) dot.hidePopover();
-          dot.showPopover();
-        } catch { void 0; }
-      };
-      window.__demoCursorRaise = raise;
-      raise();
-
-      addEventListener('mousemove', (e) => {
-        dot.style.left = e.clientX + 'px';
-        dot.style.top = e.clientY + 'px';
-      }, true);
-      addEventListener('mousedown', () => {
-        dot.classList.add('down');
-        const ripple = document.createElement('div');
-        ripple.className = 'demo-ripple';
-        dot.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 600);
-      }, true);
-      addEventListener('mouseup', () => dot.classList.remove('down'), true);
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', draw);
-    } else {
-      draw();
-    }
-  })();
-`;
-
-let pointer = null;
-
-async function glide(page, x, y) {
-  const from = pointer ?? { x: page.viewportSize().width / 2, y: 24 };
-  const distance = Math.hypot(x - from.x, y - from.y);
-  const steps = Math.max(6, Math.min(20, Math.round(distance / 45)));
-
-  for (let i = 1; i <= steps; i++) {
-    const t = i / steps;
-    const eased = t < 0.5 ? 2 * t * t : 1 - ((1 - t) ** 2) * 2;
-    await page.mouse.move(from.x + (x - from.x) * eased, from.y + (y - from.y) * eased);
-    await sleep(10);
-  }
-  pointer = { x, y };
-}
-
-async function pointOfInterest(page) {
-  return page.evaluate(() => {
-    const box = window.BrowserBible.tour().getState().spotlight
-      ?? document.querySelector('.tour-layer .tour-card')?.getBoundingClientRect();
-    if (!box) return null;
-    const y = box.height > 300
-      ? box.top + Math.min(210, Math.max(140, box.height * 0.18))
-      : box.top + box.height / 2;
-    return { x: Math.round(box.left + box.width / 2), y: Math.round(y) };
-  });
-}
-
-function runFfmpeg(args) {
-  return new Promise((resolve, reject) => {
-    const child = spawn('ffmpeg', ['-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'ignore', 'pipe'] });
-    let err = '';
-    child.stderr.on('data', d => { err += d; });
-    child.on('error', () => reject(new Error('ffmpeg not found. Install it, or drop --gif.')));
-    child.on('close', code => {
-      if (code === 0) resolve();
-      else reject(new Error(`ffmpeg failed (${code}):\n${err.trim()}`));
-    });
-  });
-}
-
-function hasGifsicle() {
-  return new Promise(resolve => {
-    const child = spawn('gifsicle', ['--version'], { stdio: 'ignore' });
-    child.on('error', () => resolve(false));
-    child.on('close', code => resolve(code === 0));
-  });
-}
-
-async function makeGif(videoPath, gifPath, { width, fps, colors }) {
-  const palette = `${gifPath}.palette.png`;
-  const chain = `fps=${fps},mpdecimate,scale=${width}:-1:flags=lanczos`;
-
-  await runFfmpeg(['-i', videoPath, '-vf',
-    `${chain},palettegen=stats_mode=diff:max_colors=${colors}`, '-y', palette]);
-  await runFfmpeg([
-    '-i', videoPath, '-i', palette,
-    '-lavfi', `${chain}[v];[v][1:v]paletteuse=dither=none:diff_mode=rectangle`,
-    '-fps_mode', 'vfr', '-loop', '0', '-y', gifPath
-  ]);
-  await rm(palette, { force: true });
-
-  if (await hasGifsicle()) {
-    await new Promise((resolve, reject) => {
-      const child = spawn('gifsicle', ['-O3', '--lossy=60', gifPath, '-o', gifPath], { stdio: 'ignore' });
-      child.on('error', reject);
-      child.on('close', code => (code === 0 ? resolve() : reject(new Error(`gifsicle failed (${code})`))));
-    });
-  }
-}
-
-function dwellFor(step, factor) {
-  const words = `${step.title ?? ''} ${step.body ?? ''}`.trim().split(/\s+/).length;
-  return Math.round(Math.min(7000, Math.max(1700, words * 185)) * factor);
+function buildTargetUrl(opts, base) {
+  const params = new URLSearchParams();
+  if (opts.content !== 'none') params.set('custom', opts.content);
+  params.set('w1', 'bible');
+  params.set('t1', 'ENGWEB');
+  params.set('v1', 'JN1_1');
+  params.set('w2', 'bible');
+  params.set('t2', opts.content === 'local' ? 'SPABES' : 'ENGASV');
+  params.set('v2', 'JN1_1');
+  params.set('tour', '0');
+  return `${base}?${params}`;
 }
 
 async function main() {
@@ -284,23 +144,7 @@ async function main() {
   }
 
   if (opts.gifOnly) {
-    const video = join(opts.out, 'inscript-walkthrough.webm');
-    if (!existsSync(video)) throw new Error(`No recording at ${video}. Run without --gif-only first.`);
-
-    const gif = join(opts.out, opts.gifName);
-    console.log(`[demo] converting to GIF at ${opts.gifWidth}px / ${opts.gifFps}fps / ${opts.gifColors} colours…`);
-    await makeGif(video, gif, { width: opts.gifWidth, fps: opts.gifFps, colors: opts.gifColors });
-
-    const manifestPath = join(opts.out, 'walkthrough.json');
-    if (existsSync(manifestPath)) {
-      const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-      manifest.gif = opts.gifName;
-      await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-      await writeFile(join(opts.out, 'index.html'), contactSheet(manifest));
-    }
-
-    const size = ((await stat(gif)).size / 1024 / 1024).toFixed(1);
-    console.log(`[demo] gif → ${gif}  (${size} MB)`);
+    await regenerateGif(opts);
     return;
   }
 
@@ -319,16 +163,7 @@ async function main() {
   }
 
   const base = (opts.url ?? server.url).replace(/\/+$/, '/');
-  const params = new URLSearchParams();
-  if (opts.content !== 'none') params.set('custom', opts.content);
-  params.set('w1', 'bible');
-  params.set('t1', 'ENGWEB');
-  params.set('v1', 'JN1_1');
-  params.set('w2', 'bible');
-  params.set('t2', opts.content === 'local' ? 'SPABES' : 'ENGASV');
-  params.set('v2', 'JN1_1');
-  params.set('tour', '0');
-  const target = `${base}?${params}`;
+  const target = buildTargetUrl(opts, base);
 
   const browser = await chromium.launch({ headless: !opts.headed });
   const context = await browser.newContext({
@@ -346,66 +181,8 @@ async function main() {
   const manifest = { url: target, viewport: `${opts.width}x${opts.height}`, steps: [] };
 
   try {
-    console.log(`[demo] opening ${target}`);
-    await page.goto(target, { waitUntil: 'domcontentloaded' });
-
-    await page.waitForSelector('.window.BibleWindow .section .verse, .window.BibleWindow .section .v',
-      { timeout: 60_000 });
-    try {
-      await page.waitForFunction(() => window.BrowserBible?.tour?.() != null, null, { timeout: 20_000 });
-    } catch {
-      throw new Error(
-        `No guided tour at ${base}. That build predates browserbible/js/menu/GuidedTour.js. ` +
-        'Record a local server (drop --url) or deploy the tour first.'
-      );
-    }
-    await sleep(1200);
-
-    const all = await page.evaluate(() => window.BrowserBible.tour().getSteps().map(s => s.id));
-    const wanted = opts.only ?? all;
-    const startIndex = opts.from ? Math.max(0, all.indexOf(opts.from)) : 0;
-
-    console.log(`[demo] ${wanted.length} step${wanted.length === 1 ? '' : 's'} to record\n`);
-
-    let state = await page.evaluate(i => window.BrowserBible.tour().start({ from: i }), startIndex);
-    let shot = 0;
-
-    while (state.active && !state.done) {
-      if (wanted.includes(state.id)) {
-        await sleep(360);
-
-        const point = await pointOfInterest(page);
-        if (point && opts.cursor) {
-          await page.evaluate(() => window.__demoCursorRaise?.());
-          await glide(page, point.x, point.y);
-        }
-
-        const dwell = dwellFor(state, opts.dwell);
-        shot += 1;
-        const file = `${pad(shot)}-${state.id}.png`;
-        await page.screenshot({ path: join(screensDir, file) });
-
-        console.log(
-          `[demo] ${pad(state.index + 1)}/${state.total}  ${state.id.padEnd(14)} ${state.title}`
-        );
-
-        manifest.steps.push({
-          order: shot,
-          index: state.index,
-          id: state.id,
-          title: state.title,
-          body: state.body,
-          screenshot: `screens/${file}`,
-          dwellMs: dwell
-        });
-
-        await sleep(dwell);
-      }
-
-      state = await page.evaluate(() => window.BrowserBible.tour().next());
-    }
-
-    await sleep(1200);
+    await openApp(page, target, base);
+    await recordSteps(page, opts, screensDir, manifest);
   } finally {
     await page.close();
     await context.close();

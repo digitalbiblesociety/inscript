@@ -7,17 +7,29 @@ const API_BIBLE_HOST = 'https://api.scripture.api.bible';
 const BIBLE_BRAIN_HOST = 'https://4.dbt.io/api';
 const ESV_HOST = 'https://api.esv.org';
 
+// API.Bible.
+function resolveApiBible(rest, search, apiBibleIds) {
+  const match = /^bibles\/([^/?]+)(\/.*)?$/.exec(rest);
+  if (!match || (apiBibleIds.length > 0 && !apiBibleIds.includes(match[1]))) {
+    return { error: 'forbidden' };
+  }
+  return { service: 'apibible', url: `${API_BIBLE_HOST}/v1/${rest}${search}` };
+}
+
+// ESV API. Only the two endpoints the app uses are exposed.
+function resolveEsv(rest, search) {
+  if (!/^passage\/(html|search)\/?$/.test(rest)) {
+    return { error: 'forbidden' };
+  }
+  return { service: 'esv', url: `${ESV_HOST}/v3/${rest}${search}` };
+}
+
 export function resolveUpstream(pathname, search = '', { apiBibleIds = [] } = {}) {
   const strip = (prefix) => (pathname.startsWith(prefix) ? pathname.slice(prefix.length) : null);
 
-  // API.Bible.
   const absRest = strip('/abs/v1/') ?? strip('/v1/');
   if (absRest != null) {
-    const match = /^bibles\/([^/?]+)(\/.*)?$/.exec(absRest);
-    if (!match || (apiBibleIds.length > 0 && !apiBibleIds.includes(match[1]))) {
-      return { error: 'forbidden' };
-    }
-    return { service: 'apibible', url: `${API_BIBLE_HOST}/v1/${absRest}${search}` };
+    return resolveApiBible(absRest, search, apiBibleIds);
   }
 
   // Bible Brain (Faith Comes By Hearing), v4.
@@ -26,13 +38,9 @@ export function resolveUpstream(pathname, search = '', { apiBibleIds = [] } = {}
     return { service: 'fcbh', url: `${BIBLE_BRAIN_HOST}/${fcbhRest}${search}` };
   }
 
-  // ESV API. Only the two endpoints the app uses are exposed.
   const esvRest = strip('/esv/v3/');
   if (esvRest != null) {
-    if (!/^passage\/(html|search)\/?$/.test(esvRest)) {
-      return { error: 'forbidden' };
-    }
-    return { service: 'esv', url: `${ESV_HOST}/v3/${esvRest}${search}` };
+    return resolveEsv(esvRest, search);
   }
 
   return null;

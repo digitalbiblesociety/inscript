@@ -123,6 +123,55 @@ const eng2p = {
   ]
 };
 
+const isEnglishLang = (lang) => {
+  if (!lang) return false;
+  const normalized = lang.toLowerCase();
+  return normalized === 'en' || normalized === 'eng' ||
+    normalized.startsWith('en-') || normalized.startsWith('eng-');
+};
+
+function updatePluralValues(setting) {
+  const selectedOption = document.getElementById(`eng2p-option-${setting.eng2p}`);
+  const cells = selectedOption?.closest('tr')?.querySelectorAll('td');
+  if (!cells) return;
+  eng2p.youPluralSubject = cells[0]?.innerHTML ?? '';
+  eng2p.youPluralPossessiveDeterminer = cells[1]?.innerHTML ?? '';
+  eng2p.youPluralPossessivePronoun = cells[2]?.innerHTML ?? '';
+  eng2p.youPluralReflexive = cells[3]?.innerHTML ?? '';
+}
+
+function runPluralTransforms(node, setting) {
+  node.querySelectorAll('.verse, .v').forEach((verse) => {
+    const verseid = verse.getAttribute('data-id');
+    if (!eng2p.secondPersonPlurals.includes(verseid) || verse.classList.contains('eng2p-verbs')) return;
+    verse.classList.add('eng2p-verbs');
+    let html = verse.innerHTML;
+    if (setting.eng2p === 'highlight') html = eng2p.highlightPlurals(html);
+    else if (setting.eng2p !== 'none') html = eng2p.replacePlurals(html);
+    verse.innerHTML = html;
+  });
+}
+
+function transformEnglishChapters(root, setting) {
+  root.querySelectorAll('div.chapter[lang]').forEach((chapter) => {
+    if (!isEnglishLang(chapter.getAttribute('lang'))) return;
+    eng2p.removePluralTransforms(chapter);
+    runPluralTransforms(chapter, setting);
+  });
+}
+
+function handleTextLoad(event, setting) {
+  if (event.data.messagetype !== 'textload' || event.data.type !== 'bible') return;
+  const contentEl = event.data.content;
+  if (!contentEl || typeof contentEl === 'string' || setting.eng2p === 'none') return;
+  if (isEnglishLang(contentEl.getAttribute('lang')) && contentEl.classList.contains('chapter')) {
+    runPluralTransforms(contentEl, setting);
+  }
+  contentEl.querySelectorAll('div.chapter[lang]').forEach((chapter) => {
+    if (isEnglishLang(chapter.getAttribute('lang'))) runPluralTransforms(chapter, setting);
+  });
+}
+
 export const Eng2pPlugin = () => {
   const config = getConfig();
 
@@ -281,46 +330,11 @@ export const Eng2pPlugin = () => {
     engWindowContainer.style.left = `${window.innerWidth - engWindowContainer.offsetWidth - 10}px`;
   }
 
-  const getPluralValues = () => {
-    const selectedOption = document.getElementById(`eng2p-option-${eng2pSetting.eng2p}`);
-    const selectedRow = selectedOption ? selectedOption.closest('tr') : null;
-
-    if (selectedRow) {
-      const tds = selectedRow.querySelectorAll('td');
-      eng2p.youPluralSubject = tds[0]?.innerHTML ?? '';
-      eng2p.youPluralPossessiveDeterminer = tds[1]?.innerHTML ?? '';
-      eng2p.youPluralPossessivePronoun = tds[2]?.innerHTML ?? '';
-      eng2p.youPluralReflexive = tds[3]?.innerHTML ?? '';
-    }
-  };
-
-  const runPluralTransforms = (node) => {
-    const nodeEl = node;
-    nodeEl.querySelectorAll('.verse, .v').forEach((verse) => {
-      const verseid = verse.getAttribute('data-id');
-
-      if (eng2p.secondPersonPlurals.indexOf(verseid) > -1) {
-        if (verse.classList.contains('eng2p-verbs')) return;
-        verse.classList.add('eng2p-verbs');
-
-        let html = verse.innerHTML;
-
-        if (eng2pSetting.eng2p === 'highlight') {
-          html = eng2p.highlightPlurals(html);
-        } else if (eng2pSetting.eng2p !== 'none') {
-          html = eng2p.replacePlurals(html);
-        }
-
-        verse.innerHTML = html;
-      }
-    });
-  };
-
   const optionInput = document.getElementById(`eng2p-option-${eng2pSetting.eng2p}`);
   if (optionInput) {
     optionInput.checked = true;
   }
-  getPluralValues();
+  updatePluralValues(eng2pSetting);
 
   document.querySelectorAll('input[name="eng2p-option"]').forEach((input) => {
     input.addEventListener('click', function() {
@@ -328,18 +342,8 @@ export const Eng2pPlugin = () => {
 
       AppSettings.setValue('docs-config-eng2p-setting', eng2pSetting);
 
-      getPluralValues();
-
-      // re-run on all English chapters
-      document.querySelectorAll('div.chapter[lang]').forEach((chapter) => {
-        const lang = (chapter.getAttribute('lang') || '').toLowerCase();
-        const isEnglish = lang === 'en' || lang === 'eng' ||
-                          lang.startsWith('en-') || lang.startsWith('eng-');
-        if (isEnglish) {
-          eng2p.removePluralTransforms(chapter);
-          runPluralTransforms(chapter);
-        }
-      });
+      updatePluralValues(eng2pSetting);
+      transformEnglishChapters(document, eng2pSetting);
     });
   });
 
@@ -349,31 +353,7 @@ export const Eng2pPlugin = () => {
 
   mixinEventEmitter(ext);
 
-  ext.on('message', (e) => {
-    if (e.data.messagetype === 'textload' && e.data.type === 'bible') {
-      const contentEl = e.data.content;
-      if (!contentEl || typeof contentEl === 'string' || eng2pSetting.eng2p === 'none') return;
-
-      const isEnglishLang = (lang) => {
-        if (!lang) return false;
-        const lowerLang = lang.toLowerCase();
-        return lowerLang === 'en' || lowerLang === 'eng' ||
-               lowerLang.startsWith('en-') || lowerLang.startsWith('eng-');
-      };
-
-      const contentLang = contentEl.getAttribute('lang') || '';
-      if (isEnglishLang(contentLang) && contentEl.classList.contains('chapter')) {
-        runPluralTransforms(contentEl);
-      }
-
-      contentEl.querySelectorAll('div.chapter[lang]').forEach((chapter) => {
-        const chapterLang = chapter.getAttribute('lang') || '';
-        if (isEnglishLang(chapterLang)) {
-          runPluralTransforms(chapter);
-        }
-      });
-    }
-  });
+  ext.on('message', (e) => handleTextLoad(e, eng2pSetting));
 
   return ext;
 };

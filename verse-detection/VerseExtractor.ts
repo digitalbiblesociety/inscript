@@ -1,4 +1,4 @@
-import type { ParsedReference } from './VersePopup.js';
+import type { ParsedReference } from './PopupTypes.js';
 
 export interface ExtractedFootnote {
 	key: string;

@@ -13,95 +13,99 @@ export function durationToSeconds(length) {
   return parts.reduce((acc, n) => acc * 60 + n, 0);
 }
 
-// Build a playlist model from ordered passage records.
-export function DeafPlaylist(passages) {
-  const items = (passages ?? []).map((p, index) => {
-    const sectionid = p.sectionid;
-    const bookid = sectionid.substring(0, 2);
-    const chapter = sectionid.substring(2);
+function createPlaylistItem(passage, index) {
+  const sectionid = passage.sectionid;
+  const bookid = sectionid.substring(0, 2);
+  return {
+    index,
+    fragmentid: `${sectionid}_${passage.verse ?? 1}`,
+    sectionid,
+    bookid,
+    chapter: sectionid.substring(2),
+    book: passage.book || BOOK_DATA[bookid]?.name || bookid,
+    reference: passage.reference || passage.title || sectionid,
+    title: passage.title || passage.reference || sectionid,
+    urlHigh: passage.web_url || passage.web_url_low || '',
+    urlLow: passage.web_url_low || passage.web_url || '',
+    poster: passage.cover || '',
+    durationSec: durationToSeconds(passage.length)
+  };
+}
 
-    return {
-      index,
-      fragmentid: `${sectionid}_${p.verse ?? 1}`,
-      sectionid,
-      bookid,
-      chapter,
-      book: p.book || BOOK_DATA[bookid]?.name || bookid,
-      reference: p.reference || p.title || sectionid,
-      title: p.title || p.reference || sectionid,
-      urlHigh: p.web_url || p.web_url_low || '',
-      urlLow: p.web_url_low || p.web_url || '',
-      poster: p.cover || '',
-      durationSec: durationToSeconds(p.length)
-    };
-  });
-
-  const byFragment = new Map();
-  const sectionOrder = [];
-  const sectionItems = new Map();
-
-  for (const it of items) {
-    if (!byFragment.has(it.fragmentid)) byFragment.set(it.fragmentid, it.index);
-    if (!sectionItems.has(it.sectionid)) {
-      sectionItems.set(it.sectionid, []);
-      sectionOrder.push(it.sectionid);
-    }
-    sectionItems.get(it.sectionid).push(it);
+class PlaylistModel {
+  constructor(passages) {
+    this.items = (passages ?? []).map(createPlaylistItem);
+    this.length = this.items.length;
+    this.isEmpty = this.length === 0;
+    this.sections = [];
+    this.byFragment = new Map();
+    this.sectionItems = new Map();
+    this.indexItems();
   }
 
-  const get = (index) => items[index] ?? null;
+  indexItems() {
+    for (const item of this.items) {
+      if (!this.byFragment.has(item.fragmentid)) this.byFragment.set(item.fragmentid, item.index);
+      if (!this.sectionItems.has(item.sectionid)) {
+        this.sectionItems.set(item.sectionid, []);
+        this.sections.push(item.sectionid);
+      }
+      this.sectionItems.get(item.sectionid).push(item);
+    }
+  }
 
-  const itemsForSection = (sectionid) => sectionItems.get(sectionid) ?? [];
+  get(index) {
+    return this.items[index] ?? null;
+  }
 
-  const indexOfSection = (sectionid) => {
-    const list = sectionItems.get(sectionid);
-    return list && list.length ? list[0].index : -1;
-  };
+  itemsForSection(sectionid) {
+    return this.sectionItems.get(sectionid) ?? [];
+  }
 
-  const indexOfFragment = (fragmentid) => {
-    if (fragmentid != null && byFragment.has(fragmentid)) return byFragment.get(fragmentid);
+  indexOfSection(sectionid) {
+    const list = this.sectionItems.get(sectionid);
+    return list?.length ? list[0].index : -1;
+  }
+
+  indexOfFragment(fragmentid) {
+    if (fragmentid != null && this.byFragment.has(fragmentid)) return this.byFragment.get(fragmentid);
     const sectionid = String(fragmentid ?? '').split('_')[0];
-    return indexOfSection(sectionid);
-  };
+    return this.indexOfSection(sectionid);
+  }
 
-  const next = (index) => (index + 1 < items.length ? index + 1 : -1);
-  const prev = (index) => (index - 1 >= 0 ? index - 1 : -1);
+  next(index) {
+    return index + 1 < this.items.length ? index + 1 : -1;
+  }
+
+  prev(index) {
+    return index - 1 >= 0 ? index - 1 : -1;
+  }
 
   // Cumulative timeline for one chapter: total seconds plus each passage's start/end in seconds and as fractions of the total.
-  const chapterTimeline = (sectionid) => {
-    const list = itemsForSection(sectionid);
-    const total = list.reduce((sum, it) => sum + it.durationSec, 0);
-
-    let acc = 0;
-    const markers = list.map((it) => {
-      const startSec = acc;
-      acc += it.durationSec;
+  chapterTimeline(sectionid) {
+    const list = this.itemsForSection(sectionid);
+    const total = list.reduce((sum, item) => sum + item.durationSec, 0);
+    let elapsed = 0;
+    const markers = list.map((item) => {
+      const startSec = elapsed;
+      elapsed += item.durationSec;
       return {
-        item: it,
+        item,
         startSec,
-        endSec: acc,
+        endSec: elapsed,
         startFraction: total > 0 ? startSec / total : 0,
-        endFraction: total > 0 ? acc / total : 0
+        endFraction: total > 0 ? elapsed / total : 0
       };
     });
-
     return { total, markers };
-  };
+  }
 
-  const sectionsForBook = (bookid) => sectionOrder.filter((s) => s.substring(0, 2) === bookid);
+  sectionsForBook(bookid) {
+    return this.sections.filter((sectionid) => sectionid.substring(0, 2) === bookid);
+  }
+}
 
-  return {
-    items,
-    length: items.length,
-    isEmpty: items.length === 0,
-    sections: sectionOrder,
-    get,
-    itemsForSection,
-    indexOfSection,
-    indexOfFragment,
-    next,
-    prev,
-    chapterTimeline,
-    sectionsForBook
-  };
+// Build a playlist model from ordered passage records.
+export function DeafPlaylist(passages) {
+  return new PlaylistModel(passages);
 }

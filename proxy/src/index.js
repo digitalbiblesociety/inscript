@@ -36,6 +36,72 @@ async function reportFums(token, request) {
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
+/** Handles OPTIONS, disallowed methods, and the root listing; null otherwise. */
+function earlyResponse(request, url, corsHeaders) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        ...corsHeaders,
+        'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Max-Age': '86400'
+      }
+    });
+  }
+
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new Response('Method not allowed', { status: 405, headers: corsHeaders });
+  }
+
+  if (url.pathname === '/' || url.pathname === '') {
+    return new Response(
+      JSON.stringify({ name: 'inscript-proxy', services: ['abs/v1', 'fcbh/v4', 'esv/v3'] }),
+      { headers: { ...JSON_HEADERS, ...corsHeaders } }
+    );
+  }
+
+  return null;
+}
+
+function maybeReportFums(text, request, ctx) {
+  if (!text.includes('fums')) return;
+  try {
+    const meta = JSON.parse(text)?.meta;
+    const token = meta?.fumsToken ?? meta?.fumsId;
+    if (token) ctx.waitUntil(reportFums(token, request));
+  } catch (_e) { /* not JSON; nothing to report */ }
+}
+
+async function relayUpstream(route, request, env, ctx, corsHeaders) {
+  const upstreamUrl = new URL(route.url);
+  const upstreamHeaders = new Headers({ 'Accept': 'application/json' });
+
+  if (route.service === 'apibible') {
+    upstreamHeaders.set('api-key', env.API_BIBLE_KEY ?? '');
+  } else if (route.service === 'fcbh') {
+    upstreamUrl.searchParams.set('v', '4');
+    upstreamUrl.searchParams.set('key', env.BIBLE_BRAIN_KEY ?? '');
+  } else if (route.service === 'esv') {
+    upstreamHeaders.set('Authorization', `Token ${env.ESV_API_KEY ?? ''}`);
+  }
+
+  const upstream = await fetch(upstreamUrl, { method: request.method, headers: upstreamHeaders });
+
+  const responseHeaders = {
+    'Content-Type': upstream.headers.get('Content-Type') ?? 'application/json',
+    ...corsHeaders
+  };
+
+  if (route.service === 'apibible' && upstream.ok) {
+    const text = await upstream.text();
+    maybeReportFums(text, request, ctx);
+    return new Response(text, { status: upstream.status, headers: responseHeaders });
+  }
+
+  return new Response(upstream.body, { status: upstream.status, headers: responseHeaders });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -53,28 +119,8 @@ export default {
         }
       : {};
 
-    if (request.method === 'OPTIONS') {
-      return new Response(null, {
-        status: 204,
-        headers: {
-          ...corsHeaders,
-          'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Max-Age': '86400'
-        }
-      });
-    }
-
-    if (request.method !== 'GET' && request.method !== 'HEAD') {
-      return new Response('Method not allowed', { status: 405, headers: corsHeaders });
-    }
-
-    if (url.pathname === '/' || url.pathname === '') {
-      return new Response(
-        JSON.stringify({ name: 'inscript-proxy', services: ['abs/v1', 'fcbh/v4', 'esv/v3'] }),
-        { headers: { ...JSON_HEADERS, ...corsHeaders } }
-      );
-    }
+    const early = earlyResponse(request, url, corsHeaders);
+    if (early) return early;
 
     const apiBibleIds = (env.API_BIBLE_IDS ?? '').split(',').map(s => s.trim()).filter(Boolean);
     const route = resolveUpstream(url.pathname, url.search, { apiBibleIds });
@@ -86,39 +132,6 @@ export default {
       return new Response('Forbidden', { status: 403, headers: corsHeaders });
     }
 
-    const upstreamUrl = new URL(route.url);
-    const upstreamHeaders = new Headers({ 'Accept': 'application/json' });
-
-    if (route.service === 'apibible') {
-      upstreamHeaders.set('api-key', env.API_BIBLE_KEY ?? '');
-    } else if (route.service === 'fcbh') {
-      upstreamUrl.searchParams.set('v', '4');
-      upstreamUrl.searchParams.set('key', env.BIBLE_BRAIN_KEY ?? '');
-    } else if (route.service === 'esv') {
-      upstreamHeaders.set('Authorization', `Token ${env.ESV_API_KEY ?? ''}`);
-    }
-
-    const upstream = await fetch(upstreamUrl, { method: request.method, headers: upstreamHeaders });
-
-    const responseHeaders = {
-      'Content-Type': upstream.headers.get('Content-Type') ?? 'application/json',
-      ...corsHeaders
-    };
-
-    if (route.service === 'apibible' && upstream.ok) {
-      const text = await upstream.text();
-
-      if (text.includes('fums')) {
-        try {
-          const meta = JSON.parse(text)?.meta;
-          const token = meta?.fumsToken ?? meta?.fumsId;
-          if (token) ctx.waitUntil(reportFums(token, request));
-        } catch (_e) { /* not JSON; nothing to report */ }
-      }
-
-      return new Response(text, { status: upstream.status, headers: responseHeaders });
-    }
-
-    return new Response(upstream.body, { status: upstream.status, headers: responseHeaders });
+    return relayUpstream(route, request, env, ctx, corsHeaders);
   }
 };

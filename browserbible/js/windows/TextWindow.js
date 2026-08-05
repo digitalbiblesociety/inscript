@@ -7,8 +7,15 @@ import { getGlobalTextNavigator } from '../ui/TextNavigator.js';
 import { getText, loadTexts, displayAbbr } from '../texts/TextLoader.js';
 import { TextNavigation } from '../common/TextNavigation.js';
 import { t as i18nT } from '../lib/i18n.js';
-import { versionHasSection, probeOrder } from './versionCycle.js';
 import audioEarSvg from '../../css/images/audio-ear.svg?raw';
+import {
+  changeText as changeWindowText,
+  cycleVersion as cycleWindowVersion,
+  getLanguageSiblings,
+  setVersionSiblings,
+  updateVersionCycler
+} from './TextWindowVersions.js';
+import { setTextInfoUI as updateTextInfoUI, toggleTextInfo } from './TextWindowInfo.js';
 
 export { registerWindowComponent } from './BaseWindow.js';
 
@@ -23,6 +30,7 @@ const textTypeOf = (t) => (t.type === undefined ? 'bible' : t.type);
 
 const getTextAsync = (textId) => AsyncHelpers.promisifyWithError(getText, textId);
 const loadTextsAsync = () => AsyncHelpers.promisify(loadTexts);
+const NAVIGABLE_TEXT_TYPES = new Set(['bible', 'commentary', 'videobible', 'deafbible']);
 
 export class TextWindowComponent extends BaseWindow {
   constructor() {
@@ -186,48 +194,7 @@ export class TextWindowComponent extends BaseWindow {
   }
 
   async handleInfoToggle() {
-    this.textChooser.hide();
-    this.textNavigator.hide();
-
-    if (this.refs.info.matches(':popover-open')) {
-      this.refs.info.hidePopover();
-      return;
-    }
-
-    const textInfo = this.state.currentTextInfo;
-    if (textInfo) {
-      this.refs.infoTitle.textContent = i18nT('windows.bible.versioninfoname', [textInfo.name || textInfo.abbr]);
-    }
-
-    if (textInfo?.aboutHtml) {
-      this.refs.infoContent.innerHTML = textInfo.aboutHtml;
-    } else {
-      this.refs.infoContent.innerHTML = `<div class="loading-indicator">${i18nT('windows.bible.loadinginfo')}</div>`;
-
-      try {
-        const response = await fetch(`${this.config.baseContentUrl}${this.config.textsPath}/${textInfo.id}/about.html`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-        const htmlString = await response.text();
-        const breakTag = '<body';
-        const fixedHtml = htmlString.indexOf(breakTag) > -1
-          ? breakTag + htmlString.split(breakTag)[1]
-          : '';
-        if (!fixedHtml) throw new Error('about.html has no body');
-
-        this.refs.infoContent.innerHTML = fixedHtml;
-        textInfo.aboutHtml = fixedHtml;
-      } catch {
-        this.refs.infoContent.innerHTML = `
-          <div class="scroller-info-empty">
-            <p>${i18nT('windows.bible.noinfo')}</p>
-            <p class="scroller-info-version-name">${textInfo?.name || textInfo?.abbr || ''}</p>
-          </div>
-        `;
-      }
-    }
-
-    this.refs.info.showPopover();
+    await toggleTextInfo(this);
   }
 
   handleTextListClick() {
@@ -314,36 +281,7 @@ export class TextWindowComponent extends BaseWindow {
   // Switch the window to a different version, reloading the current location in
   // the new text. Shared by the chooser dropdown and the version cycler arrows.
   changeText(newTextInfo) {
-    if (!newTextInfo) return;
-
-    this.setTextInfoUI(newTextInfo);
-    this.updateTabLabel(displayAbbr(newTextInfo));
-
-    this.textNavigator.setTextInfo(newTextInfo);
-    this.audioController?.setTextInfo(newTextInfo);
-
-    if (this.state.currentTextInfo == null || newTextInfo.id !== this.state.currentTextInfo.id) {
-      this.state.currentTextInfo = newTextInfo;
-
-      // A completed change supersedes any in-flight version-cycle probe.
-      this._cycleToken++;
-      this._cycleTargetId = null;
-
-      // Preserve the reader's place. The scroller's live location can be
-      // momentarily null mid-load, so fall back to the last known location;
-      // otherwise we'd reset to sections[0] (Genesis 1). Passing the fragmentid
-      // lands on the same verse and makes the scroller recompute its location
-      // after loading (it skips that when no fragmentid is given).
-      const oldLocationInfo = this.scroller.getLocationInfo() ?? this.state.currentLocationInfo;
-      const nearestSectionId = oldLocationInfo?.sectionid ?? newTextInfo.sections[0];
-      const fragmentid = oldLocationInfo?.fragmentid;
-
-      this.refs.wrapper.innerHTML = '';
-      this.scroller.setTextInfo(newTextInfo);
-      this.scroller.load('text', nearestSectionId, fragmentid);
-
-      this.updateVersionCycler();
-    }
+    changeWindowText(this, newTextInfo);
   }
 
   // Step to the previous/next version in the current language (direction -1/+1),
@@ -352,95 +290,30 @@ export class TextWindowComponent extends BaseWindow {
   // Keeps the chooser's selection in sync so the dropdown and its pinned
   // "current language" section reflect the cycled version.
   cycleVersion(direction) {
-    const siblings = this._versionSiblings;
-    const current = this.state.currentTextInfo;
-    if (!siblings || siblings.length < 2 || current == null) return;
-
-    const sectionid = this.scroller.getLocationInfo()?.sectionid
-      ?? this.state.currentLocationInfo?.sectionid;
-
-    // Anchor on the version a still-loading cycle is heading toward, so rapid
-    // clicks advance one step each instead of re-probing from the same start.
-    const anchorId = this._cycleTargetId ?? current.id;
-    let startIndex = siblings.findIndex((t) => t.id === anchorId);
-    if (startIndex === -1) startIndex = siblings.findIndex((t) => t.id === current.id);
-    if (startIndex === -1) startIndex = 0;
-
-    // Probe candidates outward from the anchor until one contains the
-    // reference. Each getText is cached after first load. The token invalidates
-    // in-flight probes superseded by a newer click or a chooser change.
-    const token = ++this._cycleToken;
-    const order = probeOrder(siblings.length, startIndex, direction);
-    const tryNext = (i) => {
-      if (i >= order.length) { // no other version has this reference
-        if (this._cycleToken === token) this._cycleTargetId = null;
-        return;
-      }
-      const candidate = siblings[order[i]];
-      if (!candidate || candidate.id === current.id) {
-        tryNext(i + 1);
-        return;
-      }
-
-      this._cycleTargetId = candidate.id;
-      getText(candidate.id, (info) => {
-        if (this._cycleToken !== token) return; // superseded
-        if (info && versionHasSection(info, sectionid)) {
-          this.textChooser.setTextInfo(info);
-          this.changeText(info);
-        } else {
-          tryNext(i + 1);
-        }
-      });
-    };
-
-    tryNext(0);
+    cycleWindowVersion(this, direction);
   }
 
   // Recompute the same-language version list and show/hide the cycler arrows.
   // Arrows appear only when the current language has more than one version of
   // this window's text type.
   updateVersionCycler() {
-    const current = this.state.currentTextInfo;
-    if (!current || !this.refs.versionCycler) {
-      this.setVersionSiblings([]);
-      return;
-    }
-
-    loadTexts((data) => {
-      // The version may have changed again while the manifest was loading.
-      if (this.state.currentTextInfo !== current) return;
-      this.setVersionSiblings(this.getLanguageSiblings(data, current));
-    });
+    updateVersionCycler(this);
   }
 
   // Versions sharing the current text's language and type, ordered the same way
   // the TextChooser lists them (by name) so cycling matches the dropdown order.
   getLanguageSiblings(data, textInfo) {
-    const type = this.state.textType;
-    const langOf = (t) => t.langNameEnglish || t.langName || '';
-
-    // Resolve the language from the manifest entry so grouping matches the
-    // TextChooser; a text's own info.json may omit the language fields.
-    const entry = data.find((t) => t.id === textInfo.id);
-    const langKey = entry ? langOf(entry) : langOf(textInfo);
-
-    return data
-      .filter((t) => t.hasText !== false && textTypeOf(t) === type && langOf(t) === langKey)
-      .sort((a, b) => a.name.localeCompare(b.name));
+    return getLanguageSiblings(this, data, textInfo);
   }
 
   setVersionSiblings(siblings) {
-    this._versionSiblings = siblings;
-    this.refs.versionCycler?.classList.toggle('has-versions', siblings.length > 1);
+    setVersionSiblings(this, siblings);
   }
 
   handleMessage(e) {
     const { data } = e;
 
-    if (data.messagetype === 'nav' &&
-        (data.type === 'bible' || data.type === 'commentary' || data.type === 'videobible' || data.type === 'deafbible') &&
-        data.locationInfo != null) {
+    if (data.messagetype === 'nav' && NAVIGABLE_TEXT_TYPES.has(data.type) && data.locationInfo != null) {
       this.scroller.scrollTo(data.locationInfo.fragmentid, data.locationInfo.offset);
     } else if (data.messagetype === 'maprequest' && data.requesttype === 'currentcontent') {
       // MapWindow is requesting current content (happens when MapWindow is created after BibleWindow)
@@ -524,20 +397,7 @@ export class TextWindowComponent extends BaseWindow {
   }
 
   setTextInfoUI(textinfo) {
-    if (textinfo.type === 'deafbible') {
-      this.refs.textlistui.classList.add('app-list-image');
-      const cover = textinfo.cover || `${this.config.baseContentUrl}${this.config.textsPath}/${textinfo.id}/${textinfo.id}.png`;
-      // Assign the URL via the DOM property rather than interpolating it into an
-      // innerHTML string: `cover` comes from remote text-info JSON and a value
-      // like `x" onerror="..." ` would otherwise break out of the src attribute.
-      const coverImg = document.createElement('img');
-      coverImg.src = cover;
-      coverImg.alt = textinfo.abbr || textinfo.name || '';
-      this.refs.textlistui.replaceChildren(coverImg);
-    } else {
-      this.refs.textlistui.classList.remove('app-list-image');
-      this.refs.textlistui.innerHTML = displayAbbr(textinfo);
-    }
+    updateTextInfoUI(this, textinfo);
   }
 
   updateTextnav(locationInfo = null) {

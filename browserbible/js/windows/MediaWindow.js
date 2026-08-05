@@ -1,45 +1,27 @@
 import { BaseWindow, registerWindowComponent } from './BaseWindow.js';
 import { Reference } from '../bible/BibleReference.js';
 import { i18n } from '../lib/i18n.js';
+import { primeDbsVideoCatalog } from '../media/DbsVideoApi.js';
 import {
-  getDbsVideoChapter,
-  getDbsVideoLanguageName,
-  getDbsVideoLanguages,
-  hasDbsVideoEdition,
-  primeDbsVideoCatalog
-} from '../media/DbsVideoApi.js';
+  effectiveVideoLanguage, rankLanguages, reloadForLanguage, renderLanguageOption,
+  renderLanguageOptions, setVideoLanguage, toggleLanguageMenu, updateLanguageLabel,
+  updateLanguageMenu
+} from './MediaLanguages.js';
+import {
+  buildItemTitle, createDbsVideoElement, createImageElement, createMediaElement,
+  createVideoElement, findGalleryIndex, navigateGallery, selectMediaItem,
+  showGalleryItem, updateGalleryUi
+} from './MediaGallery.js';
+import {
+  buildMediaUrls, createGalleryItem, getFilterCategory, renderLibraryMediaInto,
+  renderThumbLink, renderVerseInto, resizeImages
+} from './MediaThumbs.js';
+import { handleMediaMessage } from './MediaContent.js';
+
+export { pickSection, toContainer } from './MediaContent.js';
 
 const DEFAULT_LANGUAGE = 'eng';
 const RESIZE_DEBOUNCE_MS = 100;
-const TARGET_ROW_HEIGHT = 80;
-const TARGET_GUTTER_WIDTH = 4;
-
-/**
- * From a container that may hold several loaded `.section` elements, pick the one
- * matching sectionid. broadcastCurrentContent can ship the whole scroller wrapper
- * (multiple chapters); picking the first section instead of the matching one made
- * the title and the rendered verses disagree by a chapter. Falls back to the first
- * section, then the container itself.
- */
-export function pickSection(containerEl, sectionid) {
-  return containerEl.querySelector(`.section[data-id="${sectionid}"]`)
-    || containerEl.querySelector('.section')
-    || containerEl;
-}
-
-/**
- * A textload message's content is either an HTML string or the live element the
- * scroller inserted, depending on the text provider. Assuming a string turned
- * the element into "[object HTMLDivElement]", i.e. a container with no verses,
- * so local content produced an empty media window.
- */
-export function toContainer(content) {
-  if (content?.nodeType) return content;
-
-  const temp = document.createElement('div');
-  temp.innerHTML = typeof content === 'string' ? content : '';
-  return temp;
-}
 
 class MediaWindowComponent extends BaseWindow {
   constructor() {
@@ -267,7 +249,7 @@ class MediaWindowComponent extends BaseWindow {
    * the Bible text being read.
    */
   effectiveVideoLanguage() {
-    return this.state.videoLanguage || this.state.currentLanguage;
+    return effectiveVideoLanguage(this);
   }
 
   /**
@@ -276,17 +258,7 @@ class MediaWindowComponent extends BaseWindow {
    * so the header stays as it was for art-only chapters.
    */
   updateLanguageMenu() {
-    const languages = getDbsVideoLanguages([...this.chapterVideoOrgs], i18n.lng());
-    this.state.videoLanguages = languages;
-
-    this.refs.language.classList.toggle('hidden', languages.length === 0);
-    if (languages.length === 0) {
-      this.toggleLanguageMenu(false);
-      return;
-    }
-
-    this.renderLanguageOptions(this.refs.languageFilter.value);
-    this.updateLanguageLabel();
+    updateLanguageMenu(this);
   }
 
   /**
@@ -296,78 +268,34 @@ class MediaWindowComponent extends BaseWindow {
    * `search` arrives lowercased and trimmed.
    */
   rankLanguages(search) {
-    const named = [];
-    const mentioned = [];
-
-    for (const language of this.state.videoLanguages) {
-      const name = language.name.toLowerCase();
-      if (name.startsWith(search) || language.iso.startsWith(search)) named.push(language);
-      else if (name.includes(search)) mentioned.push(language);
-    }
-    return [...named, ...mentioned];
+    return rankLanguages(this, search);
   }
 
   /**
    * @param {string} [query] - part of a language name, or a code prefix
    */
   renderLanguageOptions(query = '') {
-    const search = query.trim().toLowerCase();
-    const matches = search ? this.rankLanguages(search) : this.state.videoLanguages;
-
-    // 'Auto' is the default rather than a language, so it stays at the top and
-    // out of the filtered results.
-    const auto = search ? '' : this.renderLanguageOption({
-      iso: '',
-      name: i18n.t('windows.media.videolanguageauto'),
-      titles: 0
-    });
-    const options = matches.map((language) => this.renderLanguageOption(language)).join('');
-
-    this.refs.languageOptions.innerHTML = auto + options ||
-      `<div class="media-language-empty">${this.escapeHtml(i18n.t('windows.media.videolanguagenone'))}</div>`;
+    renderLanguageOptions(this, query);
   }
 
-  renderLanguageOption({ iso, name, titles }) {
-    const selected = iso === this.state.videoLanguage;
-    const count = titles > 1 ? `<span class="media-language-count">${titles}</span>` : '';
-    return `<button type="button" class="media-language-option" role="option"
-      aria-selected="${selected}" data-iso="${this.escapeHtml(iso)}">
-      <span class="media-language-name">${this.escapeHtml(name)}</span>${count}
-    </button>`;
+  renderLanguageOption(language) {
+    return renderLanguageOption(this, language);
   }
 
   /** The button shows what videos will play in. */
   updateLanguageLabel() {
-    const iso = this.state.videoLanguage;
-    this.refs.languageLabel.textContent = iso
-      // A restored or off-chapter selection is not in this chapter's list
-      ? (this.state.videoLanguages.find((language) => language.iso === iso)?.name
-        ?? getDbsVideoLanguageName(iso, i18n.lng()))
-      : i18n.t('windows.media.videolanguageauto');
+    updateLanguageLabel(this);
   }
 
   toggleLanguageMenu(open) {
-    const show = open ?? !this.refs.languageMenu.classList.contains('open');
-    this.refs.languageMenu.classList.toggle('open', show);
-    this.refs.languageBtn.setAttribute('aria-expanded', String(show));
-
-    if (!show) return;
-    // Every open starts from the full list, and typing filters it
-    this.refs.languageFilter.value = '';
-    this.renderLanguageOptions();
-    this.refs.languageFilter.focus();
+    toggleLanguageMenu(this, open);
   }
 
   /**
    * @param {string} iso - ISO 639-3 code, or '' to follow the Bible text
    */
   setVideoLanguage(iso) {
-    this.toggleLanguageMenu(false);
-    if (iso === this.state.videoLanguage) return;
-
-    this.state.videoLanguage = iso;
-    this.reloadForLanguage();
-    this.trigger('settingschange', { type: 'settingschange', target: this, data: null });
+    setVideoLanguage(this, iso);
   }
 
   /**
@@ -375,15 +303,7 @@ class MediaWindowComponent extends BaseWindow {
    * playing if that title has an edition in it.
    */
   reloadForLanguage() {
-    const current = this.state.galleryItems[this.state.currentGalleryIndex] ?? null;
-
-    this.state.currentSectionId = ''; // force re-render of thumbs
-    this.processContent();
-    this.updateLanguageLabel(); // no content to process yet, e.g. a fresh window
-
-    if (!current) return;
-    const index = this.findGalleryIndex(current);
-    if (index >= 0) this.showGalleryItem(index);
+    reloadForLanguage(this);
   }
 
   /**
@@ -393,32 +313,7 @@ class MediaWindowComponent extends BaseWindow {
    * @param {{sectionid: string, verseid: string, folder: string, filename: string}} select
    */
   selectMediaItem(select) {
-    if (!select) return;
-
-    if (!this.mediaLibraries) {
-      this.pendingSelect = select;
-      return;
-    }
-
-    if (this.state.currentSectionId !== select.sectionid) {
-      const section = document.querySelector(`.section[data-id="${select.sectionid}"]`);
-      if (section) {
-        this.contentToProcess = section;
-        this.processContent();
-      }
-    }
-
-    let index = this.findGalleryIndex(select);
-    if (index < 0 && !this.state.filters.art) {
-      this.setFilter('art', true); // the popup only lists art images
-      index = this.findGalleryIndex(select);
-    }
-    if (index < 0) return; // no match; the rendered thumbs are still useful
-
-    this.showGalleryItem(index).then(() => {
-      this.refs.thumbsContainer?.querySelector('.media-library-thumbs a.selected')
-        ?.scrollIntoView?.({ block: 'nearest' });
-    });
+    selectMediaItem(this, select);
   }
 
   /**
@@ -428,17 +323,7 @@ class MediaWindowComponent extends BaseWindow {
    * @returns {number} index into state.galleryItems, or -1
    */
   findGalleryIndex({ folder, filename, verseid }) {
-    const items = this.state.galleryItems;
-    let index = items.findIndex(item => item.folder === folder && item.filename === filename);
-
-    const base = filename?.replace(/-color.*$/, '');
-    if (index < 0 && base !== filename) {
-      index = items.findIndex(item => item.folder === folder && item.filename === base);
-    }
-    if (index < 0) {
-      index = items.findIndex(item => item.verseid === verseid);
-    }
-    return index;
+    return findGalleryIndex(this, { folder, filename, verseid });
   }
 
   cleanup() {
@@ -453,36 +338,7 @@ class MediaWindowComponent extends BaseWindow {
   }
 
   handleMessage(e) {
-    const { data } = e;
-    let content = null;
-
-    if (data.messagetype === 'nav' && data.type === 'bible' && data.locationInfo) {
-      // An explicit navigation is announced before the chapter has loaded, so
-      // the section is often not in the DOM yet; remember the target so the
-      // textload that follows completes the move.
-      this.state.pendingSectionId = data.locationInfo.sectionid;
-      content = document.querySelector(`.section[data-id="${data.locationInfo.sectionid}"]`);
-    } else if (data.messagetype === 'textload' && data.sectionid && data.content) {
-      // A scroller broadcasts textload for the neighbouring chapters it
-      // preloads too, which is not where the reader is; following those walked
-      // the window off the chapter being read. Take a textload only for the
-      // chapter navigated to, the one already shown, or to fill an empty window
-      // (the reply to requestCurrentContent).
-      const wanted = this.state.pendingSectionId || this.state.currentSectionId;
-      if (wanted && wanted !== data.sectionid) return;
-
-      const container = toContainer(data.content);
-      content = pickSection(container, data.sectionid);
-      // Only label a container we built ourselves; the message may carry the
-      // live section element, whose own data-id is authoritative.
-      if (!content.getAttribute('data-id')) content.setAttribute('data-id', data.sectionid);
-    }
-
-    if (content) {
-      this.state.pendingSectionId = '';
-      this.contentToProcess = content;
-      this.processContent();
-    }
+    handleMediaMessage(this, e);
   }
 
   requestCurrentContent() {
@@ -497,21 +353,7 @@ class MediaWindowComponent extends BaseWindow {
   }
 
   async showGalleryItem(index) {
-    if (index < 0 || index >= this.state.galleryItems.length) return;
-    this.state.currentGalleryIndex = index;
-    const item = this.state.galleryItems[index];
-    const oldVideo = this.refs.galleryContent.querySelector('video');
-    if (oldVideo) oldVideo.pause();
-
-    const mediaEl = await this.createMediaElement(item);
-    if (this.state.currentGalleryIndex !== index) return;
-
-    this.clearGalleryContent();
-    if (mediaEl) {
-      this.refs.galleryContent.appendChild(mediaEl);
-    }
-
-    this.updateGalleryUI(item, index);
+    return showGalleryItem(this, index);
   }
 
   clearGalleryContent() {
@@ -519,107 +361,31 @@ class MediaWindowComponent extends BaseWindow {
   }
 
   createVideoElement(src, options = {}) {
-    const video = document.createElement('video');
-    video.src = src;
-    video.controls = true;
-    video.autoplay = options.autoplay ?? true;
-    if (options.poster) video.poster = options.poster;
-    // DBS publishes each video at two qualities; if the preferred copy is
-    // missing or broken, retry the other once before giving up.
-    if (options.altSrc) {
-      video.addEventListener('error', () => {
-        video.src = options.altSrc;
-        video.load();
-      }, { once: true });
-    }
-    return video;
+    return createVideoElement(src, options);
   }
 
   createImageElement(src, alt) {
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = alt || '';
-    return img;
+    return createImageElement(src, alt);
   }
 
   async createMediaElement(item) {
-    if (item.type === 'image') {
-      return this.createImageElement(item.url, item.title || item.reference);
-    }
-
-    if (item.type === 'video') {
-      return this.createVideoElement(item.url);
-    }
-
-    if (item.type === 'dbsvideo') {
-      return this.createDbsVideoElement(item);
-    }
-
-    return null;
+    return createMediaElement(this, item);
   }
 
   async createDbsVideoElement(item) {
-    this.refs.galleryContent.innerHTML = '<div class="media-gallery-loading">Loading video...</div>';
-
-    let chapter = null;
-    try {
-      chapter = await getDbsVideoChapter(item.org, this.effectiveVideoLanguage(), item.chapterNumber);
-    } catch { /* empty */ }
-
-    if (!chapter) {
-      // item.url is the chapter cover image, not a video, so there is nothing
-      // to fall back to.
-      return this.createElement('<div class="media-no-content">Video unavailable</div>');
-    }
-
-    if (chapter.title) item.title = chapter.title;
-    // A title with no edition in the wanted language plays in English instead;
-    // say so rather than leave the reader wondering.
-    item.spokenLanguage = chapter.isFallback ? chapter.languageName : '';
-    return this.createVideoElement(chapter.url, {
-      poster: chapter.poster || item.thumbUrl || '',
-      altSrc: chapter.urlAlt
-    });
+    return createDbsVideoElement(this, item);
   }
 
   buildItemTitle(item) {
-    let title = item.title || item.reference;
-    if (item.artist) {
-      title += ` - ${item.artist}`;
-      if (item.date) {
-        title += ` (${item.date})`;
-      }
-    }
-    // Several titles cover the same verse (LUMO Matthew and the Visual Bible
-    // both open on Matthew 1), so name the production they come from.
-    if (item.source && item.source !== title) {
-      title += ` - ${item.source}`;
-    }
-    if (item.spokenLanguage) {
-      title += ` (${item.spokenLanguage})`;
-    }
-    return title;
+    return buildItemTitle(item);
   }
 
   updateGalleryUI(item, index) {
-    this.refs.galleryTitle.textContent = this.buildItemTitle(item);
-    this.refs.galleryCounter.textContent = `${index + 1} / ${this.state.galleryItems.length}`;
-
-    this.refs.galleryPrev.disabled = index === 0;
-    this.refs.galleryNext.disabled = index === this.state.galleryItems.length - 1;
-
-    this.refs.gallery.classList.add('active');
-
-    this.refs.thumbsContainer.querySelectorAll('.media-library-thumbs a').forEach((a, i) => {
-      a.classList.toggle('selected', i === index);
-    });
+    updateGalleryUi(this, item, index);
   }
 
   navigateGallery(delta) {
-    const newIndex = this.state.currentGalleryIndex + delta;
-    if (newIndex >= 0 && newIndex < this.state.galleryItems.length) {
-      this.showGalleryItem(newIndex);
-    }
+    navigateGallery(this, delta);
   }
 
   processContent() {
@@ -763,101 +529,27 @@ class MediaWindowComponent extends BaseWindow {
   }
 
   getFilterCategory(mediaLibrary) {
-    if (mediaLibrary.type === 'dbsvideo' || mediaLibrary.type === 'video') {
-      return 'video';
-    }
-    return 'art';
+    return getFilterCategory(mediaLibrary);
   }
 
   renderVerseInto(verseid, reference, htmlParts) {
-    const libraries = this.mediaLibraries;
-    const filters = this.state.filters;
-
-    for (let i = 0; i < libraries.length; i++) {
-      const mediaLibrary = libraries[i];
-      const category = this.getFilterCategory(mediaLibrary);
-      if (!filters[category]) continue;
-
-      const mediaForVerse = mediaLibrary.data?.[verseid];
-      if (!mediaForVerse) continue;
-
-      this.renderLibraryMediaInto(mediaLibrary, mediaForVerse, category, verseid, reference, htmlParts);
-    }
+    renderVerseInto(this, verseid, reference, htmlParts);
   }
 
-  renderLibraryMediaInto(mediaLibrary, mediaForVerse, category, verseid, reference, htmlParts) {
-    for (let j = 0; j < mediaForVerse.length; j++) {
-      const mediaInfo = mediaForVerse[j];
-      if (mediaInfo.filename?.includes('-color')) continue;
-      if (mediaLibrary.type === 'dbsvideo') {
-        this.chapterVideoOrgs.add(mediaInfo.org);
-        if (!hasDbsVideoEdition(mediaInfo.org, this.effectiveVideoLanguage(),
-          { fallback: !this.state.videoLanguage })) continue;
-      }
-
-      const { fullUrl, thumbUrl } = this.buildMediaUrls(mediaLibrary, mediaInfo);
-      const galleryItem = this.createGalleryItem(mediaLibrary, mediaInfo, fullUrl, thumbUrl, reference, category, verseid);
-      this.state.galleryItems.push(galleryItem);
-
-      htmlParts.push(this.renderThumbLink(galleryItem, mediaLibrary, mediaInfo, reference));
-    }
+  renderLibraryMediaInto(options) {
+    renderLibraryMediaInto(this, options);
   }
 
   buildMediaUrls(mediaLibrary, mediaInfo) {
-    // Remote catalogs (DBS video) name their own cover per item; the naming is
-    // too irregular across productions to rebuild from a base + suffix.
-    if (mediaInfo.cover) {
-      return { fullUrl: mediaInfo.cover, thumbUrl: mediaInfo.cover };
-    }
-
-    if (mediaLibrary.baseUrl) {
-      const ext = Array.isArray(mediaInfo.exts) ? mediaInfo.exts[0] : mediaInfo.exts;
-      const largeSuffix = mediaLibrary.largeSuffix || `.${ext}`;
-      const thumbSuffix = mediaLibrary.thumbSuffix || '-thumb.jpg';
-      return {
-        fullUrl: `${mediaLibrary.baseUrl}${mediaInfo.filename}${largeSuffix}`,
-        thumbUrl: `${mediaLibrary.baseUrl}${mediaInfo.filename}${thumbSuffix}`
-      };
-    }
-
-    const baseUrl = `${this.config.baseContentUrl}content/media/${mediaLibrary.folder}/`;
-    const ext = Array.isArray(mediaInfo.exts) ? mediaInfo.exts[0] : mediaInfo.exts;
-    return {
-      fullUrl: `${baseUrl}${mediaInfo.filename}.${ext}`,
-      thumbUrl: `${baseUrl}${mediaInfo.filename}-thumb.jpg`
-    };
+    return buildMediaUrls(this, mediaLibrary, mediaInfo);
   }
 
-  createGalleryItem(mediaLibrary, mediaInfo, fullUrl, thumbUrl, reference, category, verseid) {
-    return {
-      url: fullUrl,
-      thumbUrl,
-      type: mediaLibrary.type,
-      title: mediaInfo.name || mediaInfo.title || '',
-      artist: mediaInfo.artist || '',
-      date: mediaInfo.date || '',
-      reference: reference.toString(),
-      category,
-      source: mediaInfo.source || '',
-      // which DBS production, and which of its chapters, to resolve at play time
-      org: mediaInfo.org || '',
-      chapterNumber: mediaLibrary.type === 'dbsvideo' ? (mediaInfo.chapter ?? mediaInfo.filename) : null,
-      // identity for selectMediaItem lookups from the media popup
-      folder: mediaLibrary.folder,
-      filename: mediaInfo.filename,
-      verseid
-    };
+  createGalleryItem(options) {
+    return createGalleryItem(options);
   }
 
   renderThumbLink(galleryItem, mediaLibrary, mediaInfo, reference) {
-    const titleAttr = galleryItem.title ? `title="${this.escapeHtml(galleryItem.title)}"` : '';
-    const playIndicator = mediaLibrary.type !== 'image' ? '<b><i></i></b>' : '';
-
-    return `<a href="${galleryItem.url}" class="mediatype-${mediaLibrary.type} mediacategory-${galleryItem.category}" ${titleAttr} data-filename="${mediaInfo.filename}" data-index="${this.state.galleryItems.length - 1}">
-      <img src="${galleryItem.thumbUrl}" alt="${this.escapeHtml(reference.toString())}" />
-      ${playIndicator}
-      <span>${reference.toString()}</span>
-    </a>`;
+    return renderThumbLink(this, galleryItem, mediaLibrary, mediaInfo, reference);
   }
 
   startResize() {
@@ -865,53 +557,7 @@ class MediaWindowComponent extends BaseWindow {
   }
 
   resizeImages(gallery) {
-    if (!gallery) return;
-    const images = gallery.querySelectorAll('img');
-    if (!images.length) return;
-
-    const containerWidth = gallery.offsetWidth;
-    let row = [], rowWidth = 0;
-
-    const flushRow = (fit) => {
-      if (!row.length) return;
-      const scale = fit && row.length > 1 ? containerWidth / rowWidth : 1;
-      for (let i = 0; i < row.length; i++) {
-        const { anchor, img, sw } = row[i];
-        this.applyThumbStyles(anchor, img,
-          Math.round(sw * scale),
-          Math.round(TARGET_ROW_HEIGHT * scale),
-          fit && i === row.length - 1);
-      }
-      row = [];
-      rowWidth = 0;
-    };
-
-    for (const img of images) {
-      const anchor = img.closest('a');
-      if (!anchor) continue;
-
-      let { originalWidth: ow, originalHeight: oh } = img.dataset;
-      if (!ow) {
-        ow = img.offsetWidth || img.naturalWidth || TARGET_ROW_HEIGHT;
-        oh = img.offsetHeight || img.naturalHeight || TARGET_ROW_HEIGHT;
-        img.dataset.originalWidth = ow;
-        img.dataset.originalHeight = oh;
-      }
-
-      const sw = Math.floor(TARGET_ROW_HEIGHT * ow / (oh || TARGET_ROW_HEIGHT));
-      if (rowWidth + sw > containerWidth && row.length) flushRow(true);
-      row.push({ anchor, img, sw });
-      rowWidth += sw + TARGET_GUTTER_WIDTH;
-    }
-    flushRow(false);
-  }
-
-  applyThumbStyles(anchor, img, width, height, isLastInRow) {
-    const widthPx = `${width}px`;
-    const heightPx = `${height}px`;
-
-    anchor.style.cssText = `width:${widthPx};height:${heightPx};margin-right:${isLastInRow ? '0' : TARGET_GUTTER_WIDTH + 'px'};margin-bottom:${TARGET_GUTTER_WIDTH}px`;
-    img.style.cssText = `width:${widthPx};height:${heightPx}`;
+    resizeImages(gallery);
   }
 
   size(width, height) {

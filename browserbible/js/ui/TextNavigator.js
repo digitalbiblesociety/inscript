@@ -1,632 +1,275 @@
-/**
- * A dropdown for navigating Bible books and chapters.
- * For English texts a passages column sits to the right of the books and
- * tracks the active book. Uses the native popover API for click-off detection.
- */
+/** A popover for navigating Bible books, chapters, and English passage titles. */
 
-import { elem, offset, forceReflow } from '../lib/helpers.esm.js';
+import { elem, offset } from '../lib/helpers.esm.js';
 import { toBcp47Lang } from '../lib/bcp47.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
-import { i18n } from '../lib/i18n.js';
-import { BOOK_DATA, OT_BOOKS, NT_BOOKS, AP_BOOKS, addNames, numbers as bibleNumbers } from '../bible/BibleData.js';
+import { addNames } from '../bible/BibleData.js';
 import { Reference } from '../bible/BibleReference.js';
-import { loadPericopesByBook } from '../bible/Pericopes.js';
-import { getShowApocrypha } from '../bible/Apocrypha.js';
+import { handleDivisionClick, renderDivisions, renderSections } from './TextNavigatorBooks.js';
+import {
+  applyFilter, ensurePericopes, filterBooks, highlightCurrentPassage,
+  isEnglishText, renderActiveBookPassages, renderSearchResults, setActiveBook
+} from './TextNavigatorPericopes.js';
 
-// Lazy pericope data shared by all navigators; render paths stay synchronous
-// and see empty data until the chunk arrives.
-let pericopeGroups = null; // [{bookid, pericopes}] or null until loaded
-let pericopeMap = null;
-
-function ensurePericopes(onReady) {
-  if (pericopeGroups) return;
-  loadPericopesByBook().then(groups => {
-    pericopeGroups = groups;
-    pericopeMap = new Map(groups.map(g => [g.bookid, g.pericopes]));
-    onReady?.();
-  });
-}
-
-const TESTAMENT_HEADERS = [
-  { books: OT_BOOKS, key: 'ot', i18nKey: 'windows.bible.ot' },
-  { books: AP_BOOKS, key: 'ap', i18nKey: 'windows.bible.dc' },
-  { books: NT_BOOKS, key: 'nt', i18nKey: 'windows.bible.nt' }
-];
-
-export function TextNavigator() {
-  let container = null;
-  let target = null;
-  let isFull = false;
-  let textInfo = null;
-  let fullBookMode = false;
-  let activeBookId = null;
-
-  // Single filter (in place of the header title): narrows books, and on English
-  // texts searches passage titles across all books.
-  const filterInput = elem('input', { className: 'text-navigator-filter', type: 'text', placeholder: 'Filter books or passages…' });
-  const header = elem('div', { className: 'text-navigator-header' }, filterInput);
-
-  // Left column: books (with inline chapter grid on selection)
-  const divisionsEl = elem('div', { className: 'text-navigator-divisions' });
-
-  // Right column (English texts): passages for the active book
-  const periHeaderEl = elem('div', { className: 'text-navigator-peri-header' });
-  const periList = elem('div', { className: 'text-navigator-peri-list' });
-  const pericopesEl = elem('div', { className: 'text-navigator-pericopes' }, periHeaderEl, periList);
-
-  const bodyEl = elem('div', { className: 'text-navigator-body' }, divisionsEl, pericopesEl);
-  const changer = elem('div', { className: 'text-navigator nav-drop-list', popover: '' }, header, bodyEl);
-
-  document.body.appendChild(changer);
-
-  // ── Passages (pericopes) ──────────────────────────────────────
-
-  // Pericope titles are English source data, so the passages column is only
-  // offered for English texts (lang "eng"/"en", incl. tagged variants).
-  function isEnglishText() {
-    const lang = (textInfo?.lang || '').toLowerCase();
-    return lang === 'eng' || lang === 'en' || lang.startsWith('eng-') || lang.startsWith('en-');
+class TextNavigatorController {
+  constructor() {
+    this.container = null;
+    this.target = null;
+    this.isFull = false;
+    this.textInfo = null;
+    this.fullBookMode = false;
+    this.activeBookId = null;
+    this.lastFragmentid = null;
+    this.buildUi();
+    mixinEventEmitter(this);
+    this.attachEvents();
   }
 
-  function getPericopeMap() {
-    return pericopeMap ?? new Map();
-  }
-
-  function sectionFilter() {
-    const available = new Set(textInfo?.sections ?? []);
-    return available.size ? (sectionid) => available.has(sectionid) : () => true;
-  }
-
-  function buildPericopeItem(p) {
-    return elem('div', {
-      className: 'peri-item',
-      dataset: { title: p.title.toLowerCase(), section: p.sectionid, fragment: p.fragmentid }
-    },
-      elem('span', { className: 'peri-title', textContent: p.title }),
-      elem('span', { className: 'peri-ref', textContent: `${p.chapter}:${p.verse}` })
-    );
-  }
-
-  // Right column shows just the active book's passages.
-  function renderActiveBookPassages(bookid) {
-    periHeaderEl.textContent = bookid ? (BOOK_DATA[bookid]?.name ?? bookid) : '';
-    periList.classList.remove('peri-grouped');
-
-    const has = sectionFilter();
-    const frag = document.createDocumentFragment();
-    for (const p of getPericopeMap().get(bookid) ?? []) {
-      if (has(p.sectionid)) frag.appendChild(buildPericopeItem(p));
-    }
-    periList.innerHTML = '';
-    periList.appendChild(frag);
-  }
-
-  // When filtering, the right column shows matches across every book.
-  // Returns the set of book ids that have at least one match.
-  function renderSearchResults(q) {
-    periHeaderEl.textContent = i18n.t('windows.search.results') || 'Results';
-    periList.classList.add('peri-grouped');
-
-    const has = sectionFilter();
-    const bookIds = new Set();
-    const frag = document.createDocumentFragment();
-    for (const { bookid, pericopes } of pericopeGroups ?? []) {
-      if (textInfo?.divisions && !textInfo.divisions.includes(bookid)) continue;
-      const bookName = BOOK_DATA[bookid]?.name ?? bookid;
-      const bookMatch = bookName.toLowerCase().includes(q);
-      const matches = pericopes.filter(p => has(p.sectionid) && (bookMatch || p.title.toLowerCase().includes(q)));
-      if (!matches.length) continue;
-
-      bookIds.add(bookid);
-      const group = elem('div', { className: 'peri-book-group' },
-        elem('div', { className: 'peri-book-header', textContent: bookName })
-      );
-      for (const p of matches) group.appendChild(buildPericopeItem(p));
-      frag.appendChild(group);
-    }
-    periList.innerHTML = '';
-    periList.appendChild(frag);
-    return bookIds;
-  }
-
-  // Show only the given book ids in the left column (used during passage search
-  // so the books owning the results stay visible alongside them).
-  function showOnlyBooks(bookIds) {
-    let headerEl = null;
-    let headerHasVisible = false;
-    const flush = () => { if (headerEl) headerEl.style.display = headerHasVisible ? '' : 'none'; };
-
-    for (const child of divisionsEl.children) {
-      if (child.classList.contains('text-navigator-division-header')) {
-        flush();
-        headerEl = child;
-        headerHasVisible = false;
-      } else if (child.classList.contains('text-navigator-division')) {
-        const visible = bookIds.has(child.dataset.id);
-        child.style.display = visible ? '' : 'none';
-        if (visible) headerHasVisible = true;
-      }
-    }
-    flush();
-  }
-
-  // Highlight & scroll to the passage containing the current reference.
-  function highlightCurrentPassage(fragmentid) {
-    if (!fragmentid) return;
-    const [sectionid, verseStr] = fragmentid.split('_');
-    const bookid = sectionid.substring(0, 2);
-    const chapter = parseInt(sectionid.substring(2), 10);
-    const verse = parseInt(verseStr || '1', 10) || 1;
-
-    let best = null;
-    for (const p of getPericopeMap().get(bookid) ?? []) {
-      if (p.chapter < chapter || (p.chapter === chapter && p.verse <= verse)) best = p;
-      else break; // passages are in canonical order
-    }
-    if (!best) return;
-
-    const node = periList.querySelector(`.peri-item[data-fragment="${best.fragmentid}"]`);
-    if (!node) return;
-    periList.querySelectorAll('.peri-item.current').forEach(n => n.classList.remove('current'));
-    node.classList.add('current');
-    node.scrollIntoView({ block: 'nearest' });
-  }
-
-  // Make `bookid` the active book: position the book list on it and, for English
-  // texts, refresh the passages column to match (unless a search is active).
-  let lastFragmentid = null;
-  function setActiveBook(bookid, currentFragmentid) {
-    activeBookId = bookid;
-    lastFragmentid = currentFragmentid ?? null;
-
-    // offsetTop, not client rects: this runs in the same task as showPopover(),
-    // while the open transition still has the popover scaled.
-    const divNode = changer.querySelector('.divisionid-' + bookid);
-    if (divNode) {
-      divisionsEl.scrollTop = Math.max(0, divNode.offsetTop - divisionsEl.offsetTop - 8);
-    }
-
-    if (!isEnglishText() || filterInput.value.trim()) return;
-    renderActiveBookPassages(bookid);
-    periList.scrollTop = 0;
-    if (currentFragmentid) highlightCurrentPassage(currentFragmentid);
-  }
-
-  // Unified filter: narrow the book list; drive the passages column.
-  function applyFilter() {
-    const q = filterInput.value.trim().toLowerCase();
-
-    if (isEnglishText() && q) {
-      showOnlyBooks(renderSearchResults(q));
-    } else {
-      filterBooks(q);
-      if (isEnglishText()) renderActiveBookPassages(activeBookId);
-    }
-  }
-
-  function filterBooks(q) {
-    // Show/hide book rows by name; hide testament headers with no visible books.
-    let headerEl = null;
-    let headerHasVisible = false;
-    const flush = () => { if (headerEl) headerEl.style.display = headerHasVisible ? '' : 'none'; };
-
-    for (const child of divisionsEl.children) {
-      if (child.classList.contains('text-navigator-division-header')) {
-        flush();
-        headerEl = child;
-        headerHasVisible = false;
-      } else if (child.classList.contains('text-navigator-division')) {
-        const name = (child.getAttribute('data-name') || '').toLowerCase();
-        const visible = !q || name.includes(q);
-        child.style.display = visible ? '' : 'none';
-        if (visible) headerHasVisible = true;
-      }
-    }
-    flush();
-  }
-
-  function firstVisibleDivision() {
-    for (const d of divisionsEl.querySelectorAll('.text-navigator-division')) {
-      if (d.style.display !== 'none') return d;
-    }
-    return null;
-  }
-
-  function navigateToPericope(item) {
-    if (!item) return;
-    ext.trigger('change', {
-      type: 'change',
-      target: item,
-      data: { sectionid: item.dataset.section, fragmentid: item.dataset.fragment, target }
+  buildUi() {
+    const filter = elem('input', {
+      className: 'text-navigator-filter', type: 'text',
+      placeholder: 'Filter books or passages…'
     });
-    hide();
+    const header = elem('div', { className: 'text-navigator-header' }, filter);
+    const divisions = elem('div', { className: 'text-navigator-divisions' });
+    const periHeader = elem('div', { className: 'text-navigator-peri-header' });
+    const periList = elem('div', { className: 'text-navigator-peri-list' });
+    const pericopes = elem('div', { className: 'text-navigator-pericopes' }, periHeader, periList);
+    const body = elem('div', { className: 'text-navigator-body' }, divisions, pericopes);
+    const changer = elem('div', { className: 'text-navigator nav-drop-list', popover: '' },
+      header, body);
+    document.body.appendChild(changer);
+    this.refs = { filter, header, divisions, periHeader, periList, pericopes, body, changer };
   }
 
-  filterInput.addEventListener('input', applyFilter);
-  filterInput.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter') return;
-    e.preventDefault();
-    if (filterInput.value.trim() && isEnglishText()) {
-      navigateToPericope(periList.querySelector('.peri-item'));
-    } else {
-      const d = firstVisibleDivision();
-      if (d && !d.classList.contains('selected')) d.click();
+  attachEvents() {
+    this.refs.filter.addEventListener('input', () => this.applyFilter());
+    this.refs.filter.addEventListener('keydown', (event) => this.handleFilterKeydown(event));
+    this.refs.periList.addEventListener('click', (event) => {
+      const item = event.target.closest('.peri-item');
+      if (item) this.navigateToPericope(item);
+    });
+    this.refs.changer.addEventListener('click', (event) => {
+      const division = event.target.closest('.text-navigator-division');
+      if (division) this.handleDivisionClick(division);
+    });
+    this.refs.changer.addEventListener('click', (event) => {
+      const section = event.target.closest('.text-navigator-section');
+      if (section) this.navigateToSection(section);
+    });
+  }
+
+  isEnglishText() {
+    return isEnglishText(this);
+  }
+
+  renderActiveBookPassages(bookid) {
+    renderActiveBookPassages(this, bookid);
+  }
+
+  renderSearchResults(query) {
+    return renderSearchResults(this, query);
+  }
+
+  filterBooks(query) {
+    filterBooks(this, query);
+  }
+
+  applyFilter() {
+    applyFilter(this);
+  }
+
+  highlightCurrentPassage(fragmentid) {
+    highlightCurrentPassage(this, fragmentid);
+  }
+
+  setActiveBook(bookid, fragmentid) {
+    setActiveBook(this, bookid, fragmentid);
+  }
+
+  handleFilterKeydown(event) {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    if (this.refs.filter.value.trim() && this.isEnglishText()) {
+      this.navigateToPericope(this.refs.periList.querySelector('.peri-item'));
+      return;
     }
-  });
-
-  periList.addEventListener('click', (e) => {
-    const item = e.target.closest('.peri-item');
-    if (item) navigateToPericope(item);
-  });
-
-  // ── Book / chapter navigation ─────────────────────────────────
-
-  function hide() {
-    changer.hidePopover();
+    const division = [...this.refs.divisions.querySelectorAll('.text-navigator-division')]
+      .find((item) => item.style.display !== 'none');
+    if (division && !division.classList.contains('selected')) division.click();
   }
 
-  function toggle() {
-    if (changer.matches(':popover-open')) {
-      hide();
-    } else {
-      show();
-    }
+  navigateToPericope(item) {
+    if (!item) return;
+    this.trigger('change', {
+      type: 'change', target: item,
+      data: {
+        sectionid: item.dataset.section, fragmentid: item.dataset.fragment,
+        target: this.target
+      }
+    });
+    this.hide();
   }
 
-  function applyDivisionAttrs(divsEl) {
-    if (!divsEl) return;
-    divsEl.style.display = '';
-    if (textInfo.dir) divsEl.setAttribute('dir', textInfo.dir);
-    if (textInfo.lang) divsEl.setAttribute('lang', toBcp47Lang(textInfo.lang));
+  navigateToSection(section) {
+    section.classList.add('selected');
+    this.trigger('change', {
+      type: 'change', target: section,
+      data: { sectionid: section.getAttribute('data-id'), target: this.target }
+    });
+    this.hide();
   }
 
-  function selectCurrentReference(fragmentid) {
+  hide() {
+    this.refs.changer.hidePopover();
+  }
+
+  toggle() {
+    if (this.refs.changer.matches(':popover-open')) this.hide();
+    else this.show();
+  }
+
+  applyDivisionAttrs() {
+    this.refs.divisions.style.display = '';
+    if (this.textInfo.dir) this.refs.divisions.setAttribute('dir', this.textInfo.dir);
+    if (this.textInfo.lang) this.refs.divisions.setAttribute('lang', toBcp47Lang(this.textInfo.lang));
+  }
+
+  selectCurrentReference(fragmentid) {
     if (!fragmentid) return;
     const sectionid = fragmentid.split('_')[0];
     const divisionid = sectionid.substring(0, 2);
-    const divisionNode = changer.querySelector('.divisionid-' + divisionid);
-    if (!divisionNode) return;
-
-    divisionNode.classList.add('selected');
-    renderSections(false);
-    const sectionNode = divisionNode.querySelector('.section-' + sectionid);
-    if (sectionNode) sectionNode.classList.add('selected');
-
-    // Position the book list on the current book and sync the passages column
-    setActiveBook(divisionid, fragmentid);
+    const division = this.refs.changer.querySelector(`.divisionid-${divisionid}`);
+    if (!division) return;
+    division.classList.add('selected');
+    this.renderSections(false);
+    division.querySelector(`.section-${sectionid}`)?.classList.add('selected');
+    this.setActiveBook(divisionid, fragmentid);
   }
 
-  function showBibleNav() {
-    const textInputValue = target?.value ?? '';
-    const biblereference = Reference(textInputValue);
-    const fragmentid = biblereference ? biblereference.toSection() : null;
-
-    renderDivisions();
-    applyDivisionAttrs(divisionsEl);
-    selectCurrentReference(fragmentid);
+  showBibleNav() {
+    const reference = Reference(this.target?.value ?? '');
+    const fragmentid = reference ? reference.toSection() : null;
+    this.renderDivisions();
+    this.applyDivisionAttrs();
+    this.selectCurrentReference(fragmentid);
   }
 
-  function show() {
-    if (textInfo == null) {
+  preparePericopes() {
+    const english = this.isEnglishText();
+    if (english) {
+      ensurePericopes(() => {
+        if (!this.refs.changer.matches(':popover-open') || !this.isEnglishText()) return;
+        if (this.refs.filter.value.trim()) this.applyFilter();
+        else if (this.activeBookId) this.setActiveBook(this.activeBookId, this.lastFragmentid);
+      });
+    }
+    this.refs.changer.classList.toggle('text-navigator-2col', english);
+    this.refs.pericopes.style.display = english ? '' : 'none';
+    this.refs.filter.placeholder = english ? 'Filter books or passages…' : 'Filter books…';
+    this.refs.periHeader.textContent = '';
+    this.refs.periList.innerHTML = '';
+  }
+
+  show() {
+    if (!this.textInfo) {
       console.warn('navigator has no textInfo!');
       return;
     }
+    this.refs.filter.value = '';
+    this.activeBookId = null;
+    this.preparePericopes();
+    this.size();
+    this.refs.changer.showPopover();
+    this.size();
+    this.refs.changer.querySelectorAll('.selected').forEach((element) => element.classList.remove('selected'));
+    this.refs.divisions.scrollTop = 0;
+    const type = (this.textInfo.type || 'bible').toLowerCase();
+    if (['bible', 'deafbible', 'videobible', 'commentary'].includes(type)) this.showBibleNav();
+    else if (type === 'book') {
+      this.renderSections();
+      this.refs.divisions.style.display = 'none';
+    }
+  }
 
-    filterInput.value = '';
-    activeBookId = null;
+  renderDivisions() {
+    renderDivisions(this);
+  }
 
-    // English texts get the passages column to the right of the books
-    const english = isEnglishText();
-    if (english) {
-      ensurePericopes(() => {
-        // Data arrived after opening: repaint the passages column.
-        if (!changer.matches(':popover-open') || !isEnglishText()) return;
-        if (filterInput.value.trim()) {
-          applyFilter();
-        } else if (activeBookId) {
-          setActiveBook(activeBookId, lastFragmentid);
-        }
+  renderSections(animated) {
+    renderSections(this, animated);
+  }
+
+  handleDivisionClick(division) {
+    handleDivisionClick(this, division);
+  }
+
+  size(width, height) {
+    if (this.isFull) {
+      width ||= this.container.offsetWidth;
+      height ||= this.container.offsetHeight;
+      const containerOffset = offset(this.container);
+      Object.assign(this.refs.changer.style, {
+        width: `${width}px`, height: `${height}px`, top: `${containerOffset.top}px`,
+        left: `${containerOffset.left}px`
       });
-    }
-    changer.classList.toggle('text-navigator-2col', english);
-    pericopesEl.style.display = english ? '' : 'none';
-    filterInput.placeholder = english ? 'Filter books or passages…' : 'Filter books…';
-    periHeaderEl.textContent = '';
-    periList.innerHTML = '';
-
-    size();
-    changer.showPopover();
-    size();
-
-    changer.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
-    divisionsEl.scrollTop = 0;
-
-    const textType = (textInfo.type || 'bible').toLowerCase();
-    const isBibleType = ['bible', 'deafbible', 'videobible', 'commentary'].includes(textType);
-
-    if (isBibleType) {
-      showBibleNav();
-    } else if (textType === 'book') {
-      renderSections();
-      divisionsEl.style.display = 'none';
-    }
-  }
-
-  function getBookSectionClass(bookid) {
-    return BOOK_DATA[bookid] ? BOOK_DATA[bookid].section : '';
-  }
-
-  function getDisplayName(divisionName, divisionAbbr) {
-    if (fullBookMode) return divisionName;
-    const source = divisionAbbr ?? divisionName ?? '';
-    return source.replace(/\s/i, '').substring(0, 3);
-  }
-
-  function buildDivisionElement(divisionid, divisionName, displayName) {
-    const chapters = textInfo.sections.filter(c => c.substring(0, 2) === divisionid);
-    return elem('div', {
-      className: `text-navigator-division divisionid-${divisionid} division-section-${getBookSectionClass(divisionid)}`,
-      dataset: { id: divisionid, chapters: chapters.join(','), name: divisionName }
-    }, elem('span', displayName));
-  }
-
-  function sortDivisionEntries() {
-    const otDivs = [];
-    const apDivs = [];
-    const ntDivs = [];
-    const otherDivs = [];
-
-    for (let i = 0; i < textInfo.divisions.length; i++) {
-      const divisionid = textInfo.divisions[i];
-      const entry = { divisionid, index: i };
-      if (OT_BOOKS.includes(divisionid)) otDivs.push(entry);
-      else if (NT_BOOKS.includes(divisionid)) ntDivs.push(entry);
-      else if (AP_BOOKS.includes(divisionid)) apDivs.push(entry);
-      else otherDivs.push(entry);
-    }
-
-    // Apocryphal books are hidden unless the user has enabled them.
-    return getShowApocrypha()
-      ? [...otDivs, ...apDivs, ...ntDivs, ...otherDivs]
-      : [...otDivs, ...ntDivs, ...otherDivs];
-  }
-
-  function appendTestamentHeader(fragment, divisionid, printed) {
-    for (const { books, key, i18nKey } of TESTAMENT_HEADERS) {
-      if (books.includes(divisionid) && !printed[key]) {
-        fragment.appendChild(elem('div', { className: 'text-navigator-division-header', textContent: i18n.t(i18nKey) }));
-        printed[key] = true;
-      }
-    }
-  }
-
-  function renderDivisions() {
-    const fragment = document.createDocumentFragment();
-    const printed = { ot: false, nt: false, ap: false };
-    fullBookMode = true;
-
-    divisionsEl.classList.toggle('text-navigator-divisions-full', fullBookMode);
-
-    for (const { divisionid, index: i } of sortDivisionEntries()) {
-      if (!BOOK_DATA[divisionid]) continue;
-
-      const divisionName = textInfo.divisionNames?.[i] ?? null;
-      const divisionAbbr = textInfo.divisionAbbreviations?.[i] ?? null;
-
-      appendTestamentHeader(fragment, divisionid, printed);
-      fragment.appendChild(buildDivisionElement(divisionid, divisionName, getDisplayName(divisionName, divisionAbbr)));
-    }
-
-    divisionsEl.innerHTML = '';
-    divisionsEl.appendChild(fragment);
-    divisionsEl.style.display = '';
-  }
-
-  changer.addEventListener('click', (e) => {
-    const divisionNode = e.target.closest('.text-navigator-division');
-    if (!divisionNode) return;
-
-    if (divisionNode.classList.contains('selected')) {
-      const sectionsEl = divisionNode.querySelector('.text-navigator-sections');
-      if (sectionsEl) {
-        sectionsEl.classList.add('collapsed');
-        sectionsEl.addEventListener('transitionend', () => {
-          divisionNode.classList.remove('selected');
-        }, { once: true });
-      } else {
-        divisionNode.classList.remove('selected');
-      }
       return;
     }
-
-    divisionNode.classList.add('selected');
-    [...divisionNode.parentElement.children].filter(s => s !== divisionNode).forEach(sib => sib.classList.remove('selected'));
-
-    const positionBefore = divisionNode.offsetTop;
-    const scrollTopBefore = divisionsEl.scrollTop;
-
-    changer.querySelectorAll('.text-navigator-sections').forEach(el => el.parentNode.removeChild(el));
-
-    const positionAfter = divisionNode.offsetTop;
-
-    if (positionBefore > positionAfter) {
-      divisionsEl.scrollTop = scrollTopBefore - (positionBefore - positionAfter);
+    if (!this.target) return;
+    const targetOffset = offset(this.target);
+    const top = targetOffset.top + this.target.offsetHeight + 10;
+    const maxHeight = window.innerHeight - 40 - top;
+    let left = targetOffset.left;
+    if (window.innerWidth < left + this.refs.changer.offsetWidth) {
+      left = Math.max(0, window.innerWidth - this.refs.changer.offsetWidth);
     }
-
-    renderSections(true);
-
-    // Selecting a book makes it active → refresh the passages column + position
-    setActiveBook(divisionNode.dataset.id);
-  });
-
-  function buildChapterElements(chapters) {
-    const numbers = textInfo.numbers ?? bibleNumbers.default;
-    const fragment = document.createDocumentFragment();
-    for (const code of chapters) {
-      const num = parseInt(code.substring(2));
-      const span = elem('span', {
-        className: `text-navigator-section section-${code}`,
-        textContent: numbers[num],
-        dataset: { id: code }
-      });
-      fragment.appendChild(span);
-    }
-    return fragment;
+    Object.assign(this.refs.changer.style, {
+      height: `${maxHeight}px`, top: `${top}px`, left: `${left}px`
+    });
+    this.refs.changer.style.setProperty('--arrow-left', `${targetOffset.left - left + 20}px`);
+    this.refs.body.style.height = `${maxHeight - this.refs.header.offsetHeight}px`;
   }
 
-  function insertSectionNodes(selectedDiv, sectionNodes, animated) {
-    const spanEl = selectedDiv?.querySelector('span');
-    if (spanEl) spanEl.parentNode.insertBefore(sectionNodes, spanEl.nextSibling);
-
-    const isLast = selectedDiv && !selectedDiv.nextElementSibling;
-    if (animated && !isLast) {
-      forceReflow(sectionNodes);
-      sectionNodes.classList.remove('collapsed');
-    } else {
-      sectionNodes.classList.remove('collapsed');
-      if (isLast) {
-        divisionsEl.scrollTop += 500;
-      }
-    }
-  }
-
-  function renderBibleSections(animated) {
-    const selectedDiv = changer.querySelector('.text-navigator-division.selected');
-    const chapters = selectedDiv?.getAttribute('data-chapters')?.split(',') ?? [];
-
-    const inner = elem('div', { className: 'text-navigator-sections-inner' });
-    inner.appendChild(buildChapterElements(chapters));
-    const sectionNodes = elem('div', { className: 'text-navigator-sections collapsed' });
-    sectionNodes.appendChild(inner);
-    insertSectionNodes(selectedDiv, sectionNodes, animated);
-  }
-
-  function renderSections(animated) {
-    const textType = (textInfo.type || 'bible').toLowerCase();
-    const isBibleType = ['bible', 'deafbible', 'videobible', 'commentary'].includes(textType);
-
-    if (isBibleType) {
-      renderBibleSections(animated);
-    }
-  }
-
-  changer.addEventListener('click', (e) => {
-    const el = e.target.closest('.text-navigator-section');
-    if (!el) return;
-
-    el.classList.add('selected');
-    const sectionid = el.getAttribute('data-id');
-
-    ext.trigger('change', { type: 'change', target: el, data: { sectionid: sectionid, target: target } });
-    hide();
-  });
-
-  function size(width, height) {
-    if (isFull) {
-      if (!(width && height)) {
-        width = container.offsetWidth;
-        height = container.offsetHeight;
-      }
-
-      const containerOffset = offset(container);
-
-      changer.style.width = width + 'px';
-      changer.style.height = height + 'px';
-      changer.style.top = containerOffset.top + 'px';
-      changer.style.left = containerOffset.left + 'px';
-    } else {
-      if (target == null) return;
-
-      const targetOffset = offset(target);
-      const targetOuterHeight = target.offsetHeight;
-      const top = targetOffset.top + targetOuterHeight + 10;
-      const changerWidth = changer.offsetWidth;
-      const winHeight = window.innerHeight - 40;
-      const winWidth = window.innerWidth;
-      const maxHeight = winHeight - top;
-
-      let left = targetOffset.left;
-
-      if (winWidth < left + changerWidth) {
-        left = winWidth - changerWidth;
-        if (left < 0) left = 0;
-      }
-
-      changer.style.height = maxHeight + 'px';
-      changer.style.top = top + 'px';
-      changer.style.left = left + 'px';
-
-      const upArrowLeft = targetOffset.left - left + 20;
-      changer.style.setProperty('--arrow-left', upArrowLeft + 'px');
-
-      // The body (book + passages columns) fills the space below the filter.
-      // Each column scrolls internally; the inline chapter grid sizes to its
-      // content (forcing a height there spreads its wrapped rows).
-      bodyEl.style.height = (maxHeight - header.offsetHeight) + 'px';
-    }
-  }
-
-  function setTextInfo(value) {
-    textInfo = value;
+  setTextInfo(textInfo) {
+    this.textInfo = textInfo;
     if (!textInfo) return;
-
-    // Warm the pericope chunk before first open.
-    if (isEnglishText()) ensurePericopes();
-
-    if (textInfo.divisionNames) {
-      addNames(textInfo.lang, textInfo.divisions, textInfo.divisionNames);
-    }
+    if (this.isEnglishText()) ensurePericopes();
+    if (textInfo.divisionNames) addNames(textInfo.lang, textInfo.divisions, textInfo.divisionNames);
   }
 
-  function isVisible() {
-    return changer.matches(':popover-open');
+  isVisible() {
+    return this.refs.changer.matches(':popover-open');
   }
 
-  function node() {
-    return changer;
+  node() {
+    return this.refs.changer;
   }
 
-  function close() {
-    hide();
+  close() {
+    this.hide();
   }
 
-  function setTarget(_container, _target) {
-    container = _container;
-    target = _target;
+  setTarget(container, target) {
+    this.container = container;
+    this.target = target;
   }
 
-  function getTarget() {
-    return target;
+  getTarget() {
+    return this.target;
   }
 
-  function destroy() {
-    changer.remove();
+  destroy() {
+    this.refs.changer.remove();
   }
+}
 
-  let ext = {
-    setTarget,
-    getTarget,
-    show,
-    toggle,
-    hide,
-    isVisible,
-    node,
-    setTextInfo,
-    size,
-    close,
-    destroy
-  };
-
-  mixinEventEmitter(ext);
-
-  return ext;
+export function TextNavigator() {
+  return new TextNavigatorController();
 }
 
 let globalTextNavigator = null;
 
 export function getGlobalTextNavigator() {
-  if (!globalTextNavigator) {
-    globalTextNavigator = TextNavigator();
-  }
+  globalTextNavigator ||= TextNavigator();
   return globalTextNavigator;
 }

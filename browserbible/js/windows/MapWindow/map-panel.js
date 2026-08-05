@@ -4,20 +4,20 @@
  * addListener, updateMarkerScales, triggerSettingsChange.
  */
 
-import { SVG_WIDTH, SVG_HEIGHT, CLUSTER_RADIUS_PX, DEFAULT_CENTER, ZOOM_STEP, COLOCATED_EPSILON, CLUSTER_BREAK_MARGIN } from './constants.js';
-import { getConfig } from '../../core/config.js';
+import { SVG_WIDTH, SVG_HEIGHT, DEFAULT_CENTER, ZOOM_STEP } from './constants.js';
 import { i18n } from '../../lib/i18n.js';
-import { svgToGeo, geoToSvg } from './geo-utils.js';
-import { getViewTransform } from './view-transform.js';
-import { NT_BOOKS } from '../../bible/BibleData.js';
+import { svgToGeo } from './geo-utils.js';
 import * as MarkerRenderer from './marker-renderer.js';
-import { loadLocationData, getLocationsForReference, loadJourneyData, resolveStopLocation } from './map-data.js';
+import { getLocationsForReference, resolveStopLocation } from './map-data.js';
+import { fetchSvgText, fetchPinData, fetchJourneyData, lazyLoadRelief } from './MapAssets.js';
 import { ensureJourneyLayer, renderJourney, removeJourney } from './journey-layer.js';
 import { journeyBoundsLocations } from './route-geometry.js';
-import { setupPanZoom, centerOn, centerOnBounds, constrainViewBox, updateViewBox, setViewBoxSize, refit, zoomBy, isAtMinZoom, isAtMaxZoom } from './pan-zoom.js';
-import { createDetailPanel, openDetailPanel, destroyDetailPanel } from './detail-panel.js';
+import { setupPanZoom, centerOn, centerOnBounds, refit, zoomBy, isAtMinZoom, isAtMaxZoom } from './pan-zoom.js';
+import { createDetailPanel, destroyDetailPanel } from './detail-panel.js';
 import { highlightLocations, removeTextHighlights, removeMarkerHighlights } from './highlight.js';
 import { computeClusters, renderClusters, applyClusterVisibility } from './clustering.js';
+import { wireDetailPanel } from './PanelEvents.js';
+import { filterMarkers, openLocationDetail } from './MarkerActions.js';
 
 // Trailing delay before clusters/labels recompute after a burst of zoom input
 const DECORATION_SETTLE_MS = 150;
@@ -26,67 +26,6 @@ const DECORATION_SETTLE_MS = 150;
 // by every live panel that has highlighted. Each such panel holds a claim here;
 // the spans are only stripped when the last claimant releases (close/destroy).
 const _textHighlightOwners = new Set();
-
-// Map assets never change, so panels share one fetch across open/close
-// cycles. Failures aren't cached; a later open retries.
-let _svgTextPromise = null;
-function fetchSvgText() {
-  if (!_svgTextPromise) {
-    _svgTextPromise = fetch(`${getConfig().baseContentUrl}content/maps/biblical-map.svg`).then((response) => {
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.text();
-    });
-    _svgTextPromise.catch(() => { _svgTextPromise = null; });
-  }
-  return _svgTextPromise;
-}
-
-function locationEra(verses, ntBookSet) {
-  let hasOT = false, hasNT = false;
-  for (const v of verses) {
-    if (ntBookSet.has(v.slice(0, 2))) { hasNT = true; } else { hasOT = true; }
-    if (hasOT && hasNT) return 'both';
-  }
-  return hasNT ? 'nt' : 'ot';
-}
-
-let _pinDataPromise = null;
-function fetchPinData() {
-  if (!_pinDataPromise) {
-    _pinDataPromise = loadLocationData().then((mapData) => {
-      // Precompute era for each location (verse IDs use 2-char book prefixes; NT/OT sets don't collide)
-      const ntBookSet = new Set(NT_BOOKS);
-      for (const loc of mapData) {
-        loc._era = locationEra(loc.verses, ntBookSet);
-      }
-      return mapData;
-    });
-    _pinDataPromise.catch(() => { _pinDataPromise = null; });
-  }
-  return _pinDataPromise;
-}
-
-let _journeyDataPromise = null;
-function fetchJourneyData() {
-  if (!_journeyDataPromise) {
-    _journeyDataPromise = loadJourneyData();
-    _journeyDataPromise.catch(() => { _journeyDataPromise = null; });
-  }
-  return _journeyDataPromise;
-}
-
-// Cached AVIF decode-support probe (1×1 AVIF data URI). Resolves once, reused thereafter.
-let _avifSupport = null;
-function supportsAvif() {
-  if (_avifSupport) return _avifSupport;
-  _avifSupport = new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = 'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAEAAAABAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIABoAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgABogQEDQgMgkQAAAAB8dSLfI=';
-  });
-  return _avifSupport;
-}
 
 export class MapPanel {
   constructor(container) {
@@ -129,7 +68,7 @@ export class MapPanel {
     if (lat !== undefined) this.state.currentCenter.lat = lat;
     if (lon !== undefined) this.state.currentCenter.lon = lon;
     this.detailPanel = createDetailPanel();
-    this._wireDetailPanel();
+    wireDetailPanel(this);
     await this._initMap();
   }
 
@@ -418,7 +357,7 @@ export class MapPanel {
       centerOn(this, this.state.currentCenter.lon, this.state.currentCenter.lat, 4);
       setupPanZoom(this);
       await this._loadPins(pinDataPromise);
-      this._lazyLoadRelief();
+      lazyLoadRelief(this.svgElement);
     } catch (err) {
       console.error('MapPanel: failed to load SVG map:', err);
       this.container.innerHTML = `<div style="padding:20px;color:var(--text-color)">${i18n.t('windows.map.loadfailed')}</div>`;
@@ -472,24 +411,6 @@ export class MapPanel {
     this._zoomOutBtn.disabled = isAtMinZoom(this);
   }
 
-  /**
-   * Lazy-load the (large) shaded-relief raster: the basemap ships the <image> with
-   * no href, so the vector coastline + pins paint immediately; we set the href once
-   * the browser is idle. If the format can't be decoded, the flat land fill remains.
-   */
-  _lazyLoadRelief() {
-    const img = this.svgElement?.querySelector('#relief-layer');
-    if (!img) return;
-    const avif = img.getAttribute('data-src');
-    const webp = img.getAttribute('data-src-fallback');
-    const apply = async () => {
-      const src = (avif && await supportsAvif()) ? avif : (webp || avif);
-      if (src) img.setAttribute('href', src);
-    };
-    if (typeof requestIdleCallback === 'function') requestIdleCallback(apply, { timeout: 1500 });
-    else setTimeout(apply, 200);
-  }
-
   async _loadPins(pinDataPromise = fetchPinData()) {
     try {
       this.locationData = await pinDataPromise;
@@ -504,165 +425,11 @@ export class MapPanel {
     }
   }
 
-  _filterMarkers({ updateScales = true } = {}) {
-    if (!this.markersOverlay || !this.locationDataByVerse) return;
-
-    const isPassageMode = this.state.mode === 'passage';
-    const isJourneysMode = this.state.mode === 'journeys';
-    this.markersOverlay.querySelectorAll('.map-marker').forEach((marker) => {
-      let show = !isPassageMode;
-      if (isJourneysMode) {
-        // Numbered journey badges replace the regular pins, highlighted or not
-        show = false;
-      } else if (marker.classList.contains('highlighted')) {
-        // Pins named in the rendered Bible text stay visible through passage/era filters
-        show = true;
-      } else if (isPassageMode && this.state.currentReference && marker.locationData) {
-        show = marker.locationData.verses.some(v => v.startsWith(this.state.currentReference + '_'));
-      } else if (!isPassageMode && this.state.exploreEra !== 'all' && marker.locationData) {
-        const era = marker.locationData._era;
-        show = era === 'both' || era === this.state.exploreEra;
-      }
-
-      marker.classList.toggle('filtered-out', !show);
-    });
-
-    if (updateScales) this.updateMarkerScales();
+  _filterMarkers(opts) {
+    filterMarkers(this, opts);
   }
 
   _openLocation(location) {
-    MarkerRenderer.fadeMarkers(this.markersOverlay, location);
-
-    const level6Width = SVG_WIDTH / 6;
-    if (this.viewBox.width > level6Width) {
-      centerOn(this, location.coordinates[0], location.coordinates[1], 6);
-    } else {
-      const { x, y } = geoToSvg(location.coordinates[0], location.coordinates[1]);
-      this.viewBox.x = x - this.viewBox.width / 2;
-      this.viewBox.y = y - this.viewBox.height / 2;
-      constrainViewBox(this.viewBox);
-      updateViewBox(this.svgElement, this.viewBox);
-      this.updateMarkerScales();
-      this.triggerSettingsChange();
-    }
-
-    // Compute anchor from screen position of the geographic coordinate.
-    // We can't rely on getBoundingClientRect() from the marker element because
-    // it may still be display:none (clustered) after zoom, returning {0,0}.
-    const containerRect = this.container.getBoundingClientRect();
-    const { x: svgX, y: svgY } = geoToSvg(location.coordinates[0], location.coordinates[1]);
-    const t = getViewTransform(this.viewBox, containerRect);
-    const screenX = containerRect.left + t.offsetX + (svgX - this.viewBox.x) * t.scale;
-    const screenY = containerRect.top + t.offsetY + (svgY - this.viewBox.y) * t.scale;
-    const anchorRect = { left: screenX - 12, right: screenX + 12, top: screenY - 12, bottom: screenY + 12, width: 24, height: 24 };
-
-    // Find co-located locations sharing this pin's position
-    const colocated = [];
-    if (this.markersOverlay) {
-      this.markersOverlay.querySelectorAll('.map-marker').forEach(marker => {
-        if (!marker.locationData || marker.locationData === location || marker._svgX === undefined) return;
-        const dx = marker._svgX - svgX;
-        const dy = marker._svgY - svgY;
-        if (dx * dx + dy * dy < COLOCATED_EPSILON * COLOCATED_EPSILON) colocated.push(marker.locationData);
-      });
-    }
-
-    if (this._onLocationOpen) {
-      this._onLocationOpen(location, colocated, this._verseTextLookup);
-    } else {
-      openDetailPanel(this.detailPanel, location, anchorRect, this._verseTextLookup, colocated, this._detailTextid);
-    }
-  }
-
-  _wireDetailPanel() {
-    // Verse links in detail panel navigate the Bible window
-    this.addListener(this.detailPanel, 'click', (e) => {
-      const coloc = e.target.closest('.map-detail-colocated-item');
-      if (coloc) {
-        const idx = parseInt(coloc.getAttribute('data-index'), 10);
-        const loc = this.detailPanel._colocatedLocations?.[idx];
-        if (loc) this._openLocation(loc);
-        return;
-      }
-
-      const link = e.target.closest('.verse');
-      if (!link || !this._onVerseClick) return;
-      this._onVerseClick(
-        link.getAttribute('data-sectionid'),
-        link.getAttribute('data-fragmentid')
-      );
-    });
-
-    // Reset marker fading when detail panel closes
-    this.addListener(this.detailPanel, 'toggle', (e) => {
-      if (e.newState === 'closed') {
-        MarkerRenderer.resetMarkerOpacity(this.markersOverlay);
-      }
-    });
-
-    this.addListener(this.container, 'click', (e) => {
-      const cluster = e.target.closest('.map-cluster');
-      if (cluster && cluster._clusterData) {
-        e.stopPropagation();
-        this._handleClusterClick(cluster._clusterData);
-      }
-    });
-
-    // Cluster keyboard activation (clusters are focusable buttons)
-    this.addListener(this.container, 'keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      const cluster = e.target.closest?.('.map-cluster');
-      if (cluster && cluster._clusterData) {
-        e.preventDefault();
-        e.stopPropagation();
-        this._handleClusterClick(cluster._clusterData);
-      }
-    });
-  }
-
-  _handleClusterClick(clusterData) {
-    const locations = clusterData.members.map(m => m.locationData).filter(Boolean);
-    if (!locations.length) return;
-
-    // Find the max pairwise SVG distance between cluster members
-    const members = clusterData.members;
-    let maxDist = 0;
-    for (let i = 0; i < members.length; i++) {
-      for (let j = i + 1; j < members.length; j++) {
-        const dx = (members[i]._svgX || 0) - (members[j]._svgX || 0);
-        const dy = (members[i]._svgY || 0) - (members[j]._svgY || 0);
-        maxDist = Math.max(maxDist, Math.hypot(dx, dy));
-      }
-    }
-
-    if (maxDist < COLOCATED_EPSILON) {
-      this._openLocation(locations[0]);
-      return;
-    }
-
-    // Use centerOnBounds to center on the pins, then check whether the resulting
-    // zoom is tight enough to actually break the cluster radius.
-    centerOnBounds(this, locations);
-
-    const containerWidth = this.container.offsetWidth || 800;
-    const zoomRatio = this.viewBox.width / SVG_WIDTH;
-    const zoomScale = Math.min(1, zoomRatio * 6);
-    const clusterRadiusSvg = CLUSTER_RADIUS_PX * zoomScale * this.viewBox.width / containerWidth;
-
-    if (maxDist <= clusterRadiusSvg) {
-      const separationWidth = Math.max(
-        Math.sqrt(maxDist * SVG_WIDTH * containerWidth / (6 * CLUSTER_RADIUS_PX)) * CLUSTER_BREAK_MARGIN,
-        30
-      );
-      const cx = this.viewBox.x + this.viewBox.width / 2;
-      const cy = this.viewBox.y + this.viewBox.height / 2;
-      setViewBoxSize(this, separationWidth);
-      this.viewBox.x = cx - this.viewBox.width / 2;
-      this.viewBox.y = cy - this.viewBox.height / 2;
-      constrainViewBox(this.viewBox);
-      updateViewBox(this.svgElement, this.viewBox);
-      this.updateMarkerScales();
-      this.triggerSettingsChange();
-    }
+    openLocationDetail(this, location);
   }
 }

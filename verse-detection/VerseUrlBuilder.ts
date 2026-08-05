@@ -47,6 +47,24 @@ export function getTextIdForLanguage(
 	return '';
 }
 
+function autoSelectTextId(
+	textIdsByLanguage: Record<string, string>,
+	primaryLanguage: string | null | undefined
+): string | null {
+	const language = primaryLanguage ?? 'en';
+
+	if (textIdsByLanguage[language]) {
+		return textIdsByLanguage[language];
+	}
+
+	if (textIdsByLanguage['en']) {
+		return textIdsByLanguage['en'];
+	}
+
+	const availableLanguages = Object.keys(textIdsByLanguage);
+	return availableLanguages.length > 0 ? textIdsByLanguage[availableLanguages[0]] : null;
+}
+
 /**
  * Returns null rather than a wrong-language text when detectedLang has no
  * mapping, which is what suppresses the popup for unsupported languages.
@@ -58,36 +76,21 @@ export function getTextId(
 	const contentConfig = config.contentSource;
 	const textIdsByLanguage = contentConfig?.textIdsByLanguage || {};
 
-	if (contentConfig?.textId && !detectedLang) {
-		return contentConfig.textId;
-	}
-
 	if (detectedLang) {
 		return textIdsByLanguage[detectedLang] || null;
+	}
+
+	if (contentConfig?.textId) {
+		return contentConfig.textId;
 	}
 
 	if (config.defaultTextId) {
 		return config.defaultTextId;
 	}
 
-	if (contentConfig?.autoSelectByLanguage) {
-		const language = config.language?.primary ?? 'en';
-
-		if (textIdsByLanguage[language]) {
-			return textIdsByLanguage[language];
-		}
-
-		if (textIdsByLanguage['en']) {
-			return textIdsByLanguage['en'];
-		}
-
-		const availableLanguages = Object.keys(textIdsByLanguage);
-		if (availableLanguages.length > 0) {
-			return textIdsByLanguage[availableLanguages[0]];
-		}
-	}
-
-	return null;
+	return contentConfig?.autoSelectByLanguage
+		? autoSelectTextId(textIdsByLanguage, config.language?.primary)
+		: null;
 }
 
 export function buildVerseUrl(

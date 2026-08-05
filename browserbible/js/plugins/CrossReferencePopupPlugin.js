@@ -19,117 +19,102 @@ const removeNotesFromVerse = (verse) => {
   });
 };
 
-export const CrossReferencePopupPlugin = () => {
-  const config = getConfig();
+function getFragmentidFromNode(node) {
+  const possibleTexts = [node.getAttribute('data-id'), node.getAttribute('title'), node.innerHTML];
+  for (const text of possibleTexts) {
+    if (text == null) continue;
+    const reference = new Reference(text.split(';')[0].trim());
+    if (typeof reference.toSection !== 'undefined') return reference.toSection();
+  }
+  return null;
+}
 
-  if (!config.enableCrossReferencePopupPlugin) {
-    return {};
+class CrossReferencePopupController {
+  constructor() {
+    this.referencePopup = InfoWindow('CrossReferencePopup');
+    this.referencePopup.container.classList.add('info-window-elevated');
+    this.extension = { getData: () => null };
+    mixinEventEmitter(this.extension);
+    this.exposeHandlers();
+    this.bindEvents();
   }
 
-  const referencePopup = InfoWindow('CrossReferencePopup');
+  exposeHandlers() {
+    const controller = this;
+    handleBibleRefClick = function(e) {
+      controller.handleClick(this, e);
+    };
+    handleBibleRefMouseover = function(e, textid) {
+      controller.handleMouseover(this, textid);
+    };
+    handleBibleRefMouseout = function() {
+      controller.referencePopup.hide();
+    };
+  }
 
-  const containerEl = referencePopup.container;
-  containerEl.classList.add('info-window-elevated');
-
-  const getFragmentidFromNode = (node) => {
-    const possibleTexts = [node.getAttribute('data-id'), node.getAttribute('title'), node.innerHTML];
-    let fragmentid = null;
-
-    for (const text of possibleTexts) {
-      if (text != null) {
-        const bref = new Reference(text.split(';')[0].trim());
-        if (typeof bref.toSection !== 'undefined') {
-          fragmentid = bref.toSection();
-          break;
-        }
-      }
-    }
-
-    return fragmentid;
-  };
-
-  handleBibleRefClick = function(e) {
-    const link = this;
-    const newfragmentid = getFragmentidFromNode(link);
-
-    const currentLocationData = PlaceKeeper.getFirstLocation();
-
-    // store the current one
-    if (currentLocationData?.fragmentid) {
-      TextNavigation.locationChange(currentLocationData.fragmentid);
-    }
-
-    if (newfragmentid != null && newfragmentid !== '') {
-      TextNavigation.locationChange(newfragmentid);
-
-      ext.trigger('globalmessage', {
-        type: 'globalmessage',
-        target: this,
-        data: {
-          messagetype: 'nav',
-          type: 'bible',
-          locationInfo: {
-            fragmentid: newfragmentid,
-            sectionid: newfragmentid.split('_')[0],
-            offset: 0
-          }
-        }
-      });
-    }
-  };
-
-  handleBibleRefMouseover = function(e, textid) {
-    const link = this;
+  handleClick(link) {
     const fragmentid = getFragmentidFromNode(link);
+    const currentLocation = PlaceKeeper.getFirstLocation();
+    if (currentLocation?.fragmentid) {
+      TextNavigation.locationChange(currentLocation.fragmentid);
+    }
 
-    if (fragmentid !== null) {
-      const sectionid = fragmentid.split('_')[0];
-
-      if (typeof textid === 'undefined') {
-        const section = link.closest('.section');
-        if (section?.classList.contains('commentary')) {
-          const firstBibleSection = document.querySelector('.BibleWindow .section');
-          textid = firstBibleSection?.getAttribute('data-textid') ?? '';
-        } else if (section) {
-          textid = section.getAttribute('data-textid');
+    if (!fragmentid) return;
+    TextNavigation.locationChange(fragmentid);
+    this.extension.trigger('globalmessage', {
+      type: 'globalmessage',
+      target: link,
+      data: {
+        messagetype: 'nav',
+        type: 'bible',
+        locationInfo: {
+          fragmentid,
+          sectionid: fragmentid.split('_')[0],
+          offset: 0
         }
       }
+    });
+  }
 
-      if (textid) {
-        getText(textid, (textInfo) => {
-          if (!textInfo) return;
-          loadSection(textInfo, sectionid, (contentNode) => {
-            const contentEl = typeof contentNode === 'string'
-              ? elem('div', { innerHTML: contentNode })
-              : contentNode;
-            if (!contentEl?.querySelectorAll) return;
+  handleMouseover(link, requestedTextid) {
+    const fragmentid = getFragmentidFromNode(link);
+    if (fragmentid === null) return;
+    const textid = requestedTextid ?? this.getTextid(link);
+    if (!textid) return;
+    getText(textid, (textInfo) => this.loadReference(textInfo, fragmentid, link));
+  }
 
-            const verseEls = contentEl.querySelectorAll(`.${fragmentid}`);
-            let html = '';
-
-            for (const verse of verseEls) {
-              const clone = verse.cloneNode(true);
-              removeNotesFromVerse(clone);
-              html += clone.innerHTML;
-            }
-
-            if (html === '') return;
-
-            referencePopup.body.innerHTML = html;
-            referencePopup.show();
-            referencePopup.position(link);
-          });
-        });
-      }
+  getTextid(link) {
+    const section = link.closest('.section');
+    if (section?.classList.contains('commentary')) {
+      return document.querySelector('.BibleWindow .section')?.getAttribute('data-textid') ?? '';
     }
-  };
+    return section?.getAttribute('data-textid') ?? '';
+  }
 
-  handleBibleRefMouseout = function(e) {
-    referencePopup.hide();
-  };
+  loadReference(textInfo, fragmentid, link) {
+    if (!textInfo) return;
+    loadSection(textInfo, fragmentid.split('_')[0], (contentNode) => {
+      const contentEl = typeof contentNode === 'string'
+        ? elem('div', { innerHTML: contentNode })
+        : contentNode;
+      if (!contentEl?.querySelectorAll) return;
+      let html = '';
+      for (const verse of contentEl.querySelectorAll(`.${fragmentid}`)) {
+        const clone = verse.cloneNode(true);
+        removeNotesFromVerse(clone);
+        html += clone.innerHTML;
+      }
+      if (!html) return;
+      this.referencePopup.body.innerHTML = html;
+      this.referencePopup.show();
+      this.referencePopup.position(link);
+    });
+  }
 
-  const windowsMain = document.querySelector('.windows-main');
-  if (windowsMain) {
+  bindEvents() {
+    const windowsMain = document.querySelector('.windows-main');
+    if (!windowsMain) return;
     windowsMain.addEventListener('click', (e) => {
       const target = e.target.closest('.bibleref, .xt');
       if (target) handleBibleRefClick.call(target, e);
@@ -146,16 +131,11 @@ export const CrossReferencePopupPlugin = () => {
       });
     }
   }
+}
 
-  let ext = {
-    getData() {
-      return null;
-    }
-  };
-
-  mixinEventEmitter(ext);
-
-  return ext;
+export const CrossReferencePopupPlugin = () => {
+  if (!getConfig().enableCrossReferencePopupPlugin) return {};
+  return new CrossReferencePopupController().extension;
 };
 
 export const getBibleRefClickHandler = () => handleBibleRefClick;

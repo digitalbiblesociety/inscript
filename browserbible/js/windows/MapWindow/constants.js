@@ -10,7 +10,6 @@ export const MAP_BOUNDS = {
 // The standard parallel is the mid-latitude of the bounds.
 const STANDARD_PARALLEL = (MAP_BOUNDS.minLat + MAP_BOUNDS.maxLat) / 2; // 27.5°
 export const PROJ_COS_PHI0 = Math.cos(STANDARD_PARALLEL * Math.PI / 180);
-
 export const SVG_WIDTH = 1200;
 export const PADDING = 40;
 export const CONTENT_WIDTH = SVG_WIDTH - 2 * PADDING;
@@ -45,23 +44,13 @@ export const DEMOTED_LOCATIONS = new Set([
 
 // Default map center (Jerusalem) used before any saved position exists
 export const DEFAULT_CENTER = { lat: 31.78, lon: 35.23 };
-
-// Zoom-in limit: the viewBox width can never shrink below this many SVG units
 export const MIN_VIEW_WIDTH = 12;
-
-// Zoom factor for the +/− buttons, double-click, and keyboard zoom
 export const ZOOM_STEP = 1.5;
-
-// Zoom factor per mouse-wheel tick
 export const WHEEL_ZOOM_FACTOR = 1.1;
-
-// Fraction of the viewBox panned per arrow-key press
-export const KEY_PAN_FRACTION = 0.15;
-
+export const ARROW_KEY_PAN_FRACTION = 0.15;
 export const CLUSTER_RADIUS_PX = 60;
 
-// Markers closer than this many SVG units are treated as the same geographic
-// point: no amount of zooming will separate them, so they never form a cluster badge
+// Markers closer than this are treated as the same geographic point
 export const COLOCATED_EPSILON = 0.5;
 
 // Safety margin applied to the computed cluster-breaking viewBox width so one

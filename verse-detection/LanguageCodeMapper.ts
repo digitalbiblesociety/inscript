@@ -1,4 +1,4 @@
-import type { TextInfo } from './VersePopup.js';
+import type { TextInfo } from './PopupTypes.js';
 
 const ISO_639_3_TO_1: Record<string, string> = {
 	'eng': 'en', 'spa': 'es', 'por': 'pt', 'fra': 'fr', 'deu': 'de',
@@ -49,17 +49,7 @@ export function getLanguageName(langCode: string | null | undefined): string {
 	return LANGUAGE_DISPLAY_NAMES[langCode ?? ''] ?? langCode ?? 'this language';
 }
 
-/** Picks one text per language, honouring preferredIds and falling back to first by name. */
-export function buildTextIdsByLanguage(
-	textsData: TextInfo[] | null | undefined,
-	preferredIds: Record<string, string | string[]> = {}
-): Record<string, string> {
-	if (!textsData || !Array.isArray(textsData)) {
-		return {};
-	}
-
-	const mapping: Record<string, string> = {};
-
+function groupBibleTextsByLanguage(textsData: TextInfo[]): Map<string, TextInfo[]> {
 	const textsByLanguage = new Map<string, TextInfo[]>();
 
 	for (const textInfo of textsData) {
@@ -78,28 +68,52 @@ export function buildTextIdsByLanguage(
 		textsByLanguage.get(langCode)!.push(textInfo);
 	}
 
-	for (const [langCode, texts] of textsByLanguage) {
-		const preferredForLang = preferredIds[langCode];
-		let selectedTextId: string | null = null;
+	return textsByLanguage;
+}
 
-		if (preferredForLang) {
-			const idsToCheck = Array.isArray(preferredForLang) ? preferredForLang : [preferredForLang];
+function findPreferredTextId(texts: TextInfo[], preferredForLang: string | string[]): string | null {
+	const idsToCheck = Array.isArray(preferredForLang) ? preferredForLang : [preferredForLang];
 
-			for (const prefId of idsToCheck) {
-				const found = texts.find(t => t.id === prefId || t.id.toUpperCase() === prefId.toUpperCase());
-				if (found) {
-					selectedTextId = found.id;
-					break;
-				}
-			}
+	for (const prefId of idsToCheck) {
+		const found = texts.find(t => t.id === prefId || t.id.toUpperCase() === prefId.toUpperCase());
+		if (found) {
+			return found.id;
 		}
+	}
 
-		if (!selectedTextId && texts.length > 0) {
-			// Sort so the fallback pick is stable across index orderings.
-			texts.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''));
-			selectedTextId = texts[0].id;
+	return null;
+}
+
+function selectTextIdForLanguage(texts: TextInfo[], preferredForLang: string | string[] | undefined): string | null {
+	if (preferredForLang) {
+		const preferredId = findPreferredTextId(texts, preferredForLang);
+		if (preferredId) {
+			return preferredId;
 		}
+	}
 
+	if (texts.length === 0) {
+		return null;
+	}
+
+	// Sort so the fallback pick is stable across index orderings.
+	texts.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''));
+	return texts[0].id;
+}
+
+/** Picks one text per language, honouring preferredIds and falling back to first by name. */
+export function buildTextIdsByLanguage(
+	textsData: TextInfo[] | null | undefined,
+	preferredIds: Record<string, string | string[]> = {}
+): Record<string, string> {
+	if (!textsData || !Array.isArray(textsData)) {
+		return {};
+	}
+
+	const mapping: Record<string, string> = {};
+
+	for (const [langCode, texts] of groupBibleTextsByLanguage(textsData)) {
+		const selectedTextId = selectTextIdForLanguage(texts, preferredIds[langCode]);
 		if (selectedTextId) {
 			mapping[langCode] = selectedTextId;
 		}

@@ -7,13 +7,14 @@ const enterArrowSvg = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor
 
 import { getApp } from '../core/registry.js';
 import { i18n } from '../lib/i18n.js';
-import { BOOK_DATA, OT_BOOKS, NT_BOOKS, AP_BOOKS, APOCRYPHAL_BIBLE, EXTRA_MATTER } from '../bible/BibleData.js';
-import { getShowApocrypha, isApocryphalBook } from '../bible/Apocrypha.js';
+import { BOOK_DATA } from '../bible/BibleData.js';
 import { Reference } from '../bible/BibleReference.js';
 import { getGlobalTextChooser } from '../ui/TextChooser.js';
 import { getText, loadTexts, startSearch, displayAbbr } from '../texts/TextLoader.js';
-import { SearchTools } from '../texts/Search.js';
-import { highlightTextMatches } from '../lib/textHighlighter.js';
+import { checkDivisionHeader, drawDivisions, getSelectedDivisions, setDivisions } from './SearchDivisions.js';
+import { createSearchHighlights, highlightLemmaWords, highlightResultsText, removeSearchHighlights } from './SearchHighlights.js';
+import { handleResultClick, handleVisualBarClick, handleVisualBarMouseover } from './SearchInteractions.js';
+import { determineBookList, formatResultLabel, renderResultsVisual, renderSearchResults, renderUsage } from './SearchResults.js';
 
 const getTextAsync = (textId) => AsyncHelpers.promisify(getText, textId);
 const loadTextsAsync = () => AsyncHelpers.promisify(loadTexts);
@@ -222,75 +223,15 @@ class SearchWindowComponent extends BaseWindow {
   }
 
   handleResultClick(tr) {
-    const fragmentid = tr.getAttribute('data-fragmentid');
-    const app = getApp();
-    const bibleWindows = app?.windowManager
-      ? app.windowManager.getWindows().filter((w) => w.className === 'BibleWindow')
-      : [];
-
-    if (bibleWindows.length === 0) {
-      app?.windowManager?.add('BibleWindow', {
-        textid: this.config.newBibleWindowVersion,
-        fragmentid,
-        sectionid: fragmentid.split('_')[0],
-      });
-    } else {
-      this.trigger('globalmessage', {
-        type: 'globalmessage',
-        target: this,
-        data: {
-          messagetype: 'nav',
-          type: 'bible',
-          locationInfo: {
-            fragmentid,
-            sectionid: fragmentid.split('_')[0],
-            offset: 0
-          }
-        }
-      });
-    }
+    handleResultClick(this, tr);
   }
 
   handleVisualBarMouseover(bookBar) {
-    if (!bookBar) return;
-
-    const count = bookBar.getAttribute('data-count');
-    const dbsBookCode = bookBar.getAttribute('data-id');
-    if (!count || !dbsBookCode) return;
-
-    const bookInfo = BOOK_DATA[dbsBookCode];
-    if (!bookInfo) return;
-
-    const bookName = bookInfo.names?.[this.state.textInfo?.lang]?.[0] ??
-                     bookInfo.names?.eng?.[0] ??
-                     dbsBookCode;
-
-    const visualWidth = this.refs.topVisual.offsetWidth;
-    let left = bookBar.offsetLeft;
-
-    this.refs.topVisualLabel.textContent = `${bookName}: ${count}`;
-    this.refs.topVisualLabel.style.left = `${left}px`;
-    this.refs.topVisualLabel.style.display = 'block';
-
-    if (left + this.refs.topVisualLabel.offsetWidth > visualWidth) {
-      left = visualWidth - this.refs.topVisualLabel.offsetWidth - 5;
-      this.refs.topVisualLabel.style.left = `${left}px`;
-    }
-
-    if (left < 5) {
-      this.refs.topVisualLabel.style.left = '5px';
-    }
+    handleVisualBarMouseover(this, bookBar);
   }
 
   handleVisualBarClick(bookBar) {
-    if (!bookBar) return;
-
-    const dbsBookCode = bookBar.getAttribute('data-id');
-    const header = this.refs.resultsBlock.querySelector(`.search-result-book-header.divisionid-${dbsBookCode}`);
-
-    if (header) {
-      this.refs.main.scrollTop = offset(header).top - header.offsetHeight - 50;
-    }
+    handleVisualBarClick(this, bookBar);
   }
 
   handleMessage(e) {
@@ -314,114 +255,19 @@ class SearchWindowComponent extends BaseWindow {
   }
 
   drawDivisions() {
-    if (!this.state.selectedTextInfo?.divisions) return;
-
-    const showApocrypha = getShowApocrypha();
-
-    let otListHtml = '';
-    let apListHtml = '';
-    let ntListHtml = '';
-
-    for (let i = 0, il = this.state.selectedTextInfo.divisions.length; i < il; i++) {
-      const dbsBookCode = this.state.selectedTextInfo.divisions[i];
-      const bookName = this.state.selectedTextInfo.divisionNames[i];
-      const checkedStatus = ' checked';
-      const html = `<label class="division-name"><input type="checkbox" value="${dbsBookCode}"${checkedStatus} />${this.escapeHtml(bookName)}</label>`;
-
-      if (EXTRA_MATTER.indexOf(dbsBookCode) > -1) continue;
-      if (!showApocrypha && isApocryphalBook(dbsBookCode)) continue;
-
-      if (NT_BOOKS.indexOf(dbsBookCode) > -1) {
-        ntListHtml += html;
-      } else if (AP_BOOKS.indexOf(dbsBookCode) > -1) {
-        apListHtml += html;
-      } else {
-        otListHtml += html;
-      }
-    }
-
-    const completeHtml =
-      `<div class="division-list division-list-ot">
-        <label class="division-header">
-          <input type="checkbox" value="list-ot" checked />${i18n.t('windows.bible.ot')}</label>
-        </label>
-        <div class="division-list-items">${otListHtml}</div>
-      </div>
-      <div class="division-list division-list-ap">
-        <label class="division-header">
-          <input type="checkbox" value="list-ap" checked />${i18n.t('windows.bible.dc')}</label>
-        </label>
-        <div class="division-list-items">${apListHtml}</div>
-      </div>
-      <div class="division-list division-list-nt">
-        <label class="division-header">
-          <input type="checkbox" value="list-nt" checked />${i18n.t('windows.bible.nt')}</label>
-        </label>
-        <div class="division-list-items">${ntListHtml}</div>
-      </div>`;
-
-    this.divisionChooser.setAttribute('dir', this.state.selectedTextInfo.dir);
-    this.divisionChooser.querySelector('.search-division-main').innerHTML = completeHtml;
-
-    const hasOtBooks = this.divisionChooser.querySelectorAll('.division-list-ot .division-list-items input').length > 0;
-    const hasApBooks = this.divisionChooser.querySelectorAll('.division-list-ap .division-list-items input').length > 0;
-    const hasNtBooks = this.divisionChooser.querySelectorAll('.division-list-nt .division-list-items input').length > 0;
-
-    if (!hasOtBooks) {
-      this.divisionChooser.querySelector('.division-list-ot').style.display = 'none';
-    }
-    if (!hasApBooks) {
-      this.divisionChooser.querySelector('.division-list-ap').style.display = 'none';
-    }
-    if (!hasNtBooks) {
-      this.divisionChooser.querySelector('.division-list-nt').style.display = 'none';
-    }
+    drawDivisions(this);
   }
 
   setDivisions(divisions) {
-    if (typeof divisions === 'string') {
-      divisions = divisions.split(',');
-    }
-
-    if (divisions?.length > 0) {
-      this.divisionChooser.querySelectorAll('.division-list input').forEach((inp) => {
-        inp.checked = false;
-      });
-
-      for (let i = 0, il = divisions.length; i < il; i++) {
-        const inp = this.divisionChooser.querySelector(`.division-list input[value="${divisions[i]}"]`);
-        if (inp) inp.checked = true;
-      }
-    }
-
-    this.checkDivisionHeader(this.divisionChooser.querySelector('.division-list-ot'));
-    this.checkDivisionHeader(this.divisionChooser.querySelector('.division-list-ap'));
-    this.checkDivisionHeader(this.divisionChooser.querySelector('.division-list-nt'));
+    setDivisions(this, divisions);
   }
 
   checkDivisionHeader(divisionList) {
-    if (!divisionList) return;
-
-    const items = divisionList.querySelectorAll('.division-list-items input');
-    let allChecked = true;
-
-    items.forEach((el) => {
-      if (!el.checked) allChecked = false;
-    });
-
-    const headerInput = divisionList.querySelector('.division-header input');
-    if (headerInput) headerInput.checked = allChecked;
+    checkDivisionHeader(divisionList);
   }
 
   getSelectedDivisions() {
-    const divisions = [];
-    const selectedBooks = this.divisionChooser.querySelectorAll('.division-list-items input:checked');
-
-    selectedBooks.forEach((el) => {
-      divisions.push(el.value);
-    });
-
-    return divisions;
+    return getSelectedDivisions(this);
   }
 
   doSearch() {
@@ -454,14 +300,14 @@ class SearchWindowComponent extends BaseWindow {
     // Tag each search so only the latest one touches the UI (searches can't be cancelled).
     const searchId = this._searchId = (this._searchId || 0) + 1;
 
-    startSearch(
+    startSearch({
       textid,
       divisions,
       text,
-      (e) => { if (searchId === this._searchId) this.searchLoadHandler(e); },
-      (e) => { if (searchId === this._searchId) this.searchIndexCompleteHandler(e); },
-      (e) => { if (searchId === this._searchId) this.searchCompleteHandler(e); }
-    );
+      onSearchLoad: (e) => { if (searchId === this._searchId) this.searchLoadHandler(e); },
+      onSearchIndexComplete: (e) => { if (searchId === this._searchId) this.searchIndexCompleteHandler(e); },
+      onSearchComplete: (e) => { if (searchId === this._searchId) this.searchCompleteHandler(e); }
+    });
   }
 
   searchLoadHandler(e) {
@@ -499,107 +345,15 @@ class SearchWindowComponent extends BaseWindow {
   }
 
   determineBookList(isLemmaSearch) {
-    if (isLemmaSearch) {
-      const text = this.refs.input.value;
-      if (text.substr(0, 1) === 'G') {
-        return NT_BOOKS;
-      } else if (text.substr(0, 1) === 'H') {
-        return OT_BOOKS;
-      }
-    }
-    return this.state.textInfo.divisions;
-  }
-
-  initializeDivisionCount(bookList) {
-    const divisionCount = {};
-    for (let i = 0, il = bookList.length; i < il; i++) {
-      divisionCount[bookList[i]] = 0;
-    }
-    return divisionCount;
+    return determineBookList(this, isLemmaSearch);
   }
 
   formatResultLabel(fragmentid, short) {
-    if (this.state.textInfo.type.toLowerCase() !== 'bible') return fragmentid;
-
-    const reference = Reference(fragmentid);
-    if (!reference?.isValid()) return fragmentid;
-
-    const language = this.state.textInfo.lang;
-    if (BOOK_DATA['GN'].names[language]) reference.language = language;
-
-    return short ? reference.toShortString() : reference.toString();
-  }
-
-  buildResultsHtml(results, divisionCount) {
-    let html = '';
-    const langCode = this.state.textInfo.lang ?? 'en';
-
-    const emittedBooks = new Set();
-    for (let i = 0, il = results.length; i < il; i++) {
-      const result = results[i];
-      const fragmentid = result.fragmentid;
-      const dbsBookCode = fragmentid.substr(0, 2);
-
-      if (!emittedBooks.has(dbsBookCode)) {
-        emittedBooks.add(dbsBookCode);
-        const bookInfo = BOOK_DATA[dbsBookCode];
-        const bookName = bookInfo?.names?.[langCode]?.[0] ??
-                         bookInfo?.names?.eng?.[0] ??
-                         dbsBookCode;
-        const count = divisionCount[dbsBookCode];
-        html += `<div class="search-result-book-header divisionid-${dbsBookCode}">${this.escapeHtml(bookName)} <span class="search-result-book-count">${count}</span></div>`;
-      }
-
-      const label = this.formatResultLabel(fragmentid, true);
-      html += `<div data-fragmentid="${fragmentid}" class="search-result-row divisionid-${dbsBookCode}"><span class="search-result-ref">${label}</span><span class="search-result-text" lang="${langCode}">${result.html}</span></div>`;
-    }
-
-    return html;
+    return formatResultLabel(this, fragmentid, short);
   }
 
   renderSearchResultsContent(results) {
-    // Sort book list and results into canonical order (OT → AP → NT)
-    const bookOrder = {};
-    for (let i = 0; i < APOCRYPHAL_BIBLE.length; i++) {
-      bookOrder[APOCRYPHAL_BIBLE[i]] = i;
-    }
-
-    const bookList = this.determineBookList(this.state.isLemmaSearch)
-      .slice()
-      .sort((a, b) => (bookOrder[a] ?? 999) - (bookOrder[b] ?? 999));
-    const divisionCount = this.initializeDivisionCount(bookList);
-    results = [...results].sort((a, b) => {
-      const aBook = a.fragmentid.substr(0, 2);
-      const bBook = b.fragmentid.substr(0, 2);
-      return (bookOrder[aBook] ?? 999) - (bookOrder[bBook] ?? 999);
-    });
-
-    for (let i = 0, il = results.length; i < il; i++) {
-      const dbsBookCode = results[i].fragmentid.substr(0, 2);
-      divisionCount[dbsBookCode] = (divisionCount[dbsBookCode] || 0) + 1;
-    }
-
-    const html = this.buildResultsHtml(results, divisionCount);
-
-    this.refs.resultsBlock.innerHTML = html;
-    this.refs.resultsBlock.querySelectorAll('.v-num').forEach((el) => {
-      el.parentNode.removeChild(el);
-    });
-
-    this.highlightResultsText();
-
-    this.renderResultsVisual(divisionCount, bookList);
-
-    // Set book header sticky offset below search-top
-    const topHeight = this.refs.topBlock.offsetHeight;
-    this.refs.resultsBlock.style.setProperty('--search-top-height', `${topHeight}px`);
-
-    if (this.state.isLemmaSearch) {
-      this.renderLemmaInfo();
-      this.renderUsage();
-    }
-
-    this.createHighlights();
+    renderSearchResults(this, results);
   }
 
   /**
@@ -609,28 +363,11 @@ class SearchWindowComponent extends BaseWindow {
    * highlights the matched word.
    */
   highlightLemmaWords(root) {
-    const regexps = SearchTools.createLemmaHighlightRegExps(this.refs.input.value);
-    if (!regexps.length) return;
-
-    root.querySelectorAll('l[s]').forEach((el) => {
-      const strongs = el.getAttribute('s') || '';
-      if (regexps.some((re) => re.test(strongs))) {
-        el.classList.add('highlight');
-      }
-    });
+    highlightLemmaWords(this, root);
   }
 
   highlightResultsText() {
-    if (this.state.isLemmaSearch) {
-      this.refs.resultsBlock.querySelectorAll('.search-result-text').forEach((el) => this.highlightLemmaWords(el));
-      return;
-    }
-
-    if (!this.state.searchTermsRegExp?.length) return;
-
-    this.refs.resultsBlock.querySelectorAll('.search-result-text').forEach((el) => {
-      highlightTextMatches(el, this.state.searchTermsRegExp);
-    });
+    highlightResultsText(this);
   }
 
   searchCompleteHandler(e) {
@@ -702,99 +439,19 @@ class SearchWindowComponent extends BaseWindow {
   }
 
   renderUsage() {
-    const usages = {};
-    const usageArray = [];
-
-    this.refs.resultsBlock.querySelectorAll('.search-result-row').forEach((row) => {
-      const highlightEl = row.querySelector('.highlight');
-      let highlightedPhrase = highlightEl?.textContent ?? '';
-
-      highlightedPhrase = highlightedPhrase.replace(/\b(with|or|and|if|a|the|in|a|by|of|for)\b/gi, '').trim();
-
-      if (typeof usages[highlightedPhrase] === 'undefined') {
-        usages[highlightedPhrase] = 0;
-      }
-      usages[highlightedPhrase]++;
-    });
-
-    for (const usage in usages) {
-      usageArray.push({ usage, count: usages[usage] });
-    }
-
-    usageArray.sort((a, b) => {
-      if (a.count < b.count) return 1;
-      else if (a.count > b.count) return -1;
-      return 0;
-    });
-
-    let html = '';
-    for (let i = 0, il = usageArray.length; i < il; i++) {
-      html += `${i > 0 ? ', ' : ''}${this.escapeHtml(usageArray[i].usage)} (${usageArray[i].count})`;
-    }
-
-    this.refs.topUsage.innerHTML = html;
-    this.refs.topUsage.style.display = 'block';
+    renderUsage(this);
   }
 
   renderResultsVisual(divisionCount, bookList) {
-    const totalBooks = bookList.length;
-    const width = 1 / totalBooks * 100;
-    const baseHeight = 2;
-    const maxHeight = 38;
-    let html = '';
-    let maxCount = 0;
-
-    for (let i = 0, il = bookList.length; i < il; i++) {
-      const count = divisionCount[bookList[i]];
-      if (count > maxCount) maxCount = count;
-    }
-
-    for (let i = 0, il = bookList.length; i < il; i++) {
-      const dbsBookCode = bookList[i];
-      const count = divisionCount[dbsBookCode];
-      const height = maxHeight * count / maxCount + baseHeight;
-      const top = maxHeight + baseHeight - height;
-
-      html += `<span class="search-result-book-bar ${dbsBookCode}" data-count="${count}" data-id="${dbsBookCode}" style="width:${width}%;"><span class="divisionid-${dbsBookCode}" style="height:${height}px; margin-top: ${top}px;"></span></span>`;
-    }
-
-    this.refs.topVisual.innerHTML = html;
-    this.refs.topVisual.appendChild(this.refs.topVisualLabel);
-    this.refs.topVisual.style.display = '';
+    renderResultsVisual(this, divisionCount, bookList);
   }
 
   removeHighlights() {
-    document.querySelectorAll('.BibleWindow .highlight').forEach((el) => {
-      if (el.tagName.toLowerCase() === 'l') {
-        el.className = el.className.replace(/highlight/gi, '');
-      } else {
-        const textFragment = document.createTextNode(el.textContent);
-        if (el?.parentNode) {
-          el.parentNode.insertBefore(textFragment, el);
-          el.parentNode.removeChild(el);
-        }
-      }
-    });
+    removeSearchHighlights();
   }
 
   createHighlights() {
-    if (this.state.currentResults == null) return;
-
-    this.removeHighlights();
-
-    for (let i = 0, il = this.state.currentResults.length; i < il; i++) {
-      const result = this.state.currentResults[i];
-      const escapedFragmentid = CSS.escape(result.fragmentid);
-
-      document.querySelectorAll(`.${escapedFragmentid}`).forEach((el) => {
-        if (this.state.isLemmaSearch) {
-          this.highlightLemmaWords(el);
-          return;
-        }
-
-        highlightTextMatches(el, this.state.searchTermsRegExp);
-      });
-    }
+    createSearchHighlights(this);
   }
 
   setTextInfo(newTextInfo, sendToChooser) {

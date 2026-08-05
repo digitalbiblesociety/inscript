@@ -5,6 +5,7 @@ import { readFileSync, cpSync } from 'fs';
 import { browserslistToTargets } from 'lightningcss';
 import browserslist from 'browserslist';
 import { compression } from 'vite-plugin-compression2';
+import { alias } from './alias.config.js';
 
 // Real ESM dirname. This config is ESM ("type":"module"), where the bare
 // `__dirname` global does not exist; Vite injects one at build time, but tools
@@ -180,19 +181,7 @@ export default defineConfig(({ command }) => {
   },
 
   resolve: {
-    alias: {
-      '@': resolve(rootDir, 'browserbible/js'),
-      '@lib': resolve(rootDir, 'browserbible/js/lib'),
-      '@core': resolve(rootDir, 'browserbible/js/core'),
-      '@common': resolve(rootDir, 'browserbible/js/common'),
-      '@bible': resolve(rootDir, 'browserbible/js/bible'),
-      '@texts': resolve(rootDir, 'browserbible/js/texts'),
-      '@windows': resolve(rootDir, 'browserbible/js/windows'),
-      '@plugins': resolve(rootDir, 'browserbible/js/plugins'),
-      '@menu': resolve(rootDir, 'browserbible/js/menu'),
-      '@ui': resolve(rootDir, 'browserbible/js/ui'),
-      '@verse-detection': resolve(rootDir, 'verse-detection')
-    }
+    alias
   },
 
   optimizeDeps: {

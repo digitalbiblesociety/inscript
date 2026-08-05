@@ -1,62 +1,55 @@
 import { elem } from '../lib/helpers.esm.js';
 import { t } from '../lib/i18n.js';
 
+class MovableWindowController {
+  constructor(width, height, titleText, id) {
+    this.title = elem('span', { className: 'movable-header-title' }, titleText);
+    this.closeButton = elem('button', {
+      type: 'button',
+      className: 'close-button plain-button',
+      ariaLabel: t('a11y.close')
+    });
+    const header = elem('div', { className: 'movable-header' }, this.title, this.closeButton);
+    this.body = elem('div', { className: 'movable-body' });
+    this.container = elem('div', { className: 'movable-window', popover: '' }, header, this.body);
+    if (id) this.container.id = id;
+
+    document.body.appendChild(this.container);
+    this.closeButton.addEventListener('click', () => this.hide());
+    this.size(width, height);
+  }
+
+  size(width, height) {
+    if (width) this.container.style.width = width + 'px';
+    if (height) this.body.style.height = height + 'px';
+    return this;
+  }
+
+  show() {
+    this.container.showPopover();
+    return this;
+  }
+
+  hide() {
+    this.container.hidePopover();
+    return this;
+  }
+
+  isVisible() {
+    return this.container.matches(':popover-open');
+  }
+
+  onToggle(callback) {
+    this.container.addEventListener('toggle', callback);
+    return this;
+  }
+
+  destroy() {
+    this.container.remove();
+  }
+}
+
 /** `height` is the body height; the window ends up taller by its header. */
 export function MovableWindow(width = 300, height = 200, titleText = '', id = null) {
-  const title = elem('span', { className: 'movable-header-title' }, titleText);
-  const close = elem('button', { type: 'button', className: 'close-button plain-button', ariaLabel: t('a11y.close') });
-  const header = elem('div', { className: 'movable-header' }, title, close);
-  const body = elem('div', { className: 'movable-body' });
-  const container = elem('div', { className: 'movable-window', popover: '' }, header, body);
-  if (id) container.id = id;
-
-  document.body.appendChild(container);
-
-  close.addEventListener('click', hide);
-
-  function size(w, h) {
-    if (w) container.style.width = w + 'px';
-    if (h) body.style.height = h + 'px';
-    return ext;
-  }
-
-  function show() {
-    container.showPopover();
-    return ext;
-  }
-
-  function hide() {
-    container.hidePopover();
-    return ext;
-  }
-
-  function isVisible() {
-    return container.matches(':popover-open');
-  }
-
-  function onToggle(callback) {
-    container.addEventListener('toggle', callback);
-    return ext;
-  }
-
-  function destroy() {
-    container.remove();
-  }
-
-  const ext = {
-    show,
-    hide,
-    isVisible,
-    onToggle,
-    size,
-    container,
-    body,
-    title,
-    closeButton: close,
-    destroy
-  };
-
-  size(width, height);
-
-  return ext;
+  return new MovableWindowController(width, height, titleText, id);
 }

@@ -1,3 +1,8 @@
+import { on, onActivate } from './HelpersEvents.js';
+import { data } from './HelpersData.js';
+
+export { on, onActivate, data };
+
 export function extend(target, ...sources) {
   sources.forEach(source => {
     if (!source) return;
@@ -72,17 +77,6 @@ export function elem(tag, props = {}, ...children) {
   return el;
 }
 
-export function onActivate(el, handler) {
-  if (!el) return;
-  el.addEventListener('click', handler);
-  el.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-      e.preventDefault();
-      handler(e);
-    }
-  });
-}
-
 export function insertAfter(newEl, refEl) {
   if (refEl && refEl.parentNode && newEl) {
     refEl.parentNode.insertBefore(newEl, refEl.nextSibling);
@@ -91,101 +85,6 @@ export function insertAfter(newEl, refEl) {
 
 export function forceReflow(el) {
   return el.offsetWidth;
-}
-
-const eventStore = new WeakMap();
-
-function getEventStore(el) {
-  if (!eventStore.has(el)) {
-    eventStore.set(el, {});
-  }
-  return eventStore.get(el);
-}
-
-function parseEventString(eventString) {
-  const parts = eventString.split('.');
-  return {
-    type: parts[0],
-    namespace: parts.slice(1).join('.') || ''
-  };
-}
-
-/**
- * `events` is space-separated and accepts jQuery-style namespaces
- * ("click.myns"), so off() can unbind one caller without touching the rest.
- * Passing a selector before the handler delegates.
- */
-export function on(el, events, selectorOrHandler, handler) {
-  if (!el) return;
-
-  const selector = typeof selectorOrHandler === 'string' ? selectorOrHandler : null;
-  const fn = selector ? handler : selectorOrHandler;
-
-  events.split(/\s+/).forEach(eventString => {
-    const parsed = parseEventString(eventString);
-    const store = getEventStore(el);
-
-    const wrapper = (e) => {
-      if (selector) {
-        let target = e.target;
-        while (target && target !== el) {
-          if (target.matches && target.matches(selector)) {
-            fn.call(target, e);
-            return;
-          }
-          target = target.parentElement;
-        }
-      } else {
-        fn.call(el, e);
-      }
-    };
-
-    const key = parsed.type + (parsed.namespace ? '.' + parsed.namespace : '');
-    if (!store[key]) store[key] = [];
-    store[key].push({ original: fn, wrapper: wrapper, selector: selector });
-
-    el.addEventListener(parsed.type, wrapper);
-  });
-}
-
-
-const dataStore = new WeakMap();
-
-/**
- * Omit `value` to read, omit `key` as well to read everything. Values live in
- * a WeakMap rather than the DOM, so any type survives round-tripping.
- */
-export function data(el, key, value) {
-  if (!el) return;
-
-  if (!dataStore.has(el)) {
-    dataStore.set(el, {});
-  }
-  const store = dataStore.get(el);
-
-  if (key === undefined) {
-    return store;
-  }
-
-  if (value !== undefined) {
-    store[key] = value;
-    return;
-  }
-
-  if (key in store) {
-    return store[key];
-  }
-
-  const attrVal = el.dataset ? el.dataset[key] : el.getAttribute('data-' + key);
-  if (attrVal !== null) {
-    try {
-      return JSON.parse(attrVal);
-    } catch (_e) {
-      return attrVal;
-    }
-  }
-
-  return undefined;
 }
 
 // Format seconds as `MM:SS` (or `H:MM:SS`); non-finite/negative treated as 0.

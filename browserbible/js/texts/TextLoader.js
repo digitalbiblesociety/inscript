@@ -1,4 +1,14 @@
 import { addNames } from '../bible/BibleData.js';
+import {
+  getTextid,
+  displayAbbr,
+  processTexts,
+  processText,
+  resolveSectionId,
+  htmlToNode
+} from './TextInfoUtils.js';
+
+export { getTextid, displayAbbr, processTexts, processText };
 
 const textProviders = new Map();
 
@@ -19,19 +29,57 @@ export function registerTextProvider(name, provider) {
   textProviders.set(name, provider);
 }
 
+function loadSectionByTextid(textid, sectionid, successCallback, errorCallback) {
+  getText(textid, (textInfo) => {
+    // getText calls back with null when it has no errorCallback to use
+    if (!textInfo) {
+      errorCallback?.(new Error(`No text info for "${textid}"`));
+      return;
+    }
+    loadSection(textInfo, sectionid, successCallback, errorCallback);
+  }, errorCallback);
+}
+
+function loadSectionFromProvider(textInfo, sectionid, successCallback, errorCallback) {
+  const provider = textProviders.get(textInfo.providerName);
+  if (!provider) return;
+
+  const textid = textInfo.id;
+  const pendingKey = `${textid}|${sectionid}`;
+  if (pendingSectionLoads[pendingKey]) {
+    pendingSectionLoads[pendingKey].push({ successCallback, errorCallback });
+    return;
+  }
+  pendingSectionLoads[pendingKey] = [{ successCallback, errorCallback }];
+
+  provider.loadSection(textid, sectionid, (html) => {
+    cachedTexts[textid][sectionid] = html;
+
+    const waiters = pendingSectionLoads[pendingKey] || [];
+    delete pendingSectionLoads[pendingKey];
+    for (const waiter of waiters) {
+      waiter.successCallback(htmlToNode(html));
+    }
+  }, (...args) => {
+    const waiters = pendingSectionLoads[pendingKey] || [];
+    delete pendingSectionLoads[pendingKey];
+    for (const waiter of waiters) waiter.errorCallback?.(...args);
+  });
+}
+
 export function loadSection(textInfo, sectionid, successCallback, errorCallback) {
   if (sectionid == 'null' || sectionid == null) {
     errorCallback?.(textInfo?.id ?? '', sectionid, { message: 'No section id given.' });
     return;
   }
 
-  if (typeof textInfo === 'string') {
+  if (textInfo != null && typeof textInfo === 'string') {
     loadSectionByTextid(textInfo, sectionid, successCallback, errorCallback);
     return;
   }
 
   const textid = textInfo.id;
-  sectionid = resolveSectionid(textInfo, sectionid);
+  sectionid = resolveSectionId(textInfo, sectionid);
 
   if (window?.BrowserBible?.analytics?.record) {
     window.BrowserBible.analytics.record('load', textInfo.id, sectionid);
@@ -41,90 +89,11 @@ export function loadSection(textInfo, sectionid, successCallback, errorCallback)
     cachedTexts[textid] = {};
   }
   if (typeof cachedTexts[textid][sectionid] !== 'undefined') {
-    const temp = document.createElement('div');
-    temp.innerHTML = cachedTexts[textid][sectionid];
-    successCallback(temp.firstChild || temp);
+    successCallback(htmlToNode(cachedTexts[textid][sectionid]));
     return;
   }
 
-  const provider = textProviders.get(textInfo.providerName);
-  if (!provider) return;
-
-  const pendingKey = `${textid}|${sectionid}`;
-  if (pendingSectionLoads[pendingKey]) {
-    pendingSectionLoads[pendingKey].push({ successCallback, errorCallback });
-    return;
-  }
-  pendingSectionLoads[pendingKey] = [{ successCallback, errorCallback }];
-
-  provider.loadSection(textid, sectionid,
-    (html) => resolveSectionLoad(textid, sectionid, pendingKey, html),
-    (...args) => rejectSectionLoad(pendingKey, args));
-}
-
-function loadSectionByTextid(textid, sectionid, successCallback, errorCallback) {
-  getText(textid, (textInfo) => {
-    if (!textInfo) {
-      errorCallback?.(new Error(`No text info for "${textid}"`));
-      return;
-    }
-    loadSection(textInfo, sectionid, successCallback, errorCallback);
-  }, errorCallback);
-}
-
-function resolveSectionid(textInfo, sectionid) {
-  if (!textInfo.sections?.length || textInfo.sections.indexOf(sectionid) > -1) {
-    return sectionid;
-  }
-
-  const bookPrefix = sectionid.substring(0, 2);
-  const chapterNum = parseInt(sectionid.substring(2), 10);
-
-  const matchingSection = textInfo.sections.find(s => {
-    if (!s.startsWith(bookPrefix)) return false;
-    return parseInt(s.substring(2), 10) === chapterNum;
-  });
-
-  return matchingSection ?? sectionid;
-}
-
-function resolveSectionLoad(textid, sectionid, pendingKey, html) {
-  cachedTexts[textid][sectionid] = html;
-
-  const waiters = pendingSectionLoads[pendingKey] || [];
-  delete pendingSectionLoads[pendingKey];
-  for (const waiter of waiters) {
-    const temp = document.createElement('div');
-    temp.innerHTML = html;
-    waiter.successCallback(temp.firstChild || temp);
-  }
-}
-
-function rejectSectionLoad(pendingKey, args) {
-  const waiters = pendingSectionLoads[pendingKey] || [];
-  delete pendingSectionLoads[pendingKey];
-  for (const waiter of waiters) waiter.errorCallback?.(...args);
-}
-
-export function getTextid(input) {
-  const parts = input.split(':');
-  return (parts.length > 1) ? parts[1] : parts[0];
-}
-
-/**
- * Version abbreviation for display: strips the leading ISO 639-3 language
- * prefix from ids like "ENGKJV" so the UI shows "KJV".
- */
-export function displayAbbr(textInfo) {
-  if (!textInfo) return '';
-  const abbr = textInfo.abbr || textInfo.id || '';
-  const lang = (textInfo.lang || '').toUpperCase();
-
-  if (lang.length === 3 && abbr.toUpperCase().startsWith(lang) && abbr.length - lang.length >= 2) {
-    return abbr.slice(lang.length);
-  }
-
-  return abbr;
+  loadSectionFromProvider(textInfo, sectionid, successCallback, errorCallback);
 }
 
 export function getProviderName(input) {
@@ -255,32 +224,16 @@ function loadTextsManifest(callback) {
   loadNextProvider();
 }
 
-export function processTexts(textArray, providerName) {
-  for (const text of textArray) {
-    processText(text, providerName);
-  }
-}
-
-export function processText(text, providerName) {
-  if (text.id.split(':').length > 1) {
-    text.id = text.id.split(':')[1];
-  }
-
-  text.providerName = providerName;
-  text.providerid = `${providerName}:${text.id}`;
-
-  if (text.country && !text.countries &&
-      text.country !== text.langName && text.country !== text.langNameEnglish) {
-    text.countries = [];
-  }
-}
-
-export function startSearch(textid, divisions, searchTerms, onSearchLoad, onSearchIndexComplete, onSearchComplete) {
-  const providerName = getProviderName(textid);
+/**
+ * @param {object} searchRequest - { textid, divisions, text,
+ *   onSearchLoad, onSearchIndexComplete, onSearchComplete }
+ */
+export function startSearch(searchRequest) {
+  const providerName = getProviderName(searchRequest.textid);
   const provider = textProviders.get(providerName);
 
   if (provider && provider.startSearch) {
-    provider.startSearch(textid, divisions, searchTerms, onSearchLoad, onSearchIndexComplete, onSearchComplete);
+    provider.startSearch(searchRequest);
   }
 }
 
@@ -296,4 +249,3 @@ export function getTextInfoData() {
 export function removeProviderTexts(providerName) {
   textInfoData = textInfoData.filter((info) => info.providerName !== providerName);
 }
-

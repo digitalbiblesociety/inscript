@@ -4,17 +4,16 @@ import { i18n } from '../lib/i18n.js';
 import { getApp } from '../core/registry.js';
 import { getText, loadSection, displayAbbr } from '../texts/TextLoader.js';
 import { renderWordCloud } from '../lib/SimpleWordCloud.js';
-import { escapeRegExp, highlightTextMatches } from '../lib/textHighlighter.js';
-import { loadStopwords, tokenizeWords, wordKey } from '../lib/stopwords.js';
+import { loadStopwords } from '../lib/stopwords.js';
 import { getShowApocrypha, skipApocryphalSection } from '../bible/Apocrypha.js';
+import { countWord, processLemmaVerse, processTextVerse, tallyLemma } from './StatisticsCounting.js';
+import { createStatisticHighlights, removeStatisticHighlights } from './StatisticsHighlights.js';
 
 const INIT_DELAY_MS = 1500;
 const FONT_SIZE_MIN = 11;
 const FONT_SIZE_MAX = 26;
 const CASCADE_STAGGER_MS = 14;
 const CASCADE_STAGGER_MAX_MS = 600;
-
-const STRONGS_STOPWORDS = ['G2532', 'G3588', 'G846', 'G1722', 'G1519', 'G1537', 'G1611', 'H853'];
 
 const getTextAsync = (textId) => AsyncHelpers.promisifyWithError(getText, textId);
 const loadSectionAsync = (textInfo, sectionId) => AsyncHelpers.promisifyWithError(loadSection, textInfo, sectionId);
@@ -220,61 +219,19 @@ class StatisticsWindowComponent extends BaseWindow {
   }
 
   processLemmaVerse(verse) {
-    const stopwords = this._stopwords;
-
-    verse.querySelectorAll('l[s]').forEach((lemma) => {
-      const strongsTokens = lemma.getAttribute('s').split(' ');
-      if (strongsTokens.every((s) => STRONGS_STOPWORDS.includes(s))) return;
-
-      const words = tokenizeWords(lemma.textContent, this.state.textInfo.lang)
-        .filter((word) => !stopwords?.has(wordKey(word)));
-      if (words.length === 0) return;
-
-      for (const word of words) this.countWord(word);
-
-      for (const strongs of strongsTokens) {
-        if (STRONGS_STOPWORDS.includes(strongs)) continue;
-        this.tallyLemma(strongs, words);
-      }
-    });
+    processLemmaVerse(this, verse);
   }
 
   processTextVerse(verse) {
-    const stopwords = this._stopwords;
-
-    for (const word of tokenizeWords(verse.textContent, this.state.textInfo.lang)) {
-      if (stopwords?.has(wordKey(word))) continue;
-      this.countWord(word);
-    }
+    processTextVerse(this, verse);
   }
 
   countWord(word) {
-    const key = wordKey(word);
-    const entry = this._wordIndex.get(key);
-
-    if (entry) {
-      entry.count++;
-      entry.formCounts[word] = (entry.formCounts[word] ?? 0) + 1;
-    } else {
-      const newEntry = { key, word, formCounts: { [word]: 1 }, count: 1 };
-      this._wordIndex.set(key, newEntry);
-      this.state.wordStats.push(newEntry);
-    }
+    countWord(this, word);
   }
 
   tallyLemma(strongs, words) {
-    const tally = this._lemmaIndex.get(strongs);
-
-    if (tally) {
-      tally.count++;
-      for (const word of words) {
-        if (!tally.words.includes(word)) tally.words.push(word);
-      }
-    } else {
-      const newTally = { strongs, words: [...new Set(words)], count: 1 };
-      this._lemmaIndex.set(strongs, newTally);
-      this.state.lemmaTally.push(newTally);
-    }
+    tallyLemma(this, strongs, words);
   }
 
   async loadChapterInfo(epoch) {
@@ -457,39 +414,11 @@ class StatisticsWindowComponent extends BaseWindow {
   }
 
   removeHighlights() {
-    document.querySelectorAll('.BibleWindow .highlight-stats').forEach((el) => {
-      if (el.tagName.toLowerCase() === 'l') {
-        el.classList.remove('highlight', 'highlight-stats', 'lemma-highlight');
-      } else {
-        const textFragment = document.createTextNode(el.textContent);
-        el.parentNode?.replaceChild(textFragment, el);
-      }
-    });
+    removeStatisticHighlights();
   }
 
   createHighlights(wordInfo) {
-    this.removeHighlights();
-
-    const { lang } = this.state.textInfo ?? {};
-
-    document.querySelectorAll(`.${this.state.sectionid}`).forEach((el) => {
-      const lemmaEls = el.querySelectorAll('l');
-
-      if (lemmaEls.length) {
-        lemmaEls.forEach((lEl) => {
-          const matches = tokenizeWords(lEl.textContent, lang)
-            .some((token) => wordKey(token) === wordInfo.key);
-          if (matches) {
-            lEl.classList.add('highlight', 'highlight-stats', 'lemma-highlight');
-          }
-        });
-      } else {
-        const r = new RegExp(`\\b${escapeRegExp(wordInfo.word)}\\b`, 'gi');
-        highlightTextMatches(el, [r], 'highlight highlight-stats');
-      }
-    });
-
-    return document.querySelector('.BibleWindow .highlight-stats');
+    return createStatisticHighlights(this, wordInfo);
   }
 
   previewEnd() {

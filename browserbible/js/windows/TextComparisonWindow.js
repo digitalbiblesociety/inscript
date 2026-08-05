@@ -1,85 +1,17 @@
 import { BaseWindow, AsyncHelpers, registerWindowComponent } from './BaseWindow.js';
 import { Reference } from '../bible/BibleReference.js';
-import { BOOK_DATA } from '../bible/BibleData.js';
-import { loadTexts, getText, loadSection, displayAbbr } from '../texts/TextLoader.js';
-import { diffWords } from '../lib/SimpleDiff.js';
+import { loadTexts, getText, displayAbbr } from '../texts/TextLoader.js';
 import { getGlobalTextChooser } from '../ui/TextChooser.js';
 import { TextNavigator } from '../ui/TextNavigator.js';
 import { i18n } from '../lib/i18n.js';
+import { loadComparisonText } from './TextComparisonData.js';
+import { renderComparison } from './TextComparisonRender.js';
 
 const hasTouch = 'ontouchend' in document;
 
 
 const loadTextsAsync = () => AsyncHelpers.promisify(loadTexts);
 const getTextAsync = (textId) => AsyncHelpers.promisify(getText, textId);
-const loadSectionAsync = (textInfo, sectionId) => AsyncHelpers.promisify(loadSection, textInfo, sectionId);
-
-const hasVerses = (content, sectionId) => {
-  const tempDiv = document.createElement('div');
-
-  if (typeof content === 'string') {
-    tempDiv.innerHTML = content;
-  } else {
-    const contentEl = content?.nodeType ? content : content?.[0];
-    if (!contentEl) return false;
-    tempDiv.appendChild(contentEl.cloneNode(true));
-  }
-
-  return !!(
-    tempDiv.querySelector(`.${sectionId}_1`) ||
-    tempDiv.querySelector(`.v.${sectionId}_1`) ||
-    tempDiv.querySelector(`[class*="${sectionId}_"]`)
-  );
-};
-
-const extractPlainText = (content, verseId) => {
-  let contentEl;
-  if (typeof content === 'string') {
-    const temp = document.createElement('div');
-    temp.innerHTML = content;
-    contentEl = temp;
-  } else {
-    contentEl = content?.nodeType ? content : content?.[0];
-  }
-
-  const verseNodes = contentEl.querySelectorAll(`.${verseId}`);
-  let plainText = '';
-
-  for (const verseNode of verseNodes) {
-    const clone = verseNode.cloneNode(true);
-    clone.querySelectorAll('.note, .cf, .v-num, .verse-num').forEach(el => {
-      el.parentNode.removeChild(el);
-    });
-
-    let text = clone.innerHTML;
-    text = text.replace(/<[^>]+>/gi, '');
-    // Pilcrows are paragraph formatting, not words; they'd show up as diffs.
-    text = text.replace(/¶/g, '');
-    plainText += `${text} `;
-  }
-
-  // Collapse runs of whitespace left behind by stripped markup; mismatched
-  // whitespace tokens would otherwise show up as spurious diffs.
-  return plainText.replace(/\s+/g, ' ').trim();
-};
-
-const generateDiffHtml = (baseText, comparisonText) => {
-  const diff = diffWords(baseText, comparisonText);
-  let html = '';
-
-  for (const part of diff) {
-    if (part.added) {
-      html += `<ins>${part.value}</ins>`;
-    } else if (part.removed) {
-      html += `<del>${part.value}</del>`;
-    } else {
-      html += part.value;
-    }
-  }
-
-  return html;
-};
-
 export class TextComparisonWindow extends BaseWindow {
   constructor() {
     super();
@@ -306,64 +238,11 @@ export class TextComparisonWindow extends BaseWindow {
   }
 
   async loadTextContent(textId, sectionId) {
-    try {
-      const textInfo = await getTextAsync(textId);
-      const content = await loadSectionAsync(textInfo, sectionId);
-
-      // Extract the actual section ID from the loaded content (may differ in padding)
-      let contentEl;
-      if (typeof content === 'string') {
-        const d = document.createElement('div');
-        d.innerHTML = content;
-        contentEl = d;
-      } else {
-        contentEl = content?.nodeType ? content : content?.[0];
-      }
-      const actualSectionId = contentEl?.querySelector('.section')?.getAttribute('data-id') || sectionId;
-
-      if (!hasVerses(content, actualSectionId)) {
-        return null;
-      }
-
-      return { textInfo, content, sectionId: actualSectionId };
-    } catch (err) {
-      console.error(`Failed to load ${textId}:`, err);
-      return null;
-    }
+    return loadComparisonText(textId, sectionId);
   }
 
   renderComparison(textData) {
-    const reference = this.state.currentReference;
-
-    let html = '<table class="comparison-table section"><thead><tr><th></th>';
-    for (const { textInfo } of textData) {
-      html += `<th>${displayAbbr(textInfo)}</th>`;
-    }
-    html += '</tr></thead><tbody>';
-
-    const startVerse = reference.verse1 > 0 ? reference.verse1 : 1;
-    const endVerse = reference.verse2 > 0 ? reference.verse2 : BOOK_DATA[reference.bookid].chapters[reference.chapter1 - 1];
-
-    for (let verse = startVerse; verse <= endVerse; verse++) {
-      // Use each text's actual section ID for verse lookup (handles different padding formats)
-      const baseVerseId = `${textData[0].sectionId}_${verse}`;
-      const baseText = extractPlainText(textData[0].content, baseVerseId);
-
-      html += `<tr><th>${verse}</th>`;
-      html += `<td class="reading-text" style="width:${100 / textData.length}%">${baseText}</td>`;
-
-      for (let i = 1; i < textData.length; i++) {
-        const compVerseId = `${textData[i].sectionId}_${verse}`;
-        const comparisonText = extractPlainText(textData[i].content, compVerseId);
-        const diffHtml = generateDiffHtml(baseText, comparisonText);
-        html += `<td class="reading-text" style="width:${100 / textData.length}%">${diffHtml}</td>`;
-      }
-
-      html += '</tr>';
-    }
-
-    html += '</tbody></table>';
-    this.refs.main.innerHTML = html;
+    renderComparison(this, textData);
   }
 
   async doComparison() {

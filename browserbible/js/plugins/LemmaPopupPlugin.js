@@ -52,28 +52,45 @@ function parseMorphs(morphAttr) {
   return morphAttr ? morphAttr.split(' ') : [];
 }
 
-export function LemmaPopupPlugin() {
-  const config = getConfig();
+function buildLemmaElements({ data, strongsNumber, morphKey, langConfig, textid }) {
+  const { langPrefix, langCode, dir, morphType } = langConfig;
+  const word = elem('div', { className: 'lemma-word' },
+    elem('span', { lang: langCode, dir }, data.lemma),
+    elem('span', { className: 'lemma-strongs', dir: 'ltr' }, `(${strongsNumber})`)
+  );
+  return [
+    word,
+    morphKey && morphology[morphType] && elem('span', { className: 'lemma-morphology', innerHTML: morphology[morphType].format(morphKey) }),
+    elem('span', {
+      className: 'lemma-findall',
+      textContent: i18n.t('plugins.lemmapopup.findalloccurrences', { count: data.frequency }),
+      dataset: { lemma: `${langPrefix}${strongsNumber}`, textid }
+    }),
+    elem('div', { className: 'lemma-outline', innerHTML: data.outline })
+  ].filter(Boolean);
+}
 
-  if (!config.enableLemmaPopupPlugin) {
-    return {};
+class LemmaPopupController {
+  constructor(config) {
+    this.config = config;
+    this.popup = InfoWindow('lemma-popup');
+    this.container = this.popup.container;
+    this.body = this.popup.body;
+    this.popup.on('hide', () => this.clearSelection());
+    this.container.addEventListener('click', (event) => this.handleFindAll(event));
+    document.querySelector('.windows-main')?.addEventListener('click', (event) => this.handleWordClick(event));
   }
 
-  const lemmaPopup = InfoWindow('lemma-popup');
-
-  lemmaPopup.on('hide', () => {
-    lemmaPopup.currentWord = null;
+  clearSelection() {
+    this.popup.currentWord = null;
     document.querySelectorAll('.selected-lemma').forEach((el) => {
       el.classList.remove('selected-lemma');
     });
-  });
+  }
 
-  const containerEl = lemmaPopup.container;
-  const bodyEl = lemmaPopup.body;
-
-  function loadStrongsData(opts) {
+  loadStrongsData(opts) {
     const { textid, strongsNumber, morphKey, langConfig, targetEl } = opts;
-    const url = `${config.baseContentUrl}content/lexicons/strongs/entries/${langConfig.langPrefix}${strongsNumber}.json`;
+    const url = `${this.config.baseContentUrl}content/lexicons/strongs/entries/${langConfig.langPrefix}${strongsNumber}.json`;
 
     fetch(url)
       .then((response) => {
@@ -82,110 +99,73 @@ export function LemmaPopupPlugin() {
       })
       .then((data) => {
         const elements = buildLemmaElements({ data, strongsNumber, morphKey, langConfig, textid });
-        bodyEl.classList.remove('loading-indicator');
-        bodyEl.append(...elements);
-        lemmaPopup.position(targetEl);
+        this.body.classList.remove('loading-indicator');
+        this.body.append(...elements);
+        this.popup.position(targetEl);
       })
       .catch(() => {
-        bodyEl.innerHTML = `Error loading ... ${langConfig.langPrefix}${strongsNumber}`;
+        this.body.innerHTML = `Error loading ... ${langConfig.langPrefix}${strongsNumber}`;
       });
   }
 
-  function buildLemmaElements(opts) {
-    const { data, strongsNumber, morphKey, langConfig, textid } = opts;
-    const { langPrefix, langCode, dir, morphType } = langConfig;
-
-    const wordDiv = elem('div', { className: 'lemma-word' },
-      elem('span', { lang: langCode, dir }, data.lemma),
-      elem('span', { className: 'lemma-strongs', dir: 'ltr' }, `(${strongsNumber})`)
-    );
-
-    return [
-      wordDiv,
-      morphKey && morphology[morphType] && elem('span', { className: 'lemma-morphology', innerHTML: morphology[morphType].format(morphKey) }),
-      elem('span', {
-        className: 'lemma-findall',
-        textContent: i18n.t('plugins.lemmapopup.findalloccurrences', { count: data.frequency }),
-        dataset: { lemma: `${langPrefix}${strongsNumber}`, textid }
-      }),
-      elem('div', { className: 'lemma-outline', innerHTML: data.outline })
-    ].filter(Boolean);
-  }
-
-  containerEl.addEventListener('click', (e) => {
-    const link = e.target.closest('.lemma-findall');
+  handleFindAll(event) {
+    const link = event.target.closest('.lemma-findall');
     if (!link) return;
-
     const lemma = link.getAttribute('data-lemma');
     const textid = link.getAttribute('data-textid');
-
     const appInstance = getApp();
-    if (appInstance?.windowManager) {
-      appInstance.windowManager.add('SearchWindow', { searchtext: lemma, textid });
-    }
-
-    lemmaPopup.hide();
-  });
-
-  const windowsMain = document.querySelector('.windows-main');
-  if (windowsMain) {
-    windowsMain.addEventListener('click', (e) => {
-      const lemmaEl = e.target.closest('.BibleWindow l');
-      if (!lemmaEl) return;
-
-      if (containerEl.matches(':popover-open') && lemmaPopup.currentWord === lemmaEl) {
-        lemmaPopup.hide();
-        lemmaPopup.currentWord = null;
-        lemmaEl.classList.remove('selected-lemma');
-        return;
-      }
-
-      if (containerEl.matches(':popover-open')) {
-        lemmaPopup.hide();
-      }
-
-      lemmaPopup.currentWord = lemmaEl;
-      document.querySelectorAll('.selected-lemma').forEach((el) => el.classList.remove('selected-lemma'));
-      lemmaEl.classList.add('selected-lemma');
-
-      const strongs = parseStrongs(lemmaEl.getAttribute('s'));
-      const morphs = parseMorphs(lemmaEl.getAttribute('m'));
-
-      const verse = lemmaEl.closest('.verse, .v');
-      const bookId = verse?.getAttribute('data-id')?.substring(0, 2) ?? '';
-      const chapter = lemmaEl.closest('.chapter');
-      const textid = chapter?.getAttribute('data-textid') ?? '';
-      const section = lemmaEl.closest('.section');
-      const sectionLang = section?.getAttribute('lang') ?? '';
-
-      const langConfig = getLangConfig(sectionLang, bookId);
-
-      if (strongs.length > 1) {
-        removeArticle(strongs, morphs, langConfig.langPrefix);
-      }
-
-      lemmaPopup.show();
-      lemmaPopup.position(lemmaEl);
-
-      if (strongs.length === 0) {
-        bodyEl.innerHTML = 'No Strong\'s data available';
-        return;
-      }
-
-      bodyEl.innerHTML = '';
-      bodyEl.classList.add('loading-indicator');
-
-      for (let i = 0; i < strongs.length; i++) {
-        loadStrongsData({
-          textid,
-          strongsNumber: strongs[i],
-          morphKey: morphs[i] || '',
-          langConfig,
-          targetEl: lemmaEl
-        });
-      }
-    });
+    appInstance?.windowManager?.add('SearchWindow', { searchtext: lemma, textid });
+    this.popup.hide();
   }
 
+  handleWordClick(event) {
+    const lemmaEl = event.target.closest('.BibleWindow l');
+    if (!lemmaEl) return;
+    if (this.isCurrentWord(lemmaEl)) {
+      this.popup.hide();
+      this.clearSelection();
+      return;
+    }
+    if (this.container.matches(':popover-open')) this.popup.hide();
+    this.selectWord(lemmaEl);
+  }
+
+  isCurrentWord(lemmaEl) {
+    return this.container.matches(':popover-open') && this.popup.currentWord === lemmaEl;
+  }
+
+  selectWord(lemmaEl) {
+    this.popup.currentWord = lemmaEl;
+    document.querySelectorAll('.selected-lemma').forEach((el) => el.classList.remove('selected-lemma'));
+    lemmaEl.classList.add('selected-lemma');
+    const strongs = parseStrongs(lemmaEl.getAttribute('s'));
+    const morphs = parseMorphs(lemmaEl.getAttribute('m'));
+    const bookId = lemmaEl.closest('.verse, .v')?.getAttribute('data-id')?.substring(0, 2) ?? '';
+    const textid = lemmaEl.closest('.chapter')?.getAttribute('data-textid') ?? '';
+    const sectionLang = lemmaEl.closest('.section')?.getAttribute('lang') ?? '';
+    const langConfig = getLangConfig(sectionLang, bookId);
+    if (strongs.length > 1) removeArticle(strongs, morphs, langConfig.langPrefix);
+    this.popup.show();
+    this.popup.position(lemmaEl);
+    if (strongs.length === 0) {
+      this.body.innerHTML = 'No Strong\'s data available';
+      return;
+    }
+    this.body.innerHTML = '';
+    this.body.classList.add('loading-indicator');
+    strongs.forEach((strongsNumber, index) => this.loadStrongsData({
+      textid,
+      strongsNumber,
+      morphKey: morphs[index] || '',
+      langConfig,
+      targetEl: lemmaEl
+    }));
+  }
+}
+
+export function LemmaPopupPlugin() {
+  const config = getConfig();
+  if (!config.enableLemmaPopupPlugin) return {};
+  new LemmaPopupController(config);
   return {};
 }

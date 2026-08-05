@@ -112,7 +112,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
   });
 }
 
-function startSearch(textid, divisions, text, onSearchLoad, onSearchIndexComplete, onSearchComplete) {
+function startSearch({ textid, divisions, text, onSearchLoad, onSearchIndexComplete, onSearchComplete }) {
   const textSearch = new TextSearch();
 
   textSearch.on('load', onSearchLoad);
