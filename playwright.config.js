@@ -22,9 +22,9 @@ export default defineConfig({
     { name: 'webkit-local',    metadata: { profile: 'local' },  use: { ...devices['Desktop Safari'] } },
   ],
   webServer: {
-    command: 'pnpm exec vite --port 5173 --open false',
+    command: 'E2E=true pnpm exec vite --port 5173 --open false',
     url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !process.env.CI && process.env.VITE_COVERAGE !== 'true',
     timeout: 120000,
     stdout: 'pipe',
   },

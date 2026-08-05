@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Downloads and extracts the BrowserBible starter pack of Bible texts into
- * browserbible/public/content/texts/ if not already populated.
+ * Downloads and extracts the BrowserBible starter pack of Bible texts into an
+ * ignored E2E cache if not already populated. Vite's E2E middleware serves the
+ * cache at /content/texts/ without replacing a developer's local text symlinks.
  *
  * Source: a public GitHub Release asset (~95MB, 17 Bibles). GitHub's asset CDN
  * serves datacenter IPs (incl. GitHub Actions runners) without bot-blocking,
@@ -22,7 +23,7 @@
  *   # to replace later: gh release upload starter-pack-v1 starter-pack.zip --clobber
  */
 
-import { existsSync, mkdirSync, readdirSync, createWriteStream, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, createWriteStream, rmSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
@@ -31,18 +32,23 @@ import { pipeline } from 'node:stream/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, '..', '..');
-const TEXTS_DIR = resolve(REPO_ROOT, 'browserbible/public/content/texts');
+const CACHE_DIR = resolve(REPO_ROOT, '.e2e-cache/starter-pack');
+const TEXTS_DIR = resolve(CACHE_DIR, 'texts');
 const STARTER_PACK_URL =
   process.env.STARTER_PACK_URL ||
   'https://github.com/digitalbiblesociety/browserbible-4/releases/download/starter-pack-v1/starter-pack.zip';
-const ZIP_PATH = resolve(TEXTS_DIR, 'starter-pack.zip');
+const ZIP_PATH = resolve(CACHE_DIR, 'starter-pack.zip');
 
 function hasExistingTexts() {
   if (!existsSync(TEXTS_DIR)) return false;
   return readdirSync(TEXTS_DIR).some(name => {
-    if (name === 'README.md') return false;
-    if (name === 'starter-pack.zip') return false;
-    return true;
+    const textDir = resolve(TEXTS_DIR, name);
+    try {
+      return statSync(textDir).isDirectory() && existsSync(resolve(textDir, 'info.json'));
+    } catch {
+      // Broken locally-generated text symlinks are not usable starter content.
+      return false;
+    }
   });
 }
 
@@ -65,6 +71,7 @@ async function downloadZip() {
 
 function extractZip() {
   console.log(`→ Extracting into ${TEXTS_DIR}`);
+  mkdirSync(TEXTS_DIR, { recursive: true });
   execSync(`unzip -q -o "${ZIP_PATH}" -d "${TEXTS_DIR}"`, { stdio: 'inherit' });
   rmSync(ZIP_PATH);
 }

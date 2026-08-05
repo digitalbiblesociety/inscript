@@ -229,7 +229,8 @@ export function VisualFilters() {
     VisualTransformer.resetTransforms(visualSettings);
   });
 
-  filtersWindowBody.addEventListener('click', () => {
+  filtersWindowBody.addEventListener('click', (event) => {
+    if (event.target.closest('.visualfilters-morph input')) return;
     if (morphSelector.style.display !== 'none') {
       morphSelector.style.display = 'none';
     }

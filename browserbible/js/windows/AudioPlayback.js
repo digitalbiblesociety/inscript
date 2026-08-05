@@ -79,7 +79,7 @@ function showNoAudio(controller, data) {
 }
 
 function applyFragmentAudio(controller, data) {
-  if (controller.fragmentAudioData?.id === data?.id) return;
+  if (controller.fragmentAudioData && data && controller.fragmentAudioData.id === data.id) return;
   controller.setReadingVerse(null);
   if (!data?.url) {
     showNoAudio(controller, data);

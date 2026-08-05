@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite';
 import { resolve, sep, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { readFileSync, cpSync } from 'fs';
+import { createReadStream, readFileSync, cpSync, statSync } from 'fs';
 import { browserslistToTargets } from 'lightningcss';
 import browserslist from 'browserslist';
 import { compression } from 'vite-plugin-compression2';
+import istanbul from 'vite-plugin-istanbul';
 import { alias } from './alias.config.js';
 
 // Real ESM dirname. This config is ESM ("type":"module"), where the bare
@@ -69,6 +70,37 @@ function copyPublicExcludingTexts() {
           const full = resolve(src);
           return full !== textsDir && !full.startsWith(textsDir + sep);
         }
+      });
+    }
+  };
+}
+
+function serveE2eStarterTexts() {
+  const textsDir = resolve(rootDir, '.e2e-cache/starter-pack/texts');
+  const contentTypes = {
+    '.html': 'text/html; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
+    '.svg': 'image/svg+xml'
+  };
+
+  return {
+    name: 'serve-e2e-starter-texts',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/content/texts', (request, response, next) => {
+        const requestPath = decodeURIComponent((request.url || '/').split('?')[0]);
+        const filePath = resolve(textsDir, requestPath.replace(/^\/+/, ''));
+        if (!filePath.startsWith(`${textsDir}${sep}`)) return next();
+
+        try {
+          if (!statSync(filePath).isFile()) return next();
+        } catch {
+          return next();
+        }
+
+        const extension = filePath.slice(filePath.lastIndexOf('.'));
+        response.setHeader('Content-Type', contentTypes[extension] || 'application/octet-stream');
+        createReadStream(filePath).pipe(response);
       });
     }
   };
@@ -198,6 +230,15 @@ export default defineConfig(({ command }) => {
   },
 
   plugins: [
+    process.env.E2E === 'true' && serveE2eStarterTexts(),
+    process.env.VITE_COVERAGE === 'true' && istanbul({
+      cwd: rootDir,
+      include: ['browserbible/js/**/*'],
+      exclude: ['**/*.d.ts'],
+      extension: ['.js'],
+      requireEnv: true,
+      nycrcPath: resolve(rootDir, '.nycrc.json')
+    }),
     injectCsp(),
     siteProfile !== 'dev' && copyPublicExcludingTexts(),
     // Precompressed siblings are for hosts that serve them directly (nginx

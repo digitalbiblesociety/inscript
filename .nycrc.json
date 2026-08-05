@@ -1,0 +1,9 @@
+{
+  "temp-dir": ".nyc_output",
+  "report-dir": "coverage",
+  "reporter": [
+    "text",
+    "html",
+    "lcov"
+  ]
+}

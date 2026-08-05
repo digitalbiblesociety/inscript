@@ -11,8 +11,9 @@ export default defineConfig({
     include: ['tests/unit/**/*.test.{js,ts}', 'tests/integration/**/*.test.{js,ts}'],
     setupFiles: ['tests/setup.js'],
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html', 'lcov'],
+      provider: 'istanbul',
+      reportsDirectory: '.nyc_output',
+      reporter: ['json'],
       include: ['browserbible/js/**', 'verse-detection/**/*.ts'],
       exclude: [
         'browserbible/js/**/index.js',

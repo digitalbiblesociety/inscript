@@ -16,7 +16,7 @@ Needs [Node.js](https://nodejs.org) and [pnpm](https://pnpm.io) (this is a pnpm 
 
 ```bash
 pnpm install
-pnpm fetch-starter-pack   # ~95 MB, 17 Bibles reaching ~90% of the world's population
+pnpm fetch-starter-pack   # ~95 MB, caches 17 Bibles for local E2E tests
 pnpm dev                  # http://localhost:3000
 ```
 
@@ -31,6 +31,7 @@ Texts are gitignored. For more, see [dbs.org](https://dbs.org),
 | `pnpm build` | Production build. Deploy this. |
 | `pnpm build:dev` | Sourcemaps, local texts bundled, all windows enabled |
 | `pnpm test` | Vitest unit + integration, in jsdom |
+| `pnpm test:coverage` | Merged Istanbul coverage from Vitest and Chromium E2E, reported by NYC |
 | `pnpm test:e2e` | Playwright across Chromium, Firefox, and WebKit |
 | `pnpm lint` | ESLint |
 
