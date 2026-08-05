@@ -108,16 +108,20 @@ function createRef(bookid, chapter1, verse1, chapter2, verse2, language) {
       const versePart = this.verse1 > 0 ? '_' + this.verse1 : '';
       return this.bookid + this.chapter1 + versePart;
     },
-    toString() {
+    toShortString() {
       if (this.bookid == null) return '';
-      const bookData = BOOK_DATA[this.bookid];
-      const bookName = bookData?.names?.[this.language]?.[0] ?? bookData?.names?.eng?.[0] ?? this.bookid;
       const crossChapter = this.chapter2 > 0 && this.chapter2 !== this.chapter1;
       let ref = `${this.chapter1}`;
       if (this.verse1 > 0) ref += `:${this.verse1}`;
       if (crossChapter) ref += this.verse2 > 0 ? `-${this.chapter2}:${this.verse2}` : `-${this.chapter2}`;
       else if (this.verse2 > 0 && this.verse2 !== this.verse1) ref += `-${this.verse2}`;
-      return `${bookName} ${ref}`;
+      return ref;
+    },
+    toString() {
+      if (this.bookid == null) return '';
+      const bookData = BOOK_DATA[this.bookid];
+      const bookName = bookData?.names?.[this.language]?.[0] ?? bookData?.names?.eng?.[0] ?? this.bookid;
+      return `${bookName} ${this.toShortString()}`;
     }
   };
 }

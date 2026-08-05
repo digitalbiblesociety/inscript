@@ -147,6 +147,46 @@ export function parseChapterContent(content, sectionid) {
     }
   };
 
+  const startVerse = (item) => {
+    closeVerse();
+    const n = item.attrs.number;
+    currentVerseNum = n;
+    html.push(`<span class="v-num v-${n}">${escapeHtml(n)}&nbsp;</span>`);
+    html.push(`<span class="v ${sectionid}_${n}" data-id="${sectionid}_${n}">`);
+    openVerse = true;
+  };
+
+  const walkChar = (item, style) => {
+    ensureVerseOpen();
+    if (style === 'wj') {
+      html.push('<span class="wj">');
+      walkInline(item.items);
+      html.push('</span>');
+    } else {
+      walkInline(item.items);
+    }
+  };
+
+  const walkTag = (item) => {
+    const style = item.attrs?.style;
+
+    if (item.name === 'verse' && style === 'v') {
+      startVerse(item);
+      return;
+    }
+
+    if (item.name === 'note') {
+      return;
+    }
+
+    if (item.name === 'char') {
+      walkChar(item, style);
+      return;
+    }
+
+    if (item.items) walkInline(item.items);
+  };
+
   const walkInline = (items = []) => {
     for (const item of items) {
       if (item.type === 'text') {
@@ -154,41 +194,9 @@ export function parseChapterContent(content, sectionid) {
           ensureVerseOpen();
           html.push(escapeHtml(item.text));
         }
-        continue;
+      } else if (item.type === 'tag') {
+        walkTag(item);
       }
-
-      if (item.type !== 'tag') continue;
-      const style = item.attrs?.style;
-
-      if (item.name === 'verse' && style === 'v') {
-        closeVerse();
-        const n = item.attrs.number;
-        currentVerseNum = n;
-        html.push(`<span class="v-num v-${n}">${escapeHtml(n)}&nbsp;</span>`);
-        html.push(`<span class="v ${sectionid}_${n}" data-id="${sectionid}_${n}">`);
-        openVerse = true;
-        continue;
-      }
-
-      if (item.name === 'note') {
-        // Footnotes/cross-refs are turned off in the request; skip any that show up.
-        continue;
-      }
-
-      if (item.name === 'char') {
-        ensureVerseOpen();
-        if (style === 'wj') {
-          html.push('<span class="wj">');
-          walkInline(item.items);
-          html.push('</span>');
-        } else {
-          walkInline(item.items);
-        }
-        continue;
-      }
-
-      // Any other inline tag: descend into its content.
-      if (item.items) walkInline(item.items);
     }
   };
 

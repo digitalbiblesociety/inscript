@@ -12,23 +12,14 @@ export const FUZZY_THRESHOLD = 0.86;
 // already handles them.
 const MIN_FUZZY_LENGTH = 3;
 
-/** Jaro similarity: 0 (no match) to 1 (identical). */
-function jaro(s1, s2) {
-  if (s1 === s2) return 1;
-  const len1 = s1.length;
-  const len2 = s2.length;
-  if (!len1 || !len2) return 0;
-
-  // Canonical Jaro uses floor(max/2)-1, which is 0 for 3-char strings and
-  // misses adjacent transpositions like "nwe"/"new". Floor the window at 1.
-  const window = Math.max(1, Math.floor(Math.max(len1, len2) / 2) - 1);
-  const matches1 = new Array(len1).fill(false);
-  const matches2 = new Array(len2).fill(false);
+function findMatches(s1, s2, window) {
+  const matches1 = new Array(s1.length).fill(false);
+  const matches2 = new Array(s2.length).fill(false);
 
   let matches = 0;
-  for (let i = 0; i < len1; i++) {
+  for (let i = 0; i < s1.length; i++) {
     const start = Math.max(0, i - window);
-    const end = Math.min(i + window + 1, len2);
+    const end = Math.min(i + window + 1, s2.length);
     for (let k = start; k < end; k++) {
       if (matches2[k] || s1[i] !== s2[k]) continue;
       matches1[i] = true;
@@ -37,17 +28,32 @@ function jaro(s1, s2) {
       break;
     }
   }
-  if (!matches) return 0;
+  return { matches1, matches2, matches };
+}
 
+function countTranspositions(s1, s2, matches1, matches2) {
   let transpositions = 0;
   let k = 0;
-  for (let i = 0; i < len1; i++) {
+  for (let i = 0; i < s1.length; i++) {
     if (!matches1[i]) continue;
     while (!matches2[k]) k++;
     if (s1[i] !== s2[k]) transpositions++;
     k++;
   }
-  transpositions /= 2;
+  return transpositions / 2;
+}
+
+function jaro(s1, s2) {
+  if (s1 === s2) return 1;
+  const len1 = s1.length;
+  const len2 = s2.length;
+  if (!len1 || !len2) return 0;
+
+  const window = Math.max(1, Math.floor(Math.max(len1, len2) / 2) - 1);
+  const { matches1, matches2, matches } = findMatches(s1, s2, window);
+  if (!matches) return 0;
+
+  const transpositions = countTranspositions(s1, s2, matches1, matches2);
 
   return (
     matches / len1 +
@@ -100,18 +106,26 @@ export function matchRanges(text, tokens, threshold = FUZZY_THRESHOLD) {
     }
     if (token.length < MIN_FUZZY_LENGTH) continue;
 
-    let best = null;
-    for (const word of lower.matchAll(/\S+/g)) {
-      const score = jaroWinkler(token, word[0]);
-      if (score >= threshold && (!best || score > best.score)) {
-        best = { start: word.index, end: word.index + word[0].length, score };
-      }
-    }
+    const best = bestFuzzyRange(lower, token, threshold);
     if (best) ranges.push([best.start, best.end]);
   }
 
   if (ranges.length < 2) return ranges;
+  return mergeRanges(ranges);
+}
 
+function bestFuzzyRange(lower, token, threshold) {
+  let best = null;
+  for (const word of lower.matchAll(/\S+/g)) {
+    const score = jaroWinkler(token, word[0]);
+    if (score >= threshold && (!best || score > best.score)) {
+      best = { start: word.index, end: word.index + word[0].length, score };
+    }
+  }
+  return best;
+}
+
+function mergeRanges(ranges) {
   ranges.sort((a, b) => a[0] - b[0]);
   const merged = [ranges[0]];
   for (let i = 1; i < ranges.length; i++) {

@@ -1,4 +1,4 @@
-import { elem } from '../lib/helpers.esm.js';
+import { elem, insertAfter } from '../lib/helpers.esm.js';
 import { getConfig } from '../core/config.js';
 import { getApp } from '../core/registry.js';
 import { InfoWindow } from '../ui/InfoWindow.js';
@@ -197,6 +197,26 @@ export const MediaLibraryPlugin = () => {
     });
   };
 
+  const usableMediaForVerse = (mediaLibrary, verseid, lang) => {
+    const mediaForVerse = mediaLibrary.data?.[verseid];
+    if (mediaForVerse && mediaLibrary.type === 'dbsvideo') {
+      const playable = playableVideos(mediaForVerse, lang);
+      return playable.length ? playable : undefined;
+    }
+    return mediaForVerse;
+  };
+
+  const addMediaIcon = (verse, mediaLibrary) => {
+    const iconEl = elem('span', { className: `inline-icon ${mediaLibrary.iconClassName} mediathumb`, dataset: { mediafolder: mediaLibrary.folder } });
+    const verseNumber = verse.querySelector('.verse-num, .v-num');
+
+    if (verseNumber) {
+      insertAfter(iconEl, verseNumber);
+    } else {
+      verse.insertBefore(iconEl, verse.firstChild);
+    }
+  };
+
   const addMedia = () => {
     if (mediaLibraries === null) {
       return;
@@ -231,37 +251,21 @@ export const MediaLibraryPlugin = () => {
           verse = section.querySelector(`.${verseid}`) ?? verse;
         }
 
-        if (!verse.classList.contains('has-media')) {
-          const lang = section?.getAttribute('data-lang3') ?? 'eng';
+        if (verse.classList.contains('has-media')) return;
 
-          for (const mediaLibrary of mediaLibraries) {
-            const iconClassName = mediaLibrary.iconClassName;
-            let mediaForVerse = mediaLibrary.data?.[verseid];
+        const lang = section?.getAttribute('data-lang3') ?? 'eng';
 
-            // Some video titles exist only in minority languages; no icon when
-            // this verse has nothing the reader could actually watch.
-            if (mediaForVerse && mediaLibrary.type === 'dbsvideo') {
-              const playable = playableVideos(mediaForVerse, lang);
-              mediaForVerse = playable.length ? playable : undefined;
-            }
-
-            if (mediaForVerse !== undefined) {
-              const iconEl = elem('span', { className: `inline-icon ${iconClassName} mediathumb`, dataset: { mediafolder: mediaLibrary.folder } });
-              const verseNumber = verse.querySelector('.verse-num, .v-num');
-
-              if (verseNumber) {
-                verseNumber.parentNode.insertBefore(iconEl, verseNumber.nextSibling);
-              } else {
-                verse.insertBefore(iconEl, verse.firstChild);
-              }
-            }
+        for (const mediaLibrary of mediaLibraries) {
+          const mediaForVerse = usableMediaForVerse(mediaLibrary, verseid, lang);
+          if (mediaForVerse !== undefined) {
+            addMediaIcon(verse, mediaLibrary);
           }
+        }
 
-          if (section) {
-            section.querySelectorAll(`.${verseid}`).forEach((v) => {
-              v.classList.add('has-media');
-            });
-          }
+        if (section) {
+          section.querySelectorAll(`.${verseid}`).forEach((v) => {
+            v.classList.add('has-media');
+          });
         }
       });
 

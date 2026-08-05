@@ -47,6 +47,33 @@ function cleanAttributes(el) {
   }
 }
 
+function cleanElement(el, parent) {
+  const tag = el.tagName;
+
+  if (DROP_TAGS.has(tag)) {
+    el.remove();
+    return;
+  }
+
+  if (TRANSFORM_TAGS[tag]) {
+    const replacement = document.createElement(TRANSFORM_TAGS[tag]);
+    while (el.firstChild) replacement.appendChild(el.firstChild);
+    el.replaceWith(replacement);
+    cleanChildren(replacement);
+    return;
+  }
+
+  if (!ALLOWED_TAGS.has(tag)) {
+    cleanChildren(el);
+    while (el.firstChild) parent.insertBefore(el.firstChild, el);
+    el.remove();
+    return;
+  }
+
+  cleanAttributes(el);
+  cleanChildren(el);
+}
+
 function cleanChildren(parent) {
   for (const child of [...parent.childNodes]) {
     if (child.nodeType === Node.TEXT_NODE) continue;
@@ -56,32 +83,7 @@ function cleanChildren(parent) {
       continue;
     }
 
-    const tag = child.tagName;
-
-    if (DROP_TAGS.has(tag)) {
-      child.remove();
-      continue;
-    }
-
-    if (TRANSFORM_TAGS[tag]) {
-      const replacement = document.createElement(TRANSFORM_TAGS[tag]);
-      while (child.firstChild) replacement.appendChild(child.firstChild);
-      child.replaceWith(replacement);
-      cleanChildren(replacement);
-      continue;
-    }
-
-    if (!ALLOWED_TAGS.has(tag)) {
-      // Disallowed wrapper (span, font, table, ...): keep its cleaned
-      // children, drop the element itself.
-      cleanChildren(child);
-      while (child.firstChild) parent.insertBefore(child.firstChild, child);
-      child.remove();
-      continue;
-    }
-
-    cleanAttributes(child);
-    cleanChildren(child);
+    cleanElement(child, parent);
   }
 }
 

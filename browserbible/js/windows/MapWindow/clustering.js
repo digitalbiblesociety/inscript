@@ -1,21 +1,7 @@
 import { elem } from '../../lib/helpers.esm.js';
 import { SVG_WIDTH, CLUSTER_RADIUS_PX, COLOCATED_EPSILON } from './constants.js';
 
-/**
- * Compute clusters from visible markers based on the current viewport.
- */
-export function computeClusters(overlay, viewBox, containerWidth) {
-  if (!overlay || !containerWidth) return { clusters: [], singles: [], hidden: [] };
-
-  // Scale cluster radius down at high zoom so nearby locations can separate
-  const zoomRatio = viewBox.width / SVG_WIDTH; // 1 at full extent, small at max zoom
-  const zoomScale = Math.min(1, zoomRatio * 6);
-  const effectiveRadiusPx = CLUSTER_RADIUS_PX * zoomScale;
-
-  // Convert screen pixel radius to SVG coordinate radius for distance checks
-  const clusterRadiusSvg = effectiveRadiusPx * (viewBox.width / containerWidth);
-  const radiusSq = clusterRadiusSvg * clusterRadiusSvg;
-
+function collectEligibleMarkers(overlay) {
   const eligible = [];
   overlay.querySelectorAll('.map-marker').forEach((marker) => {
     if (marker.classList.contains('filtered-out')) return;
@@ -31,66 +17,92 @@ export function computeClusters(overlay, viewBox, containerWidth) {
 
   // Sort by tier: lower number = more important = becomes cluster center
   eligible.sort((a, b) => a.tier - b.tier);
+  return eligible;
+}
+
+function findNearby(item, eligible, assigned, radiusSq) {
+  const nearby = [];
+  for (const other of eligible) {
+    if (assigned.has(other) || other === item) continue;
+    const dx = item.x - other.x;
+    const dy = item.y - other.y;
+    if (dx * dx + dy * dy < radiusSq) {
+      nearby.push(other);
+    }
+  }
+  return nearby;
+}
+
+function maxPairwiseDistSq(members) {
+  let maxDistSq = 0;
+  for (let i = 0; i < members.length; i++) {
+    for (let j = i + 1; j < members.length; j++) {
+      const dx = members[i].x - members[j].x;
+      const dy = members[i].y - members[j].y;
+      maxDistSq = Math.max(maxDistSq, dx * dx + dy * dy);
+    }
+  }
+  return maxDistSq;
+}
+
+function classifyGroup(item, nearby, { clusters, singles, hidden }) {
+  const allMembers = [item, ...nearby];
+
+  if (maxPairwiseDistSq(allMembers) < COLOCATED_EPSILON * COLOCATED_EPSILON) {
+    const best = allMembers.reduce((a, b) => {
+      const av = a.marker.locationData?.verses?.length ?? 0;
+      const bv = b.marker.locationData?.verses?.length ?? 0;
+      return bv > av ? b : a;
+    }, allMembers[0]);
+    singles.push(best.marker);
+    for (const m of allMembers) {
+      if (m !== best) hidden.push(m.marker);
+    }
+  } else {
+    const members = allMembers.map(m => m.marker);
+    clusters.push({
+      x: item.x,
+      y: item.y,
+      members,
+      count: members.length
+    });
+  }
+}
+
+export function computeClusters(overlay, viewBox, containerWidth) {
+  if (!overlay || !containerWidth) return { clusters: [], singles: [], hidden: [] };
+
+  const zoomRatio = viewBox.width / SVG_WIDTH;
+  const zoomScale = Math.min(1, zoomRatio * 6);
+  const effectiveRadiusPx = CLUSTER_RADIUS_PX * zoomScale;
+
+  const clusterRadiusSvg = effectiveRadiusPx * (viewBox.width / containerWidth);
+  const radiusSq = clusterRadiusSvg * clusterRadiusSvg;
+
+  const eligible = collectEligibleMarkers(overlay);
 
   const assigned = new Set();
-  const clusters = [];
-  const singles = [];
-  const hidden = []; // co-located non-representative markers (hidden but not clustered-badged)
+  const result = {
+    clusters: [],
+    singles: [],
+    hidden: []
+  };
 
   for (const item of eligible) {
     if (assigned.has(item)) continue;
 
-    const nearby = [];
-    for (const other of eligible) {
-      if (assigned.has(other) || other === item) continue;
-      const dx = item.x - other.x;
-      const dy = item.y - other.y;
-      if (dx * dx + dy * dy < radiusSq) {
-        nearby.push(other);
-      }
+    const nearby = findNearby(item, eligible, assigned, radiusSq);
+    if (nearby.length === 0) {
+      result.singles.push(item.marker);
+      continue;
     }
 
-    if (nearby.length > 0) {
-      const allMembers = [item, ...nearby];
-      assigned.add(item);
-      for (const n of nearby) assigned.add(n);
-
-      // Check if all members are truly co-located (can never be separated by zooming)
-      let maxDistSq = 0;
-      for (let i = 0; i < allMembers.length; i++) {
-        for (let j = i + 1; j < allMembers.length; j++) {
-          const dx = allMembers[i].x - allMembers[j].x;
-          const dy = allMembers[i].y - allMembers[j].y;
-          maxDistSq = Math.max(maxDistSq, dx * dx + dy * dy);
-        }
-      }
-
-      if (maxDistSq < COLOCATED_EPSILON * COLOCATED_EPSILON) { // pins at the same geographic point
-        // Show only the pin with the most verse entries; hide the rest
-        const best = allMembers.reduce((a, b) => {
-          const av = a.marker.locationData?.verses?.length ?? 0;
-          const bv = b.marker.locationData?.verses?.length ?? 0;
-          return bv > av ? b : a;
-        });
-        singles.push(best.marker);
-        for (const m of allMembers) {
-          if (m !== best) hidden.push(m.marker);
-        }
-      } else {
-        const members = [item.marker, ...nearby.map(n => n.marker)];
-        clusters.push({
-          x: item.x,
-          y: item.y,
-          members,
-          count: members.length
-        });
-      }
-    } else {
-      singles.push(item.marker);
-    }
+    assigned.add(item);
+    for (const n of nearby) assigned.add(n);
+    classifyGroup(item, nearby, result);
   }
 
-  return { clusters, singles, hidden };
+  return result;
 }
 
 /**

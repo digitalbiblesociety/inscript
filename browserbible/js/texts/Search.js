@@ -590,41 +590,29 @@ export class TextSearch {
     }
   }
 
+  termMatches(regex, html, text) {
+    regex.lastIndex = 0;
+    return regex.test(this.isLemmaSearch ? html : text);
+  }
+
   findMatchesInVerse(html) {
     let processedHtml = html;
     let foundMatch = false;
-    const regMatches = new Array(this.searchTermsRegExp.length);
+    const regMatches = new Array(this.searchTermsRegExp.length).fill(false);
 
     const temp = document.createElement('div');
     temp.innerHTML = html;
     const text = temp.textContent;
 
     for (let j = 0, jl = this.searchTermsRegExp.length; j < jl; j++) {
-      this.searchTermsRegExp[j].lastIndex = 0;
-
-      if (this.isLemmaSearch) {
-        if (this.searchTermsRegExp[j].test(processedHtml)) {
-          regMatches[j] = true;
-          foundMatch = true;
-        }
-      } else {
-        if (this.searchTermsRegExp[j].test(text)) {
-          regMatches[j] = true;
-          foundMatch = true;
-        }
-        this.searchTermsRegExp[j].lastIndex = 0;
+      if (this.termMatches(this.searchTermsRegExp[j], processedHtml, text)) {
+        regMatches[j] = true;
+        foundMatch = true;
       }
     }
 
     if (this.searchType === 'AND') {
-      let foundAll = true;
-      for (const match of regMatches) {
-        if (match !== true) {
-          foundAll = false;
-          break;
-        }
-      }
-      foundMatch = foundAll;
+      foundMatch = regMatches.every(Boolean);
     }
 
     if (foundMatch && !this.isLemmaSearch) {

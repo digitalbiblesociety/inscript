@@ -139,7 +139,7 @@ export function parsePassage(book, reference) {
   const bookIdx = bookName ? ref.toLowerCase().indexOf(bookName.toLowerCase()) : -1;
   if (bookIdx > -1) ref = ref.slice(bookIdx + bookName.length);
 
-  const match = ref.match(/(\d+)\s*:\s*(\d+)|(\d+)/);
+  const match = /(\d+)\s*:\s*(\d+)|(\d+)/.exec(ref);
   const chapter = match ? (match[1] ?? match[3]) : '1';
   const verse = match && match[2] ? match[2] : '1';
 

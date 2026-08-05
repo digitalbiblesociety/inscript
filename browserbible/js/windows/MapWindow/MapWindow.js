@@ -372,11 +372,12 @@ class MapWindowComponent extends BaseWindow {
 
     const rows = journey.stops.map((stop, i) => {
       const verses = (stop.verses || []).map(verseId => {
-        const ref = new Reference(verseId);
+        const ref = Reference(verseId);
         const bookName = BOOK_DATA[ref.bookid]?.names?.eng?.[0] ?? ref.bookid;
         const sectionid = ref.bookid + ref.chapter1;
+        const label = `${bookName} ${ref.chapter1}:${ref.verse1}`;
         return `<span class="verse map-journey-stop-verse" data-sectionid="${sectionid}"
-          data-fragmentid="${sectionid}_${ref.verse1}">${this.escapeHtml(`${bookName} ${ref.chapter1}:${ref.verse1}`)}</span>`;
+          data-fragmentid="${sectionid}_${ref.verse1}">${this.escapeHtml(label)}</span>`;
       }).join('');
       return `<div class="map-journey-stop-row" data-stop-index="${i}">
         <span class="map-journey-stop-num" style="--journey-color:${this.escapeHtml(journey.color)}">${i + 1}</span>

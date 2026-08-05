@@ -105,7 +105,7 @@ function getTextInfo(textid, callback) {
       const seenBooks = new Set();
 
       for (const line of lines) {
-        const match = line.trim().match(/^(\d+)_(.+?)_(\d+)\.mp3$/);
+        const match = /^(\d+)_(.+?)_(\d+)\.mp3$/.exec(line.trim());
         if (!match) continue;
 
         const [, dbsNum, , chapterStr] = match;

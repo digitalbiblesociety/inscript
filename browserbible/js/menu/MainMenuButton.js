@@ -1,5 +1,5 @@
 
-import { elem, asButton, onActivate } from '../lib/helpers.esm.js';
+import { elem } from '../lib/helpers.esm.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import { VERSION } from '../core/registry.js';
 import { t } from '../lib/i18n.js';
@@ -8,8 +8,7 @@ export function MainMenuButton(parentNode) {
     elem('img', { src: './img/inscript_logo.svg', alt: 'Logo', width: 114, height: 22 }),
     elem('span', { className: 'app-version-pill' }, VERSION.split('.').slice(0, 2).join('.'))
   );
-  const mainMenuButton = elem('div', { id: 'main-menu-button' });
-  asButton(mainMenuButton, t('a11y.mainMenu'));
+  const mainMenuButton = elem('button', { type: 'button', id: 'main-menu-button', className: 'plain-button', ariaLabel: t('a11y.mainMenu') });
   mainMenuButton.setAttribute('aria-haspopup', 'menu');
   mainMenuButton.setAttribute('aria-expanded', 'false');
   const mainMenuDropDown = elem('div', { id: 'main-menu-dropdown', popover: '' },
@@ -44,7 +43,7 @@ export function MainMenuButton(parentNode) {
     }
   };
 
-  onActivate(mainMenuButton, mainMenuClick);
+  mainMenuButton.addEventListener('click', mainMenuClick);
   mainMenuLogo.addEventListener('click', mainMenuClick);
 
   mainMenuDropDown.addEventListener('click', (e) => {

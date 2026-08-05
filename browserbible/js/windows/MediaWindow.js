@@ -772,7 +772,6 @@ class MediaWindowComponent extends BaseWindow {
   renderVerseInto(verseid, reference, htmlParts) {
     const libraries = this.mediaLibraries;
     const filters = this.state.filters;
-    const galleryItems = this.state.galleryItems;
 
     for (let i = 0; i < libraries.length; i++) {
       const mediaLibrary = libraries[i];
@@ -782,23 +781,25 @@ class MediaWindowComponent extends BaseWindow {
       const mediaForVerse = mediaLibrary.data?.[verseid];
       if (!mediaForVerse) continue;
 
-      for (let j = 0; j < mediaForVerse.length; j++) {
-        const mediaInfo = mediaForVerse[j];
-        if (mediaInfo.filename?.includes('-color')) continue;
-        if (mediaLibrary.type === 'dbsvideo') {
-          this.chapterVideoOrgs.add(mediaInfo.org);
-          // A picked language is a request, not a hint: show what that language
-          // has rather than padding the chapter out with English editions.
-          if (!hasDbsVideoEdition(mediaInfo.org, this.effectiveVideoLanguage(),
-            { fallback: !this.state.videoLanguage })) continue;
-        }
+      this.renderLibraryMediaInto(mediaLibrary, mediaForVerse, category, verseid, reference, htmlParts);
+    }
+  }
 
-        const { fullUrl, thumbUrl } = this.buildMediaUrls(mediaLibrary, mediaInfo);
-        const galleryItem = this.createGalleryItem(mediaLibrary, mediaInfo, fullUrl, thumbUrl, reference, category, verseid);
-        galleryItems.push(galleryItem);
-
-        htmlParts.push(this.renderThumbLink(galleryItem, mediaLibrary, mediaInfo, reference));
+  renderLibraryMediaInto(mediaLibrary, mediaForVerse, category, verseid, reference, htmlParts) {
+    for (let j = 0; j < mediaForVerse.length; j++) {
+      const mediaInfo = mediaForVerse[j];
+      if (mediaInfo.filename?.includes('-color')) continue;
+      if (mediaLibrary.type === 'dbsvideo') {
+        this.chapterVideoOrgs.add(mediaInfo.org);
+        if (!hasDbsVideoEdition(mediaInfo.org, this.effectiveVideoLanguage(),
+          { fallback: !this.state.videoLanguage })) continue;
       }
+
+      const { fullUrl, thumbUrl } = this.buildMediaUrls(mediaLibrary, mediaInfo);
+      const galleryItem = this.createGalleryItem(mediaLibrary, mediaInfo, fullUrl, thumbUrl, reference, category, verseid);
+      this.state.galleryItems.push(galleryItem);
+
+      htmlParts.push(this.renderThumbLink(galleryItem, mediaLibrary, mediaInfo, reference));
     }
   }
 

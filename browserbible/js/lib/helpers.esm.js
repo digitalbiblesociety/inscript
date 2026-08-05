@@ -72,25 +72,6 @@ export function elem(tag, props = {}, ...children) {
   return el;
 }
 
-/**
- * Make a non-<button> element behave as an accessible button: gives it a button
- * role, keyboard focusability, and (optionally) an accessible label. Used for
- * the icon-only div/span controls in the app shell. Pair with onActivate() so
- * the control responds to the keyboard as well as the mouse.
- * Returns the same element, so it can wrap an elem() call.
- */
-export function asButton(el, label) {
-  if (!el) return el;
-  if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
-  if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
-  if (label != null && !el.hasAttribute('aria-label')) el.setAttribute('aria-label', label);
-  return el;
-}
-
-/**
- * Fire a handler on both click and keyboard activation (Enter / Space) so that
- * role="button" elements are operable without a pointer.
- */
 export function onActivate(el, handler) {
   if (!el) return;
   el.addEventListener('click', handler);
@@ -106,6 +87,10 @@ export function insertAfter(newEl, refEl) {
   if (refEl && refEl.parentNode && newEl) {
     refEl.parentNode.insertBefore(newEl, refEl.nextSibling);
   }
+}
+
+export function forceReflow(el) {
+  return el.offsetWidth;
 }
 
 const eventStore = new WeakMap();

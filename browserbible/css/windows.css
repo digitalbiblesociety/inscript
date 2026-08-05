@@ -16,6 +16,18 @@ body {
 
 :focus 		     			 {outline: none}
 :focus-visible   			 {outline: 2px solid var(--color-primary);outline-offset: 2px;}
+
+:where(button.plain-button) {
+	appearance: none;
+	background: none;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	font: inherit;
+	color: inherit;
+	text-align: inherit;
+	cursor: pointer;
+}
 .close-container 			 {background: var(--color-background-alt);z-index:var(--z-chrome);position: absolute;top:0;right:0;width:72px;height:40px;}
 .compact-ui .close-container {height: 39px;}
 .close-button 				 {font-family: var(--font-family-sans);position: absolute;z-index: var(--z-chrome);top: 15px;right: 10px;cursor: pointer;color: var(--color-text-muted);width: 20px;height: 20px;border-radius: 10px;text-align: center;}

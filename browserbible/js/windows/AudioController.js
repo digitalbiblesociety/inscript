@@ -330,60 +330,40 @@ export function AudioController(id, container, toggleButton, scroller) {
     if (verseEl) verseEl.classList.add('audio-reading');
   };
 
-  audio.addEventListener('timeupdate', () => {
-    currenttime.innerHTML = secondsToTimeCode(audio.currentTime);
-    duration.innerHTML = secondsToTimeCode(audio.duration);
-
-    audioSliderCurrent.style.width = `${audio.currentTime / audio.duration * 100}%`;
-    if (!isDraggingSliderHandle) {
-      audioSliderHandle.style.left = `${audio.currentTime / audio.duration * 100}%`;
+  const scrollPaneTo = (pane, newScrollTop) => {
+    if (scroller.setScrollTop) {
+      scroller.setScrollTop(newScrollTop);
+    } else {
+      pane.scrollTop = newScrollTop;
     }
+  };
 
-    if (!scrollCheckbox.checked || toggleButtonEl == null) return;
-
-    if (!sectionNode) {
-      sectionNode = containerEl.querySelector(`.section[data-id="${sectionid}"]`);
-    }
-    if (!sectionNode) return;
-
-    const pane = containerEl.querySelector('.scroller-main');
-    if (!pane) return;
-
-    // Verse-level sync when timestamps are available
-    if (fragmentAudioData?.timestamps) {
-      let currentVerse = 1;
-      for (const ts of fragmentAudioData.timestamps) {
-        if (audio.currentTime >= ts.time) {
-          currentVerse = ts.verse;
-        } else {
-          break;
-        }
+  const syncTextToTimestamps = (pane) => {
+    let currentVerse = 1;
+    for (const ts of fragmentAudioData.timestamps) {
+      if (audio.currentTime >= ts.time) {
+        currentVerse = ts.verse;
+      } else {
+        break;
       }
-
-      if (currentVerse !== lastTimestampVerse) {
-        lastTimestampVerse = currentVerse;
-
-        const verseEl = sectionNode.querySelector(`.v[data-id="${sectionid}_${currentVerse}"]`);
-
-        setReadingVerse(verseEl);
-
-        if (verseEl) {
-          const paneTop = offset(pane).top;
-          const scrollTop = pane.scrollTop;
-          const verseTop = offset(verseEl).top;
-          const verseTopAdjusted = verseTop - paneTop + scrollTop;
-
-          if (scroller.setScrollTop) {
-            scroller.setScrollTop(verseTopAdjusted);
-          } else {
-            pane.scrollTop = verseTopAdjusted;
-          }
-        }
-      }
-      return;
     }
 
-    // Proportional estimation fallback
+    if (currentVerse === lastTimestampVerse) return;
+    lastTimestampVerse = currentVerse;
+
+    const verseEl = sectionNode.querySelector(`.v[data-id="${sectionid}_${currentVerse}"]`);
+
+    setReadingVerse(verseEl);
+
+    if (verseEl) {
+      const paneTop = offset(pane).top;
+      const scrollTop = pane.scrollTop;
+      const verseTop = offset(verseEl).top;
+      scrollPaneTo(pane, verseTop - paneTop + scrollTop);
+    }
+  };
+
+  const syncTextToEstimate = (pane) => {
     sectionHeight = sectionNode.offsetHeight;
 
     const chapter = parseInt(sectionid.substring(2), 10);
@@ -405,11 +385,33 @@ export function AudioController(id, container, toggleButton, scroller) {
 
     const targetScrollTop = nodeTopAdjusted + scrollOffset;
     if (Math.abs(targetScrollTop - pane.scrollTop) > 4) {
-      if (scroller.setScrollTop) {
-        scroller.setScrollTop(targetScrollTop);
-      } else {
-        pane.scrollTop = targetScrollTop;
-      }
+      scrollPaneTo(pane, targetScrollTop);
+    }
+  };
+
+  audio.addEventListener('timeupdate', () => {
+    currenttime.innerHTML = secondsToTimeCode(audio.currentTime);
+    duration.innerHTML = secondsToTimeCode(audio.duration);
+
+    audioSliderCurrent.style.width = `${audio.currentTime / audio.duration * 100}%`;
+    if (!isDraggingSliderHandle) {
+      audioSliderHandle.style.left = `${audio.currentTime / audio.duration * 100}%`;
+    }
+
+    if (!scrollCheckbox.checked || toggleButtonEl == null) return;
+
+    if (!sectionNode) {
+      sectionNode = containerEl.querySelector(`.section[data-id="${sectionid}"]`);
+    }
+    if (!sectionNode) return;
+
+    const pane = containerEl.querySelector('.scroller-main');
+    if (!pane) return;
+
+    if (fragmentAudioData?.timestamps) {
+      syncTextToTimestamps(pane);
+    } else {
+      syncTextToEstimate(pane);
     }
   });
 

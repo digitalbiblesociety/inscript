@@ -221,6 +221,40 @@ export function TextChooser() {
     return parts;
   }
 
+  function appendLangCode(row, item) {
+    if (item.langCode) {
+      row.appendChild(elem('span', { className: 'text-chooser-lang-code' }, item.langCode));
+    }
+  }
+
+  function appendBadges(row, text) {
+    if (text.hasLemma) {
+      row.appendChild(lemmaTemplate.cloneNode(true));
+    }
+    if (hasAudioContent(text)) {
+      row.appendChild(audioTemplate.cloneNode(true));
+    }
+    if (text.providerName === 'apibible') {
+      row.appendChild(apiBibleTemplate.cloneNode(true));
+    }
+    if (text.providerName === 'biblebrain') {
+      row.appendChild(bibleBrainTemplate.cloneNode(true));
+    }
+  }
+
+  function buildTextRow(row, item) {
+    const text = item.data;
+    const isSelected = selectedTextInfo && selectedTextInfo.id === text.id;
+
+    row.className = 'text-chooser-row' + (isSelected ? ' selected' : '');
+    row.dataset.id = text.id;
+
+    row.appendChild(elem('span', { className: 'text-chooser-abbr' }, highlighted(displayAbbr(text))));
+    row.appendChild(elem('span', { className: 'text-chooser-name' }, highlighted(text.name)));
+
+    appendBadges(row, text);
+  }
+
   function createRowElement(item, top) {
     const row = elem('div', {
       style: { position: 'absolute', top: `${top}px`, left: '0', right: '0', height: `${ROW_HEIGHT}px` }
@@ -229,38 +263,14 @@ export function TextChooser() {
     if (item.type === 'section-header') {
       row.className = 'text-chooser-row-header text-chooser-section-header';
       row.appendChild(elem('span', { className: 'name' }, item.data));
-      if (item.langCode) {
-        row.appendChild(elem('span', { className: 'text-chooser-lang-code' }, item.langCode));
-      }
+      appendLangCode(row, item);
     } else if (item.type === 'header') {
       row.className = 'text-chooser-row-header';
       row.dataset.langName = item.data;
       row.appendChild(elem('span', { className: 'name' }, highlighted(item.data)));
-      if (item.langCode) {
-        row.appendChild(elem('span', { className: 'text-chooser-lang-code' }, item.langCode));
-      }
+      appendLangCode(row, item);
     } else {
-      const text = item.data;
-      const isSelected = selectedTextInfo && selectedTextInfo.id === text.id;
-
-      row.className = 'text-chooser-row' + (isSelected ? ' selected' : '');
-      row.dataset.id = text.id;
-
-      row.appendChild(elem('span', { className: 'text-chooser-abbr' }, highlighted(displayAbbr(text))));
-      row.appendChild(elem('span', { className: 'text-chooser-name' }, highlighted(text.name)));
-
-      if (text.hasLemma) {
-        row.appendChild(lemmaTemplate.cloneNode(true));
-      }
-      if (hasAudioContent(text)) {
-        row.appendChild(audioTemplate.cloneNode(true));
-      }
-      if (text.providerName === 'apibible') {
-        row.appendChild(apiBibleTemplate.cloneNode(true));
-      }
-      if (text.providerName === 'biblebrain') {
-        row.appendChild(bibleBrainTemplate.cloneNode(true));
-      }
+      buildTextRow(row, item);
     }
 
     return row;

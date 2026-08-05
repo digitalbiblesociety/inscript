@@ -75,6 +75,18 @@ function parseDate(dateStr) {
   return isNaN(d.getTime()) ? null : d.getTime();
 }
 
+function buildImportedNote(header, content) {
+  const now = Date.now();
+  return {
+    id: generateId(),
+    title: header.title || 'Imported Note',
+    content,
+    ...normalizeReference(header.referenceDisplay),
+    created: header.created || now,
+    modified: header.modified || now
+  };
+}
+
 /**
  * Parse a markdown export back into note objects
  * Exported format:
@@ -87,6 +99,70 @@ function parseDate(dateStr) {
  *
  *   ---
  */
+const MARKDOWN_PATTERNS = {
+  verse: /^\*\*Verse:\*\*\s*(.+)$/,
+  created: /^\*Created:\s*(.+)\*$/,
+  modified: /^\*Modified:\s*(.+)\*$/
+};
+
+function applyHeaderPatterns(line, header, patterns) {
+  const verseMatch = patterns.verse.exec(line);
+  if (verseMatch) {
+    header.referenceDisplay = verseMatch[1].trim();
+    return true;
+  }
+
+  const createdMatch = patterns.created.exec(line);
+  if (createdMatch) {
+    header.created = parseDate(createdMatch[1]);
+    return true;
+  }
+
+  const modifiedMatch = patterns.modified.exec(line);
+  if (modifiedMatch) {
+    header.modified = parseDate(modifiedMatch[1]);
+    header.done = true;
+    return true;
+  }
+
+  return false;
+}
+
+function applyMarkdownHeaderLine(line, header) {
+  const titleMatch = /^# (.+)$/.exec(line);
+  if (titleMatch) {
+    header.title = titleMatch[1].trim();
+    return true;
+  }
+
+  return applyHeaderPatterns(line, header, MARKDOWN_PATTERNS);
+}
+
+function splitMarkdownSection(lines) {
+  const header = { title: '', referenceDisplay: null, created: null, modified: null, done: false };
+  const contentLines = [];
+
+  for (const line of lines) {
+    if (header.done) {
+      contentLines.push(line);
+      continue;
+    }
+
+    if (applyMarkdownHeaderLine(line, header)) continue;
+
+    if (header.title) {
+      if (line === '') continue;
+      header.done = true;
+      contentLines.push(line);
+      continue;
+    }
+
+    contentLines.push(line);
+  }
+
+  return { header, contentLines };
+}
+
 function parseMarkdownImport(text) {
   const sections = text.split(/\n---\n/);
   const notes = [];
@@ -95,70 +171,9 @@ function parseMarkdownImport(text) {
     const trimmed = section.trim();
     if (!trimmed) continue;
 
-    const lines = trimmed.split('\n');
-    let title = '';
-    let referenceDisplay = null;
-    let created = null;
-    let modified = null;
-    let contentLines = [];
-    let headerDone = false;
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-
-      if (!headerDone) {
-        const titleMatch = line.match(/^# (.+)$/);
-        if (titleMatch) {
-          title = titleMatch[1].trim();
-          continue;
-        }
-
-        const verseMatch = line.match(/^\*\*Verse:\*\*\s*(.+)$/);
-        if (verseMatch) {
-          referenceDisplay = verseMatch[1].trim();
-          continue;
-        }
-
-        const createdMatch = line.match(/^\*Created:\s*(.+)\*$/);
-        if (createdMatch) {
-          created = parseDate(createdMatch[1]);
-          continue;
-        }
-
-        const modifiedMatch = line.match(/^\*Modified:\s*(.+)\*$/);
-        if (modifiedMatch) {
-          modified = parseDate(modifiedMatch[1]);
-          headerDone = true;
-          continue;
-        }
-
-        if (line === '' && title) {
-          continue;
-        }
-
-        if (title) {
-          headerDone = true;
-          if (line !== '') {
-            contentLines.push(line);
-          }
-          continue;
-        }
-      }
-
-      contentLines.push(line);
-    }
-
-    const now = Date.now();
+    const { header, contentLines } = splitMarkdownSection(trimmed.split('\n'));
     const contentMd = contentLines.join('\n').trim();
-
-    notes.push({
-      id: generateId(),
-      title: title || 'Imported Note',
-      content: markdownToHtml(contentMd),
-      ...normalizeReference(referenceDisplay),
-      created: created || now,
-      modified: modified || now
-    });
+    notes.push(buildImportedNote(header, markdownToHtml(contentMd)));
   }
 
   return notes;
@@ -169,6 +184,39 @@ function parseMarkdownImport(text) {
  * Used by both plain text and RTF importers.
  * `versePattern` must put the reference in capture group 1.
  */
+const PLAIN_PATTERNS = {
+  created: /^Created:\s*(.+)$/,
+  modified: /^Modified:\s*(.+)$/
+};
+
+function applyMetadataLine(line, header, patterns) {
+  if (line === '') return true;
+  return applyHeaderPatterns(line, header, patterns);
+}
+
+function scanHeaderLines(lines, versePattern) {
+  const header = { title: '', referenceDisplay: null, created: null, modified: null, done: false };
+  const patterns = { verse: versePattern, ...PLAIN_PATTERNS };
+  let contentStartIndex = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    if (!header.title) {
+      if (line) {
+        header.title = line;
+        contentStartIndex = i + 1;
+      }
+      continue;
+    }
+
+    if (header.done || !applyMetadataLine(line, header, patterns)) break;
+    contentStartIndex = i + 1;
+  }
+
+  return { header, contentStartIndex };
+}
+
 function parseHeaderSections(text, divider, versePattern) {
   const sections = text.split(divider);
   const notes = [];
@@ -178,68 +226,14 @@ function parseHeaderSections(text, divider, versePattern) {
     if (!trimmed) continue;
 
     const lines = trimmed.split('\n');
-    let title = '';
-    let referenceDisplay = null;
-    let created = null;
-    let modified = null;
-    let contentStartIndex = 0;
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-
-      if (!title && line) {
-        title = line;
-        contentStartIndex = i + 1;
-        continue;
-      }
-
-      if (title && !modified) {
-        const verseMatch = line.match(versePattern);
-        if (verseMatch) {
-          referenceDisplay = verseMatch[1].trim();
-          contentStartIndex = i + 1;
-          continue;
-        }
-
-        const createdMatch = line.match(/^Created:\s*(.+)$/);
-        if (createdMatch) {
-          created = parseDate(createdMatch[1]);
-          contentStartIndex = i + 1;
-          continue;
-        }
-
-        const modifiedMatch = line.match(/^Modified:\s*(.+)$/);
-        if (modifiedMatch) {
-          modified = parseDate(modifiedMatch[1]);
-          contentStartIndex = i + 1;
-          continue;
-        }
-
-        if (line === '') {
-          contentStartIndex = i + 1;
-          continue;
-        }
-
-        break;
-      }
-    }
-
-    const now = Date.now();
-    const contentText = lines.slice(contentStartIndex).join('\n').trim();
-    const contentHtml = contentText
+    const { header, contentStartIndex } = scanHeaderLines(lines, versePattern);
+    const contentHtml = lines.slice(contentStartIndex).join('\n').trim()
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/\n/g, '<br>');
 
-    notes.push({
-      id: generateId(),
-      title: title || 'Imported Note',
-      content: contentHtml,
-      ...normalizeReference(referenceDisplay),
-      created: created || now,
-      modified: modified || now
-    });
+    notes.push(buildImportedNote(header, contentHtml));
   }
 
   return notes;

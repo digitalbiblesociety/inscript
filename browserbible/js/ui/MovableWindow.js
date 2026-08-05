@@ -1,10 +1,10 @@
-import { elem, asButton, onActivate } from '../lib/helpers.esm.js';
+import { elem } from '../lib/helpers.esm.js';
 import { t } from '../lib/i18n.js';
 
 /** `height` is the body height; the window ends up taller by its header. */
 export function MovableWindow(width = 300, height = 200, titleText = '', id = null) {
   const title = elem('span', { className: 'movable-header-title' }, titleText);
-  const close = asButton(elem('span', { className: 'close-button' }), t('a11y.close'));
+  const close = elem('button', { type: 'button', className: 'close-button plain-button', ariaLabel: t('a11y.close') });
   const header = elem('div', { className: 'movable-header' }, title, close);
   const body = elem('div', { className: 'movable-body' });
   const container = elem('div', { className: 'movable-window', popover: '' }, header, body);
@@ -12,7 +12,7 @@ export function MovableWindow(width = 300, height = 200, titleText = '', id = nu
 
   document.body.appendChild(container);
 
-  onActivate(close, hide);
+  close.addEventListener('click', hide);
 
   function size(w, h) {
     if (w) container.style.width = w + 'px';

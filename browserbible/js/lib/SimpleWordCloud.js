@@ -35,45 +35,25 @@ export function renderWordCloud(container, options) {
     .sort((a, b) => b.size - a.size);
 
   const placedRects = [];
-  const cx = width / 2;
-  const cy = height / 2;
-  const xStretch = Math.max(1, width / height);
+  const bounds = {
+    cx: width / 2,
+    cy: height / 2,
+    width,
+    height,
+    xStretch: Math.max(1, width / height)
+  };
 
   let placedCount = 0;
 
   for (const entry of entries) {
-    const span = elem('span', {
-      textContent: entry.word,
-      className: 'wordcloud-word',
-      dataset: { word: entry.word, weight: entry.weight },
-      style: {
-        position: 'absolute',
-        left: '0px',
-        top: '0px',
-        visibility: 'hidden',
-        fontSize: `${entry.size}px`,
-        color: color(entry.word, entry.weight),
-        cursor: (hover || click) ? 'pointer' : 'default',
-        display: 'inline-block',
-        lineHeight: '1.1',
-        whiteSpace: 'nowrap'
-      }
-    });
-
+    const span = createWordSpan(entry, color, hover, click);
     container.appendChild(span);
 
     const spanW = span.offsetWidth + WORD_GAP;
     const spanH = span.offsetHeight + 2;
 
-    let rotation = (entry === entries[0] || Math.random() > ROTATE_RATIO)
-      ? 0
-      : (Math.random() < 0.5 ? 90 : -90);
-
-    let spot = findSpot(cx, cy, rotation ? spanH : spanW, rotation ? spanW : spanH, width, height, xStretch, placedRects);
-    if (!spot && rotation) {
-      rotation = 0;
-      spot = findSpot(cx, cy, spanW, spanH, width, height, xStretch, placedRects);
-    }
+    const { spot, rotation } =
+      placeWord(spanW, spanH, pickRotation(entry === entries[0]), bounds, placedRects);
 
     if (!spot) {
       span.remove();
@@ -88,25 +68,61 @@ export function renderWordCloud(container, options) {
     span.style.animationDelay = `${Math.min(placedCount * STAGGER_MS, STAGGER_MAX_MS)}ms`;
     placedCount++;
 
-    if (hover) {
-      span.addEventListener('mouseenter', () => {
-        span.style.transform = 'scale(1.12)';
-        hover([entry.word, entry.weight]);
-      });
-
-      span.addEventListener('mouseleave', () => {
-        span.style.transform = '';
-        hover(null);
-      });
-    }
-
-    if (click) {
-      span.addEventListener('click', () => click([entry.word, entry.weight]));
-    }
+    bindWordEvents(span, entry, hover, click);
   }
 }
 
-function findSpot(cx, cy, w, h, width, height, xStretch, placedRects) {
+function createWordSpan(entry, color, hover, click) {
+  return elem('span', {
+    textContent: entry.word,
+    className: 'wordcloud-word',
+    dataset: { word: entry.word, weight: entry.weight },
+    style: {
+      position: 'absolute',
+      left: '0px',
+      top: '0px',
+      visibility: 'hidden',
+      fontSize: `${entry.size}px`,
+      color: color(entry.word, entry.weight),
+      cursor: (hover || click) ? 'pointer' : 'default',
+      display: 'inline-block',
+      lineHeight: '1.1',
+      whiteSpace: 'nowrap'
+    }
+  });
+}
+
+function pickRotation(isFirst) {
+  if (isFirst || Math.random() > ROTATE_RATIO) return 0;
+  return Math.random() < 0.5 ? 90 : -90;
+}
+
+function placeWord(spanW, spanH, rotation, bounds, placedRects) {
+  const spot = findSpot(rotation ? spanH : spanW, rotation ? spanW : spanH, bounds, placedRects);
+  if (spot || !rotation) return { spot, rotation };
+  return { spot: findSpot(spanW, spanH, bounds, placedRects), rotation: 0 };
+}
+
+function bindWordEvents(span, entry, hover, click) {
+  if (hover) {
+    span.addEventListener('mouseenter', () => {
+      span.style.transform = 'scale(1.12)';
+      hover([entry.word, entry.weight]);
+    });
+
+    span.addEventListener('mouseleave', () => {
+      span.style.transform = '';
+      hover(null);
+    });
+  }
+
+  if (click) {
+    span.addEventListener('click', () => click([entry.word, entry.weight]));
+  }
+}
+
+function findSpot(w, h, bounds, placedRects) {
+  const { cx, cy, width, height, xStretch } = bounds;
   const maxRadius = Math.max(width, height);
   let angle = Math.random() * Math.PI * 2;
 

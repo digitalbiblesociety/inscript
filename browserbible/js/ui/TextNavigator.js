@@ -4,7 +4,7 @@
  * tracks the active book. Uses the native popover API for click-off detection.
  */
 
-import { elem, offset } from '../lib/helpers.esm.js';
+import { elem, offset, forceReflow } from '../lib/helpers.esm.js';
 import { toBcp47Lang } from '../lib/bcp47.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import { i18n } from '../lib/i18n.js';
@@ -26,6 +26,12 @@ function ensurePericopes(onReady) {
     onReady?.();
   });
 }
+
+const TESTAMENT_HEADERS = [
+  { books: OT_BOOKS, key: 'ot', i18nKey: 'windows.bible.ot' },
+  { books: AP_BOOKS, key: 'ap', i18nKey: 'windows.bible.dc' },
+  { books: NT_BOOKS, key: 'nt', i18nKey: 'windows.bible.nt' }
+];
 
 export function TextNavigator() {
   let container = null;
@@ -364,14 +370,7 @@ export function TextNavigator() {
     }, elem('span', displayName));
   }
 
-  function renderDivisions() {
-    const fragment = document.createDocumentFragment();
-    const printed = { ot: false, nt: false, ap: false };
-    fullBookMode = true;
-
-    divisionsEl.classList.toggle('text-navigator-divisions-full', fullBookMode);
-
-    // Sort divisions into OT, AP, NT order regardless of input order
+  function sortDivisionEntries() {
     const otDivs = [];
     const apDivs = [];
     const ntDivs = [];
@@ -387,29 +386,34 @@ export function TextNavigator() {
     }
 
     // Apocryphal books are hidden unless the user has enabled them.
-    const sortedDivs = getShowApocrypha()
+    return getShowApocrypha()
       ? [...otDivs, ...apDivs, ...ntDivs, ...otherDivs]
       : [...otDivs, ...ntDivs, ...otherDivs];
+  }
 
-    for (const { divisionid, index: i } of sortedDivs) {
+  function appendTestamentHeader(fragment, divisionid, printed) {
+    for (const { books, key, i18nKey } of TESTAMENT_HEADERS) {
+      if (books.includes(divisionid) && !printed[key]) {
+        fragment.appendChild(elem('div', { className: 'text-navigator-division-header', textContent: i18n.t(i18nKey) }));
+        printed[key] = true;
+      }
+    }
+  }
+
+  function renderDivisions() {
+    const fragment = document.createDocumentFragment();
+    const printed = { ot: false, nt: false, ap: false };
+    fullBookMode = true;
+
+    divisionsEl.classList.toggle('text-navigator-divisions-full', fullBookMode);
+
+    for (const { divisionid, index: i } of sortDivisionEntries()) {
       if (!BOOK_DATA[divisionid]) continue;
 
       const divisionName = textInfo.divisionNames?.[i] ?? null;
       const divisionAbbr = textInfo.divisionAbbreviations?.[i] ?? null;
 
-      if (OT_BOOKS.includes(divisionid) && !printed.ot) {
-        fragment.appendChild(elem('div', { className: 'text-navigator-division-header', textContent: i18n.t('windows.bible.ot') }));
-        printed.ot = true;
-      }
-      if (AP_BOOKS.includes(divisionid) && !printed.ap) {
-        fragment.appendChild(elem('div', { className: 'text-navigator-division-header', textContent: i18n.t('windows.bible.dc') }));
-        printed.ap = true;
-      }
-      if (NT_BOOKS.includes(divisionid) && !printed.nt) {
-        fragment.appendChild(elem('div', { className: 'text-navigator-division-header', textContent: i18n.t('windows.bible.nt') }));
-        printed.nt = true;
-      }
-
+      appendTestamentHeader(fragment, divisionid, printed);
       fragment.appendChild(buildDivisionElement(divisionid, divisionName, getDisplayName(divisionName, divisionAbbr)));
     }
 
@@ -476,7 +480,7 @@ export function TextNavigator() {
 
     const isLast = selectedDiv && !selectedDiv.nextElementSibling;
     if (animated && !isLast) {
-      sectionNodes.offsetHeight;
+      forceReflow(sectionNodes);
       sectionNodes.classList.remove('collapsed');
     } else {
       sectionNodes.classList.remove('collapsed');

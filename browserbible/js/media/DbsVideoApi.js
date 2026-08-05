@@ -33,7 +33,8 @@ const FALLBACK_ISO = 'eng';
  */
 const ISO_639_1_TO_3 = Object.entries(ISO_639_3_TO_1)
   .reduce((map, [iso3, iso1]) => {
-    (map[iso1] ??= []).push(iso3);
+    map[iso1] ??= [];
+    map[iso1].push(iso3);
     return map;
   }, {});
 
@@ -282,7 +283,7 @@ export function getDbsVideoLanguageName(iso, locale = 'en') {
 export function getDbsVideoLanguages(orgs, locale = 'en') {
   if (!index || (orgs && !orgs.length)) return [];
 
-  const wanted = [...new Set(orgs ?? index.keys())].sort();
+  const wanted = [...new Set(orgs ?? index.keys())].sort((a, b) => (a > b) - (a < b));
   const cacheKey = `${locale}|${wanted.join(',')}`;
   const cached = languageLists.get(cacheKey);
   if (cached) return cached;

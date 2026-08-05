@@ -53,7 +53,12 @@ export function normalizeNote(raw) {
  */
 export function migratePayload(parsed) {
   const isArray = Array.isArray(parsed);
-  const rawNotes = isArray ? parsed : (parsed && Array.isArray(parsed.notes) ? parsed.notes : []);
+  let rawNotes = [];
+  if (isArray) {
+    rawNotes = parsed;
+  } else if (parsed && Array.isArray(parsed.notes)) {
+    rawNotes = parsed.notes;
+  }
   const version = isArray ? undefined : parsed?.version;
   const notes = rawNotes.map(normalizeNote).filter(Boolean);
   if (version !== SCHEMA_VERSION) {
@@ -251,9 +256,7 @@ export function createNotesStore({ storage, win } = {}) {
     // If the id vanished (another tab deleted it mid-edit), re-add instead of
     // throwing the user's work away.
     const base = index === -1 ? { id } : _notes[index];
-    const modified = Object.prototype.hasOwnProperty.call(changes, 'modified')
-      ? changes.modified
-      : Date.now();
+    const modified = Object.hasOwn(changes, 'modified') ? changes.modified : Date.now();
     const updated = normalizeNote({ ...base, ...changes, id, modified });
     if (index === -1) {
       _notes.unshift(updated);

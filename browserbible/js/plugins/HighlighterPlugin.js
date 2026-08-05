@@ -340,7 +340,7 @@ export const HighlighterPlugin = () => {
     const { startOffset, endOffset } = pendingSelection;
 
     const highlight = {
-      id: 'hl_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9),
+      id: 'hl_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 11),
       verseId: pendingVerse.getAttribute('data-id'),
       startOffset,
       endOffset,

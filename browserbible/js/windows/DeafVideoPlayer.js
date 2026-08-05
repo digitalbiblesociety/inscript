@@ -201,6 +201,46 @@ export function DeafVideoPlayer(node) {
     active?.scrollIntoView({ block: 'nearest', inline: 'center' });
   };
 
+  const seekAndMaybePlay = (seekSec, autoplay) => {
+    if (seekSec > 0) { try { video.currentTime = seekSec; } catch { void 0; } }
+    if (autoplay) video.play().catch(() => {});
+  };
+
+  const loadItemMedia = (item, { autoplay, seekSec, suppressBroadcast }) => {
+    const url = urlFor(item);
+    if (!url) {
+      if (video.getAttribute('src')) { video.removeAttribute('src'); video.load(); }
+      consecutiveErrors++;
+      const skipIndex = playlist.next(currentIndex);
+      if (consecutiveErrors <= MAX_CONSECUTIVE_SKIPS && skipIndex > -1) {
+        setCurrentIndex(skipIndex, { autoplay, suppressBroadcast });
+        return false;
+      }
+      return true;
+    }
+
+    if (video.getAttribute('src') !== url) {
+      pendingSeekSec = seekSec;
+      pendingAutoplay = autoplay;
+      video.poster = item.poster || '';
+      video.src = url;
+      video.load();
+    } else {
+      seekAndMaybePlay(seekSec, autoplay);
+    }
+    return true;
+  };
+
+  const updateChapterMarkers = (item, index, sectionChanged) => {
+    if (sectionChanged) {
+      currentChapterTimeline = playlist.chapterTimeline(item.sectionid);
+      buildPlaybar();
+    } else {
+      markersLayer.querySelectorAll('.deaf-marker.active').forEach((m) => m.classList.remove('active'));
+      markersLayer.querySelector(`.deaf-marker[data-index="${index}"]`)?.classList.add('active');
+    }
+  };
+
   const setCurrentIndex = (index, { autoplay = false, seekSec = 0, suppressBroadcast = false } = {}) => {
     if (!playlist) return;
     const item = playlist.get(index);
@@ -217,39 +257,13 @@ export function DeafVideoPlayer(node) {
     passageTitle.textContent = item.reference;
 
     if (itemChanged) {
-      const url = urlFor(item);
-      if (!url) {
-        // Don't set video.src='' (it resolves to the page URL and errors); drop the attr and skip forward
-        if (video.getAttribute('src')) { video.removeAttribute('src'); video.load(); }
-        consecutiveErrors++;
-        const skipIndex = playlist.next(currentIndex);
-        if (consecutiveErrors <= MAX_CONSECUTIVE_SKIPS && skipIndex > -1) {
-          setCurrentIndex(skipIndex, { autoplay, suppressBroadcast });
-          return;
-        }
-      } else if (video.getAttribute('src') !== url) {
-        pendingSeekSec = seekSec;
-        pendingAutoplay = autoplay;
-        video.poster = item.poster || '';
-        video.src = url;
-        video.load();
-      } else {
-        if (seekSec > 0) { try { video.currentTime = seekSec; } catch { /* ignore */ } }
-        if (autoplay) video.play().catch(() => {});
-      }
+      if (!loadItemMedia(item, { autoplay, seekSec, suppressBroadcast })) return;
       preloadNext();
     } else if (seekSec > 0) {
-      try { video.currentTime = seekSec; } catch { /* ignore */ }
-      if (autoplay) video.play().catch(() => {});
+      seekAndMaybePlay(seekSec, autoplay);
     }
 
-    if (sectionChanged) {
-      currentChapterTimeline = playlist.chapterTimeline(item.sectionid);
-      buildPlaybar();
-    } else {
-      markersLayer.querySelectorAll('.deaf-marker.active').forEach((m) => m.classList.remove('active'));
-      markersLayer.querySelector(`.deaf-marker[data-index="${index}"]`)?.classList.add('active');
-    }
+    updateChapterMarkers(item, index, sectionChanged);
 
     if (bookChanged || sectionChanged) buildChapterStrip();
 

@@ -89,7 +89,7 @@ export class DbsAudioProvider extends BaseAudioProvider {
         const filename = line.trim();
         if (!filename) continue;
 
-        const match = filename.match(/^(\d+)_(.+?)_(\d+)\.mp3$/);
+        const match = /^(\d+)_(.+?)_(\d+)\.mp3$/.exec(filename);
         if (!match) continue;
 
         const [, dbsNum, dbsName, chapterStr] = match;
@@ -192,7 +192,7 @@ export class DbsAudioProvider extends BaseAudioProvider {
 
       for (const line of text.trim().split('\n')) {
         // Format: "Verse {n}\t{HH:MM:SS.ms}"
-        const match = line.match(/^Verse\s+(\d+)\t(\d+):(\d+):(\d+)\.(\d+)/);
+        const match = /^Verse\s+(\d+)\t(\d+):(\d+):(\d+)\.(\d+)/.exec(line);
         if (!match) continue;
 
         const verse = parseInt(match[1], 10);

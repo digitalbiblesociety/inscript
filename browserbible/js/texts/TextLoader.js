@@ -25,41 +25,13 @@ export function loadSection(textInfo, sectionid, successCallback, errorCallback)
     return;
   }
 
-  let textid = '';
-
-  if (textInfo != null && typeof textInfo === 'string') {
-    textid = textInfo;
-
-    getText(textid, (textInfo) => {
-      // getText calls back with null when it has no errorCallback to use
-      if (!textInfo) {
-        errorCallback?.(new Error(`No text info for "${textid}"`));
-        return;
-      }
-      loadSection(textInfo, sectionid, successCallback, errorCallback);
-    }, errorCallback);
+  if (typeof textInfo === 'string') {
+    loadSectionByTextid(textInfo, sectionid, successCallback, errorCallback);
     return;
-  } else {
-    textid = textInfo.id;
-
-    // If the exact section doesn't exist, try to find a matching section
-    if (textInfo.sections?.length > 0 && textInfo.sections.indexOf(sectionid) === -1) {
-      const bookPrefix = sectionid.substring(0, 2);
-      const chapterNum = parseInt(sectionid.substring(2), 10);
-
-      const matchingSection = textInfo.sections.find(s => {
-        if (!s.startsWith(bookPrefix)) return false;
-        const sectionChapter = parseInt(s.substring(2), 10);
-        return sectionChapter === chapterNum;
-      });
-
-      if (matchingSection) {
-        sectionid = matchingSection;
-      }
-      // If book/chapter doesn't exist in this text, keep the original sectionid
-      // and let the provider handle it (or fail gracefully)
-    }
   }
+
+  const textid = textInfo.id;
+  sectionid = resolveSectionid(textInfo, sectionid);
 
   if (window?.BrowserBible?.analytics?.record) {
     window.BrowserBible.analytics.record('load', textInfo.id, sectionid);
@@ -76,31 +48,62 @@ export function loadSection(textInfo, sectionid, successCallback, errorCallback)
   }
 
   const provider = textProviders.get(textInfo.providerName);
-  if (provider) {
-    const pendingKey = `${textid}|${sectionid}`;
-    if (pendingSectionLoads[pendingKey]) {
-      pendingSectionLoads[pendingKey].push({ successCallback, errorCallback });
+  if (!provider) return;
+
+  const pendingKey = `${textid}|${sectionid}`;
+  if (pendingSectionLoads[pendingKey]) {
+    pendingSectionLoads[pendingKey].push({ successCallback, errorCallback });
+    return;
+  }
+  pendingSectionLoads[pendingKey] = [{ successCallback, errorCallback }];
+
+  provider.loadSection(textid, sectionid,
+    (html) => resolveSectionLoad(textid, sectionid, pendingKey, html),
+    (...args) => rejectSectionLoad(pendingKey, args));
+}
+
+function loadSectionByTextid(textid, sectionid, successCallback, errorCallback) {
+  getText(textid, (textInfo) => {
+    if (!textInfo) {
+      errorCallback?.(new Error(`No text info for "${textid}"`));
       return;
     }
-    pendingSectionLoads[pendingKey] = [{ successCallback, errorCallback }];
+    loadSection(textInfo, sectionid, successCallback, errorCallback);
+  }, errorCallback);
+}
 
-    provider.loadSection(textid, sectionid, (html) => {
-      cachedTexts[textid][sectionid] = html;
-
-      const waiters = pendingSectionLoads[pendingKey] || [];
-      delete pendingSectionLoads[pendingKey];
-      for (const waiter of waiters) {
-        // fresh nodes per caller, since callers adopt and mutate them
-        const temp = document.createElement('div');
-        temp.innerHTML = html;
-        waiter.successCallback(temp.firstChild || temp);
-      }
-    }, (...args) => {
-      const waiters = pendingSectionLoads[pendingKey] || [];
-      delete pendingSectionLoads[pendingKey];
-      for (const waiter of waiters) waiter.errorCallback?.(...args);
-    });
+function resolveSectionid(textInfo, sectionid) {
+  if (!textInfo.sections?.length || textInfo.sections.indexOf(sectionid) > -1) {
+    return sectionid;
   }
+
+  const bookPrefix = sectionid.substring(0, 2);
+  const chapterNum = parseInt(sectionid.substring(2), 10);
+
+  const matchingSection = textInfo.sections.find(s => {
+    if (!s.startsWith(bookPrefix)) return false;
+    return parseInt(s.substring(2), 10) === chapterNum;
+  });
+
+  return matchingSection ?? sectionid;
+}
+
+function resolveSectionLoad(textid, sectionid, pendingKey, html) {
+  cachedTexts[textid][sectionid] = html;
+
+  const waiters = pendingSectionLoads[pendingKey] || [];
+  delete pendingSectionLoads[pendingKey];
+  for (const waiter of waiters) {
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    waiter.successCallback(temp.firstChild || temp);
+  }
+}
+
+function rejectSectionLoad(pendingKey, args) {
+  const waiters = pendingSectionLoads[pendingKey] || [];
+  delete pendingSectionLoads[pendingKey];
+  for (const waiter of waiters) waiter.errorCallback?.(...args);
 }
 
 export function getTextid(input) {

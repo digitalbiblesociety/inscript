@@ -1,4 +1,4 @@
-import { elem, asButton, onActivate } from '../lib/helpers.esm.js';
+import { elem, forceReflow } from '../lib/helpers.esm.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import { getWindowTypeByClassName, getApp } from './registry.js';
 import { getWindowIcon } from './windowIcons.js';
@@ -16,20 +16,11 @@ class Window {
     const parentNodeEl = parentNode?.nodeType ? parentNode : parentNode?.[0];
 
     this.node = elem('div', { className: `window ${className} active` });
-    const closeBtn = asButton(elem('span', { className: 'close-button' }), t('a11y.closeWindow'));
+    const closeBtn = elem('button', { type: 'button', className: 'close-button plain-button', ariaLabel: t('a11y.closeWindow') });
 
-    // The comparison window navigates independently and never participates in
-    // linked navigation, so it doesn't get a link/unlink button.
-    const supportsLinking = className !== 'TextComparisonWindow';
-    const linkBtn = supportsLinking
-      ? asButton(elem('span', { className: 'link-button' }))
-      : null;
-    this.closeContainer = linkBtn
-      ? elem('div', { className: 'close-container' }, linkBtn, closeBtn)
-      : elem('div', { className: 'close-container' }, closeBtn);
+    const linkBtn = (className !== 'TextComparisonWindow') ? elem('button', { type: 'button', className: 'link-button plain-button' }) : null;
+    this.closeContainer = elem('div', { className: 'close-container' }, linkBtn, closeBtn);
 
-    // Linked windows follow (and broadcast) navigation; unlinked windows
-    // scroll and navigate independently of the rest.
     this.linked = data?.linked !== false;
 
     if (linkBtn) {
@@ -44,7 +35,7 @@ class Window {
       };
       updateLinkButton();
 
-      onActivate(linkBtn, () => {
+      linkBtn.addEventListener('click', () => {
         this.linked = !this.linked;
         updateLinkButton();
         manager.trigger('settingschange', { type: 'settingschange', target: this, data: null });
@@ -64,7 +55,7 @@ class Window {
     parentNodeEl.appendChild(this.node);
     this.node.appendChild(this.closeContainer);
     document.body.appendChild(this.tab);
-    onActivate(closeBtn, () => {
+    closeBtn.addEventListener('click', () => {
       manager.remove(this.id);
     });
 
@@ -81,22 +72,27 @@ class Window {
     this._pendingMessages = [];
     this._closed = false;
 
+    const createWebComponentController = (ElementClass) => {
+      const tagName = ElementClass._tagName;
+      const controller = (tagName && customElements.get(tagName))
+        ? document.createElement(tagName)
+        : new ElementClass();
+      controller.parentInfo = { node: this.node, tab: this.tab };
+      controller.windowId = id;
+      controller.initData = data || {};
+      controller.setAttribute('window-id', id);
+      controller.setAttribute('init-data', JSON.stringify(data || {}));
+      this.node.appendChild(controller);
+      return controller;
+    };
+
     const attachController = (WindowClass) => {
       if (this._closed) return;
 
       const isWebComponent = WindowClass.prototype instanceof HTMLElement;
 
       if (isWebComponent) {
-        const tagName = WindowClass._tagName;
-        this.controller = (tagName && customElements.get(tagName))
-          ? document.createElement(tagName)
-          : new WindowClass();
-        this.controller.parentInfo = { node: this.node, tab: this.tab };
-        this.controller.windowId = id;
-        this.controller.initData = data || {};
-        this.controller.setAttribute('window-id', id);
-        this.controller.setAttribute('init-data', JSON.stringify(data || {}));
-        this.node.appendChild(this.controller);
+        this.controller = createWebComponentController(WindowClass);
       } else {
         this.controller = WindowClass(id, this, data);
       }
@@ -436,7 +432,7 @@ export class WindowManager {
     const slideHome = (node, offset) => {
       node.classList.remove('window-slide', 'window-snap');
       node.style.translate = `${offset}px 0`;
-      node.offsetWidth; // commit the start position before transitioning
+      forceReflow(node);
       node.classList.add('window-slide');
       node.style.translate = '';
       clearTimeout(node._slideTimer);

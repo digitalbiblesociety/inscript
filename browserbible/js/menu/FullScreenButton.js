@@ -1,20 +1,18 @@
 import fullscreenSvg from '../../css/images/fullscreen.svg?raw';
 
-export class FullScreenButton {
-  constructor(container) {
-    const d = document;
-    if (!d.fullscreenEnabled) return;
+export function FullScreenButton(container) {
+  const d = document;
+  if (!d.fullscreenEnabled) return;
 
-    d.documentElement.classList.add('supports-fullscreen');
+  d.documentElement.classList.add('supports-fullscreen');
 
-    this.btn = d.createElement('div');
-    this.btn.id = 'main-fullscreen-button';
-    this.btn.innerHTML = fullscreenSvg;
+  const btn = d.createElement('div');
+  btn.id = 'main-fullscreen-button';
+  btn.innerHTML = fullscreenSvg;
 
-    container.appendChild(this.btn);
+  container.appendChild(btn);
 
-    this.btn.addEventListener('click', () =>
-      d.fullscreenElement ? d.exitFullscreen() : d.documentElement.requestFullscreen()
-    );
-  }
+  btn.addEventListener('click', () =>
+    d.fullscreenElement ? d.exitFullscreen() : d.documentElement.requestFullscreen()
+  );
 }

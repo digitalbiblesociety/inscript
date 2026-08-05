@@ -18,6 +18,12 @@ import { highlightTextMatches } from '../lib/textHighlighter.js';
 const getTextAsync = (textId) => AsyncHelpers.promisify(getText, textId);
 const loadTextsAsync = () => AsyncHelpers.promisify(loadTexts);
 
+export function getOpenBibleTextId() {
+  const app = getApp();
+  const firstBible = app?.windowManager?.getWindows()?.find(w => w.className === 'BibleWindow');
+  return firstBible?.getData()?.textid;
+}
+
 class SearchWindowComponent extends BaseWindow {
   constructor() {
     super();
@@ -513,25 +519,15 @@ class SearchWindowComponent extends BaseWindow {
   }
 
   formatResultLabel(fragmentid, short) {
-    if (this.state.textInfo.type.toLowerCase() === 'bible') {
-      const br = Reference(fragmentid);
-      if (br && BOOK_DATA['GN'].names[this.state.textInfo.lang]) {
-        br.language = this.state.textInfo.lang;
-      }
-      if (br?.isValid()) {
-        if (short) {
-          let ref = `${br.chapter1}`;
-          if (br.verse1 > 0) ref += `:${br.verse1}`;
-          const crossChapter = br.chapter2 > 0 && br.chapter2 !== br.chapter1;
-          if (crossChapter) ref += br.verse2 > 0 ? `-${br.chapter2}:${br.verse2}` : `-${br.chapter2}`;
-          else if (br.verse2 > 0 && br.verse2 !== br.verse1) ref += `-${br.verse2}`;
-          return ref;
-        }
-        return br.toString();
-      }
-      return fragmentid;
-    }
-    return fragmentid;
+    if (this.state.textInfo.type.toLowerCase() !== 'bible') return fragmentid;
+
+    const reference = Reference(fragmentid);
+    if (!reference?.isValid()) return fragmentid;
+
+    const language = this.state.textInfo.lang;
+    if (BOOK_DATA['GN'].names[language]) reference.language = language;
+
+    return short ? reference.toShortString() : reference.toString();
   }
 
   buildResultsHtml(results, divisionCount) {
@@ -811,47 +807,44 @@ class SearchWindowComponent extends BaseWindow {
     }
   }
 
+  async loadFirstAvailableText() {
+    try {
+      const texts = await loadTextsAsync();
+      if (texts?.length > 0) {
+        this.setTextInfo(texts[0], true);
+      }
+      this.refs.input.focus();
+    } catch (err) {
+      console.error('Error loading texts:', err);
+    }
+  }
+
   async loadInitialText() {
     const initData = this.initData || {};
 
-    // Default textid from the leftmost Bible window when not provided
+    if (!initData.textid) initData.textid = getOpenBibleTextId();
+
     if (!initData.textid) {
-      const app = getApp();
-      const firstBible = app?.windowManager?.getWindows()?.find(w => w.className === 'BibleWindow');
-      const bibleData = firstBible?.getData();
-      if (bibleData?.textid) {
-        initData.textid = bibleData.textid;
-      }
+      await this.loadFirstAvailableText();
+      return;
     }
 
-    if (initData.textid) {
-      try {
-        const data = await getTextAsync(initData.textid);
-        this.setTextInfo(data, true);
+    try {
+      const data = await getTextAsync(initData.textid);
+      this.setTextInfo(data, true);
 
-        if (initData.divisions) {
-          this.setDivisions(initData.divisions);
-        }
-
-        if (initData.searchtext && initData.searchtext !== '') {
-          this.refs.input.value = initData.searchtext;
-          this.doSearch();
-        } else {
-          this.refs.input.focus();
-        }
-      } catch (err) {
-        console.error('Error loading text:', initData.textid, err);
+      if (initData.divisions) {
+        this.setDivisions(initData.divisions);
       }
-    } else {
-      try {
-        const texts = await loadTextsAsync();
-        if (texts?.length > 0) {
-          this.setTextInfo(texts[0], true);
-        }
+
+      if (initData.searchtext) {
+        this.refs.input.value = initData.searchtext;
+        this.doSearch();
+      } else {
         this.refs.input.focus();
-      } catch (err) {
-        console.error('Error loading texts:', err);
       }
+    } catch (err) {
+      console.error('Error loading text:', initData.textid, err);
     }
   }
 

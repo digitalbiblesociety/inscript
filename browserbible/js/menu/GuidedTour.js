@@ -1,4 +1,4 @@
-import { elem, asButton, onActivate } from '../lib/helpers.esm.js';
+import { elem, onActivate, forceReflow } from '../lib/helpers.esm.js';
 import { getConfig } from '../core/config.js';
 import { getApp } from '../core/registry.js';
 import { getWindowIcon } from '../core/windowIcons.js';
@@ -14,6 +14,8 @@ let tourInstance = null;
 const $ = (selector, root = document) => root.querySelector(selector);
 
 const sleep = (ms) => new Promise(resolve => { setTimeout(resolve, ms); });
+
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 const prefersReducedMotion = () =>
   window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
@@ -451,7 +453,7 @@ export function GuidedTour() {
   const arrow = elem('div', { className: 'tour-card-arrow' });
 
   const counter = elem('span', { className: 'tour-count' });
-  const closeButton = asButton(elem('span', { className: 'tour-close', innerHTML: '&times;' }), t('tour.buttons.exit'));
+  const closeButton = elem('button', { type: 'button', className: 'tour-close plain-button', innerHTML: '&times;', ariaLabel: t('tour.buttons.exit') });
   const title = elem('h2', { className: 'tour-title', id: 'tour-title' });
   const body = elem('div', { className: 'tour-body' });
   const progressFill = elem('div', { className: 'tour-progress-fill' });
@@ -529,6 +531,53 @@ export function GuidedTour() {
     }
   };
 
+  const positionCentered = (vw, vh) => {
+    layer.classList.add('tour-centered');
+    lastRing = `left:${vw / 2}px;top:${vh / 2}px;width:0;height:0`;
+    ring.style.cssText = lastRing;
+    lastPlacement = { centered: true };
+    rerendered = false;
+    card.style.left = '';
+    card.style.top = '';
+    arrow.style.cssText = '';
+  };
+
+  const pickSide = (placement, fits, room) => {
+    const preferred = placement && placement !== 'auto' ? placement : null;
+    if (preferred && fits[preferred]) return preferred;
+    return ['bottom', 'top', 'right', 'left'].find(s => fits[s])
+      ?? Object.entries(room).sort((a, b) => b[1] - a[1])[0][0];
+  };
+
+  const cardPosition = (side, hole, cardW, cardH, vw, vh, margin) => {
+    let left;
+    let top;
+
+    if (side === 'bottom' || side === 'top') {
+      left = clamp(hole.left + hole.width / 2 - cardW / 2, margin, vw - cardW - margin);
+      top = side === 'bottom' ? hole.bottom + margin : hole.top - cardH - margin;
+    } else {
+      left = side === 'right' ? hole.right + margin : hole.left - cardW - margin;
+      top = clamp(hole.top + hole.height / 2 - cardH / 2, margin, vh - cardH - margin);
+    }
+    top = clamp(top, margin, Math.max(margin, vh - cardH - margin));
+    left = clamp(left, margin, Math.max(margin, vw - cardW - margin));
+
+    return { left: Math.round(left), top: Math.round(top) };
+  };
+
+  const restorePreviousPlacement = () => {
+    if (!rerendered || !lastRing) return;
+    layer.classList.add('tour-placing');
+    ring.style.cssText = lastRing;
+    if (lastPlacement && !lastPlacement.centered) {
+      card.style.left = `${lastPlacement.left}px`;
+      card.style.top = `${lastPlacement.top}px`;
+    }
+    forceReflow(layer);
+    layer.classList.remove('tour-placing');
+  };
+
   const position = () => {
     const step = steps[index];
     if (!step) return;
@@ -539,14 +588,7 @@ export function GuidedTour() {
     const margin = 12;
 
     if (!target || step.placement === 'center') {
-      layer.classList.add('tour-centered');
-      lastRing = `left:${vw / 2}px;top:${vh / 2}px;width:0;height:0`;
-      ring.style.cssText = lastRing;
-      lastPlacement = { centered: true };
-      rerendered = false;
-      card.style.left = '';
-      card.style.top = '';
-      arrow.style.cssText = '';
+      positionCentered(vw, vh);
       return;
     }
 
@@ -578,39 +620,10 @@ export function GuidedTour() {
     };
     const fits = { bottom: room.bottom >= cardH, top: room.top >= cardH, right: room.right >= cardW, left: room.left >= cardW };
 
-    let side = step.placement && step.placement !== 'auto' ? step.placement : null;
-    if (!side || !fits[side]) {
-      side = ['bottom', 'top', 'right', 'left'].find(s => fits[s])
-        ?? Object.entries(room).sort((a, b) => b[1] - a[1])[0][0];
-    }
+    const side = pickSide(step.placement, fits, room);
+    const { left, top } = cardPosition(side, hole, cardW, cardH, vw, vh, margin);
 
-    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-    let left;
-    let top;
-
-    if (side === 'bottom' || side === 'top') {
-      left = clamp(hole.left + hole.width / 2 - cardW / 2, margin, vw - cardW - margin);
-      top = side === 'bottom' ? hole.bottom + margin : hole.top - cardH - margin;
-    } else {
-      left = side === 'right' ? hole.right + margin : hole.left - cardW - margin;
-      top = clamp(hole.top + hole.height / 2 - cardH / 2, margin, vh - cardH - margin);
-    }
-    top = clamp(top, margin, Math.max(margin, vh - cardH - margin));
-    left = clamp(left, margin, Math.max(margin, vw - cardW - margin));
-
-    left = Math.round(left);
-    top = Math.round(top);
-
-    if (rerendered && lastRing) {
-      layer.classList.add('tour-placing');
-      ring.style.cssText = lastRing;
-      if (lastPlacement && !lastPlacement.centered) {
-        card.style.left = `${lastPlacement.left}px`;
-        card.style.top = `${lastPlacement.top}px`;
-      }
-      layer.offsetWidth;
-      layer.classList.remove('tour-placing');
-    }
+    restorePreviousPlacement();
     rerendered = false;
 
     ring.style.cssText = nextRing;
@@ -660,7 +673,7 @@ export function GuidedTour() {
     if (firstPlacement) {
       layer.classList.add('tour-placing');
       position();
-      layer.offsetWidth;
+      forceReflow(layer);
       layer.classList.remove('tour-placing');
       firstPlacement = false;
     } else {
@@ -668,7 +681,7 @@ export function GuidedTour() {
     }
 
     card.classList.remove('tour-step-in');
-    card.offsetWidth;
+    forceReflow(card);
     card.classList.add('tour-step-in');
 
     if (step.focus !== false) {
@@ -810,6 +823,36 @@ export function GuidedTour() {
     position();
   };
 
+  const enterStep = async (step, token) => {
+    if (token !== transition) return 'stale';
+
+    entering = step;
+    try {
+      await step.enter?.(context);
+    } catch (e) {
+      console.warn(`[tour] enter "${step.id}" failed:`, e);
+    } finally {
+      entering = null;
+    }
+    if (token !== transition) return 'stale';
+
+    if (step.target && !resolveTarget(step)) {
+      await leave(step);
+      return 'skip';
+    }
+    return 'ok';
+  };
+
+  const showStep = async (step, token) => {
+    raise();
+    card.classList.remove('tour-busy');
+    render();
+    await sleep(prefersReducedMotion() ? 0 : 40);
+    if (token !== transition) return;
+    position();
+    await play(step, token);
+  };
+
   const goTo = async (target, direction = 1) => {
     if (!active) return state();
     if (target < 0) return state();
@@ -826,32 +869,16 @@ export function GuidedTour() {
         await leave(previous);
         previous = null;
       }
-      if (token !== transition) return state();
 
-      entering = step;
-      try {
-        await step.enter?.(context);
-      } catch (e) {
-        console.warn(`[tour] enter "${step.id}" failed:`, e);
-      } finally {
-        entering = null;
-      }
-      if (token !== transition) return state();
-
-      if (step.target && !resolveTarget(step)) {
-        await leave(step);
+      const entered = await enterStep(step, token);
+      if (entered === 'stale') return state();
+      if (entered === 'skip') {
         candidate += direction;
         continue;
       }
 
       index = candidate;
-      raise();
-      card.classList.remove('tour-busy');
-      render();
-      await sleep(prefersReducedMotion() ? 0 : 40);
-      if (token !== transition) return state();
-      position();
-      await play(step, token);
+      await showStep(step, token);
       return state();
     }
 
@@ -898,7 +925,7 @@ export function GuidedTour() {
   const next = () => goTo(index + 1, 1);
   const prev = () => goTo(index - 1, -1);
 
-  onActivate(closeButton, () => { stop(); });
+  closeButton.addEventListener('click', () => { stop(); });
   skipButton.addEventListener('click', () => { stop(); });
   backButton.addEventListener('click', () => { prev(); });
   nextButton.addEventListener('click', () => { next(); });

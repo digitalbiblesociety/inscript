@@ -139,6 +139,6 @@ export const fuzzySearchLocations = (query, locations, limit = 8) =>
 export const parseReferenceQuery = (query) => {
   if (!query || !/\d/.test(query)) return null;
   const ref = Reference(query.trim());
-  if (!ref?.bookid || !(ref.chapter1 >= 1)) return null;
-  return ref.bookid + ref.chapter1;
+  if (ref?.bookid && ref.chapter1 >= 1) return ref.bookid + ref.chapter1;
+  return null;
 };

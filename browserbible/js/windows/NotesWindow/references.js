@@ -22,12 +22,12 @@ export function refToLocation(book, reference) {
   if (!bookCode) return null;
 
   const ref = String(reference);
-  const chapterMatch = ref.match(/^(\d+)/);
+  const chapterMatch = /^(\d+)/.exec(ref);
   if (!chapterMatch) return null;
 
   const sectionid = `${bookCode}${chapterMatch[1]}`;
-  const verseMatch = ref.match(/:(\d+)/);
-  const endVerseMatch = ref.match(/:(\d+)\s*[-–—]\s*(\d+)/);
+  const verseMatch = /:(\d+)/.exec(ref);
+  const endVerseMatch = /:(\d+)\s*[-–—]\s*(\d+)/.exec(ref);
 
   const startVerse = verseMatch ? parseInt(verseMatch[1], 10) : null;
   const endVerse = endVerseMatch ? parseInt(endVerseMatch[2], 10) : startVerse;

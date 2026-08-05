@@ -1,7 +1,7 @@
 import { getConfig } from '../core/config.js';
 import { Reference } from '../bible/BibleReference.js';
 import { TextNavigation } from '../common/TextNavigation.js';
-import { elem, asButton, onActivate } from '../lib/helpers.esm.js';
+import { elem } from '../lib/helpers.esm.js';
 import { t } from '../lib/i18n.js';
 import arrowRightSvg from '../../css/images/arrow-right-gray-light.svg?raw';
 import arrowLeftSvg from '../../css/images/arrow-left-gray-light.svg?raw';
@@ -10,17 +10,14 @@ export function NavigationButtons(parentNode) {
   const config = getConfig();
   if (!config.enableNavigationButtons) return null;
 
-  const backButton = elem('div', { id: 'main-back-button', className: 'inactive', innerHTML: arrowLeftSvg });
-  const forwardButton = elem('div', { id: 'main-forward-button', className: 'inactive', innerHTML: arrowRightSvg });
-  asButton(backButton, t('a11y.previousPassage'));
-  asButton(forwardButton, t('a11y.nextPassage'));
+  const backButton = elem('button', { type: 'button', id: 'main-back-button', className: 'inactive plain-button', innerHTML: arrowLeftSvg, ariaLabel: t('a11y.previousPassage') });
+  const forwardButton = elem('button', { type: 'button', id: 'main-forward-button', className: 'inactive plain-button', innerHTML: arrowRightSvg, ariaLabel: t('a11y.nextPassage') });
 
   const compactLabel = elem('span', { id: 'compact-back-button-label' });
-  const compactBackButton = elem('div', { id: 'compact-back-button' },
+  const compactBackButton = elem('button', { type: 'button', id: 'compact-back-button', className: 'plain-button', ariaLabel: t('a11y.previousPassage') },
     elem('span', { className: 'compact-back-icon', innerHTML: arrowLeftSvg }),
     compactLabel
   );
-  asButton(compactBackButton, t('a11y.previousPassage'));
 
   parentNode.appendChild(backButton);
   parentNode.appendChild(forwardButton);
@@ -52,9 +49,9 @@ export function NavigationButtons(parentNode) {
     forwardButton.setAttribute('aria-disabled', canGoForward ? 'false' : 'true');
   };
 
-  onActivate(forwardButton, () => TextNavigation.forward());
-  onActivate(backButton, back);
-  onActivate(compactBackButton, back);
+  forwardButton.addEventListener('click', () => TextNavigation.forward());
+  backButton.addEventListener('click', back);
+  compactBackButton.addEventListener('click', back);
 
   TextNavigation.on('locationchange', updateButtonStates);
 

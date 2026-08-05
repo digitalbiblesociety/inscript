@@ -28,65 +28,61 @@ export function getBookName(textInfo, bookid) {
   return name ?? bookid;
 }
 
-/**
- * Parse a passage reference into section loads. Handles the formats found in
- * the parallels data: "1:3", "2:2-3", "1:1-12, 14-17", "8:28-34; 9:1",
- * cross-chapter ranges "8:32-9:9" / "15:39- 16:12", and bare chapters "13".
- * Returns one entry per chapter section, in reading order.
- */
-export function parsePassageReference(passage, bookid) {
-  const chapterCounts = BOOK_DATA[bookid]?.chapters ?? [];
-  const versesIn = (ch) => chapterCounts[ch - 1] ?? 200;
-  const refs = [];
-  let chapter = null;
+const CHAPTER_PREFIX_REGEX = /^(\d+)\s*:\s*(.*)$/;
+const BARE_CHAPTER_REGEX = /^\d+$/;
+const SINGLE_VERSE_REGEX = /^(\d+)$/;
+const VERSE_RANGE_REGEX = /^(\d+)\s*-\s*(?:(\d+)\s*:\s*)?(\d+)[ab]?$/;
 
-  const pushRange = (startCh, startV, endCh, endV) => {
-    let c = startCh;
-    let v = startV;
-    while ((c < endCh || (c === endCh && v <= endV)) && refs.length < 2000) {
-      refs.push({ chapter: c, verse: v });
-      v++;
-      if (c < endCh && v > versesIn(c)) {
-        c++;
-        v = 1;
-      }
-    }
-  };
-
-  for (const rawSegment of String(passage).split(';')) {
-    const segment = rawSegment.trim();
-    if (!segment) continue;
-
-    let list = segment;
-    const chapterMatch = segment.match(/^(\d+)\s*:\s*(.*)$/);
-    if (chapterMatch) {
-      chapter = parseInt(chapterMatch[1], 10);
-      list = chapterMatch[2];
-    } else if (/^\d+$/.test(segment)) {
-      // bare chapter reference
-      chapter = parseInt(segment, 10);
-      pushRange(chapter, 1, chapter, versesIn(chapter));
-      continue;
-    }
-    if (chapter === null) continue;
-
-    for (const rawItem of list.split(',')) {
-      const item = rawItem.trim();
-      if (!item) continue;
-      const m = item.match(/^(\d+)(?:\s*-\s*(?:(\d+)\s*:\s*)?(\d+)[ab]?)?$/);
-      if (!m) continue;
-
-      const startVerse = parseInt(m[1], 10);
-      if (!m[3]) {
-        refs.push({ chapter, verse: startVerse });
-        continue;
-      }
-      const endChapter = m[2] ? parseInt(m[2], 10) : chapter;
-      pushRange(chapter, startVerse, endChapter, parseInt(m[3], 10));
-      chapter = endChapter;
+function expandVerseRange(refs, versesIn, startCh, startV, endCh, endV) {
+  let c = startCh;
+  let v = startV;
+  while ((c < endCh || (c === endCh && v <= endV)) && refs.length < 2000) {
+    refs.push({ chapter: c, verse: v });
+    v++;
+    if (c < endCh && v > versesIn(c)) {
+      c++;
+      v = 1;
     }
   }
+}
 
+function parseVerseItem(item, chapter, refs, versesIn) {
+  const single = SINGLE_VERSE_REGEX.exec(item);
+  if (single) {
+    refs.push({ chapter, verse: parseInt(single[1], 10) });
+    return chapter;
+  }
+
+  const range = VERSE_RANGE_REGEX.exec(item);
+  if (!range) return chapter;
+
+  const endChapter = range[2] ? parseInt(range[2], 10) : chapter;
+  expandVerseRange(refs, versesIn, chapter, parseInt(range[1], 10), endChapter, parseInt(range[3], 10));
+  return endChapter;
+}
+
+function parseSegment(segment, chapter, refs, versesIn) {
+  let list = segment;
+  const chapterMatch = CHAPTER_PREFIX_REGEX.exec(segment);
+  if (chapterMatch) {
+    chapter = parseInt(chapterMatch[1], 10);
+    list = chapterMatch[2];
+  } else if (BARE_CHAPTER_REGEX.test(segment)) {
+    chapter = parseInt(segment, 10);
+    expandVerseRange(refs, versesIn, chapter, 1, chapter, versesIn(chapter));
+    return chapter;
+  }
+  if (chapter === null) return null;
+
+  for (const rawItem of list.split(',')) {
+    const item = rawItem.trim();
+    if (!item) continue;
+    chapter = parseVerseItem(item, chapter, refs, versesIn);
+  }
+  return chapter;
+}
+
+function groupRefsBySection(refs, bookid) {
   const groups = [];
   for (const ref of refs) {
     const sectionid = `${bookid}${ref.chapter}`;
@@ -99,6 +95,21 @@ export function parsePassageReference(passage, bookid) {
     }
   }
   return groups;
+}
+
+export function parsePassageReference(passage, bookid) {
+  const chapterCounts = BOOK_DATA[bookid]?.chapters ?? [];
+  const versesIn = (ch) => chapterCounts[ch - 1] ?? 200;
+  const refs = [];
+  let chapter = null;
+
+  for (const rawSegment of String(passage).split(';')) {
+    const segment = rawSegment.trim();
+    if (!segment) continue;
+    chapter = parseSegment(segment, chapter, refs, versesIn);
+  }
+
+  return groupRefsBySection(refs, bookid);
 }
 
 class ParallelsWindowComponent extends BaseWindow {

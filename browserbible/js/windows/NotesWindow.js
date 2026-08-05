@@ -761,13 +761,11 @@ class NotesWindowComponent extends BaseWindow {
     e.preventDefault();
     const html = e.clipboardData?.getData('text/html');
     if (html) {
-      document.execCommand('insertHTML', false, sanitizeHtml(html));
-    } else {
-      const text = e.clipboardData?.getData('text/plain') || '';
-      if (text) document.execCommand('insertText', false, text);
+      this.execFormatCommand('insertHTML', sanitizeHtml(html));
+      return;
     }
-    this.markDirty();
-    this.scheduleAutosave();
+    const text = e.clipboardData?.getData('text/plain') || '';
+    if (text) this.execFormatCommand('insertText', text);
   }
 
   /**

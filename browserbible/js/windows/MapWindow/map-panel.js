@@ -41,6 +41,15 @@ function fetchSvgText() {
   return _svgTextPromise;
 }
 
+function locationEra(verses, ntBookSet) {
+  let hasOT = false, hasNT = false;
+  for (const v of verses) {
+    if (ntBookSet.has(v.slice(0, 2))) { hasNT = true; } else { hasOT = true; }
+    if (hasOT && hasNT) return 'both';
+  }
+  return hasNT ? 'nt' : 'ot';
+}
+
 let _pinDataPromise = null;
 function fetchPinData() {
   if (!_pinDataPromise) {
@@ -48,12 +57,7 @@ function fetchPinData() {
       // Precompute era for each location (verse IDs use 2-char book prefixes; NT/OT sets don't collide)
       const ntBookSet = new Set(NT_BOOKS);
       for (const loc of mapData) {
-        let hasOT = false, hasNT = false;
-        for (const v of loc.verses) {
-          if (ntBookSet.has(v.slice(0, 2))) { hasNT = true; } else { hasOT = true; }
-          if (hasOT && hasNT) break;
-        }
-        loc._era = (hasOT && hasNT) ? 'both' : (hasNT ? 'nt' : 'ot');
+        loc._era = locationEra(loc.verses, ntBookSet);
       }
       return mapData;
     });
