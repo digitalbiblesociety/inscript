@@ -344,6 +344,24 @@ describe('TextWindow lifecycle', () => {
     expect(component.refs.navui.value).toBe('formatted:JN3_16');
   });
 
+  it('renders a manually entered reference with the text numbering system', async () => {
+    const component = await makeWindow();
+    component.scroller = fixtures.scroller;
+    component.broadcastNav = vi.fn();
+    component.state.currentTextInfo = { lang: 'arb' };
+    component.refs.navui.value = 'John ٣:١٦';
+    fixtures.Reference.mockReturnValueOnce({
+      isValid: () => true,
+      toSection: () => 'JN3_16',
+      toString: () => 'John 3:16'
+    });
+
+    component.handleNavKeydown({ key: 'Enter' });
+    expect(fixtures.Reference).toHaveBeenCalledWith('John ٣:١٦');
+    expect(fixtures.scroller.load).toHaveBeenCalledWith('text', 'JN3', 'JN3_16');
+    expect(component.refs.navui.value).toBe('John ٣:١٦');
+  });
+
   it('routes direct/wrapped navigator and chooser changes to this window only', async () => {
     const component = await makeWindow();
     component.scroller = fixtures.scroller;

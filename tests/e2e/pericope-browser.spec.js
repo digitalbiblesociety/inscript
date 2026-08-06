@@ -17,6 +17,12 @@ const SUPPORTED_STARTER_BIBLES = [
   ['CMNUNVS', 'zh'],
 ];
 const UNSUPPORTED_STARTER_BIBLES = ['PESOPV', 'TGLTAB', 'SWHULB', 'VIEVCB'];
+const VERNACULAR_NUMERAL_BIBLES = [
+  { textid: 'BENERV', digits: '০১২৩৪৫৬৭৮৯', chapter: '৩', reference: '৩:১৬', input: 'JN৪_১', result: '৪:১' },
+  { textid: 'HINERV', digits: '०१२३४५६७८९', chapter: '३', reference: '३:१६', input: 'JN४_१', result: '४:१' },
+  { textid: 'URDERV', digits: '۰۱۲۳۴۵۶۷۸۹', chapter: '۳', reference: '۳:۱۶', input: 'JN۴_۱', result: '۴:۱' }
+];
+const RTL_STARTER_BIBLES = ['ARBNAV', 'PESOPV', 'URDERV'];
 
 async function openNavigator(page, url) {
   await page.goto(url);
@@ -123,6 +129,69 @@ test.describe('passages column (right of the books)', () => {
     await expect(passages.locator('.peri-item[data-fragment="JN1_1"]'))
       .toContainText('La palabra se hizo carne');
   });
+
+  test('Arabic navigation uses Arabic-Indic labels with ASCII navigation IDs', async ({ page, makeUrl }) => {
+    const { nav, navigator } = await openNavigator(
+      page,
+      makeUrl({ w1: 'bible', t1: 'ARBNAV', v1: 'JN3_16' })
+    );
+
+    await expect(nav).toHaveValue(/[٠-٩]+:[٠-٩]+/);
+    await expect(nav).not.toHaveValue(/[0-9]+:[0-9]+/);
+
+    const chapter = navigator.locator('.text-navigator-section.section-JN3');
+    await expect(chapter).toHaveText('٣');
+    await expect(chapter).toHaveAttribute('data-id', 'JN3');
+
+    const passage = navigator.locator('.peri-item[data-fragment="JN3_16"]');
+    await expect(passage.locator('.peri-ref')).toHaveText('٣:١٦');
+    await expect(passage).toHaveAttribute('data-section', 'JN3');
+    await expect(passage).toHaveAttribute('data-fragment', 'JN3_16');
+    await expect(passage.locator('.peri-ref')).toHaveAttribute('dir', 'ltr');
+
+    await nav.fill('JN٤_٢');
+    await nav.press('Enter');
+    await expect.poll(() => nav.getAttribute('data-fragmentid')).toBe('JN4_2');
+    await expect(nav).toHaveValue(/٤:٢/);
+  });
+
+  for (const { textid, digits, chapter, reference, input, result } of VERNACULAR_NUMERAL_BIBLES) {
+    test(`${textid} uses vernacular reference digits with ASCII navigation IDs`, async ({ page, makeUrl }) => {
+      const { nav, navigator } = await openNavigator(
+        page,
+        makeUrl({ w1: 'bible', t1: textid, v1: 'JN3_16' })
+      );
+
+      await expect(nav).toHaveValue(new RegExp(`[${digits}]+:[${digits}]+`));
+      await expect(nav).not.toHaveValue(/[0-9]+:[0-9]+/);
+
+      const chapterNode = navigator.locator('.text-navigator-section.section-JN3');
+      await expect(chapterNode).toHaveText(chapter);
+      await expect(chapterNode).toHaveAttribute('data-id', 'JN3');
+
+      const passage = navigator.locator('.peri-item[data-fragment="JN3_16"]');
+      await expect(passage.locator('.peri-ref')).toHaveText(reference);
+      await expect(passage).toHaveAttribute('data-section', 'JN3');
+      await expect(passage).toHaveAttribute('data-fragment', 'JN3_16');
+
+      await nav.fill(input);
+      await nav.press('Enter');
+      await expect.poll(() => nav.getAttribute('data-fragmentid')).toBe('JN4_1');
+      await expect(nav).toHaveValue(new RegExp(result));
+    });
+  }
+
+  for (const textid of RTL_STARTER_BIBLES) {
+    test(`${textid} renders its text content right-to-left`, async ({ page, makeUrl }) => {
+      await page.goto(makeUrl({ w1: 'bible', t1: textid, v1: 'JN3_16' }));
+      const section = page.locator('.BibleWindow .section[data-id="JN3"]').first();
+
+      await expect(section).toBeVisible({ timeout: 30_000 });
+      await expect(section).toHaveAttribute('dir', 'rtl');
+      await expect.poll(() => section.evaluate(element => getComputedStyle(element).direction))
+        .toBe('rtl');
+    });
+  }
 
   test('remote Reina Valera 1909 gets Spanish passages', async ({ page, makeUrl, profile }) => {
     test.skip(profile !== 'remote', 'SPARV09 is served by the remote text catalog');

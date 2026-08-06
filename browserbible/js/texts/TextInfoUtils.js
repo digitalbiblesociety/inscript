@@ -1,5 +1,7 @@
 // Pure helpers shared by TextLoader and the text providers.
 
+import { directionForText } from '../lib/Direction.js';
+
 export function getTextid(input) {
   const parts = input.split(':');
   return (parts.length > 1) ? parts[1] : parts[0];
@@ -34,6 +36,7 @@ export function processText(text, providerName) {
 
   text.providerName = providerName;
   text.providerid = `${providerName}:${text.id}`;
+  text.dir = directionForText(text);
 
   if (text.country && !text.countries &&
       text.country !== text.langName && text.country !== text.langNameEnglish) {

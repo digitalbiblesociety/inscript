@@ -1,11 +1,11 @@
 import { getNestedValue, interpolate, getCookie, setCookie } from './I18nUtils.js';
+import { directionForText } from './Direction.js';
 
 let currentLanguage = 'en';
 let fallbackLanguage = 'en';
 let resources = {};
 let resourceBasePath = './js/resources';
 const loadingPromises = new Map();
-const RTL_LANGUAGES = new Set(['ar', 'ur', 'he', 'fa']);
 
 async function fetchLanguageResource(lang) {
   try {
@@ -85,7 +85,7 @@ export async function init(options = {}) {
 
 function updateDocumentDirection() {
   if (typeof document === 'undefined') return;
-  const dir = RTL_LANGUAGES.has(currentLanguage) ? 'rtl' : 'ltr';
+  const dir = directionForText(currentLanguage);
   document.documentElement.lang = currentLanguage;
   document.documentElement.dir = dir;
 }
@@ -170,7 +170,7 @@ export function translateElement(el) {
   }
 
   el.lang = currentLanguage;
-  el.dir = RTL_LANGUAGES.has(currentLanguage) ? 'rtl' : 'ltr';
+  el.dir = directionForText(currentLanguage);
 }
 
 function translatePage(container) {

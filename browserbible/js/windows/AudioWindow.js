@@ -7,6 +7,7 @@ import { getGlobalTextNavigator } from '../ui/TextNavigator.js';
 import { getText, getTextInfoData, displayAbbr } from '../texts/TextLoader.js';
 import { hasLinkedAudio, loadAudioAssociations } from '../data/biblebrainDuplicates.js';
 import { t as i18nT } from '../lib/i18n.js';
+import { formatNumeral } from '../lib/Numerals.js';
 
 const hasTouch = 'ontouchend' in document;
 
@@ -213,7 +214,7 @@ class AudioWindowComponent extends BaseWindow {
 
     this.textNavigator?.hide();
 
-    this.refs.navui.value = bibleref.toString();
+    this.refs.navui.value = formatNumeral(bibleref.toString(), this.state.currentTextInfo);
     this.refs.navui.dataset.fragmentid = fragmentid;
     this.refs.navui.blur();
   }

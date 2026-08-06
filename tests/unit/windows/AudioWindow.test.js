@@ -289,6 +289,22 @@ describe('AudioWindow', () => {
     expect(() => component.changeLocation('GN1')).not.toThrow();
   });
 
+  it('renders its reference input with the text numbering system', async () => {
+    const component = await makeWindow();
+    component.scrollerMimic = { trigger: vi.fn() };
+    component.trigger = vi.fn();
+    component.getData = vi.fn(() => ({}));
+    component.state.currentTextInfo = { lang: 'arb' };
+    fixtures.Reference.mockReturnValueOnce({
+      toSection: () => 'JN3_16',
+      toString: () => 'John 3:16'
+    });
+
+    component.changeLocation('JN3_16');
+    expect(component.refs.navui.value).toBe('John ٣:١٦');
+    expect(component.refs.navui.dataset.fragmentid).toBe('JN3_16');
+  });
+
   it('updates UI and audio collaborators only for valid text info', async () => {
     const component = await makeWindow();
     component.updateTabLabel = vi.fn();

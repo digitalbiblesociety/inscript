@@ -60,6 +60,21 @@ describe('ScrollerLocation', () => {
     expect(ctx.trigger).toHaveBeenCalledOnce();
   });
 
+  it('uses the text language numbering system in lazy Bible labels', () => {
+    const ctx = controller('<div class="section JN3" data-id="JN3">' +
+      '<span class="v JN3_16" data-id="JN3_16" data-top="110"></span>' +
+      '<span class="v JN3_17" data-id="JN3_17" data-top="130"></span></div>');
+    ctx.currentTextInfo = { id: 'ARB', abbr: 'NAV', lang: 'arb', type: 'Bible' };
+    fixtures.Reference.mockReturnValueOnce({
+      language: '',
+      toString() { return 'يوحنا 3:16'; }
+    });
+
+    updateLocationInfo(ctx);
+    expect(ctx.locationInfo.label).toBe('يوحنا ٣:١٦');
+    expect(ctx.locationInfo.labelLong).toBe('يوحنا ٣:١٦ (NAV)');
+  });
+
   it('builds book labels and supports a custom fragment selector', () => {
     const ctx = controller('<div class="section page-one" data-id="page-one" data-top="120"></div>');
     ctx.currentTextInfo = {

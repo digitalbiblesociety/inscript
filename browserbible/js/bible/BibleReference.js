@@ -1,4 +1,5 @@
 import { BOOK_DATA, DEFAULT_BIBLE } from './BibleData.js';
+import { normalizeNumerals } from '../lib/Numerals.js';
 
 const shortCodeRegex = /^\w{2}\d{1,3}(_\d{1,3})?$/;
 const bookNameIndex = Object.entries(BOOK_DATA)
@@ -20,7 +21,7 @@ export function Reference(...args) {
 
   if (args.length > 2 || typeof args[0] !== 'string' || typeof args[1] === 'number') return null;
 
-  const input = String(args[0]);
+  const input = normalizeNumerals(args[0]);
   const language = args[1] || 'eng';
 
   if (shortCodeRegex.test(input)) {

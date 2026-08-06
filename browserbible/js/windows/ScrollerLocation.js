@@ -1,5 +1,6 @@
 import { offset } from '../lib/helpers.esm.js';
 import { Reference } from '../bible/BibleReference.js';
+import { formatNumeral } from '../lib/Numerals.js';
 
 export const TEXT_TYPES = {
   BIBLE: 'bible', COMMENTARY: 'commentary', VIDEOBIBLE: 'videobible',
@@ -28,7 +29,7 @@ function createLocationInfo(fragment, textInfo, contentTop) {
       const reference = Reference(this.fragmentid);
       if (reference && this._textInfo) {
         reference.language = this._textInfo.lang;
-        this._label = reference.toString();
+        this._label = formatNumeral(reference.toString(), this._textInfo);
         this._labelLong = `${this._label} (${this._textInfo.abbr})`;
       }
     } else if (type === TEXT_TYPES.BOOK && this._textInfo) {

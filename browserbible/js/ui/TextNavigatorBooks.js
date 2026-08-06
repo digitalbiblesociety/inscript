@@ -1,7 +1,8 @@
 import { elem, forceReflow } from '../lib/helpers.esm.js';
-import { BOOK_DATA, OT_BOOKS, NT_BOOKS, AP_BOOKS, numbers as bibleNumbers } from '../bible/BibleData.js';
+import { BOOK_DATA, OT_BOOKS, NT_BOOKS, AP_BOOKS } from '../bible/BibleData.js';
 import { getShowApocrypha } from '../bible/Apocrypha.js';
 import { i18n } from '../lib/i18n.js';
+import { formatNumeral } from '../lib/Numerals.js';
 
 const TESTAMENT_HEADERS = [
   { books: OT_BOOKS, key: 'ot', i18nKey: 'windows.bible.ot' },
@@ -62,12 +63,12 @@ export function renderDivisions(controller) {
 }
 
 function buildChapterElements(controller, chapters) {
-  const numbers = controller.textInfo.numbers ?? bibleNumbers.default;
   const fragment = document.createDocumentFragment();
   for (const code of chapters) {
+    const chapter = parseInt(code.substring(2), 10);
     fragment.appendChild(elem('span', {
       className: `text-navigator-section section-${code}`,
-      textContent: numbers[parseInt(code.substring(2), 10)], dataset: { id: code }
+      textContent: formatNumeral(chapter, controller.textInfo), dataset: { id: code }
     }));
   }
   return fragment;

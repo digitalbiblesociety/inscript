@@ -8,6 +8,14 @@ describe('Reference: string parsing', () => {
     expect(r).toMatchObject({ bookid: 'JN', chapter1: 3, verse1: 16, chapter2: -1, verse2: -1, language: 'eng' });
   });
 
+  it('parses Arabic-Indic chapter and verse digits into ASCII reference data', () => {
+    const r = Reference('John ٣:١٦-٤:٢');
+    expect(r).toMatchObject({
+      bookid: 'JN', chapter1: 3, verse1: 16, chapter2: 4, verse2: 2
+    });
+    expect(r.toSection()).toBe('JN3_16');
+  });
+
   it('parses common abbreviations', () => {
     expect(Reference('Jn 3:16')).toMatchObject({ bookid: 'JN', chapter1: 3, verse1: 16 });
     expect(Reference('Joh 3:16')).toMatchObject({ bookid: 'JN', chapter1: 3, verse1: 16 });
@@ -72,6 +80,10 @@ describe('Reference: short codes', () => {
   it('parses "JN3_16" → John 3:16', () => {
     const r = Reference('JN3_16');
     expect(r).toMatchObject({ bookid: 'JN', chapter1: 3, verse1: 16 });
+  });
+
+  it('parses short codes containing Arabic-Indic digits', () => {
+    expect(Reference('JN٣_١٦')).toMatchObject({ bookid: 'JN', chapter1: 3, verse1: 16 });
   });
 
   it('parses chapter-only short code "JN3"', () => {

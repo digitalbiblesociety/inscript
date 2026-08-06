@@ -2,7 +2,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const fixtures = vi.hoisted(() => ({
   loadPericopesByBook: vi.fn(),
-  pericopeLocaleFor: vi.fn((language) => ({ eng: 'en', en: 'en', spa: 'es', es: 'es' })[language] ?? null)
+  pericopeLocaleFor: vi.fn((language) => (
+    { eng: 'en', en: 'en', spa: 'es', es: 'es', arb: 'ar', ar: 'ar' }
+  )[language] ?? null)
 }));
 
 vi.mock('@bible/Pericopes.js', () => ({
@@ -86,6 +88,20 @@ describe('TextNavigatorPericopes', () => {
     expect(view.refs.periList.querySelectorAll('.peri-item')).toHaveLength(1);
     renderActiveBookPassages(view, null);
     expect(view.refs.periHeader.textContent).toBe('');
+  });
+
+  it('renders Arabic-Indic passage labels while preserving ASCII navigation data', async () => {
+    ensurePericopes('arb');
+    await Promise.resolve();
+    const view = controller();
+    view.textInfo.lang = 'arb';
+    renderActiveBookPassages(view, 'JN');
+
+    const item = view.refs.periList.querySelector('.peri-item[data-fragment="JN3_1"]');
+    expect(item.dataset.section).toBe('JN3');
+    expect(item.dataset.fragment).toBe('JN3_1');
+    expect(item.querySelector('.peri-ref').textContent).toBe('٣:١');
+    expect(item.querySelector('.peri-ref').dir).toBe('ltr');
   });
 
   it('renders grouped search results while respecting divisions and sections', () => {

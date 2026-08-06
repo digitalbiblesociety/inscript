@@ -2,6 +2,7 @@ import { elem } from '../lib/helpers.esm.js';
 import { BOOK_DATA } from '../bible/BibleData.js';
 import { loadPericopesByBook, pericopeLocaleFor } from '../bible/Pericopes.js';
 import { i18n } from '../lib/i18n.js';
+import { formatNumeral } from '../lib/Numerals.js';
 
 const groupsByLocale = new Map();
 const pericopesByLocale = new Map();
@@ -32,7 +33,9 @@ const availableSection = (controller) => {
   return available.size ? (sectionid) => available.has(sectionid) : () => true;
 };
 
-function pericopeItem(pericope) {
+function pericopeItem(controller, pericope) {
+  const reference = `${formatNumeral(pericope.chapter, controller.textInfo)}`
+    + `:${formatNumeral(pericope.verse, controller.textInfo)}`;
   return elem('div', {
     className: 'peri-item',
     dataset: {
@@ -40,7 +43,7 @@ function pericopeItem(pericope) {
       fragment: pericope.fragmentid
     }
   }, elem('span', { className: 'peri-title', textContent: pericope.title }),
-  elem('span', { className: 'peri-ref', textContent: `${pericope.chapter}:${pericope.verse}` }));
+  elem('span', { className: 'peri-ref', dir: 'ltr', textContent: reference }));
 }
 
 function bookName(controller, bookid) {
@@ -55,7 +58,7 @@ export function renderActiveBookPassages(controller, bookid) {
   const available = availableSection(controller);
   const fragment = document.createDocumentFragment();
   for (const pericope of pericopesFor(controller)?.get(bookid) ?? []) {
-    if (available(pericope.sectionid)) fragment.appendChild(pericopeItem(pericope));
+    if (available(pericope.sectionid)) fragment.appendChild(pericopeItem(controller, pericope));
   }
   periList.replaceChildren(fragment);
 }
@@ -76,7 +79,7 @@ export function renderSearchResults(controller, query) {
     bookIds.add(bookid);
     const group = elem('div', { className: 'peri-book-group' },
       elem('div', { className: 'peri-book-header', textContent: displayBookName }));
-    matches.forEach((pericope) => group.appendChild(pericopeItem(pericope)));
+    matches.forEach((pericope) => group.appendChild(pericopeItem(controller, pericope)));
     fragment.appendChild(group);
   }
   periList.replaceChildren(fragment);
