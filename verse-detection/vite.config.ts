@@ -27,7 +27,7 @@ export default defineConfig({
 			formats: ['es']
 		},
 
-		rollupOptions: {
+		rolldownOptions: {
 			external: [],
 
 			output: {
@@ -37,7 +37,6 @@ export default defineConfig({
 			}
 		},
 
-		minify: 'esbuild',
 		target: 'es2015'
 	},
 

@@ -15,14 +15,13 @@ export default defineConfig({
 			formats: ['iife']
 		},
 
-		rollupOptions: {
+		rolldownOptions: {
 			output: {
 				inlineDynamicImports: true,
 				extend: true
 			}
 		},
 
-		minify: 'esbuild',
 		target: 'es2015'
 	}
 });

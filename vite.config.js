@@ -160,7 +160,7 @@ export default defineConfig(({ command }) => {
     // builds use copyPublicExcludingTexts() below
     copyPublicDir: siteProfile === 'dev',
 
-    rollupOptions: {
+    rolldownOptions: {
       input: {
         main: resolve(rootDir, 'browserbible/index.html')
       },
@@ -183,7 +183,8 @@ export default defineConfig(({ command }) => {
       }
     },
 
-    minify: 'esbuild',
+    // JS minification is Rolldown's built-in Oxc minifier as of Vite 8; the
+    // old `minify: 'esbuild'` would now require installing esbuild separately.
 
     // JS target. The runtime floor is set by the native Popover API (used by
     // every menu/dropdown/popup): Chrome 114, Firefox 125, Safari 17. es2022 is
