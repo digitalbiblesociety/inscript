@@ -5,14 +5,28 @@ import { TEXT_TYPES } from './ScrollerLocation.js';
 
 const MAX_SECTIONS = 50;
 
-function trimTop(controller) {
-  const second = controller.wrapper.querySelectorAll('.section')[1];
-  const anchor = second?.firstElementChild ?? null;
-  const before = anchor ? offset(anchor).top : 0;
-  controller.wrapper.querySelector('.section')?.remove();
-  const after = anchor ? offset(anchor).top : 0;
-  controller.setScrollTop(controller.nodeElement.scrollTop - Math.abs(after - before));
+// How far a node sits into the scrollable content. Measured against the wrapper
+// so the reading is independent of the current scroll position: removing a tall
+// section shrinks the scroll range, and the browser clamps scrollTop as it goes,
+// which would otherwise be mistaken for part of the content shift.
+const contentTop = (controller, node) => offset(node).top - offset(controller.wrapper).top;
+
+function trimTop(controller, sections) {
+  const anchor = sections[1]?.firstElementChild ?? null;
+  const scrollTop = controller.nodeElement.scrollTop;
+  const before = anchor ? contentTop(controller, anchor) : 0;
+  sections[0]?.remove();
+  const after = anchor ? contentTop(controller, anchor) : 0;
+  controller.setScrollTop(scrollTop - Math.abs(after - before));
 }
+
+// A section may only be dropped when the buffer it leaves behind still clears
+// the two-viewport reload threshold, with a viewport to spare. Commentary
+// chapters run twenty viewports tall, so trimming one blindly throws the
+// reading position clear out of the remaining range and re-triggers the load
+// that put it there, jittering the view for as long as it stays open.
+const leavesBuffer = (buffer, section, nodeHeight) =>
+  buffer - (section?.offsetHeight ?? 0) > nodeHeight * 3;
 
 function nextVisibleSection(controller, sectionid, direction) {
   if (!sectionid || sectionid === 'null' || getShowApocrypha()) return sectionid;
@@ -32,10 +46,12 @@ export function loadMore(controller) {
   } else if (scrollTop < nodeHeight * 2 && sections.length < MAX_SECTIONS) {
     const previd = nextVisibleSection(controller, sections[0]?.getAttribute('data-previd'), -1);
     if (previd && previd !== 'null') controller.load('prev', previd);
-  } else if (scrollTop > nodeHeight * 15 && sections.length >= 2) {
-    trimTop(controller);
-  } else if (below > nodeHeight * 15 && sections.length > 4) {
-    controller.wrapper.querySelector('.section:last-child')?.remove();
+  } else if (scrollTop > nodeHeight * 15 && sections.length >= 2
+    && leavesBuffer(scrollTop, sections[0], nodeHeight)) {
+    trimTop(controller, sections);
+  } else if (below > nodeHeight * 15 && sections.length > 4
+    && leavesBuffer(below, sections[sections.length - 1], nodeHeight)) {
+    sections[sections.length - 1].remove();
   }
 }
 

@@ -104,7 +104,10 @@ describe('ScrollerLoading', () => {
     sections(ctx, 3);
     Object.defineProperty(ctx.wrapper, 'offsetHeight', { configurable: true, value: 4000 });
     ctx.nodeElement.scrollTop = 1600;
-    fixtures.offset.mockReturnValueOnce({ top: 200 }).mockReturnValueOnce({ top: 150 });
+    // Alternating anchor/wrapper reads, before and after the removal.
+    fixtures.offset
+      .mockReturnValueOnce({ top: 200 }).mockReturnValueOnce({ top: 0 })
+      .mockReturnValueOnce({ top: 150 }).mockReturnValueOnce({ top: 0 });
     loadMore(ctx);
     expect(ctx.wrapper.querySelectorAll('.section')).toHaveLength(2);
     expect(ctx.setScrollTop).toHaveBeenCalledWith(1550);
@@ -117,6 +120,38 @@ describe('ScrollerLoading', () => {
     ctx.nodeElement.scrollTop = 500;
     loadMore(ctx);
     expect(ctx.wrapper.querySelectorAll('.section')).toHaveLength(4);
+  });
+
+  // A commentary chapter can be twenty viewports tall. Trimming one the reader
+  // is still inside of leaves nowhere to restore the position to, and the reload
+  // that follows puts it straight back, jittering the view.
+  it('keeps a section taller than the buffer it would leave behind', () => {
+    const ctx = controller();
+    sections(ctx, 2);
+    Object.defineProperty(ctx.wrapper, 'offsetHeight', { configurable: true, value: 30000 });
+    const [first, last] = ctx.wrapper.querySelectorAll('.section');
+    Object.defineProperty(first, 'offsetHeight', { configurable: true, value: 17000 });
+    Object.defineProperty(last, 'offsetHeight', { configurable: true, value: 13000 });
+    ctx.nodeElement.scrollTop = 16000;
+
+    loadMore(ctx);
+
+    expect(ctx.wrapper.querySelectorAll('.section')).toHaveLength(2);
+    expect(ctx.setScrollTop).not.toHaveBeenCalled();
+    expect(ctx.load).not.toHaveBeenCalled();
+  });
+
+  it('keeps a trailing section taller than the buffer below it', () => {
+    const ctx = controller();
+    sections(ctx, 5);
+    Object.defineProperty(ctx.wrapper, 'offsetHeight', { configurable: true, value: 4000 });
+    const all = ctx.wrapper.querySelectorAll('.section');
+    Object.defineProperty(all[all.length - 1], 'offsetHeight', { configurable: true, value: 3300 });
+    ctx.nodeElement.scrollTop = 500;
+
+    loadMore(ctx);
+
+    expect(ctx.wrapper.querySelectorAll('.section')).toHaveLength(5);
   });
 
   it('scrolls to an already-loaded text and refreshes its location', () => {
