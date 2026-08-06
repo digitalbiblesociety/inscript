@@ -12,13 +12,15 @@ class MediaLibraryController {
     this.content = new MediaLibraryContent(() => this.mediaLibraries);
     this.extension = {};
     mixinEventEmitter(this.extension);
+    this.librariesRequested = false;
     this.extension.on('message', (event) => this.handleMessage(event));
-    this.loadLibraries();
   }
 
   loadLibraries() {
+    if (this.librariesRequested) return;
     const MediaLibrary = window.MediaLibrary;
     if (!MediaLibrary?.getMediaLibraries) return;
+    this.librariesRequested = true;
     primeDbsVideoCatalog().then(() => MediaLibrary.getMediaLibraries((data) => {
       this.mediaLibraries = data;
       this.bindMediaEvents();
@@ -50,6 +52,7 @@ class MediaLibraryController {
 
   handleMessage(event) {
     if (event.data.messagetype !== 'textload' || event.data.type !== 'bible') return;
+    this.loadLibraries();
     this.content.enqueue(event.data.content);
   }
 }

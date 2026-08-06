@@ -26,6 +26,11 @@ vi.mock('@ui/MovableWindow.js', () => ({
 
 import { AboutScreen } from '@menu/AboutScreen.js';
 
+const clickAndSettle = async (button) => {
+  button.click();
+  await vi.waitFor(() => expect(fixtures.instances.length).toBeGreaterThan(0));
+};
+
 describe('AboutScreen', () => {
   beforeEach(() => {
     document.body.innerHTML = '<div id="main-menu-features"></div>' +
@@ -45,11 +50,12 @@ describe('AboutScreen', () => {
     expect(button.querySelector('[data-i18n]')).toBeTruthy();
   });
 
-  it('lazily builds, sizes, and shows one reusable about window', () => {
+  it('lazily builds, sizes, and shows one reusable about window', async () => {
     const dropdown = document.querySelector('#main-menu-dropdown');
     dropdown.hidePopover = vi.fn();
     const button = AboutScreen();
-    button.click();
+    expect(fixtures.instances, 'window must not be built before the click').toHaveLength(0);
+    await clickAndSettle(button);
     const win = fixtures.instances[0];
     expect(fixtures.instances).toHaveLength(1);
     expect(win.args).toEqual([500, 250, 'About translated']);
@@ -61,18 +67,18 @@ describe('AboutScreen', () => {
     expect(win.show).toHaveBeenCalled();
 
     win.visible = false;
-    button.click();
-    expect(fixtures.instances).toHaveLength(1);
+    await clickAndSettle(button);
+    expect(fixtures.instances, 'the import and window are cached across clicks').toHaveLength(1);
   });
 
-  it('hides an already visible window and does not reopen it', () => {
+  it('hides an already visible window and does not reopen it', async () => {
     const button = AboutScreen();
-    button.click();
+    await clickAndSettle(button);
     const win = fixtures.instances[0];
     win.size.mockClear();
     win.show.mockClear();
     button.click();
-    expect(win.hide).toHaveBeenCalled();
+    await vi.waitFor(() => expect(win.hide).toHaveBeenCalled());
     expect(win.size).not.toHaveBeenCalled();
     expect(win.show).not.toHaveBeenCalled();
   });

@@ -2,12 +2,31 @@ import { BOOK_DATA, DEFAULT_BIBLE } from './BibleData.js';
 import { normalizeNumerals } from '../lib/Numerals.js';
 
 const shortCodeRegex = /^\w{2}\d{1,3}(_\d{1,3})?$/;
-const bookNameIndex = Object.entries(BOOK_DATA)
-  .flatMap(([bid, data]) => [
-    { name: bid.toLowerCase(), bid },
-    ...Object.values(data.names).flat().map(n => ({ name: String(n).toLowerCase(), bid }))
-  ])
-  .sort((a, b) => b.name.length - a.name.length);
+
+// Snapshot at import: addNames() extends BOOK_DATA[*].names as texts load, so
+// reading later would make resolution depend on which text loaded first.
+let aliasNames = [];
+let aliasBooks = [];
+for (const [bid, data] of Object.entries(BOOK_DATA)) {
+  aliasNames.push(bid);
+  aliasBooks.push(bid);
+  for (const name of Object.values(data.names).flat()) {
+    aliasNames.push(name);
+    aliasBooks.push(bid);
+  }
+}
+
+let bookNameIndex = null;
+const getBookNameIndex = () => {
+  if (!bookNameIndex) {
+    bookNameIndex = aliasNames
+      .map((name, i) => ({ name: String(name).toLowerCase(), bid: aliasBooks[i] }))
+      .sort((a, b) => b.name.length - a.name.length);
+    aliasNames = null;
+    aliasBooks = null;
+  }
+  return bookNameIndex;
+};
 
 /**
  * Accepts "John 3:16", the short code "JN3_16", or components ("JN", 3, 16),
@@ -49,7 +68,7 @@ function parseShortCode(input) {
 }
 
 function findBook(input) {
-  for (const { name, bid } of bookNameIndex) {
+  for (const { name, bid } of getBookNameIndex()) {
     const next = input[name.length];
     if (input.startsWith(name) && (next === undefined || /[\d.\s]/.test(next))) {
       return { bookid: bid, remainder: input.substring(name.length) };

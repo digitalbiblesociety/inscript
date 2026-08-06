@@ -52,7 +52,7 @@ describe('Eng2pPlugin supplemental lifecycle', () => {
     expect(document.querySelector('#config-window').hidePopover).toHaveBeenCalled();
   });
 
-  it('covers possessive/reflexive replacements and removes earlier transforms', () => {
+  it('covers possessive/reflexive replacements and removes earlier transforms', async () => {
     const chapter = document.createElement('div');
     chapter.className = 'chapter';
     chapter.lang = 'en-US';
@@ -60,11 +60,11 @@ describe('Eng2pPlugin supplemental lifecycle', () => {
     document.body.appendChild(chapter);
     Eng2pPlugin();
     document.querySelector('#eng2p-option-yall').click();
-    expect(chapter.querySelectorAll('.eng2p-corrected')).toHaveLength(3);
+    await vi.waitFor(() => expect(chapter.querySelectorAll('.eng2p-corrected')).toHaveLength(3));
     document.querySelector('#eng2p-option-highlight').click();
+    await vi.waitFor(() => expect(chapter.querySelectorAll('.eng2p-highlight')).toHaveLength(3));
     expect(chapter.querySelector('.eng2p-corrected')).toBeNull();
     expect(chapter.querySelector('.eng2p-original')).toBeNull();
-    expect(chapter.querySelectorAll('.eng2p-highlight')).toHaveLength(3);
   });
 
   it('skips non-English and unlisted verses in documents and loaded content', () => {

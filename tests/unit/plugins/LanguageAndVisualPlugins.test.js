@@ -92,7 +92,7 @@ describe('language and visual plugins', () => {
     AppSettings.removeValue('docs-config-visualfilters');
   });
 
-  it('highlights and replaces second-person plurals in English chapters', () => {
+  it('highlights and replaces second-person plurals in English chapters', async () => {
     const chapter = document.createElement('div');
     chapter.className = 'chapter';
     chapter.setAttribute('lang', 'eng-Latn');
@@ -101,16 +101,17 @@ describe('language and visual plugins', () => {
     const extension = Eng2pPlugin();
 
     document.querySelector('#eng2p-option-highlight').click();
-    expect(chapter.querySelectorAll('.eng2p-highlight').length).toBeGreaterThan(0);
+    await vi.waitFor(() => expect(chapter.querySelectorAll('.eng2p-highlight').length).toBeGreaterThan(0));
     document.querySelector('#eng2p-option-yall').click();
-    expect(chapter.querySelector('.eng2p-corrected').textContent.toLowerCase()).toMatch(/y[’']all/);
+    await vi.waitFor(() =>
+      expect(chapter.querySelector('.eng2p-corrected')?.textContent.toLowerCase()).toMatch(/y[’']all/));
 
     const loaded = document.createElement('div');
     loaded.className = 'chapter';
     loaded.lang = 'eng';
     loaded.innerHTML = '<span class="v" data-id="GN1_22">you</span>';
     extension.trigger('message', { data: { messagetype: 'textload', type: 'bible', content: loaded } });
-    expect(loaded.querySelector('.eng2p-corrected')).not.toBeNull();
+    await vi.waitFor(() => expect(loaded.querySelector('.eng2p-corrected')).not.toBeNull());
     extension.trigger('message', { data: { messagetype: 'other', type: 'bible', content: loaded } });
     document.querySelector('#config-eng2p-button').click();
   });

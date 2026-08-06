@@ -2,10 +2,10 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import bibleDefault, {
   BOOK_DATA,
   EXTRA_MATTER,
-  OT_BOOKS, OT_BOOKS_OSIS, OT_BOOKS_USFM,
-  NT_BOOKS, NT_BOOKS_OSIS, NT_BOOKS_USFM,
-  AP_BOOKS, AP_BOOKS_OSIS, AP_BOOKS_USFM,
-  DEFAULT_BIBLE, DEFAULT_BIBLE_OSIS, DEFAULT_BIBLE_USFM,
+  OT_BOOKS, OT_BOOKS_USFM,
+  NT_BOOKS, NT_BOOKS_USFM,
+  AP_BOOKS, AP_BOOKS_USFM,
+  DEFAULT_BIBLE, DEFAULT_BIBLE_USFM,
   APOCRYPHAL_BIBLE, APOCRYPHAL_BIBLE_USFM,
   numbers,
   addNames,
@@ -17,21 +17,18 @@ import bibleDefault, {
 } from '@bible/BibleData.js';
 
 describe('canon list lengths', () => {
-  it('OT has 39 books across all naming conventions', () => {
+  it('OT has 39 books in both naming conventions', () => {
     expect(OT_BOOKS).toHaveLength(39);
-    expect(OT_BOOKS_OSIS).toHaveLength(39);
     expect(OT_BOOKS_USFM).toHaveLength(39);
   });
 
-  it('NT has 27 books across all naming conventions', () => {
+  it('NT has 27 books in both naming conventions', () => {
     expect(NT_BOOKS).toHaveLength(27);
-    expect(NT_BOOKS_OSIS).toHaveLength(27);
     expect(NT_BOOKS_USFM).toHaveLength(27);
   });
 
   it('DEFAULT_BIBLE concatenates OT + NT (66 books)', () => {
     expect(DEFAULT_BIBLE).toHaveLength(66);
-    expect(DEFAULT_BIBLE_OSIS).toHaveLength(66);
     expect(DEFAULT_BIBLE_USFM).toHaveLength(66);
   });
 
@@ -44,7 +41,6 @@ describe('canon list lengths', () => {
   it('all AP arrays are length-aligned at the USFM 3.0 count of 35', () => {
     expect(AP_BOOKS).toHaveLength(35);
     expect(AP_BOOKS_USFM).toHaveLength(35);
-    expect(AP_BOOKS_OSIS).toHaveLength(35);
   });
 });
 
@@ -58,12 +54,6 @@ describe('canon arrays cross-reference BOOK_DATA', () => {
   it('every USFM in DEFAULT_BIBLE_USFM matches BOOK_DATA[short].usfm', () => {
     for (let i = 0; i < DEFAULT_BIBLE.length; i++) {
       expect(BOOK_DATA[DEFAULT_BIBLE[i]].usfm).toBe(DEFAULT_BIBLE_USFM[i]);
-    }
-  });
-
-  it('every OSIS in DEFAULT_BIBLE_OSIS matches BOOK_DATA[short].osis', () => {
-    for (let i = 0; i < DEFAULT_BIBLE.length; i++) {
-      expect(BOOK_DATA[DEFAULT_BIBLE[i]].osis).toBe(DEFAULT_BIBLE_OSIS[i]);
     }
   });
 
@@ -87,22 +77,12 @@ describe('apocrypha: USFM 3.0 conformance', () => {
     }
   });
 
-  it('every OSIS in AP_BOOKS_OSIS matches BOOK_DATA[short].osis', () => {
-    for (let i = 0; i < AP_BOOKS.length; i++) {
-      expect(BOOK_DATA[AP_BOOKS[i]].osis).toBe(AP_BOOKS_OSIS[i]);
-    }
-  });
-
   it('USFM codes in AP_BOOKS_USFM are unique', () => {
     expect(new Set(AP_BOOKS_USFM).size).toBe(AP_BOOKS_USFM.length);
   });
 
   it('short codes in AP_BOOKS are unique', () => {
     expect(new Set(AP_BOOKS).size).toBe(AP_BOOKS.length);
-  });
-
-  it('OSIS codes in AP_BOOKS_OSIS are unique', () => {
-    expect(new Set(AP_BOOKS_OSIS).size).toBe(AP_BOOKS_OSIS.length);
   });
 
   it('contains the full set of USFM 3.0 non-canonical book codes', () => {
@@ -144,7 +124,7 @@ describe('getBookInfo', () => {
   it('returns book data for a known id', () => {
     const info = getBookInfo('JN');
     expect(info.usfm).toBe('JHN');
-    expect(info.osis).toBe('John');
+    expect(info.name).toBe('John');
   });
 
   it('returns null for an unknown id', () => {

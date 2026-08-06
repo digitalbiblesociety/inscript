@@ -31,7 +31,7 @@ test.describe('guided tour', () => {
 
     await bootTour(page, makeUrl, profile);
 
-    const total = await page.evaluate(() => window.BrowserBible.tour().getSteps().length);
+    const total = await page.evaluate(async () => (await window.BrowserBible.tour().getSteps()).length);
     expect(total).toBeGreaterThan(10);
 
     let state = await page.evaluate(() => window.BrowserBible.tour().start());
@@ -137,7 +137,7 @@ test.describe('guided tour', () => {
   test('arrow keys still work after a step types in a field', async ({ page, makeUrl, profile }) => {
     await bootTour(page, makeUrl, profile);
 
-    const ids = await page.evaluate(() => window.BrowserBible.tour().getSteps().map(s => s.id));
+    const ids = await page.evaluate(async () => (await window.BrowserBible.tour().getSteps()).map(s => s.id));
     const at = ids.indexOf('search');
 
     const state = await page.evaluate(i => window.BrowserBible.tour().start({ from: i }), at);

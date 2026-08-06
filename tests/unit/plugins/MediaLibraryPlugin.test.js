@@ -49,9 +49,13 @@ function mediaIcon(folder, { verseid = 'GN1_1', sectionid = 'GN1' } = {}) {
   return section.querySelector('i');
 }
 
+const textload = (content = 'section') =>
+  ({ data: { messagetype: 'textload', type: 'bible', content } });
+
 async function enableWithLibraries() {
   window.MediaLibrary = { getMediaLibraries: vi.fn(callback => callback(libraries)) };
   const extension = MediaLibraryPlugin();
+  extension.trigger('message', textload());
   await Promise.resolve();
   await Promise.resolve();
   return extension;
@@ -86,6 +90,45 @@ describe('MediaLibraryPlugin', () => {
     expect(window.MediaLibrary.getMediaLibraries).toHaveBeenCalled();
     expect(fixtures.contentInstances[0].getLibraries()).toBe(libraries);
     expect(fixtures.contentInstances[0].process).toHaveBeenCalled();
+  });
+
+  describe('catalog fetch is deferred to first text load', () => {
+    it('fetches nothing at construction', () => {
+      window.MediaLibrary = { getMediaLibraries: vi.fn() };
+      MediaLibraryPlugin();
+      expect(fixtures.primeCatalog).not.toHaveBeenCalled();
+      expect(window.MediaLibrary.getMediaLibraries).not.toHaveBeenCalled();
+    });
+
+    it('fetches once on the first Bible text load, not again on later ones', async () => {
+      const extension = await enableWithLibraries();
+      extension.trigger('message', textload('another'));
+      extension.trigger('message', textload('a third'));
+      await Promise.resolve();
+      expect(fixtures.primeCatalog).toHaveBeenCalledOnce();
+      expect(window.MediaLibrary.getMediaLibraries).toHaveBeenCalledOnce();
+    });
+
+    it('does not fetch for non-Bible or non-textload messages', () => {
+      window.MediaLibrary = { getMediaLibraries: vi.fn() };
+      const extension = MediaLibraryPlugin();
+      extension.trigger('message', { data: { messagetype: 'nav', type: 'bible', content: 'x' } });
+      extension.trigger('message', { data: { messagetype: 'textload', type: 'book', content: 'x' } });
+      expect(window.MediaLibrary.getMediaLibraries).not.toHaveBeenCalled();
+    });
+
+    it('retries on a later text load when the host media API was not ready', async () => {
+      const extension = MediaLibraryPlugin();
+      extension.trigger('message', textload());
+      expect(fixtures.primeCatalog).not.toHaveBeenCalled();
+
+      window.MediaLibrary = { getMediaLibraries: vi.fn(callback => callback(libraries)) };
+      extension.trigger('message', textload());
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(window.MediaLibrary.getMediaLibraries).toHaveBeenCalledOnce();
+      expect(fixtures.contentInstances[0].getLibraries()).toBe(libraries);
+    });
   });
 
   it.each([

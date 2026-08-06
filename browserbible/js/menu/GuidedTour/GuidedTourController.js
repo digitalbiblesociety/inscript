@@ -1,7 +1,6 @@
-import { elem, forceReflow, onActivate } from '../../lib/helpers.esm.js';
+import { elem, forceReflow } from '../../lib/helpers.esm.js';
 import AppSettings from '../../common/AppSettings.js';
 import { getConfig } from '../../core/config.js';
-import { getWindowIcon } from '../../core/windowIcons.js';
 import { t } from '../../lib/i18n.js';
 import { GuidedTourContext } from './GuidedTourContext.js';
 import { GuidedTourPosition } from './GuidedTourPosition.js';
@@ -13,9 +12,10 @@ import {
 const SETTINGS_KEY = 'guided-tour';
 
 export class GuidedTourController {
-  constructor(steps, helpers) {
+  constructor(steps, helpers, menuButton) {
     this.allSteps = steps;
     this.helpers = helpers;
+    this.menuButton = menuButton;
     this.config = getConfig();
     this.steps = [];
     this.index = -1;
@@ -30,11 +30,7 @@ export class GuidedTourController {
   }
 
   buildUi() {
-    const menuButton = elem('div', {
-      className: 'main-menu-item', id: 'main-menu-tour-button'
-    }, elem('span', { className: 'main-menu-icon', innerHTML: getWindowIcon('tour') || '' }),
-    elem('span', { className: 'i18n', dataset: { i18n: '[html]tour.launch' } }, 'Guided Tour'));
-    document.querySelector('#main-menu-features')?.appendChild(menuButton);
+    const menuButton = this.menuButton;
     const ring = elem('div', { className: 'tour-ring' });
     const arrow = elem('div', { className: 'tour-card-arrow' });
     const counter = elem('span', { className: 'tour-count' });
@@ -168,10 +164,8 @@ export class GuidedTourController {
     window.addEventListener('scroll', this.positioner.queue, true);
     document.addEventListener('keydown', (event) => this.handleKeydown(event), true);
     document.addEventListener('pointerdown', () => this.helpers.setTourField(null), true);
-    onActivate(this.refs.menuButton, () => {
-      this.helpers.closeAppPopovers();
-      this.start();
-    });
+    // GuidedTour.js binds the menu button's activation; doing it here too would
+    // start the tour twice.
   }
 
   initializeAutostart() {

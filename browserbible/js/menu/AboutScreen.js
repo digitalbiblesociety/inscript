@@ -2,7 +2,6 @@ import { i18n } from '../lib/i18n.js';
 import { MovableWindow } from '../ui/MovableWindow.js';
 import { elem } from '../lib/helpers.esm.js';
 import { getWindowIcon } from '../core/windowIcons.js';
-import aboutHtml from '../../about.html?raw';
 
 export function AboutScreen() {
   const aboutButton = elem('div', { className: 'main-menu-item' },
@@ -11,24 +10,25 @@ export function AboutScreen() {
   );
   document.querySelector('#main-menu-features')?.appendChild(aboutButton);
 
-  let aboutWindow = null;
+  let aboutWindowPromise = null;
   const getWindow = () => {
-    if (!aboutWindow) {
-      aboutWindow = new MovableWindow(500, 250, i18n.t('menu.labels.about'));
+    aboutWindowPromise ??= import('../../about.html?raw').then(({ default: aboutHtml }) => {
+      const win = new MovableWindow(500, 250, i18n.t('menu.labels.about'));
       const aboutDoc = new DOMParser().parseFromString(aboutHtml, 'text/html');
       const aboutContent = elem('div', { className: 'about-screen' });
       aboutContent.append(...aboutDoc.body.children);
-      aboutWindow.body.appendChild(aboutContent);
+      win.body.appendChild(aboutContent);
 
-      const aboutTitle = aboutWindow.title;
+      const aboutTitle = win.title;
       aboutTitle.classList.add('i18n');
       aboutTitle.dataset.i18n = '[html]menu.labels.about';
-    }
-    return aboutWindow;
+      return win;
+    });
+    return aboutWindowPromise;
   };
 
-  aboutButton.addEventListener('click', () => {
-    const win = getWindow();
+  aboutButton.addEventListener('click', async () => {
+    const win = await getWindow();
     if (win.isVisible()) {
       win.hide();
       return;

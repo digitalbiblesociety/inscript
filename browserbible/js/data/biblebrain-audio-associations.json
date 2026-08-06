@@ -2,9 +2,6 @@
   "audioAssociations": [
     {
       "inscriptId": "ABIWBT",
-      "bibleBrainId": "ABIWBT",
-      "lang": "abi",
-      "name": "The New Testament in Abidji",
       "audioFilesets": [
         {
           "id": "ABIWBTN2DA",
@@ -30,9 +27,6 @@
     },
     {
       "inscriptId": "ABPWBT",
-      "bibleBrainId": "ABPWBT",
-      "lang": "abp",
-      "name": "Ayta Abellen New Testament",
       "audioFilesets": [
         {
           "id": "ABPWBTN1DA-opus16",
@@ -68,9 +62,6 @@
     },
     {
       "inscriptId": "ACAWBT",
-      "bibleBrainId": "ACAWBT",
-      "lang": "aca",
-      "name": "New Testament in Achagua",
       "audioFilesets": [
         {
           "id": "ACAWBTP2DA",
@@ -86,9 +77,6 @@
     },
     {
       "inscriptId": "ACDWBT",
-      "bibleBrainId": "ACDWBT",
-      "lang": "acd",
-      "name": "Gikyode 2001 Edition",
       "audioFilesets": [
         {
           "id": "ACDWBTN2DA",
@@ -104,9 +92,6 @@
     },
     {
       "inscriptId": "ACFWBT",
-      "bibleBrainId": "ACFWBT",
-      "lang": "acf",
-      "name": "Saint Lucian Creole French New Testament",
       "audioFilesets": [
         {
           "id": "DOMBECN2DA-opus16",
@@ -122,9 +107,6 @@
     },
     {
       "inscriptId": "ACRNNT",
-      "bibleBrainId": "ACRNNT",
-      "lang": "acr",
-      "name": "Achi Rabinal New Testament (new orthography)",
       "audioFilesets": [
         {
           "id": "ACRWB1N2DA",
@@ -135,9 +117,6 @@
     },
     {
       "inscriptId": "ACRTNT",
-      "bibleBrainId": "ACRTNT",
-      "lang": "acr",
-      "name": "Achi Rabinal New Testament (traditional orthography)",
       "audioFilesets": [
         {
           "id": "ACRWBTN2DA-opus16",
@@ -153,9 +132,6 @@
     },
     {
       "inscriptId": "ACUTBL",
-      "bibleBrainId": "ACUTBL",
-      "lang": "acu",
-      "name": "Achuar-shiwiar Bible",
       "audioFilesets": [
         {
           "id": "ACUTBLN2DA-opus16",
@@ -171,9 +147,6 @@
     },
     {
       "inscriptId": "ADJWBT",
-      "bibleBrainId": "ADJWBT",
-      "lang": "adj",
-      "name": "Adioukrou 1998 Edition",
       "audioFilesets": [
         {
           "id": "ADJWBTN2DA-opus16",
@@ -189,9 +162,6 @@
     },
     {
       "inscriptId": "AEUWBT",
-      "bibleBrainId": "AEUWBT",
-      "lang": "aeu",
-      "name": "Akeu New Testament",
       "audioFilesets": [
         {
           "id": "AEUWBTN1DA-opus16",
@@ -227,9 +197,6 @@
     },
     {
       "inscriptId": "AEYWBT",
-      "bibleBrainId": "AEYWBT",
-      "lang": "aey",
-      "name": "Amele Genesis",
       "audioFilesets": [
         {
           "id": "AEYTBLP1DA-opus16",
@@ -255,9 +222,6 @@
     },
     {
       "inscriptId": "AGGPNG",
-      "bibleBrainId": "AGGPNG",
-      "lang": "agg",
-      "name": "Angor New Testament",
       "audioFilesets": [
         {
           "id": "AGGPNGP1DA-opus16",
@@ -273,9 +237,6 @@
     },
     {
       "inscriptId": "AGNWPS",
-      "bibleBrainId": "AGNWPS",
-      "lang": "agn",
-      "name": "Agutaynen New Testament",
       "audioFilesets": [
         {
           "id": "AGNWPSN2DA",
@@ -291,9 +252,6 @@
     },
     {
       "inscriptId": "AGRTBL",
-      "bibleBrainId": "AGRTBL",
-      "lang": "agr",
-      "name": "Aguaruna Bible",
       "audioFilesets": [
         {
           "id": "AGRTBLN2DA",
@@ -309,9 +267,6 @@
     },
     {
       "inscriptId": "AGUNVS",
-      "bibleBrainId": "AGUNVS",
-      "lang": "agu",
-      "name": "Aguacateco Bible",
       "audioFilesets": [
         {
           "id": "AGUNVSN1DA",
@@ -327,9 +282,6 @@
     },
     {
       "inscriptId": "AGXIBT",
-      "bibleBrainId": "AGXIBT",
-      "lang": "agx",
-      "name": "Aghul Portions",
       "audioFilesets": [
         {
           "id": "AGXIBTP2DA",
@@ -345,9 +297,6 @@
     },
     {
       "inscriptId": "AIAWBT",
-      "bibleBrainId": "AIAWBT",
-      "lang": "aia",
-      "name": "Arosi 2005 Edition",
       "audioFilesets": [
         {
           "id": "AIAWYIN2DA",
@@ -373,9 +322,6 @@
     },
     {
       "inscriptId": "AKEBSS",
-      "bibleBrainId": "AKEBSS",
-      "lang": "ake",
-      "name": "Akawaio New Testament",
       "audioFilesets": [
         {
           "id": "AKEBSSN2DA",
@@ -401,9 +347,6 @@
     },
     {
       "inscriptId": "AKPWBT",
-      "bibleBrainId": "AKPWBT",
-      "lang": "akp",
-      "name": "Siwu 2008 Edition",
       "audioFilesets": [
         {
           "id": "AKPWBTN1DA",
@@ -429,9 +372,6 @@
     },
     {
       "inscriptId": "ALPWBT",
-      "bibleBrainId": "ALPWBT",
-      "lang": "alp",
-      "name": "Alune New Testament",
       "audioFilesets": [
         {
           "id": "ALPWBTN2DA",
@@ -457,9 +397,6 @@
     },
     {
       "inscriptId": "AMETBL",
-      "bibleBrainId": "AMETBL",
-      "lang": "ame",
-      "name": "Yanesha' New Testament",
       "audioFilesets": [
         {
           "id": "AMETBLN1DA-opus16",
@@ -485,9 +422,6 @@
     },
     {
       "inscriptId": "AMFSIM",
-      "bibleBrainId": "AMFSIM",
-      "lang": "amf",
-      "name": "Banna New Testament",
       "audioFilesets": [
         {
           "id": "AMFSIMN2DA",
@@ -513,9 +447,6 @@
     },
     {
       "inscriptId": "AMKWBT",
-      "bibleBrainId": "AMKWBT",
-      "lang": "amk",
-      "name": "Ambai New Testament",
       "audioFilesets": [
         {
           "id": "AMKWBTN1DA",
@@ -541,9 +472,6 @@
     },
     {
       "inscriptId": "ANVWBT",
-      "bibleBrainId": "ANVWBT",
-      "lang": "anv",
-      "name": "Denya New Testament",
       "audioFilesets": [
         {
           "id": "ANVWBTN2DA-opus16",
@@ -559,9 +487,6 @@
     },
     {
       "inscriptId": "ANYWBT",
-      "bibleBrainId": "ANYWBT",
-      "lang": "any",
-      "name": "Anyin 1997 Edition",
       "audioFilesets": [
         {
           "id": "ANYWBTN1DA",
@@ -587,9 +512,6 @@
     },
     {
       "inscriptId": "APRWBT",
-      "bibleBrainId": "APRWBT",
-      "lang": "apr",
-      "name": "Arop-Lokep",
       "audioFilesets": [
         {
           "id": "APRWBTN1DA",
@@ -605,9 +527,6 @@
     },
     {
       "inscriptId": "APYWBT",
-      "bibleBrainId": "APYWBT",
-      "lang": "apy",
-      "name": "Apalaí New Testament",
       "audioFilesets": [
         {
           "id": "APYWBTN1DA-opus16",
@@ -633,9 +552,6 @@
     },
     {
       "inscriptId": "ARBVDV",
-      "bibleBrainId": "ARBVDV",
-      "lang": "arb",
-      "name": "Arabic Van Dyck Bible",
       "audioFilesets": [
         {
           "id": "ARBVDVO2DA-opus16",
@@ -661,9 +577,6 @@
     },
     {
       "inscriptId": "ASGWBT",
-      "bibleBrainId": "ASGWBT",
-      "lang": "asg",
-      "name": "The New Testament in Cishingini",
       "audioFilesets": [
         {
           "id": "ASGWBTN2DA",
@@ -689,9 +602,6 @@
     },
     {
       "inscriptId": "ATAPNG",
-      "bibleBrainId": "ATAPNG",
-      "lang": "ata",
-      "name": "Pele-Ata Bible",
       "audioFilesets": [
         {
           "id": "ATAPNGN1DA-opus16",
@@ -707,9 +617,6 @@
     },
     {
       "inscriptId": "ATGWYI",
-      "bibleBrainId": "ATGWYI",
-      "lang": "atg",
-      "name": "Ivbie North-Okpela-Arhe New Testament",
       "audioFilesets": [
         {
           "id": "ATGWYIN1DA",
@@ -735,9 +642,6 @@
     },
     {
       "inscriptId": "AUUWBT",
-      "bibleBrainId": "AUUWBT",
-      "lang": "auu",
-      "name": "Auye Bible (NT)",
       "audioFilesets": [
         {
           "id": "AUUWBTN2DA",
@@ -763,9 +667,6 @@
     },
     {
       "inscriptId": "AVUWBT",
-      "bibleBrainId": "AVUWBT",
-      "lang": "avu",
-      "name": "Avokaya New Testament",
       "audioFilesets": [
         {
           "id": "AVUWBTN2DA-opus16",
@@ -781,9 +682,6 @@
     },
     {
       "inscriptId": "AWBTBL",
-      "bibleBrainId": "AWBTBL",
-      "lang": "awb",
-      "name": "Awa New Testament",
       "audioFilesets": [
         {
           "id": "AWBTBLN2DA-opus16",
@@ -799,9 +697,6 @@
     },
     {
       "inscriptId": "AZBEMV",
-      "bibleBrainId": "AZBEMV",
-      "lang": "azb",
-      "name": "Azerbaijani Bible",
       "audioFilesets": [
         {
           "id": "AZBEMVO1DA",
@@ -827,9 +722,6 @@
     },
     {
       "inscriptId": "AZGTBL",
-      "bibleBrainId": "AZGTBL",
-      "lang": "azg",
-      "name": "San Pedro Amuzgos New Testament",
       "audioFilesets": [
         {
           "id": "AZGTBLN2DA-opus16",
@@ -855,9 +747,6 @@
     },
     {
       "inscriptId": "AZZTBL",
-      "bibleBrainId": "AZZTBL",
-      "lang": "azz",
-      "name": "Highland Puebla Nahuatl New Testament",
       "audioFilesets": [
         {
           "id": "AZZTBLN2DA-opus16",
@@ -873,9 +762,6 @@
     },
     {
       "inscriptId": "BAKIBT",
-      "bibleBrainId": "BAKIBT",
-      "lang": "bak",
-      "name": "Bashkir New Testament",
       "audioFilesets": [
         {
           "id": "BAKIBTN1DA-opus16",
@@ -901,9 +787,6 @@
     },
     {
       "inscriptId": "BAOWBT",
-      "bibleBrainId": "BAOWBT",
-      "lang": "bao",
-      "name": "Waimaha 2010 Edition",
       "audioFilesets": [
         {
           "id": "BAOWBTN2DA-opus16",
@@ -919,9 +802,6 @@
     },
     {
       "inscriptId": "BAVWBT",
-      "bibleBrainId": "BAVWBT",
-      "lang": "bav",
-      "name": "Vengo 1993 Edition",
       "audioFilesets": [
         {
           "id": "BAVWBTN2DA-opus16",
@@ -937,9 +817,6 @@
     },
     {
       "inscriptId": "BBBWBT",
-      "bibleBrainId": "BBBWBT",
-      "lang": "bbb",
-      "name": "Barai Bible Portions",
       "audioFilesets": [
         {
           "id": "BBBWBTN2DA",
@@ -965,9 +842,6 @@
     },
     {
       "inscriptId": "BCCWBT",
-      "bibleBrainId": "BCCWBT",
-      "lang": "bcc",
-      "name": "Bible Portions in Southern Balochi",
       "audioFilesets": [
         {
           "id": "BCCWBTP1DA-opus16",
@@ -983,9 +857,6 @@
     },
     {
       "inscriptId": "BCWWBT",
-      "bibleBrainId": "BCWWBT",
-      "lang": "bcw",
-      "name": "The Bible in Bana",
       "audioFilesets": [
         {
           "id": "BCWWBTN2DA",
@@ -1001,9 +872,6 @@
     },
     {
       "inscriptId": "BDHWBT",
-      "bibleBrainId": "BDHWBT",
-      "lang": "bdh",
-      "name": "Baka (Sudan) 2017 Edition",
       "audioFilesets": [
         {
           "id": "BDHWBTN1DA",
@@ -1029,9 +897,6 @@
     },
     {
       "inscriptId": "BDQDVS",
-      "bibleBrainId": "BDQDVS",
-      "lang": "bdq",
-      "name": "The New Testament in Bahnar",
       "audioFilesets": [
         {
           "id": "BDQDVSN2DA",
@@ -1047,9 +912,6 @@
     },
     {
       "inscriptId": "BEHWBT",
-      "bibleBrainId": "BEHWBT",
-      "lang": "beh",
-      "name": "The Biali Book of Genesis",
       "audioFilesets": [
         {
           "id": "BEHWBTP2DA-opus16",
@@ -1095,9 +957,6 @@
     },
     {
       "inscriptId": "BEXWBT",
-      "bibleBrainId": "BEXWBT",
-      "lang": "bex",
-      "name": "Jur Modo 1998 Edition",
       "audioFilesets": [
         {
           "id": "BEXWBTN2DA",
@@ -1113,9 +972,6 @@
     },
     {
       "inscriptId": "BFDWBT",
-      "bibleBrainId": "BFDWBT",
-      "lang": "bfd",
-      "name": "Bafut 1999 Edition",
       "audioFilesets": [
         {
           "id": "BFDWBTN2DA",
@@ -1131,9 +987,6 @@
     },
     {
       "inscriptId": "BIBWBT",
-      "bibleBrainId": "BIBWBT",
-      "lang": "bib",
-      "name": "Bissa 2000 Edition",
       "audioFilesets": [
         {
           "id": "BIBWBTN2DA-opus16",
@@ -1149,9 +1002,6 @@
     },
     {
       "inscriptId": "BIMWBT",
-      "bibleBrainId": "BIMWBT",
-      "lang": "bim",
-      "name": "Bimoba Bible",
       "audioFilesets": [
         {
           "id": "BIMWBTN2DA-opus16",
@@ -1167,9 +1017,6 @@
     },
     {
       "inscriptId": "BIVWBT",
-      "bibleBrainId": "BIVWBT",
-      "lang": "biv",
-      "name": "Southern Birifor 2006 Edition",
       "audioFilesets": [
         {
           "id": "BIVWBTN2DA-opus16",
@@ -1185,9 +1032,6 @@
     },
     {
       "inscriptId": "BJRWBT",
-      "bibleBrainId": "BJRWBT",
-      "lang": "bjr",
-      "name": "Binumarien Bible",
       "audioFilesets": [
         {
           "id": "BJRWBTN2DA-opus16",
@@ -1213,9 +1057,6 @@
     },
     {
       "inscriptId": "BJVWYI",
-      "bibleBrainId": "BJVWYI",
-      "lang": "bjv",
-      "name": "Bedjond New Testament",
       "audioFilesets": [
         {
           "id": "BJVWYIN2DA",
@@ -1231,9 +1072,6 @@
     },
     {
       "inscriptId": "BKDWBT",
-      "bibleBrainId": "BKDWBT",
-      "lang": "bkd",
-      "name": "Binukid New Testament",
       "audioFilesets": [
         {
           "id": "BKDWBTN1DA-opus16",
@@ -1259,9 +1097,6 @@
     },
     {
       "inscriptId": "BLXWBT",
-      "bibleBrainId": "BLXWBT",
-      "lang": "blx",
-      "name": "Mag-Indi Ayta New Testament",
       "audioFilesets": [
         {
           "id": "BLXWBTN2DA-opus16",
@@ -1287,9 +1122,6 @@
     },
     {
       "inscriptId": "BLZLAI",
-      "bibleBrainId": "BLZLAI",
-      "lang": "blz",
-      "name": "Balantak New Testament",
       "audioFilesets": [
         {
           "id": "BLZLAIN2DA",
@@ -1305,9 +1137,6 @@
     },
     {
       "inscriptId": "BMRWBT",
-      "bibleBrainId": "BMRWBT",
-      "lang": "bmr",
-      "name": "Muinane New Testament",
       "audioFilesets": [
         {
           "id": "BMRWBTN1DA",
@@ -1333,9 +1162,6 @@
     },
     {
       "inscriptId": "BMUPNG",
-      "bibleBrainId": "BMUPNG",
-      "lang": "bmu",
-      "name": "Somba-Siawari Bible",
       "audioFilesets": [
         {
           "id": "BMUPNGN1DA",
@@ -1361,9 +1187,6 @@
     },
     {
       "inscriptId": "BNOWBT",
-      "bibleBrainId": "BNOWBT",
-      "lang": "bno",
-      "name": "The Bantoanon Bible",
       "audioFilesets": [
         {
           "id": "BNOWBTP1DA-opus16",
@@ -1409,9 +1232,6 @@
     },
     {
       "inscriptId": "BNPWBT",
-      "bibleBrainId": "BNPWBT",
-      "lang": "bnp",
-      "name": "Bola Bible",
       "audioFilesets": [
         {
           "id": "BNPWBTN1DA-opus16",
@@ -1427,9 +1247,6 @@
     },
     {
       "inscriptId": "BOATBL",
-      "bibleBrainId": "BOATBL",
-      "lang": "boa",
-      "name": "Bora New Testament",
       "audioFilesets": [
         {
           "id": "BOATBLN2DA-opus16",
@@ -1445,9 +1262,6 @@
     },
     {
       "inscriptId": "BOJWBT",
-      "bibleBrainId": "BOJWBT",
-      "lang": "boj",
-      "name": "Anjam New Testament 2014",
       "audioFilesets": [
         {
           "id": "BOJWBTN2DA-opus16",
@@ -1473,9 +1287,6 @@
     },
     {
       "inscriptId": "BOMNBT",
-      "bibleBrainId": "BOMNBT",
-      "lang": "bom",
-      "name": "Berom Bible",
       "audioFilesets": [
         {
           "id": "BOMNBTO1DA",
@@ -1511,9 +1322,6 @@
     },
     {
       "inscriptId": "BOVWBT",
-      "bibleBrainId": "BOVWBT",
-      "lang": "bov",
-      "name": "Tuwuli 2008 Edition",
       "audioFilesets": [
         {
           "id": "BOVWBTN1DA-opus16",
@@ -1539,9 +1347,6 @@
     },
     {
       "inscriptId": "BOXWYI",
-      "bibleBrainId": "BOXWYI",
-      "lang": "box",
-      "name": "Buamu New Testament",
       "audioFilesets": [
         {
           "id": "BOXWYIN1DA-opus16",
@@ -1567,9 +1372,6 @@
     },
     {
       "inscriptId": "BPRWYI",
-      "bibleBrainId": "BPRWYI",
-      "lang": "bpr",
-      "name": "Koronadal Blaan New Testament",
       "audioFilesets": [
         {
           "id": "BPRWYIN2DA-opus16",
@@ -1585,9 +1387,6 @@
     },
     {
       "inscriptId": "BPSWPS",
-      "bibleBrainId": "BPSWPS",
-      "lang": "bps",
-      "name": "Sarangani Blaan New Testament",
       "audioFilesets": [
         {
           "id": "BPSWPSN2DA-opus16",
@@ -1603,9 +1402,6 @@
     },
     {
       "inscriptId": "BQCSIM",
-      "bibleBrainId": "BQCSIM",
-      "lang": "bqc",
-      "name": "Boko (Benin) Bible",
       "audioFilesets": [
         {
           "id": "BQCSIMN2DA-opus16",
@@ -1631,9 +1427,6 @@
     },
     {
       "inscriptId": "BQPSIM",
-      "bibleBrainId": "BQPSIM",
-      "lang": "bqp",
-      "name": "Busa Bible",
       "audioFilesets": [
         {
           "id": "BQPSIMN1DA-opus16",
@@ -1669,9 +1462,6 @@
     },
     {
       "inscriptId": "BSCWBT",
-      "bibleBrainId": "BSCWBT",
-      "lang": "bsc",
-      "name": "The New Testament in Oniyan",
       "audioFilesets": [
         {
           "id": "BSCWBTN1DA-opus16",
@@ -1687,9 +1477,6 @@
     },
     {
       "inscriptId": "BSNTBL",
-      "bibleBrainId": "BSNTBL",
-      "lang": "bsn",
-      "name": "Barasana-Eduria New Testament",
       "audioFilesets": [
         {
           "id": "BSNTBLN2DA-opus16",
@@ -1705,9 +1492,6 @@
     },
     {
       "inscriptId": "BSPPBT",
-      "bibleBrainId": "BSPPBT",
-      "lang": "bsp",
-      "name": "Baga Sitemu Bible Portions",
       "audioFilesets": [
         {
           "id": "BSPPBTP1DA-opus16",
@@ -1733,9 +1517,6 @@
     },
     {
       "inscriptId": "BSSWBT",
-      "bibleBrainId": "BSSWBT",
-      "lang": "bss",
-      "name": "Akoose New Testament",
       "audioFilesets": [
         {
           "id": "BSSWBTN2DA",
@@ -1751,9 +1532,6 @@
     },
     {
       "inscriptId": "BUDIBS",
-      "bibleBrainId": "BUDIBS",
-      "lang": "bud",
-      "name": "Ntcham 2008 Edition",
       "audioFilesets": [
         {
           "id": "BUDIBSN2DA-opus16",
@@ -1769,9 +1547,6 @@
     },
     {
       "inscriptId": "BUSSIM",
-      "bibleBrainId": "BUSSIM",
-      "lang": "bus",
-      "name": "Bokobaru Bible",
       "audioFilesets": [
         {
           "id": "BUSSIMN1DA",
@@ -1807,9 +1582,6 @@
     },
     {
       "inscriptId": "BVDWBT",
-      "bibleBrainId": "BVDWBT",
-      "lang": "bvd",
-      "name": "Baeggu New Testament",
       "audioFilesets": [
         {
           "id": "BVDWBTN2DA-opus16",
@@ -1835,9 +1607,6 @@
     },
     {
       "inscriptId": "BYRWBT",
-      "bibleBrainId": "BYRWBT",
-      "lang": "byr",
-      "name": "Baruya New Testament and Genesis",
       "audioFilesets": [
         {
           "id": "BYRWBTN1DA",
@@ -1863,9 +1632,6 @@
     },
     {
       "inscriptId": "BZHPNG",
-      "bibleBrainId": "BZHPNG",
-      "lang": "bzh",
-      "name": "Buang New Testament",
       "audioFilesets": [
         {
           "id": "BZHPNGN1DA-opus16",
@@ -1891,9 +1657,6 @@
     },
     {
       "inscriptId": "BZIWBT",
-      "bibleBrainId": "BZIWBT",
-      "lang": "bzi",
-      "name": "The New Testament in Bisu",
       "audioFilesets": [
         {
           "id": "BZIWYIP1DA-opus16",
@@ -1929,9 +1692,6 @@
     },
     {
       "inscriptId": "BZJBSW",
-      "bibleBrainId": "BZJBSW",
-      "lang": "bzj",
-      "name": "Belize Kriol English New Testament",
       "audioFilesets": [
         {
           "id": "BZJBSWN2DA-opus16",
@@ -1947,9 +1707,6 @@
     },
     {
       "inscriptId": "CAAWBT",
-      "bibleBrainId": "CAAWBT",
-      "lang": "caa",
-      "name": "Chorti Bible",
       "audioFilesets": [
         {
           "id": "CAAWBTN2DA-opus16",
@@ -1965,9 +1722,6 @@
     },
     {
       "inscriptId": "CABNVS",
-      "bibleBrainId": "CABNVS",
-      "lang": "cab",
-      "name": "Garifuna New Testament",
       "audioFilesets": [
         {
           "id": "CABNVSN2DA",
@@ -1983,9 +1737,6 @@
     },
     {
       "inscriptId": "CAKSOU",
-      "bibleBrainId": "CAKSOU",
-      "lang": "cak",
-      "name": "Kaqchikel Chimaltenango New Testament",
       "audioFilesets": [
         {
           "id": "CA1WBTN2DA-opus16",
@@ -2001,9 +1752,6 @@
     },
     {
       "inscriptId": "CAPSBB",
-      "bibleBrainId": "CAPSBB",
-      "lang": "cap",
-      "name": "Chipaya New Testament",
       "audioFilesets": [
         {
           "id": "CAPSBBN2DA",
@@ -2019,9 +1767,6 @@
     },
     {
       "inscriptId": "CARBSS",
-      "bibleBrainId": "CARBSS",
-      "lang": "car",
-      "name": "Carib New Testament",
       "audioFilesets": [
         {
           "id": "CARBSSN2DA",
@@ -2037,9 +1782,6 @@
     },
     {
       "inscriptId": "CBCWBT",
-      "bibleBrainId": "CBCWBT",
-      "lang": "cbc",
-      "name": "Carapana New Testament",
       "audioFilesets": [
         {
           "id": "CBCWBTN2DA",
@@ -2055,9 +1797,6 @@
     },
     {
       "inscriptId": "CBITBL",
-      "bibleBrainId": "CBITBL",
-      "lang": "cbi",
-      "name": "Chachi Bible",
       "audioFilesets": [
         {
           "id": "CBITBLN2DA",
@@ -2083,9 +1822,6 @@
     },
     {
       "inscriptId": "CBRWBT",
-      "bibleBrainId": "CBRWBT",
-      "lang": "cbr",
-      "name": "Cashibo-Cacataibo New Testament",
       "audioFilesets": [
         {
           "id": "CBRTBLN2DA-opus16",
@@ -2111,9 +1847,6 @@
     },
     {
       "inscriptId": "CBTTBL",
-      "bibleBrainId": "CBTTBL",
-      "lang": "cbt",
-      "name": "Chayahuita New Testament",
       "audioFilesets": [
         {
           "id": "CBTTBLN2DA-opus16",
@@ -2129,9 +1862,6 @@
     },
     {
       "inscriptId": "CBUWBT",
-      "bibleBrainId": "CBUWBT",
-      "lang": "cbu",
-      "name": "Candoshi-Shapra New Testament",
       "audioFilesets": [
         {
           "id": "CBUTBLN2DA-opus16",
@@ -2147,9 +1877,6 @@
     },
     {
       "inscriptId": "CBVTBL",
-      "bibleBrainId": "CBVTBL",
-      "lang": "cbv",
-      "name": "Cacua New Testament",
       "audioFilesets": [
         {
           "id": "CBVTBLN2DA",
@@ -2165,9 +1892,6 @@
     },
     {
       "inscriptId": "CCOTBL",
-      "bibleBrainId": "CCOTBL",
-      "lang": "cco",
-      "name": "Comaltepec Chinantec New Testament",
       "audioFilesets": [
         {
           "id": "CCOTBLN1DA-opus16",
@@ -2183,9 +1907,6 @@
     },
     {
       "inscriptId": "CEKLKC",
-      "bibleBrainId": "CEKLKC",
-      "lang": "cek",
-      "name": "The Lemi Chin New Testament",
       "audioFilesets": [
         {
           "id": "CEKLKCN1DA-opus16",
@@ -2211,9 +1932,6 @@
     },
     {
       "inscriptId": "CGCTBL",
-      "bibleBrainId": "CGCTBL",
-      "lang": "cgc",
-      "name": "Kagayanen New Testament",
       "audioFilesets": [
         {
           "id": "CGCTBLN2DA",
@@ -2239,9 +1957,6 @@
     },
     {
       "inscriptId": "CHEIBT",
-      "bibleBrainId": "CHEIBT",
-      "lang": "che",
-      "name": "Chechen Bible",
       "audioFilesets": [
         {
           "id": "CHEIBTP2DA-opus16",
@@ -2297,9 +2012,6 @@
     },
     {
       "inscriptId": "CHFTBL",
-      "bibleBrainId": "CHFTBL",
-      "lang": "chf",
-      "name": "Tabasco Chontal New Testament",
       "audioFilesets": [
         {
           "id": "CHFTBLN2DA",
@@ -2325,9 +2037,6 @@
     },
     {
       "inscriptId": "CHVIBT",
-      "bibleBrainId": "CHVIBT",
-      "lang": "chv",
-      "name": "Chuvash New Testament",
       "audioFilesets": [
         {
           "id": "CHVIBTN2DA-opus16",
@@ -2353,9 +2062,6 @@
     },
     {
       "inscriptId": "CHZWBT",
-      "bibleBrainId": "CHZWBT",
-      "lang": "chz",
-      "name": "Ozumacín Chinantec New Testament",
       "audioFilesets": [
         {
           "id": "CHZWBTN2DA",
@@ -2371,9 +2077,6 @@
     },
     {
       "inscriptId": "CJOWBT",
-      "bibleBrainId": "CJOWBT",
-      "lang": "cjo",
-      "name": "Ashéninka Pajonal New Testament",
       "audioFilesets": [
         {
           "id": "CJOWBTN1DA-opus16",
@@ -2399,9 +2102,6 @@
     },
     {
       "inscriptId": "CJSIBT",
-      "bibleBrainId": "CJSIBT",
-      "lang": "cjs",
-      "name": "Shor Mark and John",
       "audioFilesets": [
         {
           "id": "CJSIBTP1DA",
@@ -2427,9 +2127,6 @@
     },
     {
       "inscriptId": "CLETBL",
-      "bibleBrainId": "CLETBL",
-      "lang": "cle",
-      "name": "Lealao Chinantec New Testament",
       "audioFilesets": [
         {
           "id": "CLETBLN1DA",
@@ -2455,9 +2152,6 @@
     },
     {
       "inscriptId": "CMEWBT",
-      "bibleBrainId": "CMEWBT",
-      "lang": "cme",
-      "name": "Cerma New Testament",
       "audioFilesets": [
         {
           "id": "CMEWBTN2DA",
@@ -2473,9 +2167,6 @@
     },
     {
       "inscriptId": "CMIWBT",
-      "bibleBrainId": "CMIWBT",
-      "lang": "cmi",
-      "name": "Emberá-Chamí NT",
       "audioFilesets": [
         {
           "id": "CMIWBTN2DA-opus16",
@@ -2501,9 +2192,6 @@
     },
     {
       "inscriptId": "CMOBSCK",
-      "bibleBrainId": "CMOBSCK",
-      "lang": "cmo",
-      "name": "Central Mnong New Testament in Khmer",
       "audioFilesets": [
         {
           "id": "CM3WBTN2DA",
@@ -2529,9 +2217,6 @@
     },
     {
       "inscriptId": "CMOBSCM",
-      "bibleBrainId": "CMOBSCM",
-      "lang": "cmo",
-      "name": "New Testament in Mnong, Central",
       "audioFilesets": [
         {
           "id": "CMOWBTN2DA",
@@ -2557,9 +2242,6 @@
     },
     {
       "inscriptId": "CMRWBT",
-      "bibleBrainId": "CMRWBT",
-      "lang": "cmr",
-      "name": "The New Testament in Mro-Khimi Chin",
       "audioFilesets": [
         {
           "id": "CMRWBTN1DA",
@@ -2585,9 +2267,6 @@
     },
     {
       "inscriptId": "CNIWBT",
-      "bibleBrainId": "CNIWBT",
-      "lang": "cni",
-      "name": "Asháninka New Testament",
       "audioFilesets": [
         {
           "id": "CNIWBTN2DA",
@@ -2603,9 +2282,6 @@
     },
     {
       "inscriptId": "CNLTBI",
-      "bibleBrainId": "CNLTBI",
-      "lang": "cnl",
-      "name": "Lalana Chinantec New Testament",
       "audioFilesets": [
         {
           "id": "CNLTBLN1DA",
@@ -2631,9 +2307,6 @@
     },
     {
       "inscriptId": "COEWBT",
-      "bibleBrainId": "COEWBT",
-      "lang": "coe",
-      "name": "Koreguaje 2007 Edition",
       "audioFilesets": [
         {
           "id": "COEWBTN2DA",
@@ -2649,9 +2322,6 @@
     },
     {
       "inscriptId": "COFWBT",
-      "bibleBrainId": "COFWBT",
-      "lang": "cof",
-      "name": "Colorado New Testament",
       "audioFilesets": [
         {
           "id": "COFWBTN1DA",
@@ -2677,9 +2347,6 @@
     },
     {
       "inscriptId": "COKWBT",
-      "bibleBrainId": "COKWBT",
-      "lang": "cok",
-      "name": "Santa Teresa Cora Bible",
       "audioFilesets": [
         {
           "id": "COKWBTN1DA",
@@ -2705,9 +2372,6 @@
     },
     {
       "inscriptId": "CONWBT",
-      "bibleBrainId": "CONWBT",
-      "lang": "con",
-      "name": "Cofán Bible",
       "audioFilesets": [
         {
           "id": "CONWBTN2DA-opus16",
@@ -2723,9 +2387,6 @@
     },
     {
       "inscriptId": "COTTBL",
-      "bibleBrainId": "COTTBL",
-      "lang": "cot",
-      "name": "Caquinte New Testament",
       "audioFilesets": [
         {
           "id": "COTTBLN2DA",
@@ -2751,9 +2412,6 @@
     },
     {
       "inscriptId": "COUWBT",
-      "bibleBrainId": "COUWBT",
-      "lang": "cou",
-      "name": "Wamey New Testament and Genesis",
       "audioFilesets": [
         {
           "id": "COUWBTN1DA",
@@ -2769,9 +2427,6 @@
     },
     {
       "inscriptId": "CPATBL",
-      "bibleBrainId": "CPATBL",
-      "lang": "cpa",
-      "name": "Palantla Chinantec New Testament",
       "audioFilesets": [
         {
           "id": "CPATBLN1DA-opus16",
@@ -2787,9 +2442,6 @@
     },
     {
       "inscriptId": "CPBWBT",
-      "bibleBrainId": "CPBWBT",
-      "lang": "cpb",
-      "name": "Ucayali-yurúa Ashéninka New Testament",
       "audioFilesets": [
         {
           "id": "CPBWBTN1DA",
@@ -2815,9 +2467,6 @@
     },
     {
       "inscriptId": "CPCWBT",
-      "bibleBrainId": "CPCWBT",
-      "lang": "cpc",
-      "name": "Ajyíninka Apurucayali New Testament",
       "audioFilesets": [
         {
           "id": "CPCWBTN1DA-opus16",
@@ -2833,9 +2482,6 @@
     },
     {
       "inscriptId": "CPUWBT",
-      "bibleBrainId": "CPUWBT",
-      "lang": "cpu",
-      "name": "Pichis Ashéninka New Testament",
       "audioFilesets": [
         {
           "id": "CPUWBTN1DA-opus16",
@@ -2861,9 +2507,6 @@
     },
     {
       "inscriptId": "CPYWBT",
-      "bibleBrainId": "CPYWBT",
-      "lang": "cpy",
-      "name": "South Ucayali Ashéninka Bible",
       "audioFilesets": [
         {
           "id": "CPYWBTP2DA-opus16",
@@ -2889,9 +2532,6 @@
     },
     {
       "inscriptId": "CRHIBT",
-      "bibleBrainId": "CRHIBT",
-      "lang": "crh",
-      "name": "Crimean Tatar Bible Portions",
       "audioFilesets": [
         {
           "id": "CRHIBTO2DA-opus16",
@@ -2937,9 +2577,6 @@
     },
     {
       "inscriptId": "CRNWBT",
-      "bibleBrainId": "CRNWBT",
-      "lang": "crn",
-      "name": "El Nayar Presidio De Los Reyes Cora New Testament",
       "audioFilesets": [
         {
           "id": "CRNWBTN2DA-opus16",
@@ -2955,9 +2592,6 @@
     },
     {
       "inscriptId": "CSOTBL",
-      "bibleBrainId": "CSOTBL",
-      "lang": "cso",
-      "name": "Sochiapam Chinantec New Testament",
       "audioFilesets": [
         {
           "id": "CSOTBLN2DA-opus16",
@@ -2983,9 +2617,6 @@
     },
     {
       "inscriptId": "CTOWBT",
-      "bibleBrainId": "CTOWBT",
-      "lang": "cto",
-      "name": "Ember-Catio Bible",
       "audioFilesets": [
         {
           "id": "CTOWYIP2DA",
@@ -3001,9 +2632,6 @@
     },
     {
       "inscriptId": "CUCTBL",
-      "bibleBrainId": "CUCTBL",
-      "lang": "cuc",
-      "name": "Usila Chinantec New Testament",
       "audioFilesets": [
         {
           "id": "CUCTBLN2DA-opus16",
@@ -3019,9 +2647,6 @@
     },
     {
       "inscriptId": "CUIWBT",
-      "bibleBrainId": "CUIWBT",
-      "lang": "cui",
-      "name": "Cuiba New Testament",
       "audioFilesets": [
         {
           "id": "CUIWBTN2DA-opus16",
@@ -3047,9 +2672,6 @@
     },
     {
       "inscriptId": "CUKNVS",
-      "bibleBrainId": "CUKNVS",
-      "lang": "cuk",
-      "name": "San Blas Kuna Bible",
       "audioFilesets": [
         {
           "id": "CUKNVSN2DA",
@@ -3065,9 +2687,6 @@
     },
     {
       "inscriptId": "CULWBT",
-      "bibleBrainId": "CULWBT",
-      "lang": "cul",
-      "name": "The Bible in Culina",
       "audioFilesets": [
         {
           "id": "CULWBTN1DA",
@@ -3093,9 +2712,6 @@
     },
     {
       "inscriptId": "CWEPBT",
-      "bibleBrainId": "CWEPBT",
-      "lang": "cwe",
-      "name": "Kwere New Testament",
       "audioFilesets": [
         {
           "id": "CWEPBTN1DA",
@@ -3121,9 +2737,6 @@
     },
     {
       "inscriptId": "CYAAVV",
-      "bibleBrainId": "CYAAVV",
-      "lang": "cya",
-      "name": "Nopala Chatino New Testament",
       "audioFilesets": [
         {
           "id": "CYAAVVN2DA",
@@ -3139,9 +2752,6 @@
     },
     {
       "inscriptId": "DAAWYI",
-      "bibleBrainId": "DAAWYI",
-      "lang": "daa",
-      "name": "Dangaléat New Testament",
       "audioFilesets": [
         {
           "id": "DAAWYIN2DA-opus16",
@@ -3157,9 +2767,6 @@
     },
     {
       "inscriptId": "DAHPNG",
-      "bibleBrainId": "DAHPNG",
-      "lang": "dah",
-      "name": "Gwahatike New Testament",
       "audioFilesets": [
         {
           "id": "DAHPNGN2DA-opus16",
@@ -3185,9 +2792,6 @@
     },
     {
       "inscriptId": "DEDWBT",
-      "bibleBrainId": "DEDWBT",
-      "lang": "ded",
-      "name": "Dedua Bible",
       "audioFilesets": [
         {
           "id": "DEDWBTN1DA",
@@ -3203,9 +2807,6 @@
     },
     {
       "inscriptId": "DESWBT",
-      "bibleBrainId": "DESWBT",
-      "lang": "des",
-      "name": "Desano 1984 Edition",
       "audioFilesets": [
         {
           "id": "DESWBTN2DA",
@@ -3221,9 +2822,6 @@
     },
     {
       "inscriptId": "DGRCBS",
-      "bibleBrainId": "DGRCBS",
-      "lang": "dgr",
-      "name": "Dogrib New Testament and Genesis",
       "audioFilesets": [
         {
           "id": "DGRBSCP1DA-opus16",
@@ -3239,9 +2837,6 @@
     },
     {
       "inscriptId": "DIDWBT",
-      "bibleBrainId": "DIDWBT",
-      "lang": "did",
-      "name": "Didinga New Testament",
       "audioFilesets": [
         {
           "id": "DIDWBTN2DA-opus16",
@@ -3267,9 +2862,6 @@
     },
     {
       "inscriptId": "DIKTBL",
-      "bibleBrainId": "DIKTBL",
-      "lang": "dik",
-      "name": "Southwestern Dinka New Testament",
       "audioFilesets": [
         {
           "id": "DIKTBLN2DA-opus16",
@@ -3285,9 +2877,6 @@
     },
     {
       "inscriptId": "DJKWBT",
-      "bibleBrainId": "DJKWBT",
-      "lang": "djk",
-      "name": "Eastern Maroon Creole New Testament",
       "audioFilesets": [
         {
           "id": "DJKWBTN2DA-opus16",
@@ -3303,9 +2892,6 @@
     },
     {
       "inscriptId": "DOSATA",
-      "bibleBrainId": "DOSATA",
-      "lang": "dos",
-      "name": "ANTBA Version",
       "audioFilesets": [
         {
           "id": "DOSATAN2DA",
@@ -3331,9 +2917,6 @@
     },
     {
       "inscriptId": "DWRTBL",
-      "bibleBrainId": "DWRTBL",
-      "lang": "dwr",
-      "name": "Dawro New Testament (Latin script)",
       "audioFilesets": [
         {
           "id": "DWRTBLN2DA",
@@ -3349,9 +2932,6 @@
     },
     {
       "inscriptId": "EMPWYI",
-      "bibleBrainId": "EMPWYI",
-      "lang": "emp",
-      "name": "Northern Emberá New Testament",
       "audioFilesets": [
         {
           "id": "EMPWYIP1DA",
@@ -3387,9 +2967,6 @@
     },
     {
       "inscriptId": "ENGKJV",
-      "bibleBrainId": "ENGKJV",
-      "lang": "eng",
-      "name": "King James Version",
       "audioFilesets": [
         {
           "id": "ENGKJVN2DA-opus16",
@@ -3435,9 +3012,6 @@
     },
     {
       "inscriptId": "ENGWEB",
-      "bibleBrainId": "ENGWEB",
-      "lang": "eng",
-      "name": "World English Bible (2000)",
       "audioFilesets": [
         {
           "id": "ENGWEBN2DA-opus16",
@@ -3453,9 +3027,6 @@
     },
     {
       "inscriptId": "ENQPNG",
-      "bibleBrainId": "ENQPNG",
-      "lang": "enq",
-      "name": "Enga New Testament",
       "audioFilesets": [
         {
           "id": "ENQPNGN1DA",
@@ -3471,9 +3042,6 @@
     },
     {
       "inscriptId": "ESKWBT",
-      "bibleBrainId": "ESKWBT",
-      "lang": "esk",
-      "name": "Northwest Alaska Eskimo New Testament",
       "audioFilesets": [
         {
           "id": "ESKWBTP2DA",
@@ -3484,9 +3052,6 @@
     },
     {
       "inscriptId": "EZAWBT",
-      "bibleBrainId": "EZAWBT",
-      "lang": "eza",
-      "name": "Ezaa 2014 Edition",
       "audioFilesets": [
         {
           "id": "EZAWBTN1DA",
@@ -3502,9 +3067,6 @@
     },
     {
       "inscriptId": "FARWBT",
-      "bibleBrainId": "FARWBT",
-      "lang": "far",
-      "name": "New Testament in the Fataleka",
       "audioFilesets": [
         {
           "id": "FARWBTN2DA16",
@@ -3530,9 +3092,6 @@
     },
     {
       "inscriptId": "FFMWBT",
-      "bibleBrainId": "FFMWBT",
-      "lang": "ffm",
-      "name": "Maasina Fulfulde New Testament",
       "audioFilesets": [
         {
           "id": "FFMTBLN1DA",
@@ -3548,9 +3107,6 @@
     },
     {
       "inscriptId": "FRDWBT",
-      "bibleBrainId": "FRDWBT",
-      "lang": "frd",
-      "name": "Fordata 2016 Edition",
       "audioFilesets": [
         {
           "id": "FRDWBTN1DA",
@@ -3576,9 +3132,6 @@
     },
     {
       "inscriptId": "FUFPBT",
-      "bibleBrainId": "FUFPBT",
-      "lang": "fuf",
-      "name": "Pular New Testament",
       "audioFilesets": [
         {
           "id": "FUFPBTN2DA-opus16",
@@ -3594,9 +3147,6 @@
     },
     {
       "inscriptId": "FUHSIM",
-      "bibleBrainId": "FUHSIM",
-      "lang": "fuh",
-      "name": "Fulfulde Burkina New Testament",
       "audioFilesets": [
         {
           "id": "FUHSIMO1DA",
@@ -3622,9 +3172,6 @@
     },
     {
       "inscriptId": "FUQWBT",
-      "bibleBrainId": "FUQWBT",
-      "lang": "fuq",
-      "name": "Eastern Fulfulde New Testament",
       "audioFilesets": [
         {
           "id": "FUQWBTN1DA-opus16",
@@ -3650,9 +3197,6 @@
     },
     {
       "inscriptId": "GAMWBT",
-      "bibleBrainId": "GAMWBT",
-      "lang": "gam",
-      "name": "Kandawo New Testament",
       "audioFilesets": [
         {
           "id": "GAMWBTN1DA-opus16",
@@ -3668,9 +3212,6 @@
     },
     {
       "inscriptId": "GDEWBT",
-      "bibleBrainId": "GDEWBT",
-      "lang": "gde",
-      "name": "Gude 1999 Edition",
       "audioFilesets": [
         {
           "id": "GDEWBTN2DA",
@@ -3686,9 +3227,6 @@
     },
     {
       "inscriptId": "GEBPBT",
-      "bibleBrainId": "GEBPBT",
-      "lang": "geb",
-      "name": "Kire New Testament",
       "audioFilesets": [
         {
           "id": "GEBFBKP2DA-opus16",
@@ -3704,9 +3242,6 @@
     },
     {
       "inscriptId": "GJNGIL",
-      "bibleBrainId": "GJNGIL",
-      "lang": "gjn",
-      "name": "Gonja Bible",
       "audioFilesets": [
         {
           "id": "GJNGILN1DA-opus16",
@@ -3722,9 +3257,6 @@
     },
     {
       "inscriptId": "GMVTBL",
-      "bibleBrainId": "GMVTBL",
-      "lang": "gmv",
-      "name": "Ethiopic Gamo New Testament",
       "audioFilesets": [
         {
           "id": "GMVTBLN2DA-opus16",
@@ -3740,9 +3272,6 @@
     },
     {
       "inscriptId": "GNAWBT",
-      "bibleBrainId": "GNAWBT",
-      "lang": "gna",
-      "name": "The New Testament in Kaansa",
       "audioFilesets": [
         {
           "id": "GNAWBTN1DA-opus16",
@@ -3768,9 +3297,6 @@
     },
     {
       "inscriptId": "GNGWYI",
-      "bibleBrainId": "GNGWYI",
-      "lang": "gng",
-      "name": "Ngangam New Testament",
       "audioFilesets": [
         {
           "id": "GNGWYIN2DA16",
@@ -3796,9 +3322,6 @@
     },
     {
       "inscriptId": "GOFE09",
-      "bibleBrainId": "GOFE09",
-      "lang": "gof",
-      "name": "Gofa New Testament (Ethiopic script)",
       "audioFilesets": [
         {
           "id": "GO1TBLN2DA",
@@ -3814,9 +3337,6 @@
     },
     {
       "inscriptId": "GOFTBL",
-      "bibleBrainId": "GOFTBL",
-      "lang": "gof",
-      "name": "Gofa New Testament (Latin script)",
       "audioFilesets": [
         {
           "id": "GOFTBLN2DA-opus16",
@@ -3832,9 +3352,6 @@
     },
     {
       "inscriptId": "GQRWBT",
-      "bibleBrainId": "GQRWBT",
-      "lang": "gqr",
-      "name": "Gor 2014 Edition",
       "audioFilesets": [
         {
           "id": "GQRWBTN1DA-opus16",
@@ -3860,9 +3377,6 @@
     },
     {
       "inscriptId": "GUBWBT",
-      "bibleBrainId": "GUBWBT",
-      "lang": "gub",
-      "name": "Guajajára Bible",
       "audioFilesets": [
         {
           "id": "GUBWBTN1DA",
@@ -3888,9 +3402,6 @@
     },
     {
       "inscriptId": "GUHWBT",
-      "bibleBrainId": "GUHWBT",
-      "lang": "guh",
-      "name": "Guahibo New Testament",
       "audioFilesets": [
         {
           "id": "GUHWBTN2DA-opus16",
@@ -3906,9 +3417,6 @@
     },
     {
       "inscriptId": "GUMTBL",
-      "bibleBrainId": "GUMTBL",
-      "lang": "gum",
-      "name": "Guambiano New Testament",
       "audioFilesets": [
         {
           "id": "GUMTBLN2DA-opus16",
@@ -3924,9 +3432,6 @@
     },
     {
       "inscriptId": "GUOWBT",
-      "bibleBrainId": "GUOWBT",
-      "lang": "guo",
-      "name": "Guayabero New Testament",
       "audioFilesets": [
         {
           "id": "GUOWBTN2DA-opus16",
@@ -3942,9 +3447,6 @@
     },
     {
       "inscriptId": "GURWBT",
-      "bibleBrainId": "GURWBT",
-      "lang": "gur",
-      "name": "Farefare 2003 Edition",
       "audioFilesets": [
         {
           "id": "GU1WBTN2DA-opus16",
@@ -3970,9 +3472,6 @@
     },
     {
       "inscriptId": "GVCTBL",
-      "bibleBrainId": "GVCTBL",
-      "lang": "gvc",
-      "name": "Guanano New Testament",
       "audioFilesets": [
         {
           "id": "GVCTBLN2DA",
@@ -3988,9 +3487,6 @@
     },
     {
       "inscriptId": "GWIG11",
-      "bibleBrainId": "GWIG11",
-      "lang": "gwi",
-      "name": "Gwich'in New Testament",
       "audioFilesets": [
         {
           "id": "GWIWBTN1DA",
@@ -4006,9 +3502,6 @@
     },
     {
       "inscriptId": "GWRWBT",
-      "bibleBrainId": "GWRWBT",
-      "lang": "gwr",
-      "name": "Gwere 2017 Edition",
       "audioFilesets": [
         {
           "id": "GWRWBTN2DA-opus16",
@@ -4034,9 +3527,6 @@
     },
     {
       "inscriptId": "GYMWBT",
-      "bibleBrainId": "GYMWBT",
-      "lang": "gym",
-      "name": "Ngäbere New Testament",
       "audioFilesets": [
         {
           "id": "GYMWBTN2DA-opus16",
@@ -4052,9 +3542,6 @@
     },
     {
       "inscriptId": "GYRSBB",
-      "bibleBrainId": "GYRSBB",
-      "lang": "gyr",
-      "name": "Guarayu New Testament",
       "audioFilesets": [
         {
           "id": "GYRSBBN2DA-opus16",
@@ -4070,9 +3557,6 @@
     },
     {
       "inscriptId": "HNSWBT",
-      "bibleBrainId": "HNSWBT",
-      "lang": "hns",
-      "name": "Caribbean Hindustani New Testament",
       "audioFilesets": [
         {
           "id": "HNSWBTN2DA",
@@ -4088,9 +3572,6 @@
     },
     {
       "inscriptId": "HTOWBT",
-      "bibleBrainId": "HTOWBT",
-      "lang": "hto",
-      "name": "Minica Huitoto New Testament",
       "audioFilesets": [
         {
           "id": "HTOWBTN2DA-opus16",
@@ -4106,9 +3587,6 @@
     },
     {
       "inscriptId": "HUBWBT",
-      "bibleBrainId": "HUBWBT",
-      "lang": "hub",
-      "name": "Huambisa New Testament",
       "audioFilesets": [
         {
           "id": "HUBWBTN2DA-opus16",
@@ -4124,9 +3602,6 @@
     },
     {
       "inscriptId": "HUSLLB",
-      "bibleBrainId": "HUSLLB",
-      "lang": "hus",
-      "name": "Huastec Aquiche Veracruz New Testament ",
       "audioFilesets": [
         {
           "id": "HUSLLBN2DA-opus16",
@@ -4142,9 +3617,6 @@
     },
     {
       "inscriptId": "HUVTBL",
-      "bibleBrainId": "HUVTBL",
-      "lang": "huv",
-      "name": "San Mateo Del Mar Huave New Testament",
       "audioFilesets": [
         {
           "id": "HUVTBLS1DA",
@@ -4165,9 +3637,6 @@
     },
     {
       "inscriptId": "IFAWBT",
-      "bibleBrainId": "IFAWBT",
-      "lang": "ifa",
-      "name": "Ifugao, Amganad Bible",
       "audioFilesets": [
         {
           "id": "IFAWBTN1DA-opus16",
@@ -4193,9 +3662,6 @@
     },
     {
       "inscriptId": "IFEWBT",
-      "bibleBrainId": "IFEWBT",
-      "lang": "ife",
-      "name": "Ifè 2009 Edition",
       "audioFilesets": [
         {
           "id": "IFEWBTN1DA",
@@ -4221,9 +3687,6 @@
     },
     {
       "inscriptId": "IFYWBT",
-      "bibleBrainId": "IFYWBT",
-      "lang": "ify",
-      "name": "Keley-I Kallahan New Testament",
       "audioFilesets": [
         {
           "id": "IFYWBTN2DA",
@@ -4239,9 +3702,6 @@
     },
     {
       "inscriptId": "IGNSBB",
-      "bibleBrainId": "IGNSBB",
-      "lang": "ign",
-      "name": "Ignaciano New Testament",
       "audioFilesets": [
         {
           "id": "IGNSBBN2DA-opus16",
@@ -4257,9 +3717,6 @@
     },
     {
       "inscriptId": "IKKWBT",
-      "bibleBrainId": "IKKWBT",
-      "lang": "ikk",
-      "name": "Ika New Testament",
       "audioFilesets": [
         {
           "id": "IKKTBLN1DA-opus16",
@@ -4285,9 +3742,6 @@
     },
     {
       "inscriptId": "IMOTBL",
-      "bibleBrainId": "IMOTBL",
-      "lang": "imo",
-      "name": "Imbo Ungu New Testament",
       "audioFilesets": [
         {
           "id": "IMOTBLN1DA-opus16",
@@ -4313,9 +3767,6 @@
     },
     {
       "inscriptId": "INBWBT",
-      "bibleBrainId": "INBWBT",
-      "lang": "inb",
-      "name": "Inga New Testament",
       "audioFilesets": [
         {
           "id": "INBWBTN2DA-opus16",
@@ -4331,9 +3782,6 @@
     },
     {
       "inscriptId": "INDTSI",
-      "bibleBrainId": "INDTSI",
-      "lang": "ind",
-      "name": "New Testament of Simplified Indonesian Translation ",
       "audioFilesets": [
         {
           "id": "INZTSIN1DA-opus16",
@@ -4359,9 +3807,6 @@
     },
     {
       "inscriptId": "IOUTBL",
-      "bibleBrainId": "IOUTBL",
-      "lang": "iou",
-      "name": "Tuma-Irumu Bible",
       "audioFilesets": [
         {
           "id": "IOUWBTN1DA",
@@ -4382,9 +3827,6 @@
     },
     {
       "inscriptId": "JACWBT",
-      "bibleBrainId": "JACWBT",
-      "lang": "jac",
-      "name": "Eastern Jakalteko New Testament",
       "audioFilesets": [
         {
           "id": "JACWBTN2DA",
@@ -4400,9 +3842,6 @@
     },
     {
       "inscriptId": "JICWBT",
-      "bibleBrainId": "JICWBT",
-      "lang": "jic",
-      "name": "Tol New Testament",
       "audioFilesets": [
         {
           "id": "JICWBTN2DA-opus16",
@@ -4418,9 +3857,6 @@
     },
     {
       "inscriptId": "JVNTBL",
-      "bibleBrainId": "JVNTBL",
-      "lang": "jvn",
-      "name": "Caribbean Javanese New Testament",
       "audioFilesets": [
         {
           "id": "JVNTBLN2DA",
@@ -4436,9 +3872,6 @@
     },
     {
       "inscriptId": "KAAIBT",
-      "bibleBrainId": "KAAIBT",
-      "lang": "kaa",
-      "name": "Karakalpak New Testament and Old Testament Portions",
       "audioFilesets": [
         {
           "id": "KAAIBTN2DA-opus16",
@@ -4454,9 +3887,6 @@
     },
     {
       "inscriptId": "KAPIBT",
-      "bibleBrainId": "KAPIBT",
-      "lang": "kap",
-      "name": "Bible Portions in Bezhta",
       "audioFilesets": [
         {
           "id": "KAPIBTP1DA",
@@ -4472,9 +3902,6 @@
     },
     {
       "inscriptId": "KAQWBT",
-      "bibleBrainId": "KAQWBT",
-      "lang": "kaq",
-      "name": "Capanahua New Testament",
       "audioFilesets": [
         {
           "id": "KAQTBLN2DA-opus16",
@@ -4500,9 +3927,6 @@
     },
     {
       "inscriptId": "KBDIBT",
-      "bibleBrainId": "KBDIBT",
-      "lang": "kbd",
-      "name": "Bible in Kabardian (NT)",
       "audioFilesets": [
         {
           "id": "KBDIBTP2DA",
@@ -4518,9 +3942,6 @@
     },
     {
       "inscriptId": "KBOWBT",
-      "bibleBrainId": "KBOWBT",
-      "lang": "kbo",
-      "name": "Keliko New Testament with Old Testament portions",
       "audioFilesets": [
         {
           "id": "KBOWBTN2DA",
@@ -4566,9 +3987,6 @@
     },
     {
       "inscriptId": "KBQWBT",
-      "bibleBrainId": "KBQWBT",
-      "lang": "kbq",
-      "name": "Kamano-Kafe Bible",
       "audioFilesets": [
         {
           "id": "KBQWBTN1DA-opus16",
@@ -4584,9 +4002,6 @@
     },
     {
       "inscriptId": "KDCPBT",
-      "bibleBrainId": "KDCPBT",
-      "lang": "kdc",
-      "name": "Kutu New Testament",
       "audioFilesets": [
         {
           "id": "KDCPBTN1DA",
@@ -4612,9 +4027,6 @@
     },
     {
       "inscriptId": "KEKIBS",
-      "bibleBrainId": "KEKIBS",
-      "lang": "kek",
-      "name": "Q'eqchi' Bible",
       "audioFilesets": [
         {
           "id": "KEKIBSN2DA",
@@ -4630,9 +4042,6 @@
     },
     {
       "inscriptId": "KENWBT",
-      "bibleBrainId": "KENWBT",
-      "lang": "ken",
-      "name": "Kenyang New Testament",
       "audioFilesets": [
         {
           "id": "KENWBTN2DA-opus16",
@@ -4648,9 +4057,6 @@
     },
     {
       "inscriptId": "KIAWBT",
-      "bibleBrainId": "KIAWBT",
-      "lang": "kia",
-      "name": "Garap-Kim New Testament",
       "audioFilesets": [
         {
           "id": "KIAWBTN2DA-opus16",
@@ -4676,9 +4082,6 @@
     },
     {
       "inscriptId": "KJGWBT",
-      "bibleBrainId": "KJGWBT",
-      "lang": "kjg",
-      "name": "Bible Portions in Khmu",
       "audioFilesets": [
         {
           "id": "KJGWYIP1DA-opus16",
@@ -4694,9 +4097,6 @@
     },
     {
       "inscriptId": "KJHIBT",
-      "bibleBrainId": "KJHIBT",
-      "lang": "kjh",
-      "name": "Khakas Bible",
       "audioFilesets": [
         {
           "id": "KJHIBTN2DA",
@@ -4722,9 +4122,6 @@
     },
     {
       "inscriptId": "KKJWBT",
-      "bibleBrainId": "KKJWBT",
-      "lang": "kkj",
-      "name": "Kako 1999 Edition",
       "audioFilesets": [
         {
           "id": "KKJWBTN2DA",
@@ -4740,9 +4137,6 @@
     },
     {
       "inscriptId": "KLVWBT",
-      "bibleBrainId": "KLVWBT",
-      "lang": "klv",
-      "name": "Maskelynes New Testament",
       "audioFilesets": [
         {
           "id": "KLVWBTN1DA",
@@ -4758,9 +4152,6 @@
     },
     {
       "inscriptId": "KMAWBT",
-      "bibleBrainId": "KMAWBT",
-      "lang": "kma",
-      "name": "Konni 2004 Edition",
       "audioFilesets": [
         {
           "id": "KMAWBTN2DA",
@@ -4776,9 +4167,6 @@
     },
     {
       "inscriptId": "KMLWBT",
-      "bibleBrainId": "KMLWBT",
-      "lang": "kml",
-      "name": "Mangali Kalinga New Testament",
       "audioFilesets": [
         {
           "id": "KMLWBTN1DA-opus16",
@@ -4804,9 +4192,6 @@
     },
     {
       "inscriptId": "KNFWBT",
-      "bibleBrainId": "KNFWBT",
-      "lang": "knf",
-      "name": "Mankanya New Testament and partial Old Testament",
       "audioFilesets": [
         {
           "id": "KNFWYIN1DA",
@@ -4822,9 +4207,6 @@
     },
     {
       "inscriptId": "KOGWBT",
-      "bibleBrainId": "KOGWBT",
-      "lang": "kog",
-      "name": "The Bible in Kogi-Cogui",
       "audioFilesets": [
         {
           "id": "KOGWBTN2DA16",
@@ -4850,9 +4232,6 @@
     },
     {
       "inscriptId": "KQPWBT",
-      "bibleBrainId": "KQPWBT",
-      "lang": "kqp",
-      "name": "Kimré 2007 Edition",
       "audioFilesets": [
         {
           "id": "KQPWBTN2DA-opus16",
@@ -4868,9 +4247,6 @@
     },
     {
       "inscriptId": "KRJWBT",
-      "bibleBrainId": "KRJWBT",
-      "lang": "krj",
-      "name": "Kinaray-A 2009 Edition",
       "audioFilesets": [
         {
           "id": "KRJWBTN2DA-opus16",
@@ -4886,9 +4262,6 @@
     },
     {
       "inscriptId": "KRRWBT",
-      "bibleBrainId": "KRRWBT",
-      "lang": "krr",
-      "name": "Krung Bible",
       "audioFilesets": [
         {
           "id": "KRRWBTP1DA-opus16",
@@ -4914,9 +4287,6 @@
     },
     {
       "inscriptId": "KSJWBT",
-      "bibleBrainId": "KSJWBT",
-      "lang": "ksj",
-      "name": "Bible Portions in Uare",
       "audioFilesets": [
         {
           "id": "KSJWBTN1DA-opus16",
@@ -4932,9 +4302,6 @@
     },
     {
       "inscriptId": "KSRPNG",
-      "bibleBrainId": "KSRPNG",
-      "lang": "ksr",
-      "name": "Borong New Testament and Old Testament Portions 2011 Edition",
       "audioFilesets": [
         {
           "id": "KSRPNGN1DA-opus16",
@@ -4960,9 +4327,6 @@
     },
     {
       "inscriptId": "KTJWBT",
-      "bibleBrainId": "KTJWBT",
-      "lang": "ktj",
-      "name": "The New Testament in Plapo",
       "audioFilesets": [
         {
           "id": "KTJWBTN1DA",
@@ -4988,9 +4352,6 @@
     },
     {
       "inscriptId": "KUEPNG",
-      "bibleBrainId": "KUEPNG",
-      "lang": "kue",
-      "name": "Kuman New Testament",
       "audioFilesets": [
         {
           "id": "KUEPNGN2DA",
@@ -5006,9 +4367,6 @@
     },
     {
       "inscriptId": "KUMIBT",
-      "bibleBrainId": "KUMIBT",
-      "lang": "kum",
-      "name": "Kumyk New Testament",
       "audioFilesets": [
         {
           "id": "KUMIBTP2DA-opus16",
@@ -5044,9 +4402,6 @@
     },
     {
       "inscriptId": "KVNWBT",
-      "bibleBrainId": "KVNWBT",
-      "lang": "kvn",
-      "name": "Border Kuna New Testament",
       "audioFilesets": [
         {
           "id": "KVNWBTN1DA-opus16",
@@ -5072,9 +4427,6 @@
     },
     {
       "inscriptId": "KWDWBT",
-      "bibleBrainId": "KWDWBT",
-      "lang": "kwd",
-      "name": "Kwaio New Testament",
       "audioFilesets": [
         {
           "id": "KWDWBTN2DA",
@@ -5100,9 +4452,6 @@
     },
     {
       "inscriptId": "KWFWBT",
-      "bibleBrainId": "KWFWBT",
-      "lang": "kwf",
-      "name": "Kwara'ae 2003 Edition",
       "audioFilesets": [
         {
           "id": "KWFWBTN1DA",
@@ -5128,9 +4477,6 @@
     },
     {
       "inscriptId": "KWIWBT",
-      "bibleBrainId": "KWIWBT",
-      "lang": "kwi",
-      "name": "Awa-Cuaiquer New Testament",
       "audioFilesets": [
         {
           "id": "KWIWBTN2DA",
@@ -5146,9 +4492,6 @@
     },
     {
       "inscriptId": "KYFWBT",
-      "bibleBrainId": "KYFWBT",
-      "lang": "kyf",
-      "name": "Kouya New Testament",
       "audioFilesets": [
         {
           "id": "KYFWBTN2DA-opus16",
@@ -5174,9 +4517,6 @@
     },
     {
       "inscriptId": "KYQWBT",
-      "bibleBrainId": "KYQWBT",
-      "lang": "kyq",
-      "name": "Kenga New Testament",
       "audioFilesets": [
         {
           "id": "KYQWYIN2DA",
@@ -5192,9 +4532,6 @@
     },
     {
       "inscriptId": "KYZWBT",
-      "bibleBrainId": "KYZWBT",
-      "lang": "kyz",
-      "name": "Kayabí New Testament",
       "audioFilesets": [
         {
           "id": "KYZWBTN1DA",
@@ -5220,9 +4557,6 @@
     },
     {
       "inscriptId": "LACTBL",
-      "bibleBrainId": "LACTBL",
-      "lang": "lac",
-      "name": "Lacandon New Testament",
       "audioFilesets": [
         {
           "id": "LACTBLN1DA",
@@ -5243,9 +4577,6 @@
     },
     {
       "inscriptId": "LBJWBT",
-      "bibleBrainId": "LBJWBT",
-      "lang": "lbj",
-      "name": "Ladakhi New Testament",
       "audioFilesets": [
         {
           "id": "LBJWBTO1DA-opus16",
@@ -5271,9 +4602,6 @@
     },
     {
       "inscriptId": "LEEWBT",
-      "bibleBrainId": "LEEWBT",
-      "lang": "lee",
-      "name": "Lyele 2001 Edition",
       "audioFilesets": [
         {
           "id": "LEEWBTN2DA-opus16",
@@ -5289,9 +4617,6 @@
     },
     {
       "inscriptId": "LEMWBT",
-      "bibleBrainId": "LEMWBT",
-      "lang": "lem",
-      "name": "Nomaande 2008 Edition",
       "audioFilesets": [
         {
           "id": "LEMWBTN2DA",
@@ -5307,9 +4632,6 @@
     },
     {
       "inscriptId": "LEXWBT",
-      "bibleBrainId": "LEXWBT",
-      "lang": "lex",
-      "name": "Luang New Testament and Old Testament Portions",
       "audioFilesets": [
         {
           "id": "LEXWBTN1DA-opus16",
@@ -5345,9 +4667,6 @@
     },
     {
       "inscriptId": "LEZIBT",
-      "bibleBrainId": "LEZIBT",
-      "lang": "lez",
-      "name": "The Lezgi New Testament",
       "audioFilesets": [
         {
           "id": "LEZIBTN1DA-opus16",
@@ -5393,9 +4712,6 @@
     },
     {
       "inscriptId": "LIDWBT",
-      "bibleBrainId": "LIDWBT",
-      "lang": "lid",
-      "name": "Nyndrou New Testament and Old Testament portions",
       "audioFilesets": [
         {
           "id": "LIDWBTN2DA-opus16",
@@ -5426,9 +4742,6 @@
     },
     {
       "inscriptId": "LIFWBT",
-      "bibleBrainId": "LIFWBT",
-      "lang": "lif",
-      "name": "Limbu New Testament (Limbu Script)",
       "audioFilesets": [
         {
           "id": "LIFWBTN2DA",
@@ -5444,9 +4757,6 @@
     },
     {
       "inscriptId": "LIKWBT",
-      "bibleBrainId": "LIKWBT",
-      "lang": "lik",
-      "name": "Lika Nouvelle orthographe",
       "audioFilesets": [
         {
           "id": "LIKWBTN1DA-opus16",
@@ -5472,9 +4782,6 @@
     },
     {
       "inscriptId": "LIPWBT",
-      "bibleBrainId": "LIPWBT",
-      "lang": "lip",
-      "name": "Sekpele 2008 Edition",
       "audioFilesets": [
         {
           "id": "LIPWBTN2DA-opus16",
@@ -5490,9 +4797,6 @@
     },
     {
       "inscriptId": "LLGUBB",
-      "bibleBrainId": "LLGUBB",
-      "lang": "llg",
-      "name": "Rote Lole Bible",
       "audioFilesets": [
         {
           "id": "LLGUBBN2DA-opus16",
@@ -5518,9 +4822,6 @@
     },
     {
       "inscriptId": "LOQWBT",
-      "bibleBrainId": "LOQWBT",
-      "lang": "loq",
-      "name": "Lobala: Sangola Eenyakune New Testament",
       "audioFilesets": [
         {
           "id": "LOQWBTN1DA-opus16",
@@ -5546,9 +4847,6 @@
     },
     {
       "inscriptId": "LWOWBT",
-      "bibleBrainId": "LWOWBT",
-      "lang": "lwo",
-      "name": "Luwo 2003 Edition",
       "audioFilesets": [
         {
           "id": "LWOWBTN2DA",
@@ -5564,9 +4862,6 @@
     },
     {
       "inscriptId": "LWWWBT",
-      "bibleBrainId": "LWWWBT",
-      "lang": "lww",
-      "name": "Lewo 2016 Edition",
       "audioFilesets": [
         {
           "id": "LWWWBTN1DA",
@@ -5582,9 +4877,6 @@
     },
     {
       "inscriptId": "MAASJV",
-      "bibleBrainId": "MAASJV",
-      "lang": "maa",
-      "name": "San Jerónimo Tecóatl Mazatec New Testament 2012 Edition",
       "audioFilesets": [
         {
           "id": "MAASJVN2DA",
@@ -5600,9 +4892,6 @@
     },
     {
       "inscriptId": "MAIWBT",
-      "bibleBrainId": "MAIWBT",
-      "lang": "mai",
-      "name": "Maithili Bible",
       "audioFilesets": [
         {
           "id": "MAIWBTN2DA",
@@ -5618,9 +4907,6 @@
     },
     {
       "inscriptId": "MAWWBT",
-      "bibleBrainId": "MAWWBT",
-      "lang": "maw",
-      "name": "Mampruli 2001 Edition",
       "audioFilesets": [
         {
           "id": "MAWWBTN2DA-opus16",
@@ -5636,9 +4922,6 @@
     },
     {
       "inscriptId": "MAZTBL",
-      "bibleBrainId": "MAZTBL",
-      "lang": "maz",
-      "name": "Central Mazahua Bible",
       "audioFilesets": [
         {
           "id": "MAZTBLN2DA",
@@ -5654,9 +4937,6 @@
     },
     {
       "inscriptId": "MBCWBT",
-      "bibleBrainId": "MBCWBT",
-      "lang": "mbc",
-      "name": "Macushi New Testament",
       "audioFilesets": [
         {
           "id": "MBCMVAN1DA-opus16",
@@ -5682,9 +4962,6 @@
     },
     {
       "inscriptId": "MBHTBL",
-      "bibleBrainId": "MBHTBL",
-      "lang": "mbh",
-      "name": "Mangseng New Testament",
       "audioFilesets": [
         {
           "id": "MBHTBLN1DA-opus16",
@@ -5700,9 +4977,6 @@
     },
     {
       "inscriptId": "MBJWBT",
-      "bibleBrainId": "MBJWBT",
-      "lang": "mbj",
-      "name": "Nadëb New Testament",
       "audioFilesets": [
         {
           "id": "MBJWBTN2DA",
@@ -5728,9 +5002,6 @@
     },
     {
       "inscriptId": "MBTWBT",
-      "bibleBrainId": "MBTWBT",
-      "lang": "mbt",
-      "name": "Matigsalug Manobo New Testament",
       "audioFilesets": [
         {
           "id": "MBTWBTN2DA-opus16",
@@ -5746,9 +5017,6 @@
     },
     {
       "inscriptId": "MCAWBT",
-      "bibleBrainId": "MCAWBT",
-      "lang": "mca",
-      "name": "Maka New Testament",
       "audioFilesets": [
         {
           "id": "MCAWYIN2DA-opus16",
@@ -5774,9 +5042,6 @@
     },
     {
       "inscriptId": "MCDWBT",
-      "bibleBrainId": "MCDWBT",
-      "lang": "mcd",
-      "name": "Sharanahua New Testament",
       "audioFilesets": [
         {
           "id": "MCDTBLN2DA-opus16",
@@ -5802,9 +5067,6 @@
     },
     {
       "inscriptId": "MCOTBL",
-      "bibleBrainId": "MCOTBL",
-      "lang": "mco",
-      "name": "Coatlán Mixe New Testament",
       "audioFilesets": [
         {
           "id": "MCOTBLN2DA-opus16",
@@ -5830,9 +5092,6 @@
     },
     {
       "inscriptId": "MCPWBT",
-      "bibleBrainId": "MCPWBT",
-      "lang": "mcp",
-      "name": "Makaa New Testament",
       "audioFilesets": [
         {
           "id": "MCPWBTN1DA",
@@ -5858,9 +5117,6 @@
     },
     {
       "inscriptId": "MCQSPP",
-      "bibleBrainId": "MCQSPP",
-      "lang": "mcq",
-      "name": "Managalasi New Testament",
       "audioFilesets": [
         {
           "id": "MCQTBLN2DA",
@@ -5886,9 +5142,6 @@
     },
     {
       "inscriptId": "MDYBSE",
-      "bibleBrainId": "MDYBSE",
-      "lang": "mdy",
-      "name": "Maale Bible",
       "audioFilesets": [
         {
           "id": "MDYBSEN2DA",
@@ -5904,9 +5157,6 @@
     },
     {
       "inscriptId": "MEDPNG",
-      "bibleBrainId": "MEDPNG",
-      "lang": "med",
-      "name": "Melpa New Testament",
       "audioFilesets": [
         {
           "id": "MEDPNGN1DA",
@@ -5932,9 +5182,6 @@
     },
     {
       "inscriptId": "MEETBL",
-      "bibleBrainId": "MEETBL",
-      "lang": "mee",
-      "name": "Mengen New Testament",
       "audioFilesets": [
         {
           "id": "MEETBLP1DA-opus16",
@@ -5960,9 +5207,6 @@
     },
     {
       "inscriptId": "MEQWBT",
-      "bibleBrainId": "MEQWBT",
-      "lang": "meq",
-      "name": "Merey New Testament",
       "audioFilesets": [
         {
           "id": "MEQWBTN2DA",
@@ -5978,9 +5222,6 @@
     },
     {
       "inscriptId": "MFHWYI",
-      "bibleBrainId": "MFHWYI",
-      "lang": "mfh",
-      "name": "Matal 1989 Edition",
       "audioFilesets": [
         {
           "id": "MFHWYIN2DA-opus16",
@@ -5996,9 +5237,6 @@
     },
     {
       "inscriptId": "MFIWYI",
-      "bibleBrainId": "MFIWYI",
-      "lang": "mfi",
-      "name": "Wandala Bible Wakita á Dadaamiya",
       "audioFilesets": [
         {
           "id": "MFIWYIN2DA-opus16",
@@ -6014,9 +5252,6 @@
     },
     {
       "inscriptId": "MFYWBT",
-      "bibleBrainId": "MFYWBT",
-      "lang": "mfy",
-      "name": "Mayo Bible",
       "audioFilesets": [
         {
           "id": "MFYWBTN2DA",
@@ -6032,9 +5267,6 @@
     },
     {
       "inscriptId": "MGHWBT",
-      "bibleBrainId": "MGHWBT",
-      "lang": "mgh",
-      "name": "Makhuwa-Meetto New Testament Portions",
       "audioFilesets": [
         {
           "id": "MGHWBTN1DA-opus16",
@@ -6060,9 +5292,6 @@
     },
     {
       "inscriptId": "MIFWBT",
-      "bibleBrainId": "MIFWBT",
-      "lang": "mif",
-      "name": "Le Nouveau Testament en langue Mofu-Gudur (Cameroun)",
       "audioFilesets": [
         {
           "id": "MIFWBTN2DA",
@@ -6078,9 +5307,6 @@
     },
     {
       "inscriptId": "MIOWBT",
-      "bibleBrainId": "MIOWBT",
-      "lang": "mio",
-      "name": "Pinotepa Nacional Mixtec New Testament",
       "audioFilesets": [
         {
           "id": "MIOWBTO1DA-opus16",
@@ -6106,9 +5332,6 @@
     },
     {
       "inscriptId": "MIRTBL",
-      "bibleBrainId": "MIRTBL",
-      "lang": "mir",
-      "name": "Isthmus Mixe New Testament",
       "audioFilesets": [
         {
           "id": "MIRTBLN1DA-opus16",
@@ -6124,9 +5347,6 @@
     },
     {
       "inscriptId": "MITTBL",
-      "bibleBrainId": "MITTBL",
-      "lang": "mit",
-      "name": "Southern Puebla Mixtec New Testament",
       "audioFilesets": [
         {
           "id": "MITTBLN2DA-opus16",
@@ -6142,9 +5362,6 @@
     },
     {
       "inscriptId": "MJCWBT",
-      "bibleBrainId": "MJCWBT",
-      "lang": "mjc",
-      "name": "San Juan Colorado Mixtec New Testament",
       "audioFilesets": [
         {
           "id": "MJCWBTN2DA",
@@ -6170,9 +5387,6 @@
     },
     {
       "inscriptId": "MKLSIM",
-      "bibleBrainId": "MKLSIM",
-      "lang": "mkl",
-      "name": "Monkole New Testament",
       "audioFilesets": [
         {
           "id": "MKLSIMN1DA",
@@ -6198,9 +5412,6 @@
     },
     {
       "inscriptId": "MKNUBB",
-      "bibleBrainId": "MKNUBB",
-      "lang": "mkn",
-      "name": "Kupang Malay Bible",
       "audioFilesets": [
         {
           "id": "MKNUBBN1DA",
@@ -6226,9 +5437,6 @@
     },
     {
       "inscriptId": "MOAWBT",
-      "bibleBrainId": "MOAWBT",
-      "lang": "moa",
-      "name": "The New Testament in Mwan",
       "audioFilesets": [
         {
           "id": "MOAWBTN2DA-opus16",
@@ -6254,9 +5462,6 @@
     },
     {
       "inscriptId": "MOPWBT",
-      "bibleBrainId": "MOPWBT",
-      "lang": "mop",
-      "name": "Mopán Maya New Testament 2004 Edition",
       "audioFilesets": [
         {
           "id": "MOPWBTN2DA",
@@ -6272,9 +5477,6 @@
     },
     {
       "inscriptId": "MOXFNS",
-      "bibleBrainId": "MOXFNS",
-      "lang": "mox",
-      "name": "The New Testament in the Molima Language of Papua New Guinea",
       "audioFilesets": [
         {
           "id": "MOXFSAN1DA",
@@ -6290,9 +5492,6 @@
     },
     {
       "inscriptId": "MPPWBT",
-      "bibleBrainId": "MPPWBT",
-      "lang": "mpp",
-      "name": "Migabac Bible Portions",
       "audioFilesets": [
         {
           "id": "MPPWBTN1DA",
@@ -6308,9 +5507,6 @@
     },
     {
       "inscriptId": "MPXPNG",
-      "bibleBrainId": "MPXPNG",
-      "lang": "mpx",
-      "name": "Misima-Paneati Bible",
       "audioFilesets": [
         {
           "id": "MPXPNGP1DA-opus16",
@@ -6346,9 +5542,6 @@
     },
     {
       "inscriptId": "MQBWBT",
-      "bibleBrainId": "MQBWBT",
-      "lang": "mqb",
-      "name": "Mbuko New Testament",
       "audioFilesets": [
         {
           "id": "MQBWBTN2DA",
@@ -6364,9 +5557,6 @@
     },
     {
       "inscriptId": "MUHWBT",
-      "bibleBrainId": "MUHWBT",
-      "lang": "muh",
-      "name": "Mündü 2005 Edition",
       "audioFilesets": [
         {
           "id": "MUHWBTN2DA-opus16",
@@ -6382,9 +5572,6 @@
     },
     {
       "inscriptId": "MUYWBT",
-      "bibleBrainId": "MUYWBT",
-      "lang": "muy",
-      "name": "Muyang New Testament",
       "audioFilesets": [
         {
           "id": "MUYWBTN1DA-opus16",
@@ -6410,9 +5597,6 @@
     },
     {
       "inscriptId": "MXBMVR",
-      "bibleBrainId": "MXBMVR",
-      "lang": "mxb",
-      "name": "Tezoatlán Mixtec New Testament",
       "audioFilesets": [
         {
           "id": "MXBMVRN1DA-opus16",
@@ -6438,9 +5622,6 @@
     },
     {
       "inscriptId": "MXXWBT",
-      "bibleBrainId": "MXXWBT",
-      "lang": "mxx",
-      "name": "Bible Mahou Portions",
       "audioFilesets": [
         {
           "id": "MXXWBTP1DA",
@@ -6456,9 +5637,6 @@
     },
     {
       "inscriptId": "MYABJB",
-      "bibleBrainId": "MYABJB",
-      "lang": "mya",
-      "name": "1835 Judson Burmese Bible",
       "audioFilesets": [
         {
           "id": "MYAOJVN2DA",
@@ -6474,9 +5652,6 @@
     },
     {
       "inscriptId": "MYKWBT",
-      "bibleBrainId": "MYKWBT",
-      "lang": "myk",
-      "name": "Mamara Sénoufo New Testament and Old Testament Portions",
       "audioFilesets": [
         {
           "id": "MYKWBTN2DA",
@@ -6492,9 +5667,6 @@
     },
     {
       "inscriptId": "MYUWBT",
-      "bibleBrainId": "MYUWBT",
-      "lang": "myu",
-      "name": "Mundurukú New Testament",
       "audioFilesets": [
         {
           "id": "MYUWBTN1DA-opus16",
@@ -6520,9 +5692,6 @@
     },
     {
       "inscriptId": "MYYWBT",
-      "bibleBrainId": "MYYWBT",
-      "lang": "myy",
-      "name": "New Testament in Macuna",
       "audioFilesets": [
         {
           "id": "MYYWBTN2DA16",
@@ -6548,9 +5717,6 @@
     },
     {
       "inscriptId": "MZAWBT",
-      "bibleBrainId": "MZAWBT",
-      "lang": "mza",
-      "name": "Zacatepec Mixtec New Testament",
       "audioFilesets": [
         {
           "id": "MZAWBTN2DA-opus16",
@@ -6566,9 +5732,6 @@
     },
     {
       "inscriptId": "NABWBT",
-      "bibleBrainId": "NABWBT",
-      "lang": "nab",
-      "name": "Southern Nambikuára New Testament",
       "audioFilesets": [
         {
           "id": "NABWYIN1DA-opus16",
@@ -6584,9 +5747,6 @@
     },
     {
       "inscriptId": "NAWWBT",
-      "bibleBrainId": "NAWWBT",
-      "lang": "naw",
-      "name": "Nawuri 2012 Edition",
       "audioFilesets": [
         {
           "id": "NAWWBTN1DA",
@@ -6612,9 +5772,6 @@
     },
     {
       "inscriptId": "NCAWBT",
-      "bibleBrainId": "NCAWBT",
-      "lang": "nca",
-      "name": "Iyo New Testament",
       "audioFilesets": [
         {
           "id": "NCAWBTN1DA-opus16",
@@ -6630,9 +5787,6 @@
     },
     {
       "inscriptId": "NCHTBL",
-      "bibleBrainId": "NCHTBL",
-      "lang": "nch",
-      "name": "Huasteca Central Nahuatl Bible",
       "audioFilesets": [
         {
           "id": "NCHTBLO2DA-opus16",
@@ -6678,9 +5832,6 @@
     },
     {
       "inscriptId": "NCJTBL",
-      "bibleBrainId": "NCJTBL",
-      "lang": "ncj",
-      "name": "Northern Puebla Nahuatl New Testament",
       "audioFilesets": [
         {
           "id": "NCJTBLN2DA",
@@ -6696,9 +5847,6 @@
     },
     {
       "inscriptId": "NCQWBT",
-      "bibleBrainId": "NCQWBT",
-      "lang": "ncq",
-      "name": "The New Testament in Northern Katang",
       "audioFilesets": [
         {
           "id": "NCQWBTN1DA",
@@ -6714,9 +5862,6 @@
     },
     {
       "inscriptId": "NCUWBT",
-      "bibleBrainId": "NCUWBT",
-      "lang": "ncu",
-      "name": "Chumburung New Testament",
       "audioFilesets": [
         {
           "id": "NCUWBTN2DA",
@@ -6732,9 +5877,6 @@
     },
     {
       "inscriptId": "NDZWBT",
-      "bibleBrainId": "NDZWBT",
-      "lang": "ndz",
-      "name": "The New Testament in the Ndogo language",
       "audioFilesets": [
         {
           "id": "NDZWBTN2DA-opus16",
@@ -6750,9 +5892,6 @@
     },
     {
       "inscriptId": "NFAUBB",
-      "bibleBrainId": "NFAUBB",
-      "lang": "nfa",
-      "name": "Dhao Bible",
       "audioFilesets": [
         {
           "id": "NFAUBBP1DA",
@@ -6798,9 +5937,6 @@
     },
     {
       "inscriptId": "NHETBL",
-      "bibleBrainId": "NHETBL",
-      "lang": "nhe",
-      "name": "Huasteca Oriental Nahuatl Bible 2005",
       "audioFilesets": [
         {
           "id": "NHETBLN2DA",
@@ -6816,9 +5952,6 @@
     },
     {
       "inscriptId": "NHIWBT",
-      "bibleBrainId": "NHIWBT",
-      "lang": "nhi",
-      "name": "Zacatlán-Ahuacatlán-Tepetzintla Nahuatl New Testament",
       "audioFilesets": [
         {
           "id": "NHIWBTN2DA",
@@ -6834,9 +5967,6 @@
     },
     {
       "inscriptId": "NHUWBT",
-      "bibleBrainId": "NHUWBT",
-      "lang": "nhu",
-      "name": "Noone New Testament",
       "audioFilesets": [
         {
           "id": "NHUWBTN2DA",
@@ -6852,9 +5982,6 @@
     },
     {
       "inscriptId": "NHWTBL",
-      "bibleBrainId": "NHWTBL",
-      "lang": "nhw",
-      "name": "Huasteca Occidental Nahuatl Bible",
       "audioFilesets": [
         {
           "id": "NHWTBLN2DA-opus16",
@@ -6870,9 +5997,6 @@
     },
     {
       "inscriptId": "NINWBT",
-      "bibleBrainId": "NINWBT",
-      "lang": "nin",
-      "name": "Ninzo New Testament",
       "audioFilesets": [
         {
           "id": "NINWYIN2DA-opus16",
@@ -6898,9 +6022,6 @@
     },
     {
       "inscriptId": "NKOWBT",
-      "bibleBrainId": "NKOWBT",
-      "lang": "nko",
-      "name": "Nkonya New Testament",
       "audioFilesets": [
         {
           "id": "NKOWBTP1DA",
@@ -6946,9 +6067,6 @@
     },
     {
       "inscriptId": "NLGNEW",
-      "bibleBrainId": "NLGNEW",
-      "lang": "nlg",
-      "name": "Gela New Testament",
       "audioFilesets": [
         {
           "id": "NLGWBTN1DA",
@@ -6974,9 +6092,6 @@
     },
     {
       "inscriptId": "NNWWBT",
-      "bibleBrainId": "NNWWBT",
-      "lang": "nnw",
-      "name": "Southern Nuni 1999 Edition",
       "audioFilesets": [
         {
           "id": "NNWWBTN2DA-opus16",
@@ -6992,9 +6107,6 @@
     },
     {
       "inscriptId": "NOAWBT",
-      "bibleBrainId": "NOAWBT",
-      "lang": "noa",
-      "name": "Woun Meu New Testament (Traditional)",
       "audioFilesets": [
         {
           "id": "NOAWBTN2DA",
@@ -7010,9 +6122,6 @@
     },
     {
       "inscriptId": "NODWBT",
-      "bibleBrainId": "NODWBT",
-      "lang": "nod",
-      "name": "Northern Thai Lanna Bible Translation",
       "audioFilesets": [
         {
           "id": "NODWBTN1DA",
@@ -7028,9 +6137,6 @@
     },
     {
       "inscriptId": "NOGIBT",
-      "bibleBrainId": "NOGIBT",
-      "lang": "nog",
-      "name": "Nogai New Testament, Genesis, Ruth, Ester, and Jonah",
       "audioFilesets": [
         {
           "id": "NOGIBTN2DA",
@@ -7066,9 +6172,6 @@
     },
     {
       "inscriptId": "NOTWBT",
-      "bibleBrainId": "NOTWBT",
-      "lang": "not",
-      "name": "Nomatsiguenga New Testament",
       "audioFilesets": [
         {
           "id": "NOTTBLN1DA",
@@ -7094,9 +6197,6 @@
     },
     {
       "inscriptId": "NSUWBT",
-      "bibleBrainId": "NSUWBT",
-      "lang": "nsu",
-      "name": "Sierra Negra Nahuatl New Testament",
       "audioFilesets": [
         {
           "id": "NSUWBTN2DA",
@@ -7122,9 +6222,6 @@
     },
     {
       "inscriptId": "NTPTBL",
-      "bibleBrainId": "NTPTBL",
-      "lang": "ntp",
-      "name": "Northern Tepehuan New Testament",
       "audioFilesets": [
         {
           "id": "NTPTBLN1DA-opus16",
@@ -7150,9 +6247,6 @@
     },
     {
       "inscriptId": "NTRWBT",
-      "bibleBrainId": "NTRWBT",
-      "lang": "ntr",
-      "name": "Delo 2006 Edition",
       "audioFilesets": [
         {
           "id": "NTRWBTN2DA-opus16",
@@ -7168,9 +6262,6 @@
     },
     {
       "inscriptId": "NWBWBT",
-      "bibleBrainId": "NWBWBT",
-      "lang": "nwb",
-      "name": "Nyabwa Nwe Testament",
       "audioFilesets": [
         {
           "id": "NWBWBTN2DA",
@@ -7186,9 +6277,6 @@
     },
     {
       "inscriptId": "NWIWBT",
-      "bibleBrainId": "NWIWBT",
-      "lang": "nwi",
-      "name": "Southwest Tanna New Testament",
       "audioFilesets": [
         {
           "id": "NWIWBTP1DA-opus16",
@@ -7204,9 +6292,6 @@
     },
     {
       "inscriptId": "OBOWBT",
-      "bibleBrainId": "OBOWBT",
-      "lang": "obo",
-      "name": "Obo Manobo New Testament",
       "audioFilesets": [
         {
           "id": "OBOWBTN2DA",
@@ -7232,9 +6317,6 @@
     },
     {
       "inscriptId": "OMWWBT",
-      "bibleBrainId": "OMWWBT",
-      "lang": "omw",
-      "name": "South Tairora New Testament",
       "audioFilesets": [
         {
           "id": "OM1TBLN1DA",
@@ -7260,9 +6342,6 @@
     },
     {
       "inscriptId": "OSSIBT",
-      "bibleBrainId": "OSSIBT",
-      "lang": "oss",
-      "name": "Ossetian New Testament and Old Testament Portions",
       "audioFilesets": [
         {
           "id": "OSSIBTN2DA",
@@ -7278,9 +6357,6 @@
     },
     {
       "inscriptId": "PABTBL",
-      "bibleBrainId": "PABTBL",
-      "lang": "pab",
-      "name": "Parecís New Testament",
       "audioFilesets": [
         {
           "id": "PABTBLN2DA-opus16",
@@ -7296,9 +6372,6 @@
     },
     {
       "inscriptId": "PADWBT",
-      "bibleBrainId": "PADWBT",
-      "lang": "pad",
-      "name": "Paumarí New Testament",
       "audioFilesets": [
         {
           "id": "PADTBLN2DA",
@@ -7314,9 +6387,6 @@
     },
     {
       "inscriptId": "PAONAB",
-      "bibleBrainId": "PAONAB",
-      "lang": "pao",
-      "name": "Northern Paiute New Testament",
       "audioFilesets": [
         {
           "id": "PAONABN1DA-opus16",
@@ -7332,9 +6402,6 @@
     },
     {
       "inscriptId": "PIBWBT",
-      "bibleBrainId": "PIBWBT",
-      "lang": "pib",
-      "name": "Yine New Testament",
       "audioFilesets": [
         {
           "id": "PIBWBTN2DA",
@@ -7360,9 +6427,6 @@
     },
     {
       "inscriptId": "PIRWBT",
-      "bibleBrainId": "PIRWBT",
-      "lang": "pir",
-      "name": "Piratapuyo New Testament",
       "audioFilesets": [
         {
           "id": "PIRWBTN2DA",
@@ -7378,9 +6442,6 @@
     },
     {
       "inscriptId": "PLSWBT",
-      "bibleBrainId": "PLSWBT",
-      "lang": "pls",
-      "name": "San Marcos Tlalcoyalco Popoloca New Testament",
       "audioFilesets": [
         {
           "id": "PLSWYIN1DA-opus16",
@@ -7406,9 +6467,6 @@
     },
     {
       "inscriptId": "PLUWBT",
-      "bibleBrainId": "PLUWBT",
-      "lang": "plu",
-      "name": "Palikúr New Testament",
       "audioFilesets": [
         {
           "id": "PLUWBTN2DA-opus16",
@@ -7434,9 +6492,6 @@
     },
     {
       "inscriptId": "PLWWBT",
-      "bibleBrainId": "PLWWBT",
-      "lang": "plw",
-      "name": "Brooke's Point Palawano 2013 Edition",
       "audioFilesets": [
         {
           "id": "PLWWBTN2DA",
@@ -7462,9 +6517,6 @@
     },
     {
       "inscriptId": "POIWBT",
-      "bibleBrainId": "POIWBT",
-      "lang": "poi",
-      "name": "Highland Popoluca New Testament",
       "audioFilesets": [
         {
           "id": "POITBLN1DA-opus16",
@@ -7490,9 +6542,6 @@
     },
     {
       "inscriptId": "PPKLAI",
-      "bibleBrainId": "PPKLAI",
-      "lang": "ppk",
-      "name": "Uma 1996 Edition",
       "audioFilesets": [
         {
           "id": "PPKLAIN1DA",
@@ -7518,9 +6567,6 @@
     },
     {
       "inscriptId": "PRFWBT",
-      "bibleBrainId": "PRFWBT",
-      "lang": "prf",
-      "name": "Paranan New Testament",
       "audioFilesets": [
         {
           "id": "PRFWBTN2DA",
@@ -7536,9 +6582,6 @@
     },
     {
       "inscriptId": "PRQWBT",
-      "bibleBrainId": "PRQWBT",
-      "lang": "prq",
-      "name": "Ashéninka Perené",
       "audioFilesets": [
         {
           "id": "PRQWBTN1DA",
@@ -7564,9 +6607,6 @@
     },
     {
       "inscriptId": "PTULAI",
-      "bibleBrainId": "PTULAI",
-      "lang": "ptu",
-      "name": "Bambam Bible",
       "audioFilesets": [
         {
           "id": "PTULAIN2DA",
@@ -7582,9 +6622,6 @@
     },
     {
       "inscriptId": "PWGWBT",
-      "bibleBrainId": "PWGWBT",
-      "lang": "pwg",
-      "name": "Gapapaiwa New Testament",
       "audioFilesets": [
         {
           "id": "PWGWBTN1DA-opus16",
@@ -7610,9 +6647,6 @@
     },
     {
       "inscriptId": "QUBPBS",
-      "bibleBrainId": "QUBPBS",
-      "lang": "qub",
-      "name": "Huallaga Huánuco Quechua Bible",
       "audioFilesets": [
         {
           "id": "QUBWTCO1DA-opus16",
@@ -7638,9 +6672,6 @@
     },
     {
       "inscriptId": "QULSBB",
-      "bibleBrainId": "QULSBB",
-      "lang": "qul",
-      "name": "North Bolivian Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QULSBBN2DA",
@@ -7656,9 +6687,6 @@
     },
     {
       "inscriptId": "QUPTBL",
-      "bibleBrainId": "QUPTBL",
-      "lang": "qup",
-      "name": "Southern Pastaza Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QUPTBLN2DA",
@@ -7674,9 +6702,6 @@
     },
     {
       "inscriptId": "QVETBL",
-      "bibleBrainId": "QVETBL",
-      "lang": "qve",
-      "name": "Eastern Apurímac Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QVETBLN2DA",
@@ -7692,9 +6717,6 @@
     },
     {
       "inscriptId": "QVHLLB",
-      "bibleBrainId": "QVHLLB",
-      "lang": "qvh",
-      "name": "Huamalíes-Dos de Mayo Huánuco Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QEJLLBN1DA-opus16",
@@ -7720,9 +6742,6 @@
     },
     {
       "inscriptId": "QVMTBL",
-      "bibleBrainId": "QVMTBL",
-      "lang": "qvm",
-      "name": "Margos-Yarowilca-Lauricocha Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QVMTBLN2DA-opus16",
@@ -7738,9 +6757,6 @@
     },
     {
       "inscriptId": "QVNLLB",
-      "bibleBrainId": "QVNLLB",
-      "lang": "qvn",
-      "name": "North Junín Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QVNLLBN2DA-opus16",
@@ -7756,9 +6772,6 @@
     },
     {
       "inscriptId": "QVSTBL",
-      "bibleBrainId": "QVSTBL",
-      "lang": "qvs",
-      "name": "San Martín Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QVSTBLN2DA-opus16",
@@ -7774,9 +6787,6 @@
     },
     {
       "inscriptId": "QVWTBL",
-      "bibleBrainId": "QVWTBL",
-      "lang": "qvw",
-      "name": "Huaylla Wanca Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QVWTBLN2DA",
@@ -7792,9 +6802,6 @@
     },
     {
       "inscriptId": "QVZWBT",
-      "bibleBrainId": "QVZWBT",
-      "lang": "qvz",
-      "name": "Northern Pastaza Quichua New Testament",
       "audioFilesets": [
         {
           "id": "QVZWBTN2DA",
@@ -7810,9 +6817,6 @@
     },
     {
       "inscriptId": "QXHWBT",
-      "bibleBrainId": "QXHWBT",
-      "lang": "qxh",
-      "name": "Panao Huánuco Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QXHWBTN2DA-opus16",
@@ -7828,9 +6832,6 @@
     },
     {
       "inscriptId": "QXNWBT",
-      "bibleBrainId": "QXNWBT",
-      "lang": "qxn",
-      "name": "Northern Conchucos Ancash Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QXNWBTN2DA-opus16",
@@ -7846,9 +6847,6 @@
     },
     {
       "inscriptId": "QXOLLB",
-      "bibleBrainId": "QXOLLB",
-      "lang": "qxo",
-      "name": "Southern Conchucos Ancash Quechua New Testament",
       "audioFilesets": [
         {
           "id": "QXOLLBN2DA-opus16",
@@ -7864,9 +6862,6 @@
     },
     {
       "inscriptId": "RAITBL",
-      "bibleBrainId": "RAITBL",
-      "lang": "rai",
-      "name": "Ramoaaina New Testament",
       "audioFilesets": [
         {
           "id": "RAITBLN1DA",
@@ -7882,9 +6877,6 @@
     },
     {
       "inscriptId": "RAPWBT",
-      "bibleBrainId": "RAPWBT",
-      "lang": "rap",
-      "name": "New Testament in Rapa Nui",
       "audioFilesets": [
         {
           "id": "RAPWBTN1DA",
@@ -7910,9 +6902,6 @@
     },
     {
       "inscriptId": "RGUUBB",
-      "bibleBrainId": "RGUUBB",
-      "lang": "rgu",
-      "name": "Rote Rikou Bible",
       "audioFilesets": [
         {
           "id": "RGUUBBN1DA",
@@ -7938,9 +6927,6 @@
     },
     {
       "inscriptId": "ROWUBB",
-      "bibleBrainId": "ROWUBB",
-      "lang": "row",
-      "name": "Rote Dela Bible",
       "audioFilesets": [
         {
           "id": "ROWUBBN2DA",
@@ -7976,9 +6962,6 @@
     },
     {
       "inscriptId": "RROPNG",
-      "bibleBrainId": "RROPNG",
-      "lang": "rro",
-      "name": "Waima New Testament",
       "audioFilesets": [
         {
           "id": "RROPNGN1DA",
@@ -8004,9 +6987,6 @@
     },
     {
       "inscriptId": "RUBWBT",
-      "bibleBrainId": "RUBWBT",
-      "lang": "rub",
-      "name": "Gungu 2017 Edition",
       "audioFilesets": [
         {
           "id": "RUBWBTN2DA",
@@ -8032,9 +7012,6 @@
     },
     {
       "inscriptId": "RUFPWW",
-      "bibleBrainId": "RUFPWW",
-      "lang": "ruf",
-      "name": "Luguru New Testament",
       "audioFilesets": [
         {
           "id": "RUFPBTN1DA",
@@ -8050,9 +7027,6 @@
     },
     {
       "inscriptId": "RUGWBT",
-      "bibleBrainId": "RUGWBT",
-      "lang": "rug",
-      "name": "Roviana Bible",
       "audioFilesets": [
         {
           "id": "RUGWBTN1DA-opus16",
@@ -8078,9 +7052,6 @@
     },
     {
       "inscriptId": "RUSS76",
-      "bibleBrainId": "RUSS76",
-      "lang": "rus",
-      "name": "Russian Synodal Translation",
       "audioFilesets": [
         {
           "id": "RUSS76N2DA",
@@ -8106,9 +7077,6 @@
     },
     {
       "inscriptId": "SABWBT",
-      "bibleBrainId": "SABWBT",
-      "lang": "sab",
-      "name": "Buglere New Testament",
       "audioFilesets": [
         {
           "id": "SABWBTN2DA-opus16",
@@ -8124,9 +7092,6 @@
     },
     {
       "inscriptId": "SAHIBT",
-      "bibleBrainId": "SAHIBT",
-      "lang": "sah",
-      "name": "Yakut New Testaments and Old Testament Portions",
       "audioFilesets": [
         {
           "id": "SAHIBTN2DA-opus16",
@@ -8172,9 +7137,6 @@
     },
     {
       "inscriptId": "SBEWBT",
-      "bibleBrainId": "SBEWBT",
-      "lang": "sbe",
-      "name": "Matthew and Mark in the Saliba language of Papua New Guinea",
       "audioFilesets": [
         {
           "id": "SBEWBTN1DA-opus16",
@@ -8190,9 +7152,6 @@
     },
     {
       "inscriptId": "SESNEW",
-      "bibleBrainId": "SESNEW",
-      "lang": "ses",
-      "name": "Songhai Bible (Gao)",
       "audioFilesets": [
         {
           "id": "SESVMVN1DA",
@@ -8208,9 +7167,6 @@
     },
     {
       "inscriptId": "SEYWBT",
-      "bibleBrainId": "SEYWBT",
-      "lang": "sey",
-      "name": "Secoya New Testament",
       "audioFilesets": [
         {
           "id": "SEYWBTN2DA-opus16",
@@ -8236,9 +7192,6 @@
     },
     {
       "inscriptId": "SGBTBL",
-      "bibleBrainId": "SGBTBL",
-      "lang": "sgb",
-      "name": "Mag-antsi Ayta New Testament",
       "audioFilesets": [
         {
           "id": "SGBTBLN2DA-opus16",
@@ -8254,9 +7207,6 @@
     },
     {
       "inscriptId": "SHPTBL",
-      "bibleBrainId": "SHPTBL",
-      "lang": "shp",
-      "name": "Shipibo-Conibo Bible",
       "audioFilesets": [
         {
           "id": "SHPTBLN2DA-opus16",
@@ -8272,9 +7222,6 @@
     },
     {
       "inscriptId": "SIGWBT",
-      "bibleBrainId": "SIGWBT",
-      "lang": "sig",
-      "name": "The New Testament in Sisaala-Paasaal (Ghana)",
       "audioFilesets": [
         {
           "id": "SIGWBTN2DA",
@@ -8290,9 +7237,6 @@
     },
     {
       "inscriptId": "SJATBL",
-      "bibleBrainId": "SJATBL",
-      "lang": "sja",
-      "name": "Epena New Testament &amp; OT Portions",
       "audioFilesets": [
         {
           "id": "SJATBLN2DA-opus16",
@@ -8308,9 +7252,6 @@
     },
     {
       "inscriptId": "SJMWBT",
-      "bibleBrainId": "SJMWBT",
-      "lang": "sjm",
-      "name": "Mapun New Testament",
       "audioFilesets": [
         {
           "id": "SJMWBTP2DA",
@@ -8356,9 +7297,6 @@
     },
     {
       "inscriptId": "SMKWBT",
-      "bibleBrainId": "SMKWBT",
-      "lang": "smk",
-      "name": "Bolinao New Testament",
       "audioFilesets": [
         {
           "id": "SMKWBTN2DA",
@@ -8384,9 +7322,6 @@
     },
     {
       "inscriptId": "SNNWBT",
-      "bibleBrainId": "SNNWBT",
-      "lang": "snn",
-      "name": "Siona New Testament",
       "audioFilesets": [
         {
           "id": "SNNWBTN1DA",
@@ -8412,9 +7347,6 @@
     },
     {
       "inscriptId": "SNPWBT",
-      "bibleBrainId": "SNPWBT",
-      "lang": "snp",
-      "name": "Siane Komongu New Testament",
       "audioFilesets": [
         {
           "id": "SNPWBTN1DA",
@@ -8440,9 +7372,6 @@
     },
     {
       "inscriptId": "SNWWBT",
-      "bibleBrainId": "SNWWBT",
-      "lang": "snw",
-      "name": "The New Testament the Sɛlɛɛ language (Ghana)",
       "audioFilesets": [
         {
           "id": "SNWWBTN2DA-opus16",
@@ -8458,9 +7387,6 @@
     },
     {
       "inscriptId": "SOMSIM",
-      "bibleBrainId": "SOMSIM",
-      "lang": "som",
-      "name": "Somali Bible (SIM)",
       "audioFilesets": [
         {
           "id": "SOMSIMO2DA-opus16",
@@ -8486,9 +7412,6 @@
     },
     {
       "inscriptId": "SOYSIM",
-      "bibleBrainId": "SOYSIM",
-      "lang": "soy",
-      "name": "Sola New Testament",
       "audioFilesets": [
         {
           "id": "SOYSIMN1DA",
@@ -8514,9 +7437,6 @@
     },
     {
       "inscriptId": "SPAWTC",
-      "bibleBrainId": "SPAWTC",
-      "lang": "spa",
-      "name": "The Word of God for All",
       "audioFilesets": [
         {
           "id": "SPNWTCN2DA",
@@ -8542,9 +7462,6 @@
     },
     {
       "inscriptId": "SPPTBL",
-      "bibleBrainId": "SPPTBL",
-      "lang": "spp",
-      "name": "Supyire Sénoufo New Testament",
       "audioFilesets": [
         {
           "id": "SPPTBLN2DA-opus16",
@@ -8560,9 +7477,6 @@
     },
     {
       "inscriptId": "SPYWBT",
-      "bibleBrainId": "SPYWBT",
-      "lang": "spy",
-      "name": "Sabaot New Testament",
       "audioFilesets": [
         {
           "id": "SPYWBTN2DA",
@@ -8578,9 +7492,6 @@
     },
     {
       "inscriptId": "SRIWBT",
-      "bibleBrainId": "SRIWBT",
-      "lang": "sri",
-      "name": "Siriano New Testament",
       "audioFilesets": [
         {
           "id": "SRIWBTN2DA-opus16",
@@ -8596,9 +7507,6 @@
     },
     {
       "inscriptId": "SRMWBT",
-      "bibleBrainId": "SRMWBT",
-      "lang": "srm",
-      "name": "Saramaccan New Testament",
       "audioFilesets": [
         {
           "id": "SRMWBTN2DA-opus16",
@@ -8614,9 +7522,6 @@
     },
     {
       "inscriptId": "SRNBSS",
-      "bibleBrainId": "SRNBSS",
-      "lang": "srn",
-      "name": "Sranan New Testament",
       "audioFilesets": [
         {
           "id": "SRNBSSO1DA",
@@ -8652,9 +7557,6 @@
     },
     {
       "inscriptId": "STPTBL",
-      "bibleBrainId": "STPTBL",
-      "lang": "stp",
-      "name": "Southeastern Tepehuan New Testament",
       "audioFilesets": [
         {
           "id": "STPTBLN1DA",
@@ -8670,9 +7572,6 @@
     },
     {
       "inscriptId": "SUCWBT",
-      "bibleBrainId": "SUCWBT",
-      "lang": "suc",
-      "name": "Western Subanon New Testament",
       "audioFilesets": [
         {
           "id": "SUCWBTN1DA-opus16",
@@ -8698,9 +7597,6 @@
     },
     {
       "inscriptId": "SUSPBT",
-      "bibleBrainId": "SUSPBT",
-      "lang": "sus",
-      "name": "Susu New Testament",
       "audioFilesets": [
         {
           "id": "SUSPBTN2DA-opus16",
@@ -8716,9 +7612,6 @@
     },
     {
       "inscriptId": "SUZWBT",
-      "bibleBrainId": "SUZWBT",
-      "lang": "suz",
-      "name": "Sunwar Bible",
       "audioFilesets": [
         {
           "id": "SUZWBTN1DA",
@@ -8744,9 +7637,6 @@
     },
     {
       "inscriptId": "SXBWBT",
-      "bibleBrainId": "SXBWBT",
-      "lang": "sxb",
-      "name": "Suba New Testament",
       "audioFilesets": [
         {
           "id": "SXBBTLN2DA-opus16",
@@ -8772,9 +7662,6 @@
     },
     {
       "inscriptId": "TACPBC",
-      "bibleBrainId": "TACPBC",
-      "lang": "tac",
-      "name": "Western Tarahumara New Testament",
       "audioFilesets": [
         {
           "id": "TACPBCN1DA-opus16",
@@ -8790,9 +7677,6 @@
     },
     {
       "inscriptId": "TAJWBT",
-      "bibleBrainId": "TAJWBT",
-      "lang": "taj",
-      "name": "Eastern Tamang New Testament",
       "audioFilesets": [
         {
           "id": "TAJWBTN2DA",
@@ -8808,9 +7692,6 @@
     },
     {
       "inscriptId": "TAQWBT",
-      "bibleBrainId": "TAQWBT",
-      "lang": "taq",
-      "name": "Tamasheq 2003 Edition",
       "audioFilesets": [
         {
           "id": "TAQWBTN1DA-opus16",
@@ -8836,9 +7717,6 @@
     },
     {
       "inscriptId": "TATIBT",
-      "bibleBrainId": "TATIBT",
-      "lang": "tat",
-      "name": "Tatar New Testament",
       "audioFilesets": [
         {
           "id": "TTRIBTN2DA-opus16",
@@ -8854,9 +7732,6 @@
     },
     {
       "inscriptId": "TAVWBT",
-      "bibleBrainId": "TAVWBT",
-      "lang": "tav",
-      "name": "Tatuyo New Testament",
       "audioFilesets": [
         {
           "id": "TAVWBTN2DA",
@@ -8882,9 +7757,6 @@
     },
     {
       "inscriptId": "TBCPNG",
-      "bibleBrainId": "TBCPNG",
-      "lang": "tbc",
-      "name": "Takia New Testament",
       "audioFilesets": [
         {
           "id": "TBCPNGN2DA",
@@ -8900,9 +7772,6 @@
     },
     {
       "inscriptId": "TBGWBT",
-      "bibleBrainId": "TBGWBT",
-      "lang": "tbg",
-      "name": "North Tairora New Testament",
       "audioFilesets": [
         {
           "id": "TBGTBLN1DA",
@@ -8918,9 +7787,6 @@
     },
     {
       "inscriptId": "TBLWBT",
-      "bibleBrainId": "TBLWBT",
-      "lang": "tbl",
-      "name": "Tboli New Testament",
       "audioFilesets": [
         {
           "id": "TBLWYIN2DA",
@@ -8946,9 +7812,6 @@
     },
     {
       "inscriptId": "TERTBL",
-      "bibleBrainId": "TERTBL",
-      "lang": "ter",
-      "name": "Terêna New Testament",
       "audioFilesets": [
         {
           "id": "TERTBLN2DA",
@@ -8964,9 +7827,6 @@
     },
     {
       "inscriptId": "TEWBDV",
-      "bibleBrainId": "TEWBDV",
-      "lang": "tew",
-      "name": "Tewa New Testament",
       "audioFilesets": [
         {
           "id": "TEWBTTP1DA-opus16",
@@ -8982,9 +7842,6 @@
     },
     {
       "inscriptId": "TFRWBT",
-      "bibleBrainId": "TFRWBT",
-      "lang": "tfr",
-      "name": "Teribe Bible",
       "audioFilesets": [
         {
           "id": "TFRWBTN2DA",
@@ -9000,9 +7857,6 @@
     },
     {
       "inscriptId": "TGKIBT",
-      "bibleBrainId": "TGKIBT",
-      "lang": "tgk",
-      "name": "Tajik Bible",
       "audioFilesets": [
         {
           "id": "TGKIBTN2DA",
@@ -9018,9 +7872,6 @@
     },
     {
       "inscriptId": "TGPWBT",
-      "bibleBrainId": "TGPWBT",
-      "lang": "tgp",
-      "name": "Tangoa New Testament",
       "audioFilesets": [
         {
           "id": "TGPWBTN2DA-opus16",
@@ -9036,9 +7887,6 @@
     },
     {
       "inscriptId": "THVWBT",
-      "bibleBrainId": "THVWBT",
-      "lang": "thv",
-      "name": "Tamahaq (written version)",
       "audioFilesets": [
         {
           "id": "THVWBTP1DA",
@@ -9054,9 +7902,6 @@
     },
     {
       "inscriptId": "TKRIBT",
-      "bibleBrainId": "TKRIBT",
-      "lang": "tkr",
-      "name": "Book of Proverbs in Tsakhur",
       "audioFilesets": [
         {
           "id": "TKRIBTP1DA-opus16",
@@ -9072,9 +7917,6 @@
     },
     {
       "inscriptId": "TLJWBT",
-      "bibleBrainId": "TLJWBT",
-      "lang": "tlj",
-      "name": "Talinga-Bwisi New Testament",
       "audioFilesets": [
         {
           "id": "TLJWBTN2DA-opus16",
@@ -9100,9 +7942,6 @@
     },
     {
       "inscriptId": "TNCBLI",
-      "bibleBrainId": "TNCBLI",
-      "lang": "tnc",
-      "name": "Tanimuca-Retuarã New Testament portions",
       "audioFilesets": [
         {
           "id": "TNCWBTP1DA-opus16",
@@ -9128,9 +7967,6 @@
     },
     {
       "inscriptId": "TNKWBT",
-      "bibleBrainId": "TNKWBT",
-      "lang": "tnk",
-      "name": "Kwamera New Testament",
       "audioFilesets": [
         {
           "id": "TNKWBTN1DA-opus16",
@@ -9146,9 +7982,6 @@
     },
     {
       "inscriptId": "TOCTBL",
-      "bibleBrainId": "TOCTBL",
-      "lang": "toc",
-      "name": "Coyutla Totonac New Testament",
       "audioFilesets": [
         {
           "id": "TOCTBLN2DA",
@@ -9164,9 +7997,6 @@
     },
     {
       "inscriptId": "TODPBT",
-      "bibleBrainId": "TODPBT",
-      "lang": "tod",
-      "name": "Toma Bible Portions",
       "audioFilesets": [
         {
           "id": "TODPBTP2DA",
@@ -9182,9 +8012,6 @@
     },
     {
       "inscriptId": "TPIPNG",
-      "bibleBrainId": "TPIPNG",
-      "lang": "tpi",
-      "name": "Tok Pisin Bible (Portions)",
       "audioFilesets": [
         {
           "id": "TPIPNGS1DA",
@@ -9230,9 +8057,6 @@
     },
     {
       "inscriptId": "TPZWBT",
-      "bibleBrainId": "TPZWBT",
-      "lang": "tpz",
-      "name": "Tinputz Vasui New Testament",
       "audioFilesets": [
         {
           "id": "TPZWBTN2DA",
@@ -9248,9 +8072,6 @@
     },
     {
       "inscriptId": "TTCWBT",
-      "bibleBrainId": "TTCWBT",
-      "lang": "ttc",
-      "name": "Tektiteko New Testament",
       "audioFilesets": [
         {
           "id": "TTCWBTN1DA-opus16",
@@ -9276,9 +8097,6 @@
     },
     {
       "inscriptId": "TTEWBT",
-      "bibleBrainId": "TTEWBT",
-      "lang": "tte",
-      "name": "Bwanabwana 2003 Edition",
       "audioFilesets": [
         {
           "id": "TTEWBTN1DA-opus16",
@@ -9304,9 +8122,6 @@
     },
     {
       "inscriptId": "TUEWBT",
-      "bibleBrainId": "TUEWBT",
-      "lang": "tue",
-      "name": "Tuyuca New Testament",
       "audioFilesets": [
         {
           "id": "TUEWBTN2DA-opus16",
@@ -9322,9 +8137,6 @@
     },
     {
       "inscriptId": "TUFWYI",
-      "bibleBrainId": "TUFWYI",
-      "lang": "tuf",
-      "name": "Central Tunebo New Testament",
       "audioFilesets": [
         {
           "id": "TUFWYIN2DA-opus16",
@@ -9350,9 +8162,6 @@
     },
     {
       "inscriptId": "TUKIBT",
-      "bibleBrainId": "TUKIBT",
-      "lang": "tuk",
-      "name": "Turkmen Bible",
       "audioFilesets": [
         {
           "id": "TUKIBTN2DA-opus16",
@@ -9398,9 +8207,6 @@
     },
     {
       "inscriptId": "TUOWBT",
-      "bibleBrainId": "TUOWBT",
-      "lang": "tuo",
-      "name": "Tucano New Testament",
       "audioFilesets": [
         {
           "id": "TUOWBTN2DA-opus16",
@@ -9416,9 +8222,6 @@
     },
     {
       "inscriptId": "TXUTBL",
-      "bibleBrainId": "TXUTBL",
-      "lang": "txu",
-      "name": "Kayapó New Testament",
       "audioFilesets": [
         {
           "id": "TXUTBLN1DA",
@@ -9444,9 +8247,6 @@
     },
     {
       "inscriptId": "TYVIBT",
-      "bibleBrainId": "TYVIBT",
-      "lang": "tyv",
-      "name": "Tuvan Bible",
       "audioFilesets": [
         {
           "id": "TYVIBTO1DA-opus16",
@@ -9492,9 +8292,6 @@
     },
     {
       "inscriptId": "UBUAND",
-      "bibleBrainId": "UBUAND",
-      "lang": "ubu",
-      "name": "Umbu Ungu - Andelale 1998 Edition",
       "audioFilesets": [
         {
           "id": "UBUANDN2DA-opus16",
@@ -9520,9 +8317,6 @@
     },
     {
       "inscriptId": "UDUSIM",
-      "bibleBrainId": "UDUSIM",
-      "lang": "udu",
-      "name": "Uduk Bible",
       "audioFilesets": [
         {
           "id": "UDUSIMN2DA",
@@ -9538,9 +8332,6 @@
     },
     {
       "inscriptId": "UPVWBT",
-      "bibleBrainId": "UPVWBT",
-      "lang": "upv",
-      "name": "Uripiv New Testament",
       "audioFilesets": [
         {
           "id": "UPVWBTN1DA",
@@ -9556,9 +8347,6 @@
     },
     {
       "inscriptId": "URATBL",
-      "bibleBrainId": "URATBL",
-      "lang": "ura",
-      "name": "Urarina New Testament",
       "audioFilesets": [
         {
           "id": "URATBLN2DA-opus16",
@@ -9574,9 +8362,6 @@
     },
     {
       "inscriptId": "URBWBT",
-      "bibleBrainId": "URBWBT",
-      "lang": "urb",
-      "name": "Kaapor New Testament",
       "audioFilesets": [
         {
           "id": "URBWBTN1DA-opus16",
@@ -9602,9 +8387,6 @@
     },
     {
       "inscriptId": "URTWBT",
-      "bibleBrainId": "URTWBT",
-      "lang": "urt",
-      "name": "The New Testament in Urat",
       "audioFilesets": [
         {
           "id": "URTWBTN2DA-opus16",
@@ -9630,9 +8412,6 @@
     },
     {
       "inscriptId": "USPWBT",
-      "bibleBrainId": "USPWBT",
-      "lang": "usp",
-      "name": "Uspanteko New Testament",
       "audioFilesets": [
         {
           "id": "USPWBTN2DA",
@@ -9648,9 +8427,6 @@
     },
     {
       "inscriptId": "WAJWBT",
-      "bibleBrainId": "WAJWBT",
-      "lang": "waj",
-      "name": "Waffa New Testament",
       "audioFilesets": [
         {
           "id": "WAJWBTN1DA-opus16",
@@ -9676,9 +8452,6 @@
     },
     {
       "inscriptId": "WALSIM",
-      "bibleBrainId": "WALSIM",
-      "lang": "wal",
-      "name": "Wolaytta Bible (Latin)",
       "audioFilesets": [
         {
           "id": "WALSIMN2DA-opus16",
@@ -9694,9 +8467,6 @@
     },
     {
       "inscriptId": "WAPWBT",
-      "bibleBrainId": "WAPWBT",
-      "lang": "wap",
-      "name": "Wapishana New Testament",
       "audioFilesets": [
         {
           "id": "WAPWYIN1DA-opus16",
@@ -9722,9 +8492,6 @@
     },
     {
       "inscriptId": "WMWWYI",
-      "bibleBrainId": "WMWWYI",
-      "lang": "wmw",
-      "name": "Mwani New Testament",
       "audioFilesets": [
         {
           "id": "WMWWYIN2DA",
@@ -9740,9 +8507,6 @@
     },
     {
       "inscriptId": "WOBWBT",
-      "bibleBrainId": "WOBWBT",
-      "lang": "wob",
-      "name": "We Northern 2010 Edition",
       "audioFilesets": [
         {
           "id": "WOBWBTN2DA",
@@ -9758,9 +8522,6 @@
     },
     {
       "inscriptId": "XALIBT",
-      "bibleBrainId": "XALIBT",
-      "lang": "xal",
-      "name": "Kalmyk Oirat New Testament and Old Testament Portions",
       "audioFilesets": [
         {
           "id": "XALIBTP2DA",
@@ -9806,9 +8567,6 @@
     },
     {
       "inscriptId": "XEDWYI",
-      "bibleBrainId": "XEDWYI",
-      "lang": "xed",
-      "name": "Hdi New Testament",
       "audioFilesets": [
         {
           "id": "XEDWYIN2DA-opus16",
@@ -9834,9 +8592,6 @@
     },
     {
       "inscriptId": "XRBWBT",
-      "bibleBrainId": "XRBWBT",
-      "lang": "xrb",
-      "name": "Eastern Karaboro 1993 Edition",
       "audioFilesets": [
         {
           "id": "XRBWBTN2DA-opus16",
@@ -9852,9 +8607,6 @@
     },
     {
       "inscriptId": "XSMBFV",
-      "bibleBrainId": "XSMBFV",
-      "lang": "xsm",
-      "name": "Burkina Faso Kasem 1997 Edition",
       "audioFilesets": [
         {
           "id": "XSMBFVN1DA-opus16",
@@ -9880,9 +8632,6 @@
     },
     {
       "inscriptId": "XTDTBL",
-      "bibleBrainId": "XTDTBL",
-      "lang": "xtd",
-      "name": "Diuxi-tilantongo Mixtec New Testament",
       "audioFilesets": [
         {
           "id": "XTDTBLN1DA",
@@ -9908,9 +8657,6 @@
     },
     {
       "inscriptId": "XTMWBT",
-      "bibleBrainId": "XTMWBT",
-      "lang": "xtm",
-      "name": "Magdalena Peñasco Mixtec Bible",
       "audioFilesets": [
         {
           "id": "XTMTBLN2DA",
@@ -9936,9 +8682,6 @@
     },
     {
       "inscriptId": "XUOWBT",
-      "bibleBrainId": "XUOWBT",
-      "lang": "xuo",
-      "name": "Kuo 2013 Edition",
       "audioFilesets": [
         {
           "id": "XUOWBTN2DA",
@@ -9964,9 +8707,6 @@
     },
     {
       "inscriptId": "YADTBL",
-      "bibleBrainId": "YADTBL",
-      "lang": "yad",
-      "name": "Yagua New Testament",
       "audioFilesets": [
         {
           "id": "YADTBLN2DA",
@@ -9982,9 +8722,6 @@
     },
     {
       "inscriptId": "YALPBT",
-      "bibleBrainId": "YALPBT",
-      "lang": "yal",
-      "name": "Yalunka Bible",
       "audioFilesets": [
         {
           "id": "YALPBTN2DA",
@@ -10000,9 +8737,6 @@
     },
     {
       "inscriptId": "YAMWBT",
-      "bibleBrainId": "YAMWBT",
-      "lang": "yam",
-      "name": "Yamba 1992 Edition",
       "audioFilesets": [
         {
           "id": "YAMWBTN2DA-opus16",
@@ -10018,9 +8752,6 @@
     },
     {
       "inscriptId": "YCNWBT",
-      "bibleBrainId": "YCNWBT",
-      "lang": "ycn",
-      "name": "Yucuna New Testament &amp; OT Portions",
       "audioFilesets": [
         {
           "id": "YCNWBTN2DA",
@@ -10036,9 +8767,6 @@
     },
     {
       "inscriptId": "YRKIBT",
-      "bibleBrainId": "YRKIBT",
-      "lang": "yrk",
-      "name": "Mark, Luke, and John in Nenets",
       "audioFilesets": [
         {
           "id": "YRKIBTP1DA",
@@ -10054,9 +8782,6 @@
     },
     {
       "inscriptId": "YVATBL",
-      "bibleBrainId": "YVATBL",
-      "lang": "yva",
-      "name": "Yawa New Testament",
       "audioFilesets": [
         {
           "id": "YVATBLN2DA-opus16",
@@ -10072,9 +8797,6 @@
     },
     {
       "inscriptId": "ZAATBL",
-      "bibleBrainId": "ZAATBL",
-      "lang": "zaa",
-      "name": "Sierra de Juárez Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZAATBLN2DA",
@@ -10090,9 +8812,6 @@
     },
     {
       "inscriptId": "ZACSIM",
-      "bibleBrainId": "ZACSIM",
-      "lang": "zac",
-      "name": "Ocotlán Zapotec",
       "audioFilesets": [
         {
           "id": "ZACSIMP1DA-opus16",
@@ -10108,9 +8827,6 @@
     },
     {
       "inscriptId": "ZADWBT",
-      "bibleBrainId": "ZADWBT",
-      "lang": "zad",
-      "name": "Cajonos Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZADTBLN2DA",
@@ -10126,9 +8842,6 @@
     },
     {
       "inscriptId": "ZAEWBT",
-      "bibleBrainId": "ZAEWBT",
-      "lang": "zae",
-      "name": "Yareni Zapotec Bible",
       "audioFilesets": [
         {
           "id": "ZAEWBTN2DA",
@@ -10144,9 +8857,6 @@
     },
     {
       "inscriptId": "ZAMILM",
-      "bibleBrainId": "ZAMILM",
-      "lang": "zam",
-      "name": "Miahuatlán Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZAMILMP1DA-opus16",
@@ -10162,9 +8872,6 @@
     },
     {
       "inscriptId": "ZAOTBL",
-      "bibleBrainId": "ZAOTBL",
-      "lang": "zao",
-      "name": "Ozolotepec Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZAOTBLN1DA",
@@ -10180,9 +8887,6 @@
     },
     {
       "inscriptId": "ZARTBL",
-      "bibleBrainId": "ZARTBL",
-      "lang": "zar",
-      "name": "Rincón Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZARTBLN2DA-opus16",
@@ -10203,9 +8907,6 @@
     },
     {
       "inscriptId": "ZAWMVR",
-      "bibleBrainId": "ZAWMVR",
-      "lang": "zaw",
-      "name": "Mitla Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZAWOTSS1DA",
@@ -10226,9 +8927,6 @@
     },
     {
       "inscriptId": "ZCAWBT",
-      "bibleBrainId": "ZCAWBT",
-      "lang": "zca",
-      "name": "Coatecas Altas Zapotec",
       "audioFilesets": [
         {
           "id": "ZCAWYIN2DA-opus16",
@@ -10244,9 +8942,6 @@
     },
     {
       "inscriptId": "ZOSTBL",
-      "bibleBrainId": "ZOSTBL",
-      "lang": "zos",
-      "name": "Francisco León Zoque New Testament",
       "audioFilesets": [
         {
           "id": "ZOSTBLN1DA",
@@ -10257,9 +8952,6 @@
     },
     {
       "inscriptId": "ZPCTBL",
-      "bibleBrainId": "ZPCTBL",
-      "lang": "zpc",
-      "name": "Choapan Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZPCTBLN1DA",
@@ -10285,9 +8977,6 @@
     },
     {
       "inscriptId": "ZPIWYI",
-      "bibleBrainId": "ZPIWYI",
-      "lang": "zpi",
-      "name": "Santa María Quiegolani Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZPIWYIN2DA-opus16",
@@ -10303,9 +8992,6 @@
     },
     {
       "inscriptId": "ZPLTBL",
-      "bibleBrainId": "ZPLTBL",
-      "lang": "zpl",
-      "name": "Lachixío Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZPLTBLN1DA",
@@ -10321,9 +9007,6 @@
     },
     {
       "inscriptId": "ZPMTBL",
-      "bibleBrainId": "ZPMTBL",
-      "lang": "zpm",
-      "name": "Mixtepec Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZPMTBLN1DA",
@@ -10334,9 +9017,6 @@
     },
     {
       "inscriptId": "ZPOTBL",
-      "bibleBrainId": "ZPOTBL",
-      "lang": "zpo",
-      "name": "Amatlán Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZPOTBLN1DA-opus16",
@@ -10362,9 +9042,6 @@
     },
     {
       "inscriptId": "ZPQTBL",
-      "bibleBrainId": "ZPQTBL",
-      "lang": "zpq",
-      "name": "Zoogocho Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZPQTBLN2DA-opus16",
@@ -10380,9 +9057,6 @@
     },
     {
       "inscriptId": "ZPTWBT",
-      "bibleBrainId": "ZPTWBT",
-      "lang": "zpt",
-      "name": "Zapoteco de Coatlán New Testament (2015)",
       "audioFilesets": [
         {
           "id": "ZPTTBLN2DA16",
@@ -10408,9 +9082,6 @@
     },
     {
       "inscriptId": "ZPUTBL",
-      "bibleBrainId": "ZPUTBL",
-      "lang": "zpu",
-      "name": "Yalálag Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZPUTBLN1DA",
@@ -10436,9 +9107,6 @@
     },
     {
       "inscriptId": "ZPVTBL",
-      "bibleBrainId": "ZPVTBL",
-      "lang": "zpv",
-      "name": "Chichicapan Zapotec New Testament",
       "audioFilesets": [
         {
           "id": "ZPVTBLP1DA",
@@ -10449,9 +9117,6 @@
     },
     {
       "inscriptId": "ZPZTBL",
-      "bibleBrainId": "ZPZTBL",
-      "lang": "zpz",
-      "name": "Texmelucan Zapotec Bible",
       "audioFilesets": [
         {
           "id": "ZPZTBLN1DA-opus16",
@@ -10477,9 +9142,6 @@
     },
     {
       "inscriptId": "ZTQTBL",
-      "bibleBrainId": "ZTQTBL",
-      "lang": "ztq",
-      "name": "New Testament and Psalms in Quioquitani-Quierí",
       "audioFilesets": [
         {
           "id": "ZTQTBLN1DA-opus16",
@@ -10495,9 +9157,6 @@
     },
     {
       "inscriptId": "ZTYTBL",
-      "bibleBrainId": "ZTYTBL",
-      "lang": "zty",
-      "name": "New Testament and Psalms in Zapotec, Yatee",
       "audioFilesets": [
         {
           "id": "ZTYTBLN1DA",
@@ -10513,9 +9172,6 @@
     },
     {
       "inscriptId": "ZYPWBT",
-      "bibleBrainId": "ZYPWBT",
-      "lang": "zyp",
-      "name": "Zyphe Chin New Testament",
       "audioFilesets": [
         {
           "id": "ZYPWBTN2DA",
