@@ -15,8 +15,7 @@ export class GuidedTourContext {
       dragBy: helpers.dragBy,
       remember: (key, value) => this.memory.set(key, value),
       recall: (key) => this.memory.get(key),
-      addWindow: (className, data) => this.addWindow(className, data),
-      trackNewWindows: (action) => this.trackNewWindows(action)
+      addWindow: (className, data) => this.addWindow(className, data)
     };
   }
 
@@ -57,17 +56,6 @@ export class GuidedTourContext {
     if (added.ready) await added.ready;
     await this.controller.helpers.waitFor(() => document.querySelector(`.window.${className}`));
     return added;
-  }
-
-  async trackNewWindows(action) {
-    const manager = getApp()?.windowManager;
-    const before = new Set(manager?.getWindows().map((windowComponent) => windowComponent.id) ?? []);
-    await action();
-    const step = this.owningStep();
-    if (!manager || !step) return;
-    for (const windowComponent of manager.getWindows()) {
-      if (!before.has(windowComponent.id)) this.recordWindow(step, windowComponent.id);
-    }
   }
 
   closeStepWindows(step) {

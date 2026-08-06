@@ -122,11 +122,6 @@ class ScrollerController {
     scrollTo(this, fragmentid, scrollOffset);
   }
 
-  size(width, height) {
-    this.nodeElement.style.width = `${width}px`;
-    this.nodeElement.style.height = `${height}px`;
-  }
-
   getTextInfo() {
     return this.currentTextInfo;
   }

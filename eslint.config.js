@@ -56,9 +56,7 @@ export default [
       'dist/**',
       'browserbible/dist/**',
       'downloads/**',
-      '**/*.min.js',
-      'browserbible/js/core/config-custom.js',
-      'browserbible/js/core/config-custom-example.js'
+      '**/*.min.js'
     ]
   }
 ];

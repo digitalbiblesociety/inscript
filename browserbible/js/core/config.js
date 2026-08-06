@@ -80,7 +80,6 @@ const defaultConfig = {
   enableAudioWindow: true,
   audioWindowDefaultBibleFragmentid: 'JN1_1',
   audioWindowDefaultBibleVersion: 'ENGESV',
-  enableDeafBibleWindow: true,
   deafBibleWindowDefaultBibleFragmentid: 'JN1_1',
   deafBibleWindowDefaultBibleVersion: 'deaf_ASE',
   deafBibleEnabled: true,

@@ -1,7 +1,6 @@
 const plugins = new Map();
 const windowTypes = new Map();
 const menuComponents = new Map();
-const textProviders = new Map();
 const audioSources = [];
 
 export const VERSION = '5.0.0';
@@ -51,12 +50,6 @@ export const registerMenuComponent = (name, ComponentClass) => {
 
 export const getAllMenuComponents = () => Array.from(menuComponents.entries());
 
-export const registerTextProvider = (name, provider) => {
-  textProviders.set(name, provider);
-};
-
-export const getTextProvider = (name) => textProviders.get(name);
-
 export const registerAudioSource = (source) => {
   audioSources.push(source);
 };
@@ -81,8 +74,6 @@ const registry = {
   getAllWindowTypes,
   registerMenuComponent,
   getAllMenuComponents,
-  registerTextProvider,
-  getTextProvider,
   registerAudioSource,
   getAudioSources,
   setApp,

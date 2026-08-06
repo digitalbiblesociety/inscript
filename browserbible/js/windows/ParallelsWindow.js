@@ -23,7 +23,6 @@ class ParallelsWindowComponent extends BaseWindow {
     };
 
     this.textChooser = getGlobalTextChooser();
-    this.columnFormat = 'inlinetitle';
     // bumped whenever the parallel set or version changes, so in-flight
     // passage loads for the previous table know to stop
     this._loadGeneration = 0;

@@ -77,13 +77,11 @@
 }
 
 /* Jabbok theme adjustments */
-.theme-jabbok .highlighter-toggle.active,
-html.jabbok .highlighter-toggle.active {
+.theme-jabbok .highlighter-toggle.active {
 	background-color: var(--color-highlight);
 }
 
 /* Shiloh theme adjustments */
-.theme-shiloh .highlighter-toggle.active,
-html.shiloh .highlighter-toggle.active {
+.theme-shiloh .highlighter-toggle.active {
 	background-color: var(--color-highlight);
 }

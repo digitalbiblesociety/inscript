@@ -28,9 +28,7 @@ export function loadAudioAssociations() {
   loadPromise ??= import('./biblebrain-audio-associations.json').then(manifest => {
     audioByCode = new Map();
     for (const assoc of manifest.default.audioAssociations ?? []) {
-      // Same-code matches, so index by both (they're equal).
       if (assoc.inscriptId) audioByCode.set(assoc.inscriptId.toUpperCase(), assoc);
-      if (assoc.bibleBrainId) audioByCode.set(assoc.bibleBrainId.toUpperCase(), assoc);
     }
   });
   return loadPromise;

@@ -53,8 +53,6 @@ describe('media index', () => {
     const cached = vi.fn();
     api.getMediaLibraries(cached);
     expect(cached).toHaveBeenCalledWith(one.mock.calls[0][0]);
-    expect(api.show()).toBeUndefined();
-    expect(api.hide()).toBeUndefined();
   });
 
   it('falls back to remote configuration and filters disabled DBS video', async () => {

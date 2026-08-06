@@ -27,8 +27,4 @@ export class MainMenu {
       }
     }
   }
-
-  getComponents() {
-    return this.components;
-  }
 }

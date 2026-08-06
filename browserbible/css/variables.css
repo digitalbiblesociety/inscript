@@ -27,7 +27,6 @@
   --color-division-revelation:       oklch(0.75 0.11 288);
 
   --shadow-sm:    0 1px 2px oklch(0 0 0 / 0.1);
-  --shadow-md:    0 2px 4px oklch(0 0 0 / 0.15);
   --shadow-lg:    0 4px 8px oklch(0 0 0 / 0.2);
   --shadow-popup: 0 2px 10px oklch(0 0 0 / 0.25);
 
@@ -47,11 +46,9 @@
   --font-size-sm: 13px;
   --font-size-md: 15px;
   --font-size-lg: 18px;
-  --font-size-xl: 24px;
 
   --transition-fast:   0.15s ease;
   --transition-normal: 0.25s ease;
-  --transition-slow:   0.4s ease;
 
   --duration-fast:   0.15s;
   --duration-normal: 0.22s;
@@ -72,8 +69,7 @@
 }
 
 
-.theme-jabbok,
-html.jabbok {
+.theme-jabbok {
   --color-primary:            oklch(0.6868 0.157 252.9);
   --color-background:         oklch(0.1776 0 0);
   --color-background-alt:     oklch(0.2178 0 0);
@@ -102,8 +98,7 @@ html.jabbok {
 }
 
 
-.theme-shiloh,
-html.shiloh {
+.theme-shiloh {
   --color-primary:            oklch(0.65 0.13 43);
   --color-background:         oklch(0.30 0.01 70);
   --color-background-alt:     oklch(0.32 0.01 70);
@@ -131,8 +126,7 @@ html.shiloh {
   --color-division-revelation:       oklch(0.60 0.07 288);
 }
 
-.theme-gethsemane,
-html.gethsemane {
+.theme-gethsemane {
   --color-primary:            oklch(0.719 0.1322 264.2);
   --color-background:         oklch(0.2263 0.0214 280.49);
   --color-background-alt:     oklch(0.3056 0.0369 273.23);

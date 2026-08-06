@@ -39,9 +39,9 @@
     "build-dbs-video-media": "node tools/build-dbs-video-media.mjs",
     "lint": "eslint browserbible/js",
     "lint:fix": "eslint browserbible/js --fix",
-    "vd:dev": "vite --config verse-detection/vite.config.js serve verse-detection",
+    "vd:dev": "vite --config verse-detection/vite.config.ts serve verse-detection",
     "vd:build": "vite --config verse-detection/vite.config.ts build && vite --config verse-detection/vite.config.auto.ts build",
-    "vd:preview": "vite --config verse-detection/vite.config.js preview verse-detection",
+    "vd:preview": "vite --config verse-detection/vite.config.ts preview verse-detection",
     "knip": "knip"
   },
   "dependencies": {

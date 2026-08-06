@@ -39,11 +39,6 @@ class MovableWindowController {
     return this.container.matches(':popover-open');
   }
 
-  onToggle(callback) {
-    this.container.addEventListener('toggle', callback);
-    return this;
-  }
-
   destroy() {
     this.container.remove();
   }

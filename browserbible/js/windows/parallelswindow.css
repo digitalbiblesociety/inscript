@@ -49,10 +49,6 @@
 	display: inline;
 }
 
-.parallels-main .passage-notloaded {
-	cursor: pointer;
-	color: var(--color-primary);
-}
 
 .parallel-entry-header {
 	cursor: pointer;

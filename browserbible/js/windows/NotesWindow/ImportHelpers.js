@@ -11,7 +11,7 @@ import { generateId } from './NotesStore.js';
  * Resolve a human reference string ("John 3:16") to the fragmentid the app
  * uses internally, so imported linked notes match the current-verse filter.
  */
-export function normalizeReference(referenceDisplay) {
+function normalizeReference(referenceDisplay) {
   if (!referenceDisplay) return { reference: null, referenceDisplay: null };
   const ref = Reference(referenceDisplay);
   if (ref?.isValid()) {

@@ -153,11 +153,3 @@
   flex-shrink: 0;
 }
 
-.command-palette-section {
-  padding: var(--spacing-xs) var(--spacing-md) 2px;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}

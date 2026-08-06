@@ -52,10 +52,8 @@ export function renderParallelTable(component) {
   const data = component.state.currentParallelData;
   const html = createHeader(component, data);
   html.push(`<table dir="${component.state.currentTextInfo?.dir ?? 'ltr'}">`);
-  if (component.columnFormat === 'inlinetitle') {
-    const style = ` style="width: ${100 / (data.books.length + 1)}%"`;
-    html.push('<tbody>', ...createRows(component, style), '</tbody>');
-  }
+  const style = ` style="width: ${100 / (data.books.length + 1)}%"`;
+  html.push('<tbody>', ...createRows(component, style), '</tbody>');
   html.push('</table>');
   component.refs.main.innerHTML = html.join('');
 }

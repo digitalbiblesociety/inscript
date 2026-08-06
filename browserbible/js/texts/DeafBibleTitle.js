@@ -4,7 +4,7 @@
 import { BOOK_DATA } from '../bible/BibleData.js';
 import { toBcp47Lang } from '../lib/bcp47.js';
 
-export const escapeHtml = (s) => String(s ?? '')
+const escapeHtml = (s) => String(s ?? '')
   .replace(/&/g, '&amp;')
   .replace(/</g, '&lt;')
   .replace(/>/g, '&gt;')

@@ -49,7 +49,3 @@
 	color: #7aa2f7;
 }
 
-#config-theme-auto {
-	background: linear-gradient(135deg, oklch(1 0 0) 50%, oklch(0.1776 0 0) 50%);
-	color: oklch(0.5103 0 0);
-}

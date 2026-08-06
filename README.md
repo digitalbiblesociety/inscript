@@ -1,5 +1,7 @@
 # inScript
 
+[![Maintainability](https://qlty.sh/gh/digitalbiblesociety/projects/inscript/maintainability.svg)](https://qlty.sh/gh/digitalbiblesociety/projects/inscript) [![Code Coverage](https://qlty.sh/gh/digitalbiblesociety/projects/inscript/coverage.svg)](https://qlty.sh/gh/digitalbiblesociety/projects/inscript)
+
 Bible study software that runs entirely in the browser: read, listen to, and search
 translations in many languages, side by side, online or from local files. Vanilla ES6
 with a plugin architecture, bundled with [Vite](https://vitejs.dev/). Originally created by

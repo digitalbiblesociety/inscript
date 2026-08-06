@@ -445,20 +445,6 @@ body.window-reordering .windows-header {
 }
 
 
-.window-overlay {
-	position: absolute;
-	top: 50px;
-	right: 10px;
-	width: 300px;
-	height: 300px;
-	padding: 25px 25px 0;
-	background: var(--color-background);
-	border: solid 1px var(--color-border);
-	box-shadow: var(--shadow-popup);
-	display: none;
-	z-index: var(--z-overlay);
-	overflow: auto;
-}
 
 #about h1 {
 	font-size: 18pt;

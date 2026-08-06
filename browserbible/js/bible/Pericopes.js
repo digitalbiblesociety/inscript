@@ -11,7 +11,7 @@
 import { BOOK_DATA } from './BibleData.js';
 import { toBcp47Lang } from '../lib/bcp47.js';
 
-export const PERICOPE_LOCALES = new Set([
+const PERICOPE_LOCALES = new Set([
   'ar', 'bn', 'de', 'en', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'pt', 'ru', 'ur', 'zh-CN'
 ]);
 

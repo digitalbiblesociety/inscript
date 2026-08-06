@@ -10,7 +10,7 @@ export const NUMBERING_SYSTEM_DIGITS = Object.freeze({
 });
 
 /** Default vernacular numbering system for languages currently supported here. */
-export const NUMBERING_SYSTEM_BY_LANGUAGE = Object.freeze({
+const NUMBERING_SYSTEM_BY_LANGUAGE = Object.freeze({
   ar: 'arab',
   bn: 'beng',
   hi: 'deva',

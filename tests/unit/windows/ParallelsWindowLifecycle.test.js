@@ -70,7 +70,7 @@ describe('ParallelsWindow lifecycle', () => {
     document.body.innerHTML = '';
   });
 
-  it('initializes state, chooser, format, and generation defaults', () => {
+  it('initializes state, chooser, and generation defaults', () => {
     const component = document.createElement('parallels-window');
     expect(component.state).toMatchObject({
       currentTextInfo: null,
@@ -79,7 +79,6 @@ describe('ParallelsWindow lifecycle', () => {
       currentParallelData: null
     });
     expect(component.textChooser).toBe(fixtures.chooser);
-    expect(component.columnFormat).toBe('inlinetitle');
     expect(component._loadGeneration).toBe(0);
   });
 

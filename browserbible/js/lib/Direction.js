@@ -46,4 +46,3 @@ export function directionForText(context) {
   return String(info.dir ?? '').toLowerCase() === 'rtl' ? 'rtl' : 'ltr';
 }
 
-export { RTL_LANGUAGES, RTL_SCRIPTS };

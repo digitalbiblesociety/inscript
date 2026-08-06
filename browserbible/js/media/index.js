@@ -108,11 +108,7 @@ const MediaLibrary = (() => {
 
       pendingCallbacks.push(callback);
       loadMediaLibraries();
-    },
-
-    show() {},
-
-    hide() {}
+    }
   };
 })();
 

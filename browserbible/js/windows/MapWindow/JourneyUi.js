@@ -5,7 +5,7 @@ import { Reference } from '../../bible/BibleReference.js';
 import { BOOK_DATA } from '../../bible/BibleData.js';
 
 /** Localized journey display name, falling back to the data file's name. */
-export function journeyName(journey) {
+function journeyName(journey) {
   const key = `windows.map.journeynames.${journey.id}`;
   const name = i18n.t(key);
   return name === key ? journey.name : name;

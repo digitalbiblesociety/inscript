@@ -25,15 +25,7 @@
 	margin: 0 4px 0 0;
 }
 
-.config-eng2p-off .eng2p-original {
-	text-decoration: inherit;
-	color: inherit;
-	display: inherit;
-}
 
-.config-eng2p-off .eng2p-corrected {
-	display: none;
-}
 
 #config-eng2p table {
 	border-collapse: collapse;

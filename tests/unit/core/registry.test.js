@@ -64,14 +64,6 @@ describe('window types', () => {
   });
 });
 
-describe('text providers', () => {
-  it('registerTextProvider + getTextProvider round-trips', () => {
-    const provider = { load: () => null };
-    registry.registerTextProvider('test:provider:a', provider);
-    expect(registry.getTextProvider('test:provider:a')).toBe(provider);
-  });
-});
-
 describe('menu components', () => {
   it('registerMenuComponent + getAllMenuComponents round-trips', () => {
     const C = () => {};
