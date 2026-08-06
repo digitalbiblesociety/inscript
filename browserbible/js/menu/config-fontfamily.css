@@ -40,13 +40,3 @@
 	color: var(--color-background);
 }
 
-#config-font-family-libertine {
-	font-family: "Linux Libertine";
-}
-
-.config-font-family-libertine .section,
-.config-font-family-libertine #font-size-table {
-	font-family: Libertine;
-	font-variant-ligatures: common-ligatures discretionary-ligatures contextual;
-	font-feature-settings: "onum" 1, "zero" 1, "liga" 1, "dlig" 1, "clig" 1, "salt" 1, "ss02" 1;
-}
