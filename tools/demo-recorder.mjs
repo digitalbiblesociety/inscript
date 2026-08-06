@@ -146,7 +146,7 @@ export async function openApp(page, target, base) {
     await page.waitForFunction(() => window.BrowserBible?.tour?.() != null, null, { timeout: 20_000 });
   } catch {
     throw new Error(
-      `No guided tour at ${base}. That build predates browserbible/js/menu/GuidedTour.js. ` +
+      `No guided tour at ${base}. That build predates browserbible/js/menu/GuidedTour/. ` +
       'Record a local server (drop --url) or deploy the tour first.'
     );
   }

@@ -1,15 +1,21 @@
-/** A popover for navigating Bible books, chapters, and English passage titles. */
+/** A popover for navigating Bible books, chapters, and localized passage titles. */
 
 import { elem, offset } from '../lib/helpers.esm.js';
 import { toBcp47Lang } from '../lib/bcp47.js';
+import { i18n } from '../lib/i18n.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import { addNames } from '../bible/BibleData.js';
 import { Reference } from '../bible/BibleReference.js';
 import { handleDivisionClick, renderDivisions, renderSections } from './TextNavigatorBooks.js';
 import {
   applyFilter, ensurePericopes, filterBooks, highlightCurrentPassage,
-  isEnglishText, renderActiveBookPassages, renderSearchResults, setActiveBook
+  hasPericopeTranslation, renderActiveBookPassages, renderSearchResults, setActiveBook
 } from './TextNavigatorPericopes.js';
+
+function translation(key, fallback) {
+  const value = i18n.t(key);
+  return value === key ? fallback : value;
+}
 
 class TextNavigatorController {
   constructor() {
@@ -28,7 +34,7 @@ class TextNavigatorController {
   buildUi() {
     const filter = elem('input', {
       className: 'text-navigator-filter', type: 'text',
-      placeholder: 'Filter books or passages…'
+      placeholder: translation('windows.bible.filterbooks', 'Filter books…')
     });
     const header = elem('div', { className: 'text-navigator-header' }, filter);
     const divisions = elem('div', { className: 'text-navigator-divisions' });
@@ -59,8 +65,8 @@ class TextNavigatorController {
     });
   }
 
-  isEnglishText() {
-    return isEnglishText(this);
+  hasPericopeTranslation() {
+    return hasPericopeTranslation(this);
   }
 
   renderActiveBookPassages(bookid) {
@@ -90,7 +96,7 @@ class TextNavigatorController {
   handleFilterKeydown(event) {
     if (event.key !== 'Enter') return;
     event.preventDefault();
-    if (this.refs.filter.value.trim() && this.isEnglishText()) {
+    if (this.refs.filter.value.trim() && this.hasPericopeTranslation()) {
       this.navigateToPericope(this.refs.periList.querySelector('.peri-item'));
       return;
     }
@@ -131,8 +137,12 @@ class TextNavigatorController {
 
   applyDivisionAttrs() {
     this.refs.divisions.style.display = '';
-    if (this.textInfo.dir) this.refs.divisions.setAttribute('dir', this.textInfo.dir);
-    if (this.textInfo.lang) this.refs.divisions.setAttribute('lang', toBcp47Lang(this.textInfo.lang));
+    for (const element of [this.refs.divisions, this.refs.pericopes]) {
+      if (this.textInfo.dir) element.setAttribute('dir', this.textInfo.dir);
+      else element.removeAttribute('dir');
+      if (this.textInfo.lang) element.setAttribute('lang', toBcp47Lang(this.textInfo.lang));
+      else element.removeAttribute('lang');
+    }
   }
 
   selectCurrentReference(fragmentid) {
@@ -148,25 +158,30 @@ class TextNavigatorController {
   }
 
   showBibleNav() {
-    const reference = Reference(this.target?.value ?? '');
-    const fragmentid = reference ? reference.toSection() : null;
+    const stableFragmentid = this.target?.dataset.fragmentid;
+    const reference = stableFragmentid ? null : Reference(this.target?.value ?? '');
+    const fragmentid = stableFragmentid || (reference ? reference.toSection() : null);
     this.renderDivisions();
     this.applyDivisionAttrs();
     this.selectCurrentReference(fragmentid);
   }
 
   preparePericopes() {
-    const english = this.isEnglishText();
-    if (english) {
-      ensurePericopes(() => {
-        if (!this.refs.changer.matches(':popover-open') || !this.isEnglishText()) return;
+    const language = this.textInfo?.lang;
+    const translated = this.hasPericopeTranslation();
+    if (translated) {
+      ensurePericopes(language, () => {
+        if (!this.refs.changer.matches(':popover-open')
+          || this.textInfo?.lang !== language || !this.hasPericopeTranslation()) return;
         if (this.refs.filter.value.trim()) this.applyFilter();
         else if (this.activeBookId) this.setActiveBook(this.activeBookId, this.lastFragmentid);
       });
     }
-    this.refs.changer.classList.toggle('text-navigator-2col', english);
-    this.refs.pericopes.style.display = english ? '' : 'none';
-    this.refs.filter.placeholder = english ? 'Filter books or passages…' : 'Filter books…';
+    this.refs.changer.classList.toggle('text-navigator-2col', translated);
+    this.refs.pericopes.style.display = translated ? '' : 'none';
+    this.refs.filter.placeholder = translated
+      ? translation('windows.bible.filterbooksorpassages', 'Filter books or passages…')
+      : translation('windows.bible.filterbooks', 'Filter books…');
     this.refs.periHeader.textContent = '';
     this.refs.periList.innerHTML = '';
   }
@@ -233,7 +248,7 @@ class TextNavigatorController {
   setTextInfo(textInfo) {
     this.textInfo = textInfo;
     if (!textInfo) return;
-    if (this.isEnglishText()) ensurePericopes();
+    if (this.hasPericopeTranslation()) ensurePericopes(textInfo.lang);
     if (textInfo.divisionNames) addNames(textInfo.lang, textInfo.divisions, textInfo.divisionNames);
   }
 

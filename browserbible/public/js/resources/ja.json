@@ -90,6 +90,8 @@
         "label": "聖書",
         "recentlyused": "最近使用した項目",
         "filter": "フィルタ...",
+        "filterbooks": "書巻を絞り込む…",
+        "filterbooksorpassages": "書巻または段落を絞り込む…",
         "ot": "旧約聖書",
         "nt": "新約聖書",
         "dc": "第二正典",

@@ -90,6 +90,8 @@
         "label": "성경",
         "recentlyused": "최근 사용",
         "filter": "필터...",
+        "filterbooks": "성경책 필터링…",
+        "filterbooksorpassages": "성경책 또는 단락 필터링…",
         "ot": "구약",
         "nt": "신약",
         "dc": "제2경전",

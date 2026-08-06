@@ -22,7 +22,7 @@ import { LanguageSetting } from './LanguageSetting.js';
 import { ApocryphaSetting } from './ApocryphaSetting.js';
 import { ResetSettingsButton } from './ResetSettingsButton.js';
 import { CommandPalette } from './CommandPalette.js';
-import { GuidedTour } from './GuidedTour.js';
+import { GuidedTour } from './GuidedTour/GuidedTour.js';
 
 registerMenuComponent('MainMenuButton', MainMenuButton);
 registerMenuComponent('NavigationButtons', NavigationButtons);

@@ -46,7 +46,8 @@ const defaultConfig = {
     ? __BIBLE_BRAIN_PROXY_BASE__
     : '',
   bibleBrainLanguages: [],
-  // Bible Brain texts that duplicate an existing DBS/inscript text (see
+  // Curated Bible Brain ids to keep out of the picker (near-miss codes the
+  // runtime exact-code dedup in BibleBrainTextProvider can't catch; see
   // js/data/biblebrainDuplicates.js).
   bibleBrainExcludeIds,
 

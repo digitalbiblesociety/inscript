@@ -408,6 +408,9 @@ export class TextWindowComponent extends BaseWindow {
 
     this.state.currentLocationInfo = newLocationInfo;
     this.refs.navui.value = newLocationInfo.label;
+    const stableFragmentid = newLocationInfo.fragmentid || newLocationInfo.sectionid;
+    if (stableFragmentid) this.refs.navui.dataset.fragmentid = stableFragmentid;
+    else delete this.refs.navui.dataset.fragmentid;
 
     const textid = this.state.currentTextInfo?.id;
     if (this._lastNav && this._lastNav.textid === textid && this._lastNav.fragmentid === newLocationInfo.fragmentid) return;

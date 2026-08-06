@@ -24,7 +24,9 @@ Additional behavior:
 - **Cached Bible Brain catalog**: the upstream `/bibles` list is 60+ pages,
   which made the frontend's catalog load painfully slow. A cron trigger
   (every 15 min, no-op until the copy is ~4h old) crawls the whole list,
-  keeps only bibles with readable text (`text_plain`/`text_format` filesets),
+  keeps only bibles with readable text (`text_plain`/`text_format`) or audio
+  (`audio`/`audio_drama`) filesets (audio-only entries stay so the frontend can
+  pair their audio to texts it already serves),
   prunes each entry to the fields the frontend uses, and stores the result in
   the `CATALOG` KV namespace. `/fcbh/v4/bibles-all` serves it in one request
   (`{ data, meta }`, `Cache-Control: max-age=3600`). While the cache is cold

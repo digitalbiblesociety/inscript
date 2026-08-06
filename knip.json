@@ -33,7 +33,7 @@
         "browserbible/index.html",
         "tests/**/*.test.js",
         "tests/scripts/**/*.mjs",
-        "e2e/**/*.{js,ts}",
+        "tests/e2e/**/*.{js,ts}",
         "tools/**/*.mjs"
       ],
       "project": ["browserbible/js/**/*.js"]

@@ -1,24 +1,31 @@
 import { elem } from '../lib/helpers.esm.js';
 import { BOOK_DATA } from '../bible/BibleData.js';
-import { loadPericopesByBook } from '../bible/Pericopes.js';
+import { loadPericopesByBook, pericopeLocaleFor } from '../bible/Pericopes.js';
 import { i18n } from '../lib/i18n.js';
 
-let pericopeGroups = null;
-let pericopeMap = null;
+const groupsByLocale = new Map();
+const pericopesByLocale = new Map();
 
-export function ensurePericopes(onReady) {
-  if (pericopeGroups) return;
-  loadPericopesByBook().then((groups) => {
-    pericopeGroups = groups;
-    pericopeMap = new Map(groups.map((group) => [group.bookid, group.pericopes]));
+export function ensurePericopes(language, onReady) {
+  const locale = pericopeLocaleFor(language);
+  if (!locale || groupsByLocale.has(locale)) return;
+  loadPericopesByBook(language).then((groups) => {
+    if (!groups.length) {
+      onReady?.();
+      return;
+    }
+    groupsByLocale.set(locale, groups);
+    pericopesByLocale.set(locale, new Map(groups.map((group) => [group.bookid, group.pericopes])));
     onReady?.();
   });
 }
 
-export function isEnglishText(controller) {
-  const language = (controller.textInfo?.lang || '').toLowerCase();
-  return ['eng', 'en'].includes(language) || language.startsWith('eng-') || language.startsWith('en-');
+export function hasPericopeTranslation(controller) {
+  return !!pericopeLocaleFor(controller.textInfo?.lang);
 }
+
+const groupsFor = controller => groupsByLocale.get(pericopeLocaleFor(controller.textInfo?.lang)) ?? [];
+const pericopesFor = controller => pericopesByLocale.get(pericopeLocaleFor(controller.textInfo?.lang));
 
 const availableSection = (controller) => {
   const available = new Set(controller.textInfo?.sections ?? []);
@@ -36,13 +43,18 @@ function pericopeItem(pericope) {
   elem('span', { className: 'peri-ref', textContent: `${pericope.chapter}:${pericope.verse}` }));
 }
 
+function bookName(controller, bookid) {
+  const index = controller.textInfo?.divisions?.indexOf(bookid) ?? -1;
+  return controller.textInfo?.divisionNames?.[index] || BOOK_DATA[bookid]?.name || bookid;
+}
+
 export function renderActiveBookPassages(controller, bookid) {
   const { periHeader, periList } = controller.refs;
-  periHeader.textContent = bookid ? (BOOK_DATA[bookid]?.name ?? bookid) : '';
+  periHeader.textContent = bookid ? bookName(controller, bookid) : '';
   periList.classList.remove('peri-grouped');
   const available = availableSection(controller);
   const fragment = document.createDocumentFragment();
-  for (const pericope of pericopeMap?.get(bookid) ?? []) {
+  for (const pericope of pericopesFor(controller)?.get(bookid) ?? []) {
     if (available(pericope.sectionid)) fragment.appendChild(pericopeItem(pericope));
   }
   periList.replaceChildren(fragment);
@@ -55,15 +67,15 @@ export function renderSearchResults(controller, query) {
   const available = availableSection(controller);
   const bookIds = new Set();
   const fragment = document.createDocumentFragment();
-  for (const { bookid, pericopes } of pericopeGroups ?? []) {
+  for (const { bookid, pericopes } of groupsFor(controller)) {
     if (controller.textInfo?.divisions && !controller.textInfo.divisions.includes(bookid)) continue;
-    const bookName = BOOK_DATA[bookid]?.name ?? bookid;
+    const displayBookName = bookName(controller, bookid);
     const matches = pericopes.filter((pericope) => available(pericope.sectionid)
-      && (bookName.toLowerCase().includes(query) || pericope.title.toLowerCase().includes(query)));
+      && (displayBookName.toLowerCase().includes(query) || pericope.title.toLowerCase().includes(query)));
     if (!matches.length) continue;
     bookIds.add(bookid);
     const group = elem('div', { className: 'peri-book-group' },
-      elem('div', { className: 'peri-book-header', textContent: bookName }));
+      elem('div', { className: 'peri-book-header', textContent: displayBookName }));
     matches.forEach((pericope) => group.appendChild(pericopeItem(pericope)));
     fragment.appendChild(group);
   }
@@ -100,11 +112,11 @@ export function filterBooks(controller, query) {
 
 export function applyFilter(controller) {
   const query = controller.refs.filter.value.trim().toLowerCase();
-  if (controller.isEnglishText() && query) {
+  if (controller.hasPericopeTranslation() && query) {
     showOnlyBooks(controller, controller.renderSearchResults(query));
   } else {
     filterBooks(controller, query);
-    if (controller.isEnglishText()) controller.renderActiveBookPassages(controller.activeBookId);
+    if (controller.hasPericopeTranslation()) controller.renderActiveBookPassages(controller.activeBookId);
   }
 }
 
@@ -115,7 +127,7 @@ export function highlightCurrentPassage(controller, fragmentid) {
   const chapter = parseInt(sectionid.substring(2), 10);
   const verse = parseInt(verseText || '1', 10) || 1;
   let best = null;
-  for (const pericope of pericopeMap?.get(bookid) ?? []) {
+  for (const pericope of pericopesFor(controller)?.get(bookid) ?? []) {
     if (pericope.chapter < chapter || (pericope.chapter === chapter && pericope.verse <= verse)) best = pericope;
     else break;
   }
@@ -136,7 +148,7 @@ export function setActiveBook(controller, bookid, fragmentid) {
     controller.refs.divisions.scrollTop = Math.max(0,
       division.offsetTop - controller.refs.divisions.offsetTop - 8);
   }
-  if (!controller.isEnglishText() || controller.refs.filter.value.trim()) return;
+  if (!controller.hasPericopeTranslation() || controller.refs.filter.value.trim()) return;
   controller.renderActiveBookPassages(bookid);
   controller.refs.periList.scrollTop = 0;
   if (fragmentid) controller.highlightCurrentPassage(fragmentid);

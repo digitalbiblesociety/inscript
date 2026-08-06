@@ -90,6 +90,8 @@
         "label": "Alkitab",
         "recentlyused": "Baru Digunakan",
         "filter": "Saring...",
+        "filterbooks": "Saring kitab…",
+        "filterbooksorpassages": "Saring kitab atau perikop…",
         "ot": "Perjanjian Lama",
         "nt": "Perjanjian Baru",
         "dc": "Kitab-kitab Deuterokanonika",

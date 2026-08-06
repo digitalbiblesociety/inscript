@@ -90,6 +90,8 @@
         "label": "Bible",
         "recentlyused": "Récemment utilisés",
         "filter": "Filtrer...",
+        "filterbooks": "Filtrer les livres…",
+        "filterbooksorpassages": "Filtrer les livres ou les passages…",
         "ot": "Ancien Testament",
         "nt": "Nouveau Testament",
         "dc": "Livres deutérocanoniques",

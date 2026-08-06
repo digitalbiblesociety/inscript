@@ -2,12 +2,27 @@
  * Pericopes
  * Section/passage titles ("pericopes") keyed to Bible references.
  *
- * Source data lives in pericopesData.js as `reference: title` pairs, where
- * the reference is the internal 2-char book shortCode followed by
- * `chapter.verse` (e.g. `S116.14` = 1 Samuel 16:14, `GN1.1` = Genesis 1:1).
+ * Localized source data lives in content/pericopes/{locale}.json as
+ * `reference: title` pairs, where the reference is the internal 2-char book
+ * shortCode followed by `chapter.verse` (e.g. `S116.14` = 1 Samuel 16:14,
+ * `GN1.1` = Genesis 1:1).
  */
 
 import { BOOK_DATA } from './BibleData.js';
+import { toBcp47Lang } from '../lib/bcp47.js';
+
+export const PERICOPE_LOCALES = new Set([
+  'ar', 'bn', 'de', 'en', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'pt', 'ru', 'ur', 'zh-CN'
+]);
+
+/** Maps text-catalog ISO 639 codes and BCP-47 variants to a bundled dataset. */
+export function pericopeLocaleFor(language) {
+  const normalized = toBcp47Lang(language)?.toLowerCase();
+  if (!normalized) return null;
+  const primary = normalized.split('-')[0];
+  const locale = primary === 'zh' ? 'zh-CN' : primary;
+  return PERICOPE_LOCALES.has(locale) ? locale : null;
+}
 
 /**
  * Parse the raw `reference: title` pairs into navigable pericope records.
@@ -57,11 +72,25 @@ function groupByBook(pericopes) {
     .sort((a, b) => (BOOK_DATA[a.bookid]?.sortOrder ?? 999) - (BOOK_DATA[b.bookid]?.sortOrder ?? 999));
 }
 
-let loadPromise = null;
+const loadPromises = new Map();
 
-/** Lazy-loads the ~75 kB data module; resolves to [{bookid, pericopes}] in canonical order. */
-export function loadPericopesByBook() {
-  loadPromise ??= import('./pericopesData.js')
-    .then(m => groupByBook(parsePericopes(m.PERICOPE_DATA)));
-  return loadPromise;
+/** Fetches and caches one localized dataset, grouped in canonical book order. */
+export function loadPericopesByBook(language) {
+  const locale = pericopeLocaleFor(language);
+  if (!locale) return Promise.resolve([]);
+  if (!loadPromises.has(locale)) {
+    const promise = fetch(`./content/pericopes/${locale}.json`)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Unable to load ${locale} pericopes (${response.status})`);
+        return response.json();
+      })
+      .then(rows => groupByBook(parsePericopes(rows)))
+      .catch((error) => {
+        loadPromises.delete(locale);
+        console.warn(error);
+        return [];
+      });
+    loadPromises.set(locale, promise);
+  }
+  return loadPromises.get(locale);
 }

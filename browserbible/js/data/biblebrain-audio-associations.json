@@ -85,24 +85,6 @@
       ]
     },
     {
-      "inscriptId": "ACCIBS",
-      "bibleBrainId": "ACCIBS",
-      "lang": "acr",
-      "name": "Nuevo Testamento en Achi de Cubulco",
-      "audioFilesets": [
-        {
-          "id": "ACCIBSN1DA-opus16",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "ACCIBSN1DA",
-          "type": "audio",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "ACDWBT",
       "bibleBrainId": "ACDWBT",
       "lang": "acd",
@@ -2643,24 +2625,6 @@
         {
           "id": "CNLTBLN1DA-opus16",
           "type": "audio",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "CNTTBL",
-      "bibleBrainId": "CNTTBL",
-      "lang": "cnt",
-      "name": "Tepetotutla Chinantec New Testament",
-      "audioFilesets": [
-        {
-          "id": "CNTTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "CNTTBLN2DA-opus16",
-          "type": "audio_drama",
           "size": "NT"
         }
       ]
@@ -5653,24 +5617,6 @@
       ]
     },
     {
-      "inscriptId": "MAQTBL",
-      "bibleBrainId": "MAQTBL",
-      "lang": "maq",
-      "name": "Chiquihuitlán Mazatec New Testament",
-      "audioFilesets": [
-        {
-          "id": "MAQTBLP1DA",
-          "type": "audio",
-          "size": "NTP"
-        },
-        {
-          "id": "MAQTBLP1DA-opus16",
-          "type": "audio",
-          "size": "NTP"
-        }
-      ]
-    },
-    {
       "inscriptId": "MAWWBT",
       "bibleBrainId": "MAWWBT",
       "lang": "maw",
@@ -6113,24 +6059,6 @@
       ]
     },
     {
-      "inscriptId": "MIETBL",
-      "bibleBrainId": "MIETBL",
-      "lang": "mie",
-      "name": "Ocotepec Mixtec New Testament 1977 Edition",
-      "audioFilesets": [
-        {
-          "id": "MIETBLN1DA-opus16",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "MIETBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "MIFWBT",
       "bibleBrainId": "MIFWBT",
       "lang": "mif",
@@ -6143,34 +6071,6 @@
         },
         {
           "id": "MIFWBTN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "MILTBL",
-      "bibleBrainId": "MILTBL",
-      "lang": "mil",
-      "name": "Peñoles Mixtec New Testament 2002 Edition",
-      "audioFilesets": [
-        {
-          "id": "MILTBLN1DA-opus16",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "MILTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "MILTBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "MILTBLN2DA-opus16",
           "type": "audio_drama",
           "size": "NT"
         }
@@ -6236,24 +6136,6 @@
         {
           "id": "MITTBLN2DA",
           "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "MIZTBL",
-      "bibleBrainId": "MIZTBL",
-      "lang": "miz",
-      "name": "Coatzospan Mixtec New Testament",
-      "audioFilesets": [
-        {
-          "id": "MIZTBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "MIZTBLN1DA-opus16",
-          "type": "audio",
           "size": "NT"
         }
       ]
@@ -6339,24 +6221,6 @@
           "id": "MKNUBBN2DA",
           "type": "audio_drama",
           "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "MKSTBL",
-      "bibleBrainId": "MKSTBL",
-      "lang": "mks",
-      "name": "Silacayoapan Mixtec New Testament",
-      "audioFilesets": [
-        {
-          "id": "MKSTBLP1DA",
-          "type": "audio",
-          "size": "NTP"
-        },
-        {
-          "id": "MKSTBLP1DA-opus16",
-          "type": "audio",
-          "size": "NTP"
         }
       ]
     },
@@ -6568,52 +6432,6 @@
         {
           "id": "MXBMVRN1DA",
           "type": "audio",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "MXQTBL",
-      "bibleBrainId": "MXQTBL",
-      "lang": "mxq",
-      "name": "Juquila Mixe New Testament",
-      "audioFilesets": [
-        {
-          "id": "MXQTBLN1DA-opus16",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "MXQTBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "MXTTBL",
-      "bibleBrainId": "MXTTBL",
-      "lang": "mxt",
-      "name": "Jamiltepec Mixtec New Testament",
-      "audioFilesets": [
-        {
-          "id": "MXTTBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "MXTTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "MXTTBLN1DA-opus16",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "MXTTBLN2DA-opus16",
-          "type": "audio_drama",
           "size": "NT"
         }
       ]
@@ -6877,24 +6695,6 @@
       ]
     },
     {
-      "inscriptId": "NCLTBL",
-      "bibleBrainId": "NCLTBL",
-      "lang": "ncl",
-      "name": "Michoacán Nahuatl New Testament",
-      "audioFilesets": [
-        {
-          "id": "NCLTBLP1DA-opus16",
-          "type": "audio",
-          "size": "NTP"
-        },
-        {
-          "id": "NCLTBLP1DA",
-          "type": "audio",
-          "size": "NTP"
-        }
-      ]
-    },
-    {
       "inscriptId": "NCQWBT",
       "bibleBrainId": "NCQWBT",
       "lang": "ncq",
@@ -6997,24 +6797,6 @@
       ]
     },
     {
-      "inscriptId": "NGUTBL",
-      "bibleBrainId": "NGUTBL",
-      "lang": "ngu",
-      "name": "Guerrero Nahuatl New Testament",
-      "audioFilesets": [
-        {
-          "id": "NGUTBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "NGUTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "NHETBL",
       "bibleBrainId": "NHETBL",
       "lang": "nhe",
@@ -7081,34 +6863,6 @@
         },
         {
           "id": "NHWTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "NHYTBL",
-      "bibleBrainId": "NHYTBL",
-      "lang": "nhy",
-      "name": "Northern Oaxaca Nahuatl New Testament",
-      "audioFilesets": [
-        {
-          "id": "NHYTBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "NHYTBLN1DA-opus16",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "NHYTBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "NHYTBLN2DA",
           "type": "audio_drama",
           "size": "NT"
         }
@@ -7339,24 +7093,6 @@
       ]
     },
     {
-      "inscriptId": "NPLWYI",
-      "bibleBrainId": "NPLWYI",
-      "lang": "npl",
-      "name": "Southeastern Puebla Nahuatl New Testament",
-      "audioFilesets": [
-        {
-          "id": "NPLWYIN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "NPLWYIN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "NSUWBT",
       "bibleBrainId": "NSUWBT",
       "lang": "nsu",
@@ -7536,42 +7272,6 @@
         {
           "id": "OSSIBTN2DA-opus16",
           "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "OTETBL",
-      "bibleBrainId": "OTETBL",
-      "lang": "ote",
-      "name": "Mezquital Otomi New Testament",
-      "audioFilesets": [
-        {
-          "id": "OTETBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "OTETBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "OTQTBL",
-      "bibleBrainId": "OTQTBL",
-      "lang": "otq",
-      "name": "Querétaro Otomi New Testament",
-      "audioFilesets": [
-        {
-          "id": "OTQTBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "OTQTBLN1DA-opus16",
-          "type": "audio",
           "size": "NT"
         }
       ]
@@ -7937,24 +7637,6 @@
       ]
     },
     {
-      "inscriptId": "QUFLLB",
-      "bibleBrainId": "QUFLLB",
-      "lang": "quf",
-      "name": "Lambayeque Quechua New Testament",
-      "audioFilesets": [
-        {
-          "id": "QUFLLBN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "QUFLLBN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "QULSBB",
       "bibleBrainId": "QULSBB",
       "lang": "qul",
@@ -7985,24 +7667,6 @@
         },
         {
           "id": "QUPTBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "QVCTBL",
-      "bibleBrainId": "QVCTBL",
-      "lang": "qvc",
-      "name": "Cajamarca Quechua New Testament",
-      "audioFilesets": [
-        {
-          "id": "QVCTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "QVCTBLN2DA-opus16",
           "type": "audio_drama",
           "size": "NT"
         }
@@ -8139,24 +7803,6 @@
         },
         {
           "id": "QVZWBTN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "QWHLLB",
-      "bibleBrainId": "QWHLLB",
-      "lang": "qwh",
-      "name": "Huaylas Ancash Quechua New Testament",
-      "audioFilesets": [
-        {
-          "id": "QWHLLBN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "QWHLLBN2DA",
           "type": "audio_drama",
           "size": "NT"
         }
@@ -9299,42 +8945,6 @@
       ]
     },
     {
-      "inscriptId": "TCATBL",
-      "bibleBrainId": "TCATBL",
-      "lang": "tca",
-      "name": "Ticuna New Testament (Brazil)",
-      "audioFilesets": [
-        {
-          "id": "TCATBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "TCATBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "TEETBL",
-      "bibleBrainId": "TEETBL",
-      "lang": "tee",
-      "name": "Huehuetla Tepehua New Testament",
-      "audioFilesets": [
-        {
-          "id": "TEETBLN1DA-opus16",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "TEETBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "TERTBL",
       "bibleBrainId": "TERTBL",
       "lang": "ter",
@@ -9571,24 +9181,6 @@
       ]
     },
     {
-      "inscriptId": "TOSTBL",
-      "bibleBrainId": "TOSTBL",
-      "lang": "tos",
-      "name": "Highland Totonac New Testament",
-      "audioFilesets": [
-        {
-          "id": "TOSTBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "TOSTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "TPIPNG",
       "bibleBrainId": "TPIPNG",
       "lang": "tpi",
@@ -9633,24 +9225,6 @@
           "id": "TPIPNGS2DA-opus16",
           "type": "audio_drama",
           "size": "OTP"
-        }
-      ]
-    },
-    {
-      "inscriptId": "TPTTBL",
-      "bibleBrainId": "TPTTBL",
-      "lang": "tpt",
-      "name": "Tlachichilco Tepehua New Testament",
-      "audioFilesets": [
-        {
-          "id": "TPTTBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "TPTTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
         }
       ]
     },
@@ -10073,34 +9647,6 @@
       ]
     },
     {
-      "inscriptId": "VMYTBL",
-      "bibleBrainId": "VMYTBL",
-      "lang": "vmy",
-      "name": "New Testament in Mazateco, Ayautla",
-      "audioFilesets": [
-        {
-          "id": "VMYTBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "VMYTBLN1DA-opus16",
-          "type": "audio",
-          "size": "NT"
-        },
-        {
-          "id": "VMYTBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "VMYTBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "WAJWBT",
       "bibleBrainId": "WAJWBT",
       "lang": "waj",
@@ -10417,19 +9963,6 @@
       ]
     },
     {
-      "inscriptId": "YAATBL",
-      "bibleBrainId": "YAATBL",
-      "lang": "yaa",
-      "name": "Yaminahua New Testament &amp; OT Portions",
-      "audioFilesets": [
-        {
-          "id": "YAATBLN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "YADTBL",
       "bibleBrainId": "YADTBL",
       "lang": "yad",
@@ -10480,24 +10013,6 @@
           "id": "YAMWBTN2DA",
           "type": "audio_drama",
           "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "YAQTBL",
-      "bibleBrainId": "YAQTBL",
-      "lang": "yaq",
-      "name": "Yaqui New Testament",
-      "audioFilesets": [
-        {
-          "id": "YAQTBLP1DA-opus16",
-          "type": "audio",
-          "size": "NTP"
-        },
-        {
-          "id": "YAQTBLP1DA",
-          "type": "audio",
-          "size": "NTP"
         }
       ]
     },
@@ -10574,19 +10089,6 @@
       ]
     },
     {
-      "inscriptId": "ZABTBL",
-      "bibleBrainId": "ZABTBL",
-      "lang": "zab",
-      "name": "San Juan Guelavía Zapotec",
-      "audioFilesets": [
-        {
-          "id": "ZABTBLN1DA",
-          "type": "audio",
-          "size": "NT"
-        }
-      ]
-    },
-    {
       "inscriptId": "ZACSIM",
       "bibleBrainId": "ZACSIM",
       "lang": "zac",
@@ -10635,24 +10137,6 @@
         },
         {
           "id": "ZAEWBTN2DA16",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "ZAITBL",
-      "bibleBrainId": "ZAITBL",
-      "lang": "zai",
-      "name": "Isthmus Zapotec New Testament",
-      "audioFilesets": [
-        {
-          "id": "ZAITBLN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "ZAITBLN2DA",
           "type": "audio_drama",
           "size": "NT"
         }
@@ -10714,42 +10198,6 @@
           "id": "ZARTBLN1DA",
           "type": "audio",
           "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "ZASWYI",
-      "bibleBrainId": "ZASWYI",
-      "lang": "zas",
-      "name": "Santo Domingo Albarradas Zapotec New Testament",
-      "audioFilesets": [
-        {
-          "id": "ZASWYIN2DA-opus16",
-          "type": "audio_drama",
-          "size": "NT"
-        },
-        {
-          "id": "ZASWYIN2DA",
-          "type": "audio_drama",
-          "size": "NT"
-        }
-      ]
-    },
-    {
-      "inscriptId": "ZAVTBL",
-      "bibleBrainId": "ZAVTBL",
-      "lang": "zav",
-      "name": "Yatzachi Zapotec New Testament",
-      "audioFilesets": [
-        {
-          "id": "ZAVTBLP1DA-opus16",
-          "type": "audio",
-          "size": "NTP"
-        },
-        {
-          "id": "ZAVTBLP1DA",
-          "type": "audio",
-          "size": "NTP"
         }
       ]
     },

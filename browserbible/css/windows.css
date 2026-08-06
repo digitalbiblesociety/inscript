@@ -297,6 +297,10 @@ body.window-reordering .windows-header {
 	margin-right: 0;
 }
 
+.window .window-header .text-nav:focus-visible {
+	outline-offset: -2px;
+}
+
 .window .window-header .text-nav + * {
 	margin-left: -1px;
 }

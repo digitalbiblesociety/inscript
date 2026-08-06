@@ -90,6 +90,8 @@
         "label": "圣经",
         "recentlyused": "最近使用",
         "filter": "筛选…",
+        "filterbooks": "筛选书卷…",
+        "filterbooksorpassages": "筛选书卷或段落…",
         "ot": "旧约",
         "nt": "新约",
         "dc": "次经书卷",

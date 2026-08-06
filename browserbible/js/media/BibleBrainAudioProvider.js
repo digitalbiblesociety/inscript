@@ -127,8 +127,10 @@ export class BibleBrainAudioProvider extends BaseAudioProvider {
  * Bible Brain audio for an existing text whose *text* duplicates a Bible Brain
  * edition. The duplicate BB text is excluded from the picker, but its audio is
  * kept and matched back here by the text's id/abbr (like DbsAudioProvider, so it
- * doesn't rely on a field surviving on the textInfo). Registered last, so it only
- * fills in texts with no local or DBS audio.
+ * doesn't rely on a field surviving on the textInfo). Associations come from the
+ * live catalog (registered by BibleBrainTextProvider at manifest time) plus the
+ * curated static manifest. Registered last, so it only fills in texts with no
+ * local or DBS audio.
  */
 export class LinkedBibleBrainAudioProvider extends BibleBrainAudioProvider {
   get name() { return 'biblebrain-linked'; }

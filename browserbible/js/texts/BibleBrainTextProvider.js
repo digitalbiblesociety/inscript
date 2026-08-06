@@ -1,5 +1,7 @@
 import { getConfig } from '../core/config.js';
-import { processTexts } from './TextLoader.js';
+import { processTexts, getTextInfoData } from './TextLoader.js';
+import { registerLinkedAudio } from '../data/biblebrainDuplicates.js';
+import { aliasTargetFor, isPairingBlocked } from '../data/biblebrainAliases.js';
 import {
   BOOK_DATA,
   DEFAULT_BIBLE,
@@ -63,6 +65,65 @@ const getTextInfoSync = (textid) => {
   return textData.find(text => text.providerid === providerid);
 };
 
+/**
+ * Index of the texts already loaded before this provider runs (providers load
+ * in registration order, so this is the local catalog), keyed by upper id/abbr.
+ */
+const buildExistingTextIndex = () => {
+  const byCode = new Map();
+  for (const text of getTextInfoData() ?? []) {
+    for (const code of [text.id, text.abbr]) {
+      const key = String(code ?? '').toUpperCase();
+      if (key && !byCode.has(key)) byCode.set(key, text);
+    }
+  }
+  return byCode;
+};
+
+/**
+ * Adds a catalog entry's audio to the association for `targetId`, merging it
+ * with any other Bible Brain entry that reads the same text (the ESV, for one,
+ * arrives under three codes with a different recording each). Returns false when
+ * the entry is text-only and there was nothing to pair.
+ */
+const pairAudioToText = (associations, targetId, entry) => {
+  const { audioFilesets } = selectFilesets(entry.filesets);
+  if (audioFilesets.length === 0) return false;
+
+  const key = String(targetId).toUpperCase();
+  let association = associations.get(key);
+  if (!association) {
+    association = { inscriptId: targetId, bibleBrainIds: [], audioFilesets: [] };
+    associations.set(key, association);
+  }
+
+  association.bibleBrainIds.push(entry.abbr);
+  for (const fileset of audioFilesets) {
+    if (!association.audioFilesets.some(kept => kept.id === fileset.id)) {
+      association.audioFilesets.push(fileset);
+    }
+  }
+  return true;
+};
+
+/**
+ * Hands an association's audio to a Bible Brain text we kept, for aliases whose
+ * target is itself a Bible Brain entry. Without this the audio would be dropped:
+ * BibleBrainAudioProvider answers first for those texts and only reads the
+ * entry's own filesets.
+ */
+const mergeIntoOwnFilesets = (texts, association) => {
+  const target = texts.find(text => text.id === association.inscriptId);
+  if (!target) return false;
+
+  const own = target.biblebrain.audioFilesets;
+  for (const fileset of association.audioFilesets) {
+    if (!own.some(kept => kept.id === fileset.id)) own.push(fileset);
+  }
+  target.hasAudio = own.length > 0;
+  return true;
+};
+
 function getTextManifest(callback) {
   const config = getConfig();
 
@@ -84,15 +145,38 @@ function getTextManifest(callback) {
     .then(entries => {
       const languages = config.bibleBrainLanguages ?? [];
       const excludeIds = config.bibleBrainExcludeIds ?? [];
+      const existingTexts = buildExistingTextIndex();
 
       textData = [];
+      const associations = new Map();
       for (const entry of entries) {
         if (languages.length > 0 && !languages.includes(entry.iso)) continue;
+
+        // A text we already serve, either by the same FCBH code or through a
+        // curated alias: never add the Bible Brain copy, just pair its audio.
+        // Blocklisted ids share a code with one of our texts without being the
+        // same work, so they skip pairing and are treated as any other entry.
+        const localText = existingTexts.get(String(entry.abbr ?? '').toUpperCase());
+        const targetId = isPairingBlocked(entry.abbr)
+          ? null
+          : localText?.id ?? aliasTargetFor(entry.abbr);
+        if (targetId) {
+          const paired = pairAudioToText(associations, targetId, entry);
+          if (paired && localText) localText.hasAudio = true;
+          continue;
+        }
+
         if (excludeIds.includes(entry.abbr)) continue;
 
         const info = entryToTextInfo(entry);
         if (info) textData.push(info);
       }
+
+      // Aliases pointing at a text we serve elsewhere (local, API.Bible, ESV API)
+      // become linked audio; those pointing at a Bible Brain text we kept fold
+      // into that text's own filesets. Targets that never load stay dormant.
+      registerLinkedAudio([...associations.values()]
+        .filter(association => !mergeIntoOwnFilesets(textData, association)));
 
       processTexts(textData, providerName);
       finish();

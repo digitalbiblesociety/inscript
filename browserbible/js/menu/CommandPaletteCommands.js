@@ -4,7 +4,7 @@ import { resetWindowLayout } from '../common/settingsReset.js';
 import { getConfig } from '../core/config.js';
 import { getAllWindowTypes, getApp } from '../core/registry.js';
 import { getWindowIcon } from '../core/windowIcons.js';
-import { getGuidedTour } from './GuidedTour.js';
+import { getGuidedTour } from './GuidedTour/GuidedTour.js';
 import { promptSettingsReset } from './ResetSettingsButton.js';
 
 const toSlug = (value) => value.replace(/\s+/g, '-').toLowerCase();

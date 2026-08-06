@@ -5,8 +5,7 @@ export const CATALOG_META_KEY = 'fcbh:bibles:meta';
 export const CRAWL_STATE_KEY = 'fcbh:bibles:crawl';
 export const WARMUP_LOCK_KEY = 'fcbh:bibles:warmup-lock';
 
-const TEXT_TYPES = ['text_plain', 'text_format'];
-const KEEP_TYPES = [...TEXT_TYPES, 'audio', 'audio_drama'];
+const KEEP_TYPES = ['text_plain', 'text_format', 'audio', 'audio_drama'];
 
 const DEFAULT_PAGES_PER_RUN = 32;
 const PAGE_CONCURRENCY = 6;
@@ -16,9 +15,12 @@ const CRAWL_ABANDON_MS = 2 * 3600_000;
 const filesetType = (fs) => fs.type ?? fs.set_type_code ?? '';
 const filesetSize = (fs) => fs.size ?? fs.set_size_code ?? '';
 
+// Keeps any entry with readable text or audio: the app serves text-carrying
+// entries it doesn't already have, and pairs audio (including audio-only
+// entries) to texts it does.
 export function pruneEntry(entry) {
   const filesets = {};
-  let hasText = false;
+  let hasContent = false;
 
   for (const [bucket, list] of Object.entries(entry?.filesets ?? {})) {
     if (!Array.isArray(list)) continue;
@@ -29,10 +31,10 @@ export function pruneEntry(entry) {
 
     if (kept.length === 0) continue;
     filesets[bucket] = kept;
-    hasText = hasText || kept.some(fs => TEXT_TYPES.includes(fs.type));
+    hasContent = true;
   }
 
-  if (!hasText) return null;
+  if (!hasContent) return null;
 
   return {
     abbr: entry.abbr,

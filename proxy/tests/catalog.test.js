@@ -67,8 +67,13 @@ describe('pruneEntry', () => {
       .toEqual(['abbr', 'name', 'vname', 'language', 'autonym', 'iso', 'filesets']);
   });
 
-  it('drops audio-only bibles (no readable text)', () => {
-    expect(pruneEntry(entry({ filesets: { 'dbp-prod': [audioFileset] } }))).toBeNull();
+  it('keeps audio-only bibles (the app pairs their audio to existing texts)', () => {
+    expect(pruneEntry(entry({ filesets: { 'dbp-prod': [audioFileset] } }))?.filesets['dbp-prod'])
+      .toEqual([{ id: 'ABCDEFN2DA', type: 'audio_drama', size: 'NT' }]);
+  });
+
+  it('drops video-only bibles (no text or audio)', () => {
+    expect(pruneEntry(entry({ filesets: { 'dbp-prod': [videoFileset] } }))).toBeNull();
   });
 
   it('drops text_usx/text_json-only bibles but keeps text_format', () => {
@@ -96,7 +101,7 @@ describe('pruneEntry', () => {
 describe('advanceCatalogCrawl', () => {
   const entries = [
     entry({ abbr: 'A1' }),
-    entry({ abbr: 'A2', filesets: { 'dbp-prod': [audioFileset] } }),
+    entry({ abbr: 'A2', filesets: { 'dbp-prod': [videoFileset] } }),
     entry({ abbr: 'A3' }),
     entry({ abbr: 'A4' })
   ];

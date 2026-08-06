@@ -214,6 +214,7 @@ class AudioWindowComponent extends BaseWindow {
     this.textNavigator?.hide();
 
     this.refs.navui.value = bibleref.toString();
+    this.refs.navui.dataset.fragmentid = fragmentid;
     this.refs.navui.blur();
   }
 
