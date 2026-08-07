@@ -125,6 +125,21 @@ describe('LocalTextProvider.loadSection', () => {
     expect(vNum.nextElementSibling?.classList.contains('v')).toBe(true);
   });
 
+  it('invokes errorCallback when the section text info cannot be loaded', async () => {
+    // Both fetches fail: without an error path here the load never settles and
+    // TextLoader queues every later caller behind it.
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404 })));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { LocalTextProvider } = await import('@texts/LocalTextProvider.js');
+
+    const result = await new Promise((resolve) => {
+      LocalTextProvider.loadSection('missing', SECTION_ID, () => {}, (textid, sectionid) =>
+        resolve({ textid, sectionid })
+      );
+    });
+    expect(result).toEqual({ textid: 'missing', sectionid: SECTION_ID });
+  });
+
   it('invokes errorCallback when section fetch fails', async () => {
     vi.stubGlobal('fetch', makeFetchStub([
       ['info.json', jsonResponse(info)],

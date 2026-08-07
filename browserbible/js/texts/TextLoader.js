@@ -1,6 +1,7 @@
 import { addNames } from '../bible/BibleData.js';
 import {
   getTextid,
+  getTextIdentity,
   displayAbbr,
   processTexts,
   processText,
@@ -8,7 +9,7 @@ import {
   htmlToNode
 } from './TextInfoUtils.js';
 
-export { getTextid, displayAbbr, processTexts, processText };
+export { getTextid, getTextIdentity, displayAbbr, processTexts, processText };
 
 const textProviders = new Map();
 
@@ -18,15 +19,24 @@ let textInfoDataIsLoaded = false;
 
 let textInfoData = [];
 
+// All three caches are keyed by "providerName:textid", never by the bare id:
+// two providers can expose the same id (e.g. an "ESV" from both the ESV API and
+// API.Bible) and must not share metadata or chapter html.
 const textData = {};
 
 const cachedTexts = {};
 
-// In-flight section loads by "textid|sectionid"; concurrent callers share one fetch
+// In-flight section loads by "providerName:textid|sectionid"; concurrent callers
+// share one fetch
 const pendingSectionLoads = {};
 
 export function registerTextProvider(name, provider) {
   textProviders.set(name, provider);
+}
+
+/** The cache key for an already-resolved textInfo. */
+function cacheKey(textInfo) {
+  return textInfo.providerid ?? `${textInfo.providerName ?? 'local'}:${textInfo.id}`;
 }
 
 function loadSectionByTextid(textid, sectionid, successCallback, errorCallback) {
@@ -42,29 +52,48 @@ function loadSectionByTextid(textid, sectionid, successCallback, errorCallback) 
 
 function loadSectionFromProvider(textInfo, sectionid, successCallback, errorCallback) {
   const provider = textProviders.get(textInfo.providerName);
-  if (!provider) return;
+  if (!provider) {
+    errorCallback?.(textInfo.id, sectionid, {
+      message: `Provider "${textInfo.providerName}" not found`
+    });
+    return;
+  }
 
   const textid = textInfo.id;
-  const pendingKey = `${textid}|${sectionid}`;
+  const key = cacheKey(textInfo);
+  const pendingKey = `${key}|${sectionid}`;
   if (pendingSectionLoads[pendingKey]) {
     pendingSectionLoads[pendingKey].push({ successCallback, errorCallback });
     return;
   }
   pendingSectionLoads[pendingKey] = [{ successCallback, errorCallback }];
 
-  provider.loadSection(textid, sectionid, (html) => {
-    cachedTexts[textid][sectionid] = html;
+  let settled = false;
+  const succeed = (html) => {
+    if (settled) return;
+    settled = true;
+    cachedTexts[key][sectionid] = html;
 
     const waiters = pendingSectionLoads[pendingKey] || [];
     delete pendingSectionLoads[pendingKey];
     for (const waiter of waiters) {
       waiter.successCallback(htmlToNode(html));
     }
-  }, (...args) => {
+  };
+  const fail = (...args) => {
+    if (settled) return;
+    settled = true;
     const waiters = pendingSectionLoads[pendingKey] || [];
     delete pendingSectionLoads[pendingKey];
     for (const waiter of waiters) waiter.errorCallback?.(...args);
-  });
+  };
+
+  try {
+    provider.loadSection(textid, sectionid, succeed, fail);
+  } catch (error) {
+    if (settled) throw error;
+    fail(textid, sectionid, { message: error?.message ?? String(error), error });
+  }
 }
 
 export function loadSection(textInfo, sectionid, successCallback, errorCallback) {
@@ -78,18 +107,18 @@ export function loadSection(textInfo, sectionid, successCallback, errorCallback)
     return;
   }
 
-  const textid = textInfo.id;
   sectionid = resolveSectionId(textInfo, sectionid);
 
   if (window?.BrowserBible?.analytics?.record) {
     window.BrowserBible.analytics.record('load', textInfo.id, sectionid);
   }
 
-  if (typeof cachedTexts[textid] === 'undefined') {
-    cachedTexts[textid] = {};
+  const key = cacheKey(textInfo);
+  if (typeof cachedTexts[key] === 'undefined') {
+    cachedTexts[key] = {};
   }
-  if (typeof cachedTexts[textid][sectionid] !== 'undefined') {
-    successCallback(htmlToNode(cachedTexts[textid][sectionid]));
+  if (typeof cachedTexts[key][sectionid] !== 'undefined') {
+    successCallback(htmlToNode(cachedTexts[key][sectionid]));
     return;
   }
 
@@ -126,11 +155,14 @@ export function getProviderId(input) {
 }
 
 export function getText(textid, callback, errorCallback) {
-  // textData is keyed by the bare id (data.id after processText strips any
-  // "provider:" prefix). Normalize the lookup key the same way so prefixed
-  // and bare forms hit the same cache slot.
+  // Both the bare "ENGKJV" and prefixed "local:ENGKJV" forms resolve to the same
+  // provider-qualified key, so they share one cache slot without letting two
+  // providers' texts of the same id collide.
   const bareId = getTextid(textid);
-  const textinfo = textData[bareId];
+  const providerName = getProviderName(textid);
+  const key = `${providerName}:${bareId}`;
+
+  const textinfo = textData[key];
 
   if (typeof textinfo !== 'undefined') {
     if (typeof callback !== 'undefined') {
@@ -139,37 +171,63 @@ export function getText(textid, callback, errorCallback) {
     return textinfo;
   }
 
-  const providerName = getProviderName(textid);
-  textid = bareId;
-
   const provider = textProviders.get(providerName);
   if (!provider) {
     if (errorCallback) {
       errorCallback(new Error(`Provider "${providerName}" not found`));
+    } else if (callback) {
+      callback(null);
     }
     return;
   }
 
-  provider.getTextInfo(textid, (data) => {
+  let settled = false;
+  const fail = (...args) => {
+    if (settled) return;
+    settled = true;
+    if (errorCallback) errorCallback(...args);
+    else callback?.(null);
+  };
+  const succeed = (data) => {
+    if (settled) return;
+
     if (!data) {
-      if (errorCallback) errorCallback(new Error(`No data for "${textid}"`));
-      else if (callback) callback(null);
+      fail(new Error(`No data for "${bareId}"`));
       return;
     }
 
-    const initialInfo = textInfoData[textid];
-    data = { ...initialInfo, ...data };
+    try {
+      // The manifest entry carries fields a provider's detail response can omit
+      // (language names, runtime flags such as hasAudio), so start from it.
+      const manifestInfo = textInfoData.find((info) =>
+        info.providerid === key || (info.providerName === providerName && info.id === bareId));
+      data = { ...manifestInfo, ...data };
 
-    processText(data, providerName);
+      processText(data, providerName);
 
-    textData[data.id] = data;
+      textData[key] = data;
+      if (data.providerid !== key) {
+        textData[data.providerid] = data;
+      }
 
-    if (data.divisionNames) {
-      addNames(data.lang, data.divisions, data.divisionNames);
+      if (data.divisionNames) {
+        addNames(data.lang, data.divisions, data.divisionNames);
+      }
+    } catch (error) {
+      fail(error);
+      return;
     }
 
-    callback(data);
-  }, errorCallback);
+    settled = true;
+    callback?.(data);
+  };
+
+  try {
+    provider.getTextInfo(bareId, succeed, fail);
+  } catch (error) {
+    if (settled) throw error;
+    fail(error);
+  }
 }
 
 export function loadTexts(callback) {
@@ -195,20 +253,7 @@ function loadTextsManifest(callback) {
   let currentProviderIndex = 0;
 
   const loadNextProvider = () => {
-    if (currentProviderIndex < providerKeys.length) {
-      const providerName = providerKeys[currentProviderIndex];
-      const provider = textProviders.get(providerName);
-
-      provider.getTextManifest((data) => {
-        if (data && data != null) {
-          processTexts(data, providerName);
-          textInfoData = textInfoData.concat(data);
-        }
-
-        currentProviderIndex++;
-        loadNextProvider();
-      });
-    } else {
+    if (currentProviderIndex >= providerKeys.length) {
       textInfoDataIsLoading = false;
       textInfoDataIsLoaded = true;
 
@@ -218,6 +263,33 @@ function loadTextsManifest(callback) {
           cb(textInfoData);
         }
       }
+      return;
+    }
+
+    const providerName = providerKeys[currentProviderIndex];
+    const provider = textProviders.get(providerName);
+
+    // Providers load in series, so one that answers twice (or throws) would
+    // otherwise skip a provider or stall every text in the app.
+    let settled = false;
+    const next = (data) => {
+      if (settled) return;
+      settled = true;
+
+      if (data) {
+        processTexts(data, providerName);
+        textInfoData = textInfoData.concat(data);
+      }
+
+      currentProviderIndex++;
+      loadNextProvider();
+    };
+
+    try {
+      provider.getTextManifest(next);
+    } catch (error) {
+      console.error(`Error loading the "${providerName}" text manifest:`, error);
+      next(null);
     }
   };
 
@@ -232,9 +304,23 @@ export function startSearch(searchRequest) {
   const providerName = getProviderName(searchRequest.textid);
   const provider = textProviders.get(providerName);
 
-  if (provider && provider.startSearch) {
+  if (provider?.startSearch) {
     provider.startSearch(searchRequest);
+    return;
   }
+
+  // Commentaries and audio-only providers cannot search. Report a failed
+  // completion so the search window stops waiting on a result that never comes.
+  searchRequest.onSearchComplete?.({
+    type: 'complete',
+    target: null,
+    data: {
+      results: null,
+      searchIndexesData: [],
+      searchTermsRegExp: [],
+      isLemmaSearch: false
+    }
+  });
 }
 
 export function getTextInfoData() {

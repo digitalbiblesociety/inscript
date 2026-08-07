@@ -60,6 +60,10 @@ describe('morphology selector and visual filter rows', () => {
     expect(transform.style).toContain('background-color');
     expect(transform.morphRegExp.test('V-AA')).toBe(true);
 
+    grid.querySelector('.visualfilters-morph input').value = '[';
+    expect(() => readTransforms(grid)).not.toThrow();
+    expect(readTransforms(grid)[0].morphRegExp.test('[value')).toBe(true);
+
     drawTransforms(grid, [transform, { ...transform, strongs: 'H1', styleType: 'underline' }]);
     expect(readTransforms(grid)).toHaveLength(2);
     removeFilterRow(grid.querySelector('.visualfilters-remove'));
@@ -128,9 +132,12 @@ describe('language and visual plugins', () => {
     const content = document.createElement('div');
     content.className = 'section';
     content.lang = 'grc';
-    content.innerHTML = '<l s="G2424" m="V-AA">word</l><l s="G1" m="N-NSM">other</l>';
+    content.innerHTML = '<l s="G3588 G2424" m="V-AA" style="color: green; font-weight: bold">word</l>' +
+      '<l s="G1" m="N-NSM">other</l>';
+    document.querySelector('.windows-main').appendChild(content);
     extension.trigger('message', { data: { messagetype: 'textload', content } });
-    expect(content.querySelector('[s="G2424"]').style.backgroundColor).toBe('rgb(255, 0, 0)');
+    const filtered = content.querySelector('[s~="G2424"]');
+    expect(filtered.style.backgroundColor).toBe('rgb(255, 0, 0)');
     extension.trigger('message', { data: { messagetype: 'ignored', content } });
 
     document.querySelector('#config-visualfilters-button').click();
@@ -141,6 +148,9 @@ describe('language and visual plugins', () => {
     strong.value = 'G1';
     strong.dispatchEvent(new Event('keyup', { bubbles: true }));
     vi.advanceTimersByTime(250);
+    expect(filtered.style.backgroundColor).toBe('');
+    expect(filtered.style.color).toBe('green');
+    expect(filtered.style.fontWeight).toBe('bold');
     const morphInput = document.querySelector('.visualfilters-morph input');
     morphInput.click();
     expect(document.querySelector('.morph-selector').style.display).toBe('');

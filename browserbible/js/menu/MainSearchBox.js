@@ -7,6 +7,7 @@ import { getConfig } from '../core/config.js';
 import { PlaceKeeper } from '../common/PlaceKeeper.js';
 import { TextNavigation } from '../common/TextNavigation.js';
 import { t as i18nT } from '../lib/i18n.js';
+import { escapeHtml } from '../lib/escapeHtml.js';
 
 function getCurrentVersion() {
   const app = getApp();
@@ -74,12 +75,6 @@ export function MainSearchBox(parentNode) {
     suggestions.innerHTML = '';
     currentOptions = [];
     selectedIndex = 0;
-  };
-
-  const escapeHtml = (text) => {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
   };
 
   const updateSuggestions = () => {

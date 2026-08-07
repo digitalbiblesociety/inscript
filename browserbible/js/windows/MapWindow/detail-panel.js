@@ -5,6 +5,7 @@ import { getConfig } from '../../core/config.js';
 import { i18n } from '../../lib/i18n.js';
 import { getLocationTypeName } from './icon-library.js';
 import { getImportanceTier } from './geo-utils.js';
+import { escapeHtml } from '../../lib/escapeHtml.js';
 
 const TIER_LABELS = {
   1: 'Major location',
@@ -18,12 +19,6 @@ const TIER_LABELS = {
 const EAGER_HYDRATE_SECTIONS = 10;
 
 const SNIPPET_LENGTH = 150;
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
 
 function truncate(text) {
   return text.length > SNIPPET_LENGTH ? text.slice(0, SNIPPET_LENGTH) + '…' : text;

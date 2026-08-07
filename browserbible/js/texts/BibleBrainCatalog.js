@@ -1,15 +1,11 @@
 import { BOOK_DATA, NT_BOOKS } from '../bible/BibleData.js';
 import { toBcp47Lang } from '../lib/bcp47.js';
+import { escapeHtml } from '../lib/escapeHtml.js';
 
 const MANIFEST_MAX_PAGES = 100;
 const MANIFEST_FETCH_CONCURRENCY = 8;
 
 const AUDIO_TYPES = ['audio', 'audio_drama'];
-
-export const escapeHtml = (s) => String(s ?? '')
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;');
 
 const filesetType = (fs) => fs.type ?? fs.set_type_code ?? '';
 const filesetSize = (fs) => fs.size ?? fs.set_size_code ?? '';

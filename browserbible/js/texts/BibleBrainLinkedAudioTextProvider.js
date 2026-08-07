@@ -26,7 +26,11 @@ function getTextManifest(callback) {
         entry.hasAudio = true;
       }
     }
-
+  }).catch((error) => {
+    // Badging is optional, but the manifest loader runs providers in series and
+    // would stall for every text if this never called back.
+    console.error('Error loading linked Bible Brain audio associations:', error);
+  }).then(() => {
     callback(null);
   });
 }

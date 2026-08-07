@@ -1,5 +1,5 @@
 import { showNotice } from './notice.js';
-import { stripHtml } from './sanitize.js';
+import { stripHtml } from '../../lib/sanitizeHtml.js';
 import { SCHEMA_VERSION } from './NotesStore.js';
 import { t } from '../../lib/i18n.js';
 

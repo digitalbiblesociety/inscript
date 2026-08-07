@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import {
   buildAboutHtml,
   buildStructureFromBooks,
-  escapeHtml,
   parseChapterContent,
   renderApiBibleSection
 } from '@texts/ApiBibleChapterParser.js';
@@ -13,11 +12,6 @@ const verse = number => ({
 });
 
 describe('ApiBibleChapterParser helpers', () => {
-  it('escapes values after string coercion', () => {
-    expect(escapeHtml('<&>')).toBe('&lt;&amp;&gt;');
-    expect(escapeHtml(12)).toBe('12');
-  });
-
   it('handles defaults, ignored nodes, nested tags, and non-red-letter char runs', () => {
     const html = parseChapterContent([
       null,

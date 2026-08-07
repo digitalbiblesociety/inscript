@@ -64,11 +64,10 @@ describe('NotesPopupPlugin', () => {
     expect(fixtures.infoWindow).not.toHaveBeenCalled();
   });
 
-  it('creates an event-emitting extension and clears the current key when hidden', () => {
+  it('returns an inert extension and clears the current key when hidden', () => {
     const extension = NotesPopupPlugin();
     expect(fixtures.infoWindow).toHaveBeenCalledWith('NotesPopup');
-    expect(extension.getData()).toBeNull();
-    expect(extension.on).toBeTypeOf('function');
+    expect(extension).toEqual({});
     fixtures.popup.currentWord = document.createElement('span');
     fixtures.popup.callbacks.hide();
     expect(fixtures.popup.currentWord).toBeNull();
@@ -137,7 +136,7 @@ describe('NotesPopupPlugin', () => {
 
   it('routes desktop hover handlers with the source text id', async () => {
     let owner = document;
-    while (owner && !Object.prototype.hasOwnProperty.call(owner, 'ontouchend')) {
+    while (owner && !Object.hasOwn(owner, 'ontouchend')) {
       owner = Object.getPrototypeOf(owner);
     }
     const descriptor = owner && Object.getOwnPropertyDescriptor(owner, 'ontouchend');

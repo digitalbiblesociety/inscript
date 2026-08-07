@@ -1,6 +1,7 @@
 import { fuzzyIncludes } from '../lib/fuzzy.js';
 import { getConfig } from '../core/config.js';
 import { t as i18nT } from '../lib/i18n.js';
+import { getTextIdentity } from '../texts/TextInfoUtils.js';
 
 export const hasAudioContent = (text) => Boolean(
   text.hasAudio || text.audioDirectory || text.fcbh_audio_ot || text.fcbh_audio_nt);
@@ -47,7 +48,13 @@ export function buildGroupedData(controller) {
 
 function recentlyUsedItems(controller, texts) {
   if (!controller.recentlyUsed.recent.length) return [];
-  const textMap = new Map(texts.map((text) => [text.id, text]));
+  const textMap = new Map();
+  for (const text of texts) {
+    // Keep old bare-id settings readable, but make provider-qualified ids the
+    // canonical key so equal ids from separate providers stay distinct.
+    if (!textMap.has(text.id)) textMap.set(text.id, text);
+    textMap.set(getTextIdentity(text), text);
+  }
   const recent = controller.recentlyUsed.recent.map((id) => textMap.get(id)).filter(Boolean);
   if (!recent.length) return [];
   const header = i18nT('windows.bible.recentlyused') || 'Recently Used';

@@ -5,7 +5,7 @@
  */
 
 import { t } from '../../lib/i18n.js';
-import { sanitizeHtml } from './sanitize.js';
+import { sanitizeHtml } from '../../lib/sanitizeHtml.js';
 import { detectReferences } from './references.js';
 import { renderDetectedRefs } from './render.js';
 

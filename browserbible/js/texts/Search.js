@@ -13,18 +13,14 @@ export class TextSearch {
   constructor() {
     this._events = {};
 
-    const config = getConfig();
-    this.baseContentPath = `${config.baseContentUrl}${config.textsPath}/`;
     this.isLemmaRegExp = /[GgHh]\d{1,6}/g;
 
     this.isSearching = false;
-    this.canceled = false;
     this.searchText = '';
     this.searchTextid = '';
     this.searchDivisions = [];
     this.textInfo = null;
     this.isLemmaSearch = false;
-    this.startTime = null;
     this.searchTermsRegExp = [];
     this.searchIndexesData = [];
     this.searchIndexesCurrentIndex = 0;
@@ -44,29 +40,61 @@ export class TextSearch {
     this.searchText = text.trim();
     this.searchTextid = textid;
     this.searchDivisions = divisions;
-    this.textInfo = getText(this.searchTextid);
+    this.textInfo = null;
 
-    this.canceled = false;
-    this.startTime = new Date();
     this.searchFinalResults = [];
     this.searchTermsRegExp = [];
     this.searchIndexesData = [];
     this.searchIndexesCurrentIndex = 0;
-    this.searchType = /\bOR\b/gi.test(text) ? 'OR' : 'AND';
 
     this.isLemmaRegExp.lastIndex = 0;
     this.isLemmaSearch = this.isLemmaRegExp.test(this.searchText);
-    this.searchTermsRegExp = SearchTools.createSearchTerms(text, this.isLemmaSearch);
 
+    const query = SearchTools.parseQuery(text, this.isLemmaSearch);
+    this.searchType = query.searchType;
+    this.searchTermsRegExp = query.searchTermsRegExp;
+
+    // A query of nothing but operators or punctuation has no term to match, and
+    // the brute-force scan would otherwise walk the whole text for it.
+    if (this.searchTermsRegExp.length === 0) {
+      this.completeSearch([]);
+      return true;
+    }
+
+    // getText is async on a cache miss, so resolve the metadata before running:
+    // both the index loader and loadSection need textInfo.id and .sections.
+    getText(this.searchTextid, (textInfo) => {
+      if (!textInfo) {
+        this.completeSearch(null);
+        return;
+      }
+      this.textInfo = textInfo;
+      this.runSearch();
+    }, () => this.completeSearch(null));
+
+    return true;
+  }
+
+  /** End the search now; `null` results mean it could not run at all. */
+  completeSearch(results) {
+    this.isSearching = false;
+
+    this.trigger('complete', {
+      type: 'complete',
+      target: this,
+      data: this.completeEventData(results)
+    });
+  }
+
+  runSearch() {
     const config = getConfig();
+
     if (config.serverSearchPath !== '' &&
         (window.location.protocol !== 'file:' || config.baseContentUrl !== '')) {
       this.startServerSearch(this.textInfo, this.searchDivisions, this.searchText);
     } else {
       this.searchIndexLoader.loadIndexes(this.textInfo, this.searchDivisions, this.searchText, this.isLemmaSearch);
     }
-
-    return true;
   }
 
   completeEventData(results) {

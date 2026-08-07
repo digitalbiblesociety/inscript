@@ -1,14 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const fixtures = vi.hoisted(() => ({
-  config: { apiBibleProxyBase: 'https://proxy.test' },
-  createSearchTerms: vi.fn(text => [new RegExp(text, 'gi')])
-}));
+const fixtures = vi.hoisted(() => ({ config: { apiBibleProxyBase: 'https://proxy.test' } }));
 
 vi.mock('@core/config.js', () => ({ getConfig: () => fixtures.config }));
-vi.mock('@texts/Search.js', () => ({
-  SearchTools: { createSearchTerms: fixtures.createSearchTerms }
-}));
 
 import { createApiBibleSearchStarter } from '@texts/ApiBibleSearch.js';
 
@@ -31,7 +25,6 @@ describe('createApiBibleSearchStarter', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     fixtures.config = { apiBibleProxyBase: 'https://proxy.test' };
-    fixtures.createSearchTerms.mockImplementation(text => [new RegExp(text, 'gi')]);
     vi.stubGlobal('fetch', vi.fn());
   });
 
@@ -64,6 +57,24 @@ describe('createApiBibleSearchStarter', () => {
     expect(result.data.results[0].html.match(/class="highlight"/g)).toHaveLength(2);
   });
 
+  it('requires every AND term, not just the first', async () => {
+    fetch.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({ data: { verses: [
+      { bookId: 'JHN', id: 'JHN.1.1', text: 'faith and hope' },
+      { bookId: 'JHN', id: 'JHN.1.2', text: 'faith alone' }
+    ] } }) });
+    const result = await run(makeStarter(), { text: 'faith hope' });
+    expect(result.data.results.map(entry => entry.fragmentid)).toEqual(['JN1_1']);
+  });
+
+  it('accepts a verse matching only a later OR term', async () => {
+    fetch.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({ data: { verses: [
+      { bookId: 'JHN', id: 'JHN.1.1', text: 'hope alone' },
+      { bookId: 'JHN', id: 'JHN.1.2', text: 'bread or wine' }
+    ] } }) });
+    const result = await run(makeStarter(), { text: 'faith OR hope' });
+    expect(result.data.results.map(entry => entry.fragmentid)).toEqual(['JN1_1']);
+  });
+
   it('encodes spaces as plus signs and accepts every division when none are selected', async () => {
     fetch.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({
       data: { verses: [{ bookId: 'GEN', id: 'GEN.1.1', text: 'two words' }] }
@@ -76,6 +87,13 @@ describe('createApiBibleSearchStarter', () => {
   it('handles missing verse data as an empty result', async () => {
     fetch.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({}) });
     expect((await run(makeStarter())).data.results).toEqual([]);
+  });
+
+  it('matches nothing when the query has no terms', async () => {
+    fetch.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({ data: { verses: [
+      { bookId: 'JHN', id: 'JHN.1.1', text: 'anything' }
+    ] } }) });
+    expect((await run(makeStarter(), { text: '' })).data.results).toEqual([]);
   });
 
   it.each([

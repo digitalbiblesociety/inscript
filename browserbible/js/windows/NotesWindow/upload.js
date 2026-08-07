@@ -5,7 +5,7 @@
  */
 
 import { normalizeNote } from './NotesStore.js';
-import { sanitizeHtml } from './sanitize.js';
+import { sanitizeHtml } from '../../lib/sanitizeHtml.js';
 import { parseMarkdownImport } from './ImportMarkdown.js';
 import { parsePlainTextImport, parseRtfImport } from './ImportText.js';
 

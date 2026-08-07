@@ -7,9 +7,6 @@
 .eng2p-corrected {
 	color: var(--color-success);
 }
-.lemma-highlight .eng2p-corrected {
-	color: var(--color-success);
-}
 
 .eng2p-highlight,
 .eng2p-highlight-demo {
@@ -24,9 +21,6 @@
 	display: inline-block;
 	margin: 0 4px 0 0;
 }
-
-
-
 #config-eng2p table {
 	border-collapse: collapse;
 	margin: 10px auto;
@@ -53,5 +47,5 @@
 }
 
 #config-eng2p p {
-	margin: 10px 30px 0 ;
+	margin: 10px 30px 0;
 }

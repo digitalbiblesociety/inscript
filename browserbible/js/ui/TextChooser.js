@@ -3,7 +3,7 @@
 import { elem, offset } from '../lib/helpers.esm.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import AppSettings from '../common/AppSettings.js';
-import { getText, loadTexts } from '../texts/TextLoader.js';
+import { getText, getTextIdentity, loadTexts } from '../texts/TextLoader.js';
 import {
   buildFilteredIndices, buildGroupedData, buildPinnedTop, processTexts
 } from './TextChooserData.js';
@@ -73,7 +73,7 @@ class TextChooserController {
     if (event.key !== 'Enter') return;
     const visible = this.filteredIndices.filter((index) => this.processedData[index].type === 'text');
     if (visible.length === 1) {
-      this.selectText(this.processedData[visible[0]].data.id);
+      this.selectText(getTextIdentity(this.processedData[visible[0]].data));
       this.clearFilter();
     }
   }
@@ -134,7 +134,7 @@ class TextChooserController {
 
   storeRecentlyUsed(textInfo) {
     if (this.textType !== 'bible') return;
-    const textid = typeof textInfo === 'string' ? textInfo : textInfo?.id;
+    const textid = typeof textInfo === 'string' ? textInfo : getTextIdentity(textInfo);
     if (!textid) return;
     this.recentlyUsed.recent = this.recentlyUsed.recent.filter((id) => id !== textid);
     this.recentlyUsed.recent.unshift(textid);

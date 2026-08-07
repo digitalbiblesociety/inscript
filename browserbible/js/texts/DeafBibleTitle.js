@@ -3,12 +3,7 @@
 
 import { BOOK_DATA } from '../bible/BibleData.js';
 import { toBcp47Lang } from '../lib/bcp47.js';
-
-const escapeHtml = (s) => String(s ?? '')
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;')
-  .replace(/"/g, '&quot;');
+import { escapeHtml } from '../lib/escapeHtml.js';
 
 const norm = (s) => String(s ?? '').toLowerCase().replace(/[\s.]/g, '');
 

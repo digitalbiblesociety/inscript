@@ -1,9 +1,6 @@
 import { toBcp47Lang } from '../lib/bcp47.js';
-
-export const escapeHtml = (s) => String(s)
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;');
+import { escapeHtml } from '../lib/escapeHtml.js';
+import { sanitizeHtml } from '../lib/sanitizeHtml.js';
 
 // Paragraph styles that are section headings rather than verse-bearing prose.
 const TITLE_STYLE = /^(s\d*|ms\d*|mr|sr|sp|d|qa|r)$/;
@@ -125,10 +122,12 @@ export function parseChapterContent(content, sectionid) {
 const addBlankTargets = (html) => html.replace(/<a\s/gi, '<a target="_blank" rel="noopener" ');
 
 export function buildAboutHtml(textInfo, details) {
+  // details.info is publisher-supplied HTML from a remote API and lands in the
+  // info popover via innerHTML, so allowlist it before adding link targets.
   return `<div class="about-text">
   <h1>${escapeHtml(details?.nameLocal || details?.name || textInfo.name)}</h1>
   <p class="about-language">${escapeHtml(details?.language?.name || textInfo.langName || '')}</p>
-  <div class="about-publisher">${addBlankTargets(details?.info || '')}</div>
+  <div class="about-publisher">${addBlankTargets(sanitizeHtml(details?.info || ''))}</div>
   <p class="about-copyright">${escapeHtml(details?.copyright || '')}</p>
   <p class="about-source">Provided through <a href="https://api.bible" target="_blank" rel="noopener">API.Bible</a>.</p>
 </div>`;
@@ -170,7 +169,7 @@ export function renderApiBibleSection({ content, textid, sectionid, bookid, chap
     `>`);
 
   if (chapter === '1') {
-    html.push(`<div class="mt">${bookTitle}</div>`);
+    html.push(`<div class="mt">${escapeHtml(bookTitle)}</div>`);
   }
 
   html.push(`<div class="c">${chapter}</div>`);

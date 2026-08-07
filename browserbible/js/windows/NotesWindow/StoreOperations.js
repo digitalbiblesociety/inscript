@@ -5,7 +5,7 @@
 
 import { normalizeNote } from './NoteSchema.js';
 import { persistNotes } from './StoreBackend.js';
-import { stripHtml } from './sanitize.js';
+import { stripHtml } from '../../lib/sanitizeHtml.js';
 
 function emitChange(state, source, ids) {
   state.store.trigger('change', { source, ids });

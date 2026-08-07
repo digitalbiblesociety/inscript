@@ -19,16 +19,75 @@ function isInnerWordChar(input, i, punctuation, innerWordExceptions) {
   return !prevIsPunctuation && !nextIsPunctuation;
 }
 
+/** A search word that is really an operator: "AND"/"OR" in any case. */
+const IS_OPERATOR = /^(?:AND|OR)$/i;
+
+/** Split on whitespace outside double-quoted phrases. */
+function splitQueryTokens(searchText) {
+  const tokens = [];
+  let token = '';
+  let quoted = false;
+
+  for (const char of String(searchText ?? '')) {
+    if (char === '"') quoted = !quoted;
+
+    if (/\s/.test(char) && !quoted) {
+      if (token) tokens.push(token);
+      token = '';
+    } else {
+      token += char;
+    }
+  }
+
+  if (token) tokens.push(token);
+  return tokens;
+}
+
+function parseOperators(searchText) {
+  const tokens = splitQueryTokens(searchText);
+  return {
+    searchType: tokens.some((token) => /^OR$/i.test(token)) ? 'OR' : 'AND',
+    withoutOperators: tokens.filter((token) => !IS_OPERATOR.test(token)).join(' ')
+  };
+}
+
 export const SearchTools = {
   isAsciiRegExp: /^[\x20-\x7E]*$/gi,
   isLemmaRegExp: /[GgHh]\d{1,6}/g,
   HASHSIZE: 20,
 
+  /**
+   * Read the query once so every consumer agrees on it: the local search, the
+   * index loader and the remote providers all need the same operator, the same
+   * terms and the same regexes. `words` are the plain index keys (operators
+   * removed); `searchTermsRegExp` are the matching regexes.
+   */
+  parseQuery(searchText, isLemmaSearch = false) {
+    const text = String(searchText ?? '');
+    const { searchType, withoutOperators } = parseOperators(text);
+
+    return {
+      searchType,
+      words: isLemmaSearch
+        ? [...new Set(withoutOperators.split(/\s+/).filter(Boolean))]
+        : SearchTools.splitWords(withoutOperators),
+      searchTermsRegExp: SearchTools.createSearchTerms(text, isLemmaSearch)
+    };
+  },
+
+  /**
+   * Drop standalone AND/OR tokens. They select how terms combine, so leaving
+   * them in would search for the words "and"/"or" themselves.
+   */
+  removeOperators(searchText) {
+    return parseOperators(searchText).withoutOperators;
+  },
+
   createSearchTerms(searchText, isLemmaSearch) {
     const searchTermsRegExp = [];
 
     if (isLemmaSearch) {
-      const strongNumbers = searchText.split(' ');
+      const strongNumbers = SearchTools.removeOperators(searchText).split(/\s+/).filter(Boolean);
 
       for (const part of strongNumbers) {
         searchTermsRegExp.push(
@@ -46,15 +105,15 @@ export const SearchTools = {
       SearchTools.isAsciiRegExp.lastIndex = 0;
 
       if (SearchTools.isAsciiRegExp.test(searchText)) {
-        let andSearchParts = searchText.split(/\s+AND\s+|\s+/gi);
+        let searchParts = SearchTools.removeOperators(searchText).split(/\s+/).filter(Boolean);
 
-        andSearchParts = andSearchParts.filter((item, index, arr) => arr.indexOf(item) === index);
+        searchParts = searchParts.filter((item, index, arr) => arr.indexOf(item) === index);
 
-        for (const part of andSearchParts) {
+        for (const part of searchParts) {
           searchTermsRegExp.push(new RegExp(`\\b(${escapeRegExp(part)})\\b`, 'gi'));
         }
       } else {
-        const words = SearchTools.splitWords(searchText);
+        const words = SearchTools.splitWords(SearchTools.removeOperators(searchText));
 
         for (const word of words) {
           searchTermsRegExp.push(new RegExp(escapeRegExp(word), 'gi'));
@@ -109,7 +168,9 @@ export const SearchTools = {
     for (let i = 0, il = input.length; i < il; i++) {
       const letter = input.charAt(i);
       const isPunctuation = punctuation.indexOf(letter) > -1;
-      const isWhitespace = letter === ' ';
+      // Any whitespace, not just a literal space: newlines and tabs reach here
+      // from pasted queries and from index building over wrapped html.
+      const isWhitespace = /\s/.test(letter);
       const isLetter = !(isWhitespace || isPunctuation);
 
       if (isLetter) {

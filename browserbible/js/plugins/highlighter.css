@@ -75,13 +75,3 @@
 	border-color: var(--color-error);
 	color: var(--color-error);
 }
-
-/* Jabbok theme adjustments */
-.theme-jabbok .highlighter-toggle.active {
-	background-color: var(--color-highlight);
-}
-
-/* Shiloh theme adjustments */
-.theme-shiloh .highlighter-toggle.active {
-	background-color: var(--color-highlight);
-}

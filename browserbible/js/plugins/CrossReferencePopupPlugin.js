@@ -1,12 +1,12 @@
 import { getConfig } from '../core/config.js';
 import { InfoWindow } from '../ui/InfoWindow.js';
 import { elem } from '../lib/helpers.esm.js';
-const hasTouch = 'ontouchend' in document;
 import { Reference } from '../bible/BibleReference.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import { PlaceKeeper } from '../common/PlaceKeeper.js';
 import { TextNavigation } from '../common/TextNavigation.js';
 import { getText, loadSection } from '../texts/TextLoader.js';
+import { delegate, supportsHover } from './PluginEvents.js';
 
 // Store global handlers for cross-plugin communication
 let handleBibleRefClick = null;
@@ -14,13 +14,11 @@ let handleBibleRefMouseover = null;
 let handleBibleRefMouseout = null;
 
 const removeNotesFromVerse = (verse) => {
-  verse.querySelectorAll('.note').forEach((note) => {
-    note.parentNode.removeChild(note);
-  });
+  verse.querySelectorAll('.note').forEach((note) => note.remove());
 };
 
 function getFragmentidFromNode(node) {
-  const possibleTexts = [node.getAttribute('data-id'), node.getAttribute('title'), node.innerHTML];
+  const possibleTexts = [node.dataset.id, node.title, node.textContent];
   for (const text of possibleTexts) {
     if (text == null) continue;
     const reference = new Reference(text.split(';')[0].trim());
@@ -33,7 +31,8 @@ class CrossReferencePopupController {
   constructor() {
     this.referencePopup = InfoWindow('CrossReferencePopup');
     this.referencePopup.container.classList.add('info-window-elevated');
-    this.extension = { getData: () => null };
+    this.requestId = 0;
+    this.extension = {};
     mixinEventEmitter(this.extension);
     this.exposeHandlers();
     this.bindEvents();
@@ -48,7 +47,7 @@ class CrossReferencePopupController {
       controller.handleMouseover(this, textid);
     };
     handleBibleRefMouseout = function() {
-      controller.referencePopup.hide();
+      controller.handleMouseout();
     };
   }
 
@@ -77,11 +76,17 @@ class CrossReferencePopupController {
   }
 
   handleMouseover(link, requestedTextid) {
+    const requestId = ++this.requestId;
     const fragmentid = getFragmentidFromNode(link);
     if (fragmentid === null) return;
     const textid = requestedTextid ?? this.getTextid(link);
     if (!textid) return;
-    getText(textid, (textInfo) => this.loadReference(textInfo, fragmentid, link));
+    getText(textid, (textInfo) => this.loadReference(textInfo, fragmentid, link, requestId));
+  }
+
+  handleMouseout() {
+    this.requestId++;
+    this.referencePopup.hide();
   }
 
   getTextid(link) {
@@ -92,9 +97,10 @@ class CrossReferencePopupController {
     return section?.getAttribute('data-textid') ?? '';
   }
 
-  loadReference(textInfo, fragmentid, link) {
-    if (!textInfo) return;
+  loadReference(textInfo, fragmentid, link, requestId) {
+    if (!textInfo || requestId !== this.requestId) return;
     loadSection(textInfo, fragmentid.split('_')[0], (contentNode) => {
+      if (requestId !== this.requestId) return;
       const contentEl = typeof contentNode === 'string'
         ? elem('div', { innerHTML: contentNode })
         : contentNode;
@@ -115,20 +121,19 @@ class CrossReferencePopupController {
   bindEvents() {
     const windowsMain = document.querySelector('.windows-main');
     if (!windowsMain) return;
-    windowsMain.addEventListener('click', (e) => {
-      const target = e.target.closest('.bibleref, .xt');
-      if (target) handleBibleRefClick.call(target, e);
+    const selector = '.bibleref, .xt';
+    delegate(windowsMain, 'click', selector, (target, event) => {
+      handleBibleRefClick.call(target, event);
     });
 
-    if (!hasTouch) {
-      windowsMain.addEventListener('mouseover', (e) => {
-        const target = e.target.closest('.bibleref, .xt');
-        if (target) handleBibleRefMouseover.call(target, e);
-      });
-      windowsMain.addEventListener('mouseout', (e) => {
-        const target = e.target.closest('.bibleref, .xt');
-        if (target) handleBibleRefMouseout.call(target, e);
-      });
+    if (supportsHover()) {
+      const options = { ignoreInternal: true };
+      delegate(windowsMain, 'mouseover', selector, (target, event) => {
+        handleBibleRefMouseover.call(target, event);
+      }, options);
+      delegate(windowsMain, 'mouseout', selector, (target, event) => {
+        handleBibleRefMouseout.call(target, event);
+      }, options);
     }
   }
 }

@@ -7,6 +7,13 @@ import { highlightTextMatches } from '../lib/textHighlighter.js';
 export function findVerseMatches(html, { searchTermsRegExp, isLemmaSearch, searchType }) {
   let processedHtml = html;
   let foundMatch = false;
+
+  // No terms matches nothing: an AND search over an empty term list would
+  // otherwise report every verse as a match.
+  if (!searchTermsRegExp || searchTermsRegExp.length === 0) {
+    return { html: processedHtml, foundMatch: false };
+  }
+
   const regMatches = new Array(searchTermsRegExp.length);
 
   const temp = document.createElement('div');

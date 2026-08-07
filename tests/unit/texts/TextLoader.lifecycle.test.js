@@ -11,6 +11,7 @@ const fixtures = vi.hoisted(() => ({
 vi.mock('@bible/BibleData.js', () => ({ addNames: fixtures.addNames }));
 vi.mock('@texts/TextInfoUtils.js', () => ({
   getTextid: value => value.split(':').at(-1),
+  getTextIdentity: info => info?.providerid ?? info?.id ?? '',
   displayAbbr: vi.fn(),
   processTexts: fixtures.processTexts,
   processText: fixtures.processText,
@@ -29,15 +30,78 @@ describe('TextLoader lifecycle', () => {
     delete window.BrowserBible;
   });
 
-  it('ignores unregistered providers and reports invalid section ids', async () => {
+  it('reports unregistered providers and invalid section ids instead of hanging', async () => {
     const loader = await moduleUnderTest();
     const success = vi.fn();
     const error = vi.fn();
     loader.loadSection({ id: 'WEB', providerName: 'missing' }, 'GN1', success, error);
     expect(success).not.toHaveBeenCalled();
+    expect(error).toHaveBeenCalledWith('WEB', 'GN1', expect.objectContaining({
+      message: expect.stringContaining('missing')
+    }));
     loader.loadSection({ id: 'WEB' }, null, success, error);
     loader.loadSection({ id: 'WEB' }, 'null', success, error);
-    expect(error).toHaveBeenCalledTimes(2);
+    expect(error).toHaveBeenCalledTimes(3);
+  });
+
+  it('keeps two providers exposing the same id apart', async () => {
+    const loader = await moduleUnderTest();
+    const one = {
+      getTextInfo: vi.fn((id, callback) => callback({ id, name: 'From one' })),
+      loadSection: vi.fn((_id, _section, callback) => callback('<section>one</section>'))
+    };
+    const two = {
+      getTextInfo: vi.fn((id, callback) => callback({ id, name: 'From two' })),
+      loadSection: vi.fn((_id, _section, callback) => callback('<section>two</section>'))
+    };
+    loader.registerTextProvider('one', one);
+    loader.registerTextProvider('two', two);
+
+    const first = vi.fn();
+    const second = vi.fn();
+    loader.getText('one:ESV', first);
+    loader.getText('two:ESV', second);
+    expect(first).toHaveBeenCalledWith(expect.objectContaining({ name: 'From one' }));
+    expect(second).toHaveBeenCalledWith(expect.objectContaining({ name: 'From two' }));
+
+    const firstSection = vi.fn();
+    const secondSection = vi.fn();
+    loader.loadSection({ id: 'ESV', providerName: 'one' }, 'GN1', firstSection);
+    loader.loadSection({ id: 'ESV', providerName: 'two' }, 'GN1', secondSection);
+    expect(firstSection).toHaveBeenCalledWith({ html: '<section>one</section>' });
+    expect(secondSection).toHaveBeenCalledWith({ html: '<section>two</section>' });
+  });
+
+  it('completes a search request for a provider that cannot search', async () => {
+    const loader = await moduleUnderTest();
+    loader.registerTextProvider('commentary', { getTextInfo: vi.fn(), loadSection: vi.fn() });
+
+    const onSearchComplete = vi.fn();
+    loader.startSearch({ textid: 'commentary:MHC', divisions: [], text: 'love', onSearchComplete });
+    expect(onSearchComplete).toHaveBeenCalledWith(expect.objectContaining({
+      type: 'complete',
+      data: expect.objectContaining({ results: null })
+    }));
+  });
+
+  it('merges the manifest entry under the provider detail response', async () => {
+    const loader = await moduleUnderTest();
+    loader.registerTextProvider('remote', {
+      getTextManifest: vi.fn(callback => callback([
+        { id: 'WEB', langName: 'English', hasAudio: true, name: 'Manifest name' }
+      ])),
+      getTextInfo: vi.fn((id, callback) => callback({ id, name: 'Detail name', sections: ['GN1'] }))
+    });
+    loader.loadTexts(vi.fn());
+
+    const callback = vi.fn();
+    loader.getText('remote:WEB', callback);
+    expect(callback).toHaveBeenCalledWith(expect.objectContaining({
+      name: 'Detail name',
+      langName: 'English',
+      hasAudio: true,
+      sections: ['GN1']
+    }));
   });
 
   it('shares concurrent provider loads, populates cache, and records analytics', async () => {
@@ -76,6 +140,41 @@ describe('TextLoader lifecycle', () => {
     expect(second).toHaveBeenCalled();
     loader.loadSection(info, 'GN1', vi.fn(), vi.fn());
     expect(provider.loadSection).toHaveBeenCalledTimes(2);
+  });
+
+  it('settles every waiter and permits retry when a provider throws synchronously', async () => {
+    const loader = await moduleUnderTest();
+    const provider = { loadSection: vi.fn(() => { throw new Error('provider exploded'); }) };
+    loader.registerTextProvider('remote', provider);
+    const first = vi.fn();
+    const second = vi.fn();
+    const info = { id: 'WEB', providerName: 'remote' };
+
+    loader.loadSection(info, 'GN1', vi.fn(), first);
+    loader.loadSection(info, 'GN1', vi.fn(), second);
+
+    expect(first).toHaveBeenCalledWith('WEB', 'GN1', expect.objectContaining({
+      message: 'provider exploded', error: expect.any(Error)
+    }));
+    expect(second).toHaveBeenCalledWith('WEB', 'GN1', expect.objectContaining({
+      message: 'provider exploded', error: expect.any(Error)
+    }));
+    expect(provider.loadSection).toHaveBeenCalledTimes(2);
+  });
+
+  it('reports a synchronous text-info exception and can retry', async () => {
+    const loader = await moduleUnderTest();
+    const provider = { getTextInfo: vi.fn(() => { throw new Error('bad metadata'); }) };
+    loader.registerTextProvider('remote', provider);
+    const first = vi.fn();
+    const second = vi.fn();
+
+    loader.getText('remote:WEB', vi.fn(), first);
+    loader.getText('remote:WEB', vi.fn(), second);
+
+    expect(first).toHaveBeenCalledWith(expect.objectContaining({ message: 'bad metadata' }));
+    expect(second).toHaveBeenCalledWith(expect.objectContaining({ message: 'bad metadata' }));
+    expect(provider.getTextInfo).toHaveBeenCalledTimes(2);
   });
 
   it('loads string text ids and returns null metadata without an error callback', async () => {

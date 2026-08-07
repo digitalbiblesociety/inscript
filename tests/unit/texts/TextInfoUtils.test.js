@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { processText, processTexts } from '@texts/TextInfoUtils.js';
+import { getTextIdentity, processText, processTexts } from '@texts/TextInfoUtils.js';
+
+describe('TextInfoUtils identity', () => {
+  it('prefers provider-qualified ids and supports legacy bare metadata', () => {
+    expect(getTextIdentity({ id: 'ESV', providerid: 'esv:ESV' })).toBe('esv:ESV');
+    expect(getTextIdentity({ id: 'ESV' })).toBe('ESV');
+    expect(getTextIdentity(null)).toBe('');
+  });
+});
 
 describe('TextInfoUtils direction normalization', () => {
   it.each(['arb', 'urd', 'pes', 'heb'])('corrects bad LTR metadata for %s texts', (lang) => {

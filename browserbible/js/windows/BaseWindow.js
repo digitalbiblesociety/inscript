@@ -1,6 +1,7 @@
 
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import { getConfig } from '../core/config.js';
+import { escapeHtml } from '../lib/escapeHtml.js';
 
 export const AsyncHelpers = {
   /** For APIs whose last argument is a success callback. */
@@ -264,10 +265,7 @@ export class BaseWindow extends HTMLElement {
   }
 
   escapeHtml(text) {
-    if (text == null) return '';
-    const div = document.createElement('div');
-    div.textContent = String(text);
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 
   createElement(html) {

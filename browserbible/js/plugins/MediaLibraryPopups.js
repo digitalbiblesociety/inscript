@@ -7,10 +7,14 @@ import { getDbsVideoChapter, hasDbsVideoEdition } from '../media/DbsVideoApi.js'
 export const playableVideos = (mediaForVerse, lang) =>
   mediaForVerse.filter((mediaInfo) => hasDbsVideoEdition(mediaInfo.org, lang));
 
-const escapeAttr = (value) => String(value ?? '')
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/"/g, '&quot;');
+const safeMediaUrl = (value) => {
+  try {
+    const url = new URL(value, document.baseURI);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+  } catch {
+    return '';
+  }
+};
 
 function getMediaUrl(mediaLibrary, filename, extension, suffix) {
   if (mediaLibrary.baseUrl) {
@@ -28,27 +32,40 @@ const isModifiedClick = (event) => {
 export class MediaLibraryPopups {
   constructor() {
     this.popup = InfoWindow('mediapopup');
+    this.requestId = 0;
+    this.popup.on('hide', () => this.requestId++);
     this.popup.body.addEventListener('click', (event) => this.handleThumbnailClick(event));
   }
 
   showImage({ icon, mediaLibrary, mediaForVerse, reference, verseid, sectionid }) {
-    const html = mediaForVerse.map((mediaInfo) => {
+    this.requestId++;
+    const items = mediaForVerse.map((mediaInfo) => {
       const extension = Array.isArray(mediaInfo.exts) ? mediaInfo.exts[0] : mediaInfo.exts;
-      const fullUrl = getMediaUrl(mediaLibrary, mediaInfo.filename, extension, mediaLibrary.largeSuffix);
-      const thumbUrl = getMediaUrl(mediaLibrary, mediaInfo.filename, extension, mediaLibrary.thumbSuffix || null);
-      return `<li><a href="${fullUrl}" target="_blank" rel="noopener noreferrer" data-folder="${mediaLibrary.folder}" data-filename="${mediaInfo.filename}" data-verseid="${verseid}" data-sectionid="${sectionid}"><img src="${thumbUrl}" alt="${reference}" /></a></li>`;
-    }).join('');
-    this.showThumbnailList(icon, reference, html);
+      const fullUrl = safeMediaUrl(getMediaUrl(mediaLibrary, mediaInfo.filename, extension, mediaLibrary.largeSuffix));
+      const thumbUrl = safeMediaUrl(getMediaUrl(mediaLibrary, mediaInfo.filename, extension, mediaLibrary.thumbSuffix || null));
+      if (!fullUrl || !thumbUrl) return null;
+      return this.createThumbnail({
+        href: fullUrl,
+        src: thumbUrl,
+        alt: reference,
+        dataset: { folder: mediaLibrary.folder, filename: mediaInfo.filename, verseid, sectionid },
+        newTab: true
+      });
+    }).filter(Boolean);
+    this.showThumbnailList(icon, reference, items);
   }
 
   showVideo(icon, mediaLibrary, mediaForVerse) {
+    this.requestId++;
     const mediaInfo = mediaForVerse[0];
     const extension = Array.isArray(mediaInfo.exts) ? mediaInfo.exts[0] : mediaInfo.exts;
-    const videoUrl = getMediaUrl(mediaLibrary, mediaInfo.filename, extension);
+    const videoUrl = safeMediaUrl(getMediaUrl(mediaLibrary, mediaInfo.filename, extension));
+    if (!videoUrl) return;
     this.showVideoPopup(icon, videoUrl, mediaInfo.name || mediaInfo.filename);
   }
 
   async showDbsVideo({ icon, mediaLibrary, mediaForVerse, reference, verseid, sectionid }) {
+    const requestId = ++this.requestId;
     const lang = icon.closest('.section')?.getAttribute('data-lang3') ?? 'eng';
     const playable = playableVideos(mediaForVerse, lang);
     if (!playable.length) return;
@@ -63,23 +80,43 @@ export class MediaLibraryPopups {
     } catch (error) {
       console.warn('DBS video error:', error.message);
     }
-    if (!chapter) return;
+    if (!chapter || requestId !== this.requestId) return;
     const langSuffix = chapter.isFallback && chapter.languageName ? ` (${chapter.languageName})` : '';
-    this.showVideoPopup(icon, chapter.url, (chapter.title || mediaInfo.name || mediaInfo.filename) + langSuffix);
+    const videoUrl = safeMediaUrl(chapter.url);
+    if (videoUrl) this.showVideoPopup(icon, videoUrl, (chapter.title || mediaInfo.name || mediaInfo.filename) + langSuffix);
   }
 
   showVideoChooser({ icon, mediaLibrary, mediaForVerse, reference, verseid, sectionid }) {
-    const html = mediaForVerse.map((mediaInfo) => {
+    const items = mediaForVerse.map((mediaInfo) => {
       const label = [mediaInfo.name, mediaInfo.source].filter(Boolean).join(' - ');
-      return `<li><a href="${mediaInfo.cover}" data-folder="${mediaLibrary.folder}" data-filename="${mediaInfo.filename}" data-verseid="${verseid}" data-sectionid="${sectionid}" title="${escapeAttr(label)}"><img src="${mediaInfo.cover}" alt="${escapeAttr(label)}" /><b><i></i></b></a></li>`;
-    }).join('');
-    this.showThumbnailList(icon, reference, html);
+      const cover = safeMediaUrl(mediaInfo.cover);
+      if (!cover) return null;
+      return this.createThumbnail({
+        href: cover,
+        src: cover,
+        alt: label,
+        title: label,
+        dataset: { folder: mediaLibrary.folder, filename: mediaInfo.filename, verseid, sectionid },
+        extra: elem('b', {}, elem('i'))
+      });
+    }).filter(Boolean);
+    this.showThumbnailList(icon, reference, items);
   }
 
-  showThumbnailList(icon, reference, html) {
+  createThumbnail({ href, src, alt, title = '', dataset, newTab = false, extra = null }) {
+    const anchor = elem('a', {
+      href,
+      title,
+      dataset,
+      ...(newTab && { target: '_blank', rel: 'noopener noreferrer' })
+    }, elem('img', { src, alt }), extra);
+    return elem('li', {}, anchor);
+  }
+
+  showThumbnailList(icon, reference, items) {
     this.popup.body.innerHTML = '';
     this.popup.body.appendChild(elem('strong', {}, reference));
-    this.popup.body.appendChild(elem('ul', { className: 'inline-image-library-thumbs', innerHTML: html }));
+    this.popup.body.appendChild(elem('ul', { className: 'inline-image-library-thumbs' }, items));
     this.popup.position(icon).show();
   }
 

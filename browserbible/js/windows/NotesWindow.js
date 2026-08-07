@@ -9,7 +9,7 @@ import { Reference } from '../bible/BibleReference.js';
 import { t } from '../lib/i18n.js';
 import { getSharedNotesStore } from './NotesWindow/NotesStore.js';
 import { filterAndSortNotes } from './NotesWindow/query.js';
-import { sanitizeHtml, stripHtml } from './NotesWindow/sanitize.js';
+import { sanitizeHtml, stripHtml } from '../lib/sanitizeHtml.js';
 import { showNotice, showConfirm } from './NotesWindow/notice.js';
 import { selectSuggestion } from './NotesWindow/search.js';
 import { renderWindowStructure, renderNotesList } from './NotesWindow/render.js';

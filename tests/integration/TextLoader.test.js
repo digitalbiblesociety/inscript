@@ -114,6 +114,121 @@ describe('TextLoader.getText', () => {
   });
 });
 
+describe('TextLoader search startup', () => {
+  it('runs a local search whose text metadata is not cached yet', async () => {
+    const { registerTextProvider, startSearch } = await import('@texts/TextLoader.js');
+    const { LocalTextProvider } = await import('@texts/LocalTextProvider.js');
+    const { updateConfig } = await import('@core/config.js');
+
+    // Force the index-based local search rather than the hosted search service.
+    updateConfig({ serverSearchPath: '' });
+
+    // No getText() call has cached ENGKJV, so the search has to wait for
+    // info.json and then for the index request that follows it.
+    const requested = [];
+    vi.stubGlobal('fetch', vi.fn(async (url) => {
+      requested.push(url);
+      if (url.includes('info.json')) {
+        return { ok: true, json: async () => ({ id: 'ENGKJV', lang: 'eng', sections: ['JN3'] }) };
+      }
+      if (url.includes('/index/stems.json')) {
+        return { ok: false, status: 404 };
+      }
+      if (url.includes('/index/')) {
+        return { ok: true, json: async () => ({ loved: ['JN3_16'] }) };
+      }
+      if (url.endsWith('JN3.html')) {
+        return {
+          ok: true,
+          text: async () => '<div class="section" data-id="JN3">' +
+            '<span class="v JN3_16" data-id="JN3_16">For God so loved</span></div>'
+        };
+      }
+      return { ok: false, status: 404 };
+    }));
+
+    registerTextProvider('local', LocalTextProvider);
+
+    const event = await new Promise((resolve, reject) => {
+      startSearch({
+        textid: 'ENGKJV',
+        divisions: [],
+        text: 'loved',
+        onSearchLoad: () => {},
+        onSearchIndexComplete: () => {},
+        onSearchComplete: resolve
+      });
+      setTimeout(() => reject(new Error('search never completed')), 3000);
+    });
+
+    expect(requested.some(url => url.includes('info.json'))).toBe(true);
+    expect(event.data.results).toEqual([
+      { fragmentid: 'JN3_16', html: 'For God so <span class="highlight">loved</span> ' }
+    ]);
+  });
+
+  it('completes a search that cannot resolve its text', async () => {
+    const { registerTextProvider, startSearch } = await import('@texts/TextLoader.js');
+    const { LocalTextProvider } = await import('@texts/LocalTextProvider.js');
+
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404 })));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    registerTextProvider('local', LocalTextProvider);
+
+    const event = await new Promise((resolve, reject) => {
+      startSearch({
+        textid: 'MISSING',
+        divisions: [],
+        text: 'love',
+        onSearchLoad: () => {},
+        onSearchIndexComplete: () => {},
+        onSearchComplete: resolve
+      });
+      setTimeout(() => reject(new Error('search never completed')), 3000);
+    });
+
+    expect(event.data.results).toBeNull();
+  });
+});
+
+describe('TextLoader.loadTexts', () => {
+  it('keeps loading providers when one rejects its manifest', async () => {
+    const { registerTextProvider, loadTexts, getTextInfoData } = await import('@texts/TextLoader.js');
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    registerTextProvider('broken', {
+      getTextManifest: () => { throw new Error('provider exploded'); }
+    });
+    registerTextProvider('working', {
+      getTextManifest: (callback) => callback([{ id: 'WEB', name: 'World English Bible' }])
+    });
+
+    const data = await new Promise((resolve, reject) => {
+      loadTexts(resolve);
+      setTimeout(() => reject(new Error('manifest loading stalled')), 3000);
+    });
+
+    expect(data.map(info => info.id)).toEqual(['WEB']);
+    expect(getTextInfoData()).toHaveLength(1);
+  });
+
+  it('ignores a provider that answers its manifest twice', async () => {
+    const { registerTextProvider, loadTexts } = await import('@texts/TextLoader.js');
+
+    registerTextProvider('chatty', {
+      getTextManifest: (callback) => {
+        callback([{ id: 'ONE' }]);
+        callback([{ id: 'TWO' }]);
+      }
+    });
+
+    const data = await new Promise((resolve) => {
+      loadTexts(resolve);
+    });
+    expect(data.map(info => info.id)).toEqual(['ONE']);
+  });
+});
+
 describe('TextLoader.processText', () => {
   it('strips a leading "provider:" off the id and stamps providerName/providerid', async () => {
     const { processText } = await import('@texts/TextLoader.js');

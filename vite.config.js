@@ -127,17 +127,13 @@ export default defineConfig(({ command }) => {
     || (command === 'build' ? 'inscript' : 'dev');
   const siteConfig = JSON.parse(readFileSync(`./sites/${siteProfile}.json`, 'utf-8'));
 
-  // `vite dev` (serve) talks to a locally-run proxy; builds bake the deployed
-  // proxy URL from the site profile, so dev.inscript.org / inscript.org both
-  // reach https://api.inscript.org/abs/v1 rather than the visitor's localhost.
+  // `vite dev` talks to a locally-run proxy; builds use the configured service.
   const apiBibleProxyBase = command === 'serve'
     ? 'http://localhost:8787/v1'
     : (siteConfig.apiBibleProxyBase || 'https://api.inscript.org/abs/v1');
-
   const bibleBrainProxyBase = command === 'serve'
     ? 'http://localhost:8787/fcbh/v4'
-    : (siteConfig.bibleBrainProxyBase || '');
-
+    : (siteConfig.bibleBrainProxyBase || 'https://api.inscript.org/fcbh/v4');
   const esvProxyBase = command === 'serve'
     ? 'http://localhost:8787/esv/v3'
     : (siteConfig.esvProxyBase || 'https://api.inscript.org/esv/v3');
@@ -164,21 +160,31 @@ export default defineConfig(({ command }) => {
       input: {
         main: resolve(rootDir, 'browserbible/index.html')
       },
+      // Cache busting: every file Vite emits carries a content hash in its
+      // name, so a deploy changes the URL of whatever actually changed and
+      // leaves the rest cacheable forever. index.html is the only unhashed
+      // entry point; it revalidates on every load and points at the new names.
+      // browserbible/public/_headers grants `immutable` to exactly the
+      // directories below, so any path added here needs a rule added there.
+      //
+      // The entry chunk lives in js/chunks/ alongside the lazy chunks (both
+      // are hashed and immutable) so that js/resources/, which holds unhashed
+      // public i18n JSON, stays outside the immutable prefix.
       output: {
-        entryFileNames: 'js/bundle.js',
-        chunkFileNames: 'js/[name]-[hash].js',
+        entryFileNames: 'js/chunks/bundle-[hash].js',
+        chunkFileNames: 'js/chunks/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
           const extType = assetInfo.name.split('.').pop();
           if (/css/i.test(extType)) {
-            return 'css/[name][extname]';
+            return 'css/[name]-[hash][extname]';
           }
           if (/png|jpe?g|gif|svg|ico|webp/i.test(extType)) {
-            return 'images/[name][extname]';
+            return 'images/[name]-[hash][extname]';
           }
           if (/woff2?|ttf|eot/i.test(extType)) {
-            return 'fonts/[name][extname]';
+            return 'fonts/[name]-[hash][extname]';
           }
-          return 'assets/[name][extname]';
+          return 'assets/[name]-[hash][extname]';
         }
       }
     },
@@ -194,8 +200,6 @@ export default defineConfig(({ command }) => {
 
   server: {
     port: 3000,
-    // The proxy worker's ALLOWED_ORIGINS only permits this exact origin; if
-    // 3000 is taken, fail instead of drifting to 3001 and getting CORS 403s.
     strictPort: true,
     open: true,
     cors: true

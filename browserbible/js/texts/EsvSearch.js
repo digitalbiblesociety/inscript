@@ -1,7 +1,11 @@
 import { getConfig } from '../core/config.js';
-import { SearchTools } from './SearchTools.js';
 import { BOOK_DATA, DEFAULT_BIBLE } from '../bible/BibleData.js';
-import { escapeHtml } from './EsvPassageParser.js';
+import {
+  createRemoteSearchEvent,
+  matchesSearchTerms,
+  highlightSearchTerms,
+  isInDivisions
+} from './RemoteSearch.js';
 
 const SEARCH_PAGE_SIZE = 100;
 const SEARCH_MAX_PAGES = 20;
@@ -26,31 +30,12 @@ export function createEsvSearchStarter({ getTextInfoSync, bookName }) {
     return bookNameToCode.get(name.toLowerCase());
   };
 
-  const highlightWords = (text, searchTermsRegExp) => {
-    let processedHtml = escapeHtml(text);
-
-    for (const regex of searchTermsRegExp) {
-      regex.lastIndex = 0;
-      processedHtml = processedHtml.replace(regex, match => `<span class="highlight">${match}</span>`);
-    }
-
-    return processedHtml;
-  };
-
   return function startSearch({ textid, divisions, text, onSearchComplete }) {
     const config = getConfig();
     const info = getTextInfoSync(textid);
 
-    const e = {
-      type: 'complete',
-      target: this,
-      data: {
-        results: [],
-        searchIndexesData: [],
-        searchTermsRegExp: SearchTools.createSearchTerms(text, false),
-        isLemmaSearch: false
-      }
-    };
+    const { searchType, event: e } = createRemoteSearchEvent(this, text);
+    const terms = e.data.searchTermsRegExp;
 
     if (!info) {
       onSearchComplete(e);
@@ -67,13 +52,11 @@ export function createEsvSearchStarter({ getTextInfoSync, bookName }) {
         const bookCode = getBookCode(match[1]);
         if (!bookCode) continue;
 
-        e.data.searchTermsRegExp[0].lastIndex = 0;
-        const hasMatch = e.data.searchTermsRegExp[0].test(result.content);
-
-        if (hasMatch && (divisions.length === 0 || divisions.includes(bookCode))) {
+        if (matchesSearchTerms(result.content, terms, searchType) &&
+            isInDivisions(divisions, bookCode)) {
           e.data.results.push({
             fragmentid: `${bookCode}${match[2]}_${match[3]}`,
-            html: highlightWords(result.content, e.data.searchTermsRegExp)
+            html: highlightSearchTerms(result.content, terms)
           });
         }
       }

@@ -1,6 +1,4 @@
-l.lemma-highlight,
-.lemma-highlight,
-.lemma-highlight:hover {
+.lemma-highlight {
 	background: var(--color-primary);
 	color: var(--color-background);
 }

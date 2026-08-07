@@ -8,5 +8,4 @@ import { BibleBrainAudioProvider, LinkedBibleBrainAudioProvider } from './BibleB
 registerAudioSource(new LocalAudioProvider());
 registerAudioSource(new BibleBrainAudioProvider());
 registerAudioSource(new DbsAudioProvider());
-// Last: Bible Brain audio for texts no earlier provider covers.
 registerAudioSource(new LinkedBibleBrainAudioProvider());

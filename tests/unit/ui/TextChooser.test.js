@@ -5,6 +5,7 @@ const fixtures = vi.hoisted(() => ({
   getValue: vi.fn(),
   setValue: vi.fn(),
   getText: vi.fn(),
+  getTextIdentity: vi.fn(info => info?.providerid ?? info?.id ?? ''),
   loadTexts: vi.fn(),
   buildFilteredIndices: vi.fn(() => []),
   buildGroupedData: vi.fn(() => ['grouped']),
@@ -22,6 +23,7 @@ vi.mock('@common/AppSettings.js', () => ({
 
 vi.mock('@texts/TextLoader.js', () => ({
   getText: fixtures.getText,
+  getTextIdentity: fixtures.getTextIdentity,
   loadTexts: fixtures.loadTexts
 }));
 
@@ -96,7 +98,7 @@ describe('TextChooser', () => {
     chooser.refs.filter.dispatchEvent(new Event('input'));
     chooser.refs.filter.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     chooser.refs.main.dispatchEvent(new Event('scroll'));
-    chooser.refs.scrollContent.innerHTML = '<div class="text-chooser-row" data-id="ENG"><span></span></div><button></button>';
+    chooser.refs.scrollContent.innerHTML = '<div class="text-chooser-row" data-id="one:ENG"><span></span></div><button></button>';
     chooser.refs.scrollContent.querySelector('span').click();
     chooser.refs.scrollContent.querySelector('button').click();
     chooser.refs.chooser.dispatchEvent(new Event('toggle'));
@@ -104,7 +106,7 @@ describe('TextChooser', () => {
     expect(chooser.handleFilterInput).toHaveBeenCalled();
     expect(chooser.handleFilterKeydown).toHaveBeenCalled();
     expect(chooser.handleScroll).toHaveBeenCalled();
-    expect(chooser.selectText).toHaveBeenCalledWith('ENG');
+    expect(chooser.selectText).toHaveBeenCalledWith('one:ENG');
     expect(chooser.handleToggle).toHaveBeenCalled();
     expect(chooser.refresh).toHaveBeenCalled();
   });
@@ -127,14 +129,16 @@ describe('TextChooser', () => {
   it('selects the sole visible text on Enter and ignores other key/list shapes', () => {
     const chooser = makeChooser();
     chooser.processedData = [
-      { type: 'heading' }, { type: 'text', data: { id: 'ENG' } }, { type: 'heading' }
+      { type: 'heading' },
+      { type: 'text', data: { id: 'ENG', providerid: 'one:ENG' } },
+      { type: 'heading' }
     ];
     chooser.filteredIndices = [0, 1, 2];
     chooser.selectText = vi.fn();
     chooser.clearFilter = vi.fn();
     chooser.handleFilterKeydown({ key: 'x' });
     chooser.handleFilterKeydown({ key: 'Enter' });
-    expect(chooser.selectText).toHaveBeenCalledWith('ENG');
+    expect(chooser.selectText).toHaveBeenCalledWith('one:ENG');
     expect(chooser.clearFilter).toHaveBeenCalled();
 
     chooser.processedData.push({ type: 'text', data: { id: 'SPA' } });
@@ -194,14 +198,14 @@ describe('TextChooser', () => {
     fixtures.getText.mockImplementation((_id, callback) => { resolveText = callback; });
     const changed = vi.fn();
     chooser.on('change', changed);
-    chooser.selectText('ENG');
+    chooser.selectText('one:ENG');
     chooser.target = document.body;
     resolveText({ id: 'ENG', abbr: 'WEB' });
     expect(chooser.refs.chooser.hidePopover).toHaveBeenCalled();
     expect(chooser.selectedTextInfo).toEqual({ id: 'ENG', abbr: 'WEB' });
     expect(changed).toHaveBeenCalledWith({
       type: 'change', target: null,
-      data: { textInfo: { id: 'ENG', abbr: 'WEB' }, textid: 'ENG', target }
+      data: { textInfo: { id: 'ENG', abbr: 'WEB' }, textid: 'one:ENG', target }
     });
   });
 
@@ -214,8 +218,8 @@ describe('TextChooser', () => {
     expect(fixtures.setValue).not.toHaveBeenCalled();
     chooser.recentlyUsed = { recent: ['A', 'B', 'C', 'D', 'E'] };
     chooser.storeRecentlyUsed('C');
-    chooser.storeRecentlyUsed({ id: 'F' });
-    expect(chooser.recentlyUsed.recent).toEqual(['F', 'C', 'A', 'B', 'D']);
+    chooser.storeRecentlyUsed({ id: 'F', providerid: 'remote:F' });
+    expect(chooser.recentlyUsed.recent).toEqual(['remote:F', 'C', 'A', 'B', 'D']);
     expect(fixtures.setValue).toHaveBeenLastCalledWith('texts-recently-used', chooser.recentlyUsed);
   });
 

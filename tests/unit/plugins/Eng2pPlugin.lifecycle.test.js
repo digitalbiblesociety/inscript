@@ -42,8 +42,7 @@ describe('Eng2pPlugin supplemental lifecycle', () => {
   it('honors URL selection/startup flags and closes the config popover', () => {
     history.replaceState({}, '', '/?eng2p=yall&eng2pshow=1');
     Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1000 });
-    const extension = Eng2pPlugin();
-    expect(extension.sendMessage()).toBeUndefined();
+    Eng2pPlugin();
     const movable = document.querySelector('.movable-window');
     expect(movable.showPopover).toHaveBeenCalled();
     expect(movable.style.left).toMatch(/px$/);
@@ -65,6 +64,22 @@ describe('Eng2pPlugin supplemental lifecycle', () => {
     await vi.waitFor(() => expect(chapter.querySelectorAll('.eng2p-highlight')).toHaveLength(3));
     expect(chapter.querySelector('.eng2p-corrected')).toBeNull();
     expect(chapter.querySelector('.eng2p-original')).toBeNull();
+  });
+
+  it('transforms only verse text without rewriting attributes or note content', async () => {
+    const chapter = document.createElement('div');
+    chapter.className = 'chapter';
+    chapter.lang = 'eng';
+    chapter.innerHTML = '<span class="v" data-id="GN1_22"><a title="you" href="?q=you">You</a>' +
+      '<span class="note">You</span></span>';
+    document.body.appendChild(chapter);
+    Eng2pPlugin();
+
+    document.querySelector('#eng2p-option-highlight').click();
+    await vi.waitFor(() => expect(chapter.querySelector('a .eng2p-highlight')).not.toBeNull());
+    expect(chapter.querySelector('a').title).toBe('you');
+    expect(chapter.querySelector('a').getAttribute('href')).toBe('?q=you');
+    expect(chapter.querySelector('.note .eng2p-highlight')).toBeNull();
   });
 
   it('skips non-English and unlisted verses in documents and loaded content', () => {

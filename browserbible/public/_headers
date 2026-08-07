@@ -20,29 +20,53 @@
 # Deliberately no Cache-Control in the /* block above: every matching rule is
 # applied and same-named headers are combined, so a global Cache-Control would
 # collide with the per-path values below instead of being overridden by them.
+# For the same reason no two rules below may match the same file.
 #
-# Only /js/chunks/ files are content-hashed, so they alone cache immutably.
-# Everything else keeps unhashed names: code and markup must revalidate every
-# load or a deploy would not reach returning visitors; fonts and images get a
-# real max-age because their bytes are stable even though their names are not.
+# Everything Vite emits is content-hashed (see rolldownOptions.output in
+# vite.config.js), so those directories cache for a year and a deploy busts
+# them by changing the filename. index.html is the unhashed entry point that
+# names them, so it must revalidate on every load; if it were cached, a deploy
+# would not reach returning visitors. The remaining unhashed files are copied
+# verbatim from public/ and get a plain max-age instead.
 
-/js/bundle.js
+# The document that references every hashed name. Never cache it.
+/
   Cache-Control: public, max-age=0, must-revalidate
 
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Content-hashed build output: entry chunk, lazy chunks, bundled CSS, and any
+# image/font/asset Vite emitted for them.
 /js/chunks/*
   Cache-Control: public, max-age=31536000, immutable
 
-/css/main.css
-  Cache-Control: public, max-age=0, must-revalidate
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
 
 /fonts/*
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=31536000, immutable
 
 /images/*
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=31536000, immutable
 
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Unhashed files copied from public/. Their bytes can change without their
+# names changing, so they revalidate on a timer rather than caching immutably.
+
+# i18n strings. Kept out of the immutable rule above by living in
+# js/resources/ rather than js/chunks/.
+/js/resources/*
+  Cache-Control: public, max-age=3600
+
+# App icons and logos, referenced by fixed name from index.html,
+# manifest.webmanifest, and the main menu. Their bytes rarely change, but the
+# names never do, so a long max-age would strand a replaced icon in caches for
+# weeks. Kept at an hour like the other unhashed files.
 /img/*
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=3600
 
 # Bundled data (maps, parallels, media manifests) ships with the build and
 # changes with it, so keep this short enough that a deploy propagates quickly.

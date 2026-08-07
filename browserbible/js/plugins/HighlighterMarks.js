@@ -1,5 +1,5 @@
 import { elem } from '../lib/helpers.esm.js';
-import { getHighlightsForVerse } from './HighlighterStorage.js';
+import { getHighlightsForText } from './HighlighterStorage.js';
 
 const SKIP_SELECTORS = '.verse-num, .v-num, .note, .cf, .chapter-num, .c, .c-num';
 
@@ -111,10 +111,16 @@ export function recolorHighlightMarks(highlightId, color) {
 
 export function applyHighlightsToSection(textid, section) {
   if (!section || !textid) return;
+  const highlightsByVerse = new Map();
+  for (const highlight of getHighlightsForText(textid)) {
+    const verseHighlights = highlightsByVerse.get(highlight.verseId) ?? [];
+    verseHighlights.push(highlight);
+    highlightsByVerse.set(highlight.verseId, verseHighlights);
+  }
   for (const verse of section.querySelectorAll('.verse, .v')) {
     const verseId = verse.getAttribute('data-id');
     if (!verseId) continue;
-    const highlights = getHighlightsForVerse(textid, verseId)
+    const highlights = (highlightsByVerse.get(verseId) ?? [])
       .sort((a, b) => b.startOffset - a.startOffset);
     for (const highlight of highlights) {
       applyHighlightMark(verse, highlight.startOffset, highlight.endOffset, highlight.color, highlight.id);

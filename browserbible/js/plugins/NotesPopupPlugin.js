@@ -1,12 +1,11 @@
 import { getConfig } from '../core/config.js';
 import { InfoWindow } from '../ui/InfoWindow.js';
-const hasTouch = 'ontouchend' in document;
-import { mixinEventEmitter } from '../common/EventEmitter.js';
 import {
   getBibleRefClickHandler,
   getBibleRefMouseoverHandler,
   getBibleRefMouseoutHandler
 } from './CrossReferencePopupPlugin.js';
+import { delegate, supportsHover } from './PluginEvents.js';
 
 export const NotesPopupPlugin = () => {
   const config = getConfig();
@@ -24,39 +23,21 @@ export const NotesPopupPlugin = () => {
   const notesPopupBody = notesPopup.body;
 
   // Handle clicks on bible refs within notes
-  notesPopupBody.addEventListener('click', (e) => {
-    const target = e.target.closest('.bibleref, .xt');
-    if (target) {
-      const handler = getBibleRefClickHandler();
-      if (handler) {
-        handler.call(target, e);
-      }
-      notesPopup.hide();
-    }
+  const referenceSelector = '.bibleref, .xt';
+  delegate(notesPopupBody, 'click', referenceSelector, (target, event) => {
+    getBibleRefClickHandler()?.call(target, event);
+    notesPopup.hide();
   });
 
-  if (!hasTouch) {
-    notesPopupBody.addEventListener('mouseover', (e) => {
-      const target = e.target.closest('.bibleref, .xt');
-      if (target) {
-        const section = notesPopup.currentWord?.closest('.section');
-        const textid = section?.getAttribute('data-textid') ?? '';
-        const handler = getBibleRefMouseoverHandler();
-        if (handler) {
-          handler.call(target, e, textid);
-        }
-      }
-    });
-
-    notesPopupBody.addEventListener('mouseout', (e) => {
-      const target = e.target.closest('.bibleref, .xt');
-      if (target) {
-        const handler = getBibleRefMouseoutHandler();
-        if (handler) {
-          handler.call(target, e);
-        }
-      }
-    });
+  if (supportsHover()) {
+    const options = { ignoreInternal: true };
+    delegate(notesPopupBody, 'mouseover', referenceSelector, (target, event) => {
+      const textid = notesPopup.currentWord?.closest('.section')?.dataset.textid ?? '';
+      getBibleRefMouseoverHandler()?.call(target, event, textid);
+    }, options);
+    delegate(notesPopupBody, 'mouseout', referenceSelector, (target, event) => {
+      getBibleRefMouseoutHandler()?.call(target, event);
+    }, options);
   }
 
   const windowsMain = document.querySelector('.windows-main');
@@ -88,13 +69,5 @@ export const NotesPopupPlugin = () => {
     });
   }
 
-  let ext = {
-    getData() {
-      return null;
-    }
-  };
-
-  mixinEventEmitter(ext);
-
-  return ext;
+  return {};
 };

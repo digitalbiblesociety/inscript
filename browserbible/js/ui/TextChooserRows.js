@@ -1,6 +1,6 @@
 import { elem } from '../lib/helpers.esm.js';
 import { matchRanges } from '../lib/fuzzy.js';
-import { displayAbbr } from '../texts/TextLoader.js';
+import { displayAbbr, getTextIdentity } from '../texts/TextLoader.js';
 import { hasAudioContent } from './TextChooserData.js';
 import audioEarSvg from '../../css/images/audio-ear.svg?raw';
 import morphSvg from '../../css/images/morphology-gray-dark.svg?raw';
@@ -52,9 +52,9 @@ function appendBadges(row, text) {
 
 function buildTextRow(controller, row, item) {
   const text = item.data;
-  const selected = controller.selectedTextInfo?.id === text.id;
+  const selected = getTextIdentity(controller.selectedTextInfo) === getTextIdentity(text);
   row.className = `text-chooser-row${selected ? ' selected' : ''}`;
-  row.dataset.id = text.id;
+  row.dataset.id = getTextIdentity(text);
   row.appendChild(elem('span', { className: 'text-chooser-abbr' },
     highlighted(controller, displayAbbr(text))));
   row.appendChild(elem('span', { className: 'text-chooser-name' },

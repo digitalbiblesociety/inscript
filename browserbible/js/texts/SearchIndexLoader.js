@@ -28,7 +28,9 @@ export class SearchIndexLoader {
     this.textInfo = newTextInfo;
     this.searchDivisions = divisions;
 
-    this.searchTerms = SearchTools.splitWords(searchText);
+    // parseQuery drops the AND/OR operators, which are not index terms.
+    const query = SearchTools.parseQuery(searchText, isLemma);
+    this.searchTerms = query.words;
 
     this.searchTermsIndex = -1;
     this.loadedIndexes = [];
@@ -36,7 +38,7 @@ export class SearchIndexLoader {
     this.stemInfo = [];
     this.stemmingData = isLemma ? null : {};
 
-    this.searchType = /\bOR\b/gi.test(searchText) ? 'OR' : 'AND';
+    this.searchType = query.searchType;
 
     if (this.isStemEnabled && !isLemma) {
       this.loadStemmingData();
@@ -131,7 +133,9 @@ export class SearchIndexLoader {
   }
 
   mergeOrIndexes() {
-    const fragmentids = this.loadedIndexes.flat();
+    // A verse containing two of the searched words is in both indexes; keep it
+    // once so it is not reported as two results.
+    const fragmentids = [...new Set(this.loadedIndexes.flat())];
     const sections = this.textInfo.sections;
 
     const parseFragment = (fid) => {

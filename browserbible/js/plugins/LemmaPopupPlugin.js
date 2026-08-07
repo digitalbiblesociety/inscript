@@ -7,6 +7,7 @@ import { InfoWindow } from '../ui/InfoWindow.js';
 import { OT_BOOKS } from '../bible/BibleData.js';
 import { morphology } from '../bible/Morphology.js';
 import { elem } from '../lib/helpers.esm.js';
+import { sanitizeHtml } from '../lib/sanitizeHtml.js';
 
 // Articles are dropped when a selection spans several words.
 const GREEK_ARTICLE = 3588;  // G3588 - the Greek definite article
@@ -66,7 +67,7 @@ function buildLemmaElements({ data, strongsNumber, morphKey, langConfig, textid 
       textContent: i18n.t('plugins.lemmapopup.findalloccurrences', { count: data.frequency }),
       dataset: { lemma: `${langPrefix}${strongsNumber}`, textid }
     }),
-    elem('div', { className: 'lemma-outline', innerHTML: data.outline })
+    elem('div', { className: 'lemma-outline', innerHTML: sanitizeHtml(data.outline) })
   ].filter(Boolean);
 }
 
@@ -76,7 +77,12 @@ class LemmaPopupController {
     this.popup = InfoWindow('lemma-popup');
     this.container = this.popup.container;
     this.body = this.popup.body;
-    this.popup.on('hide', () => this.clearSelection());
+    this.requestId = 0;
+    this.abortController = null;
+    this.popup.on('hide', () => {
+      this.cancelLoads();
+      this.clearSelection();
+    });
     this.container.addEventListener('click', (event) => this.handleFindAll(event));
     document.querySelector('.windows-main')?.addEventListener('click', (event) => this.handleWordClick(event));
   }
@@ -88,23 +94,44 @@ class LemmaPopupController {
     });
   }
 
-  loadStrongsData(opts) {
-    const { textid, strongsNumber, morphKey, langConfig, targetEl } = opts;
-    const url = `${this.config.baseContentUrl}content/lexicons/strongs/entries/${langConfig.langPrefix}${strongsNumber}.json`;
+  cancelLoads() {
+    this.requestId++;
+    this.abortController?.abort();
+    this.abortController = null;
+  }
 
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-      })
-      .then((data) => {
-        const elements = buildLemmaElements({ data, strongsNumber, morphKey, langConfig, textid });
+  async loadStrongsData(opts, signal) {
+    const { textid, strongsNumber, morphKey, langConfig } = opts;
+    const url = `${this.config.baseContentUrl}content/lexicons/strongs/entries/${langConfig.langPrefix}${strongsNumber}.json`;
+    const response = await fetch(url, { signal });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    return buildLemmaElements({ data, strongsNumber, morphKey, langConfig, textid });
+  }
+
+  loadAllStrongs(options, targetEl) {
+    this.cancelLoads();
+    const requestId = this.requestId;
+    this.abortController = new AbortController();
+    const { signal } = this.abortController;
+    Promise.allSettled(options.map((option) => this.loadStrongsData(option, signal)))
+      .then((results) => {
+        if (requestId !== this.requestId) return;
+        this.abortController = null;
         this.body.classList.remove('loading-indicator');
-        this.body.append(...elements);
+        this.body.innerHTML = '';
+        results.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            this.body.append(...result.value);
+          } else {
+            const { langConfig, strongsNumber } = options[index];
+            this.body.appendChild(elem('div', {
+              className: 'lemma-error',
+              textContent: `Error loading ... ${langConfig.langPrefix}${strongsNumber}`
+            }));
+          }
+        });
         this.popup.position(targetEl);
-      })
-      .catch(() => {
-        this.body.innerHTML = `Error loading ... ${langConfig.langPrefix}${strongsNumber}`;
       });
   }
 
@@ -126,7 +153,6 @@ class LemmaPopupController {
       this.clearSelection();
       return;
     }
-    if (this.container.matches(':popover-open')) this.popup.hide();
     this.selectWord(lemmaEl);
   }
 
@@ -148,24 +174,25 @@ class LemmaPopupController {
     this.popup.show();
     this.popup.position(lemmaEl);
     if (strongs.length === 0) {
+      this.cancelLoads();
+      this.body.classList.remove('loading-indicator');
       this.body.innerHTML = 'No Strong\'s data available';
       return;
     }
     this.body.innerHTML = '';
     this.body.classList.add('loading-indicator');
-    strongs.forEach((strongsNumber, index) => this.loadStrongsData({
+    const options = strongs.map((strongsNumber, index) => ({
       textid,
       strongsNumber,
       morphKey: morphs[index] || '',
-      langConfig,
-      targetEl: lemmaEl
+      langConfig
     }));
+    this.loadAllStrongs(options, lemmaEl);
   }
 }
 
 export function LemmaPopupPlugin() {
   const config = getConfig();
   if (!config.enableLemmaPopupPlugin) return {};
-  new LemmaPopupController(config);
-  return {};
+  return new LemmaPopupController(config);
 }

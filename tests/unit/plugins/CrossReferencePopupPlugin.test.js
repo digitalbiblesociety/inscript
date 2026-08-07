@@ -81,7 +81,6 @@ describe('CrossReferencePopupPlugin', () => {
     const extension = CrossReferencePopupPlugin();
     expect(fixtures.infoWindow).toHaveBeenCalledWith('CrossReferencePopup');
     expect(fixtures.popup.container.classList).toContain('info-window-elevated');
-    expect(extension.getData()).toBeNull();
     expect(extension.on).toBeTypeOf('function');
   });
 
@@ -159,6 +158,27 @@ describe('CrossReferencePopupPlugin', () => {
     expect(fixtures.popup.show).not.toHaveBeenCalled();
   });
 
+  it('ignores stale loads after another reference is hovered or the pointer leaves', () => {
+    CrossReferencePopupPlugin();
+    const callbacks = [];
+    fixtures.loadSection.mockImplementation((_info, _section, callback) => callbacks.push(callback));
+    const first = link({ 'data-id': 'JN3:16' });
+    const second = link({ 'data-id': 'GN1:1' });
+
+    getBibleRefMouseoverHandler().call(first, {}, 'ENGWEB');
+    getBibleRefMouseoverHandler().call(second, {}, 'ENGWEB');
+    callbacks[0]('<div><span class="JN3_16">stale</span></div>');
+    expect(fixtures.popup.show).not.toHaveBeenCalled();
+    callbacks[1]('<div><span class="GN1_1">current</span></div>');
+    expect(fixtures.popup.body.textContent).toBe('current');
+
+    fixtures.popup.show.mockClear();
+    getBibleRefMouseoverHandler().call(first, {}, 'ENGWEB');
+    getBibleRefMouseoutHandler().call(first, {});
+    callbacks[2]('<div><span class="JN3_16">late</span></div>');
+    expect(fixtures.popup.show).not.toHaveBeenCalled();
+  });
+
   it('hides on mouseout and routes delegated window clicks', () => {
     const extension = CrossReferencePopupPlugin();
     extension.trigger = vi.fn();
@@ -180,7 +200,7 @@ describe('CrossReferencePopupPlugin', () => {
 
   it('delegates desktop hover events when touch support is absent', async () => {
     let owner = document;
-    while (owner && !Object.prototype.hasOwnProperty.call(owner, 'ontouchend')) {
+    while (owner && !Object.hasOwn(owner, 'ontouchend')) {
       owner = Object.getPrototypeOf(owner);
     }
     const descriptor = owner && Object.getOwnPropertyDescriptor(owner, 'ontouchend');

@@ -71,6 +71,19 @@ describe('highlight persistence and DOM marks', () => {
     applyHighlightsToSection('ENGWEB', null);
   });
 
+  it('reads persisted highlights once while restoring a section', () => {
+    addHighlight('ENGWEB', { id: 'one', verseId: 'JN3_16', startOffset: 0, endOffset: 1, color: '#ff7' });
+    addHighlight('ENGWEB', { id: 'two', verseId: 'JN3_17', startOffset: 0, endOffset: 1, color: '#ada' });
+    const section = document.createElement('div');
+    section.innerHTML = '<span class="v" data-id="JN3_16">A</span><span class="v" data-id="JN3_17">B</span>';
+    const getItem = vi.spyOn(Storage.prototype, 'getItem');
+
+    applyHighlightsToSection('ENGWEB', section);
+
+    expect(getItem).toHaveBeenCalledOnce();
+    expect(section.querySelectorAll('.user-highlight')).toHaveLength(2);
+  });
+
   it('creates and positions a selectable palette', () => {
     const pick = vi.fn();
     const erase = vi.fn();

@@ -1,14 +1,10 @@
 import { getConfig } from '../core/config.js';
-import { SearchTools } from './Search.js';
-
-const highlightWords = (text, searchTermsRegExp) => {
-  let processedHtml = text;
-  for (const regex of searchTermsRegExp) {
-    regex.lastIndex = 0;
-    processedHtml = processedHtml.replace(regex, match => `<span class="highlight">${match}</span>`);
-  }
-  return processedHtml;
-};
+import {
+  createRemoteSearchEvent,
+  matchesSearchTerms,
+  highlightSearchTerms,
+  isInDivisions
+} from './RemoteSearch.js';
 
 export function extractSearchVerses(json) {
   return [
@@ -28,23 +24,14 @@ export function createBibleBrainSearchStarter({ getTextInfoSync, isEnabled, usfm
     const config = getConfig();
     const info = getTextInfoSync(textid);
 
-    const e = {
-      type: 'complete',
-      target: this,
-      data: {
-        results: [],
-        searchIndexesData: [],
-        searchTermsRegExp: SearchTools.createSearchTerms(text, false),
-        isLemmaSearch: false
-      }
-    };
+    const { searchType, event: e } = createRemoteSearchEvent(this, text);
+    const terms = e.data.searchTermsRegExp;
 
     if (!info || !isEnabled(config)) {
       onSearchComplete(e);
       return;
     }
 
-    const searchType = /\bOR\b/gi.test(text) ? 'OR' : 'AND';
     const query = encodeURIComponent(text).replace(/%20/g, '+');
     const base = config.bibleBrainProxyBase;
 
@@ -56,14 +43,6 @@ export function createBibleBrainSearchStarter({ getTextInfoSync, isEnabled, usfm
 
     Promise.all(requests)
       .then(jsons => {
-        // AND: every term must match; OR: any one (matches local TextSearch).
-        const terms = e.data.searchTermsRegExp;
-        const verseMatches = (verseText) => {
-          if (terms.length === 0) return false;
-          const test = (re) => { re.lastIndex = 0; return re.test(verseText); };
-          return searchType === 'OR' ? terms.some(test) : terms.every(test);
-        };
-
         const seen = new Set();
         for (const json of jsons) {
           if (!json) continue;
@@ -74,11 +53,12 @@ export function createBibleBrainSearchStarter({ getTextInfoSync, isEnabled, usfm
             const fragmentid = `${dbsBookCode}${verse.chapter}_${verse.verse_start}`;
             if (seen.has(fragmentid)) continue;
 
-            if (verseMatches(verse.verse_text) && (divisions.length === 0 || divisions.includes(dbsBookCode))) {
+            if (matchesSearchTerms(verse.verse_text, terms, searchType) &&
+                isInDivisions(divisions, dbsBookCode)) {
               seen.add(fragmentid);
               e.data.results.push({
                 fragmentid,
-                html: highlightWords(verse.verse_text, e.data.searchTermsRegExp)
+                html: highlightSearchTerms(verse.verse_text, terms)
               });
             }
           }

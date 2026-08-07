@@ -14,19 +14,15 @@ vi.mock('@core/config.js', () => ({
 vi.mock('@bible/BibleReference.js', () => ({ Reference: fixtures.Reference }));
 vi.mock('@/media/DbsVideoApi.js', () => ({ primeDbsVideoCatalog: fixtures.primeCatalog }));
 vi.mock('@plugins/MediaLibraryPopups.js', () => ({
-  MediaLibraryPopups: class MediaLibraryPopups {
-    constructor() {
-      this.showImage = vi.fn(); this.showVideo = vi.fn(); this.showDbsVideo = vi.fn();
-      fixtures.popupInstances.push(this);
-    }
+  MediaLibraryPopups: function MediaLibraryPopups() {
+    this.showImage = vi.fn(); this.showVideo = vi.fn(); this.showDbsVideo = vi.fn();
+    fixtures.popupInstances.push(this);
   }
 }));
 vi.mock('@plugins/MediaLibraryContent.js', () => ({
-  MediaLibraryContent: class MediaLibraryContent {
-    constructor(getLibraries) {
-      this.getLibraries = getLibraries; this.process = vi.fn(); this.enqueue = vi.fn();
-      fixtures.contentInstances.push(this);
-    }
+  MediaLibraryContent: function MediaLibraryContent(getLibraries) {
+    this.getLibraries = getLibraries; this.process = vi.fn(); this.enqueue = vi.fn();
+    fixtures.contentInstances.push(this);
   }
 }));
 
@@ -128,6 +124,19 @@ describe('MediaLibraryPlugin', () => {
       await Promise.resolve();
       expect(window.MediaLibrary.getMediaLibraries).toHaveBeenCalledOnce();
       expect(fixtures.contentInstances[0].getLibraries()).toBe(libraries);
+    });
+
+    it('still loads non-DBS libraries when DBS catalog priming fails', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      fixtures.primeCatalog.mockRejectedValueOnce(new Error('offline'));
+      window.MediaLibrary = { getMediaLibraries: vi.fn(callback => callback(libraries)) };
+      const extension = MediaLibraryPlugin();
+      extension.trigger('message', textload());
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(window.MediaLibrary.getMediaLibraries).toHaveBeenCalledOnce();
+      expect(fixtures.contentInstances[0].process).toHaveBeenCalled();
+      expect(warn).toHaveBeenCalledWith('DBS video catalog unavailable:', 'offline');
     });
   });
 

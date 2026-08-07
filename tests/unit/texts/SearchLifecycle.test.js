@@ -4,7 +4,6 @@ const fixtures = vi.hoisted(() => ({
   config: {},
   getText: vi.fn(),
   loadSection: vi.fn(),
-  createSearchTerms: vi.fn(() => [/word/gi]),
   collectSectionResults: vi.fn(() => []),
   loaderInstances: []
 }));
@@ -13,9 +12,6 @@ vi.mock('@core/config.js', () => ({ getConfig: () => fixtures.config }));
 vi.mock('@texts/TextLoader.js', () => ({
   getText: fixtures.getText,
   loadSection: fixtures.loadSection
-}));
-vi.mock('@texts/SearchTools.js', () => ({
-  SearchTools: { createSearchTerms: fixtures.createSearchTerms }
 }));
 vi.mock('@texts/SearchIndexLoader.js', () => ({
   SearchIndexLoader: class SearchIndexLoader {
@@ -33,24 +29,27 @@ vi.mock('@texts/SearchMatcher.js', () => ({
 
 import { TextSearch } from '@texts/Search.js';
 
+const textInfo = { id: 'WEB', sections: ['GN1'] };
+
 describe('TextSearch lifecycle', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     fixtures.loaderInstances.length = 0;
     fixtures.config = { baseContentUrl: '/base/', textsPath: 'texts', serverSearchPath: '' };
-    fixtures.getText.mockReturnValue({ id: 'WEB', sections: ['GN1'] });
-    fixtures.createSearchTerms.mockReturnValue([/word/gi]);
+    fixtures.getText.mockImplementation((_textid, callback) => {
+      callback(textInfo);
+      return textInfo;
+    });
     fixtures.collectSectionResults.mockReturnValue([]);
     vi.stubGlobal('fetch', vi.fn());
   });
 
   it('initializes search state and subscribes to index completion', () => {
     const search = new TextSearch();
-    expect(search.baseContentPath).toBe('/base/texts/');
     expect(search).toMatchObject({
-      isSearching: false, canceled: false, searchText: '', searchTextid: '',
+      isSearching: false, searchText: '', searchTextid: '',
       searchDivisions: [], textInfo: null, isLemmaSearch: false,
-      startTime: null, searchTermsRegExp: [], searchIndexesData: [],
+      searchTermsRegExp: [], searchIndexesData: [],
       searchIndexesCurrentIndex: 0, searchType: 'AND', searchFinalResults: []
     });
     expect(search.searchIndexLoader.on).toHaveBeenCalledWith('complete', expect.any(Function));
@@ -63,12 +62,58 @@ describe('TextSearch lifecycle', () => {
       isSearching: true, searchText: 'word OR hope', searchTextid: 'WEB',
       searchDivisions: ['GN'], searchType: 'OR', isLemmaSearch: false
     });
-    expect(fixtures.getText).toHaveBeenCalledWith('WEB');
-    expect(fixtures.createSearchTerms).toHaveBeenCalledWith('  word OR hope  ', false);
+    // The operator is not one of the searched words.
+    expect(search.searchTermsRegExp).toHaveLength(2);
+    expect(search.searchTermsRegExp.some(regex => regex.test('or'))).toBe(false);
+    expect(fixtures.getText).toHaveBeenCalledWith('WEB', expect.any(Function), expect.any(Function));
     expect(search.searchIndexLoader.loadIndexes).toHaveBeenCalledWith(
-      search.textInfo, ['GN'], 'word OR hope', false
+      textInfo, ['GN'], 'word OR hope', false
     );
     expect(search.start('WEB', [], 'again')).toBe(false);
+  });
+
+  it('waits for uncached text metadata before loading indexes', () => {
+    let resolveText;
+    fixtures.getText.mockImplementation((_textid, callback) => { resolveText = callback; });
+
+    const search = new TextSearch();
+    expect(search.start('WEB', [], 'word')).toBe(true);
+    expect(search.searchIndexLoader.loadIndexes).not.toHaveBeenCalled();
+
+    resolveText(textInfo);
+    expect(search.textInfo).toBe(textInfo);
+    expect(search.searchIndexLoader.loadIndexes).toHaveBeenCalledWith(textInfo, [], 'word', false);
+  });
+
+  it.each([
+    ['metadata resolves to nothing', (callback, errorCallback) => errorCallback(new Error('no info'))],
+    ['the provider is missing', (_callback, errorCallback) => errorCallback(new Error('no provider'))]
+  ])('reports a failed completion when %s', (_label, resolve) => {
+    fixtures.getText.mockImplementation((_textid, callback, errorCallback) =>
+      resolve(callback, errorCallback));
+
+    const search = new TextSearch();
+    search.trigger = vi.fn();
+    expect(search.start('WEB', [], 'word')).toBe(true);
+    expect(search.isSearching).toBe(false);
+    expect(search.trigger).toHaveBeenCalledWith('complete', expect.objectContaining({
+      data: expect.objectContaining({ results: null })
+    }));
+    expect(search.searchIndexLoader.loadIndexes).not.toHaveBeenCalled();
+    // A failed search must not wedge the searcher.
+    expect(search.start('WEB', [], 'word')).toBe(true);
+  });
+
+  it.each(['', '   ', 'OR', 'and or'])('completes empty for the termless query %o', (text) => {
+    const search = new TextSearch();
+    search.trigger = vi.fn();
+    expect(search.start('WEB', [], text)).toBe(true);
+    expect(search.isSearching).toBe(false);
+    expect(fixtures.getText).not.toHaveBeenCalled();
+    expect(search.searchIndexLoader.loadIndexes).not.toHaveBeenCalled();
+    expect(search.trigger).toHaveBeenCalledWith('complete', expect.objectContaining({
+      data: expect.objectContaining({ results: [] })
+    }));
   });
 
   it('detects lemma searches and resets state for a fresh run', () => {
@@ -81,7 +126,8 @@ describe('TextSearch lifecycle', () => {
     expect(search.searchFinalResults).toEqual([]);
     expect(search.searchIndexesData).toEqual([]);
     expect(search.searchIndexesCurrentIndex).toBe(0);
-    expect(fixtures.createSearchTerms).toHaveBeenCalledWith('G25', true);
+    expect(search.searchTermsRegExp).toHaveLength(1);
+    expect(search.searchTermsRegExp[0].source).toContain('25');
   });
 
   it('selects server search for configured HTTP and hosted-relative endpoints', () => {

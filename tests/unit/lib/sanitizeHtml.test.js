@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sanitizeHtml, stripHtml, escapeHtml } from '@windows/NotesWindow/sanitize.js';
+import { sanitizeHtml, stripHtml } from '@lib/sanitizeHtml.js';
 
 describe('sanitizeHtml', () => {
   it('drops script/style/iframe elements together with their contents', () => {
@@ -81,17 +81,5 @@ describe('stripHtml', () => {
   it('handles empty input', () => {
     expect(stripHtml('')).toBe('');
     expect(stripHtml(null)).toBe('');
-  });
-});
-
-describe('escapeHtml', () => {
-  it('escapes markup-significant characters', () => {
-    expect(escapeHtml('<script>"a" & \'b\'</script>'))
-      .toBe('&lt;script&gt;&quot;a&quot; &amp; &#39;b&#39;&lt;/script&gt;');
-  });
-
-  it('handles null/undefined', () => {
-    expect(escapeHtml(null)).toBe('');
-    expect(escapeHtml(undefined)).toBe('');
   });
 });

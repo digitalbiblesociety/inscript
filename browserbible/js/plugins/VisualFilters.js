@@ -9,28 +9,38 @@ import morphologySvg from '../../css/images/morphology.svg?raw';
 import { MorphologySelector } from './MorphologySelector.js';
 import { createFilterRow, drawTransforms, readTransforms, removeFilterRow } from './VisualFilterRows.js';
 
-/** "background-color" -> "backgroundColor" */
-const toCamelCase = (str) => {
-  return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
-};
+const originalStyles = new WeakMap();
+const FILTERED_CLASS = 'visualfilters-applied';
 
 const applyStyle = (node, css) => {
   if (css == null || css === '') return;
-
-  for (const prop of css.split(';')) {
-    const parts = prop.split(':');
-    if (parts.length === 2) {
-      node.style[toCamelCase(parts[0].trim())] = parts[1].trim();
-    }
+  if (!originalStyles.has(node)) {
+    originalStyles.set(node, node.getAttribute('style'));
+    node.classList.add(FILTERED_CLASS);
+  }
+  for (const declaration of css.split(';')) {
+    const [property, value] = declaration.split(':');
+    if (property && value) node.style.setProperty(property.trim(), value.trim());
   }
 };
+
+const strongTokens = (value) => new Set(
+  value.toUpperCase().split(/[\s,;]+/)
+    .filter(Boolean)
+    .map((strong) => strong.replace(/(\d)[A-Z]$/, '$1'))
+);
 
 const matchesTransform = (word, transform) => {
   if (!transform.active) return false;
 
-  if (transform.strongs !== '' && word.getAttribute('s') !== transform.strongs) return false;
+  if (transform.strongs !== '') {
+    const expected = strongTokens(transform.strongs);
+    const actual = strongTokens(word.getAttribute('s') ?? '');
+    if (![...expected].some((strong) => actual.has(strong))) return false;
+  }
 
-  if (transform.morph !== '' && transform.morphRegExp?.test) {
+  if (transform.morph !== '') {
+    if (!transform.morphRegExp) return false;
     const wordMorphData = word.getAttribute('m');
     if (wordMorphData == null || !transform.morphRegExp.test(wordMorphData)) return false;
   }
@@ -41,8 +51,12 @@ const matchesTransform = (word, transform) => {
 
 const VisualTransformer = {
   resetTransforms(visualSettings) {
-    document.querySelectorAll('l').forEach(el => {
-      el.setAttribute('style', '');
+    document.querySelectorAll(`.${FILTERED_CLASS}`).forEach((word) => {
+      const originalStyle = originalStyles.get(word);
+      if (originalStyle == null) word.removeAttribute('style');
+      else word.setAttribute('style', originalStyle);
+      word.classList.remove(FILTERED_CLASS);
+      originalStyles.delete(word);
     });
 
     document.querySelectorAll('.section').forEach(section => {
@@ -125,7 +139,6 @@ export function VisualFilters() {
   const thStyle = elem('div', { className: 'visualfilters-style visualfilters-th i18n', dataset: { i18n: '[html]plugins.visualfilters.style' } }, 'Style');
   const thRemove = elem('div', { className: 'visualfilters-remove visualfilters-th' });
   visualGrid.append(thActive, thStrongs, thMorph, thStyle, thRemove);
-  const tbody = visualGrid; // tbody is now the grid itself (rows added directly)
   visualNode.append(addRowButton, visualGrid);
 
   const filtersWindowBody = filtersWindow.body;
@@ -142,13 +155,13 @@ export function VisualFilters() {
   }
 
   const saveTransforms = () => {
-    visualSettings.transforms = readTransforms(tbody);
+    visualSettings.transforms = readTransforms(visualGrid);
     AppSettings.setValue(settingsKey, visualSettings);
   };
 
   addRowButton.addEventListener('click', () => {
     const row = createFilterRow();
-    tbody.appendChild(row);
+    visualGrid.appendChild(row);
   });
 
   const filtersWindowTitle = filtersWindow.title;
@@ -165,7 +178,7 @@ export function VisualFilters() {
     }
   });
 
-  tbody.addEventListener('click', (e) => {
+  visualGrid.addEventListener('click', (e) => {
     const target = e.target.closest('.visualfilters-remove');
     if (!target) return;
 
@@ -174,7 +187,7 @@ export function VisualFilters() {
     VisualTransformer.resetTransforms(visualSettings);
   });
 
-  tbody.addEventListener('change', (e) => {
+  visualGrid.addEventListener('change', (e) => {
     const target = e.target.closest('.visualfilters-active input, .visualfilters-morph select, .visualfilters-strongs input, .visualfilters-morph input, .style-type, .style-color');
     if (target) {
       saveTransforms();
@@ -183,7 +196,7 @@ export function VisualFilters() {
   });
 
   let keyupTimer = null;
-  tbody.addEventListener('keyup', (e) => {
+  visualGrid.addEventListener('keyup', (e) => {
     const target = e.target.closest('.visualfilters-strongs input, .visualfilters-morph input');
     if (target) {
       clearTimeout(keyupTimer);
@@ -236,9 +249,7 @@ export function VisualFilters() {
     }
   });
 
-  let ext = {
-    sendMessage: () => {}
-  };
+  const ext = {};
   mixinEventEmitter(ext);
 
   ext.on('message', (e) => {
@@ -260,7 +271,7 @@ export function VisualFilters() {
     }
   });
 
-  drawTransforms(tbody, visualSettings.transforms);
+  drawTransforms(visualGrid, visualSettings.transforms);
   saveTransforms();
 
   return ext;

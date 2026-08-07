@@ -1,14 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const fixtures = vi.hoisted(() => ({
-  config: {},
-  createSearchTerms: vi.fn()
-}));
+const fixtures = vi.hoisted(() => ({ config: {} }));
 
 vi.mock('@core/config.js', () => ({ getConfig: () => fixtures.config }));
-vi.mock('@texts/Search.js', () => ({
-  SearchTools: { createSearchTerms: fixtures.createSearchTerms }
-}));
 
 import { createBibleBrainSearchStarter, extractSearchVerses } from '@texts/BibleBrainSearch.js';
 
@@ -27,7 +21,6 @@ describe('BibleBrainSearch', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     fixtures.config = { bibleBrainProxyBase: 'https://proxy.test' };
-    fixtures.createSearchTerms.mockReturnValue([/love/gi]);
     vi.stubGlobal('fetch', vi.fn());
   });
 
@@ -48,8 +41,9 @@ describe('BibleBrainSearch', () => {
     const missing = await runSearch(starter, { context });
     expect(missing).toMatchObject({
       type: 'complete', target: context,
-      data: { results: [], searchIndexesData: [], searchTermsRegExp: [/love/gi], isLemmaSearch: false }
+      data: { results: [], searchIndexesData: [], isLemmaSearch: false }
     });
+    expect(missing.data.searchTermsRegExp).toHaveLength(1);
     expect(fetch).not.toHaveBeenCalled();
 
     getTextInfoSync.mockReturnValue({ biblebrain: { textFilesets: [] } });
@@ -58,7 +52,6 @@ describe('BibleBrainSearch', () => {
   });
 
   it('searches all filesets, filters AND matches/divisions, deduplicates, and highlights terms', async () => {
-    fixtures.createSearchTerms.mockReturnValue([/love/gi, /world/gi]);
     const info = { biblebrain: { textFilesets: [{ id: 'OT' }, { id: 'NT' }, { id: 'BAD' }] } };
     const starter = createBibleBrainSearchStarter({
       getTextInfoSync: () => info,
@@ -88,8 +81,24 @@ describe('BibleBrainSearch', () => {
     }]);
   });
 
+  it('escapes markup in remote verse text before highlighting it', async () => {
+    const starter = createBibleBrainSearchStarter({
+      getTextInfoSync: () => ({ biblebrain: { textFilesets: [{ id: 'ONE' }] } }),
+      isEnabled: () => true,
+      usfmToDbsCode: () => 'JN'
+    });
+    fetch.mockResolvedValue(response({ json: { data: [{
+      book_id: 'JHN', chapter: 3, verse_start: 16,
+      verse_text: '<img src=x onerror="alert(1)"> love & <b>peace</b>'
+    }] } }));
+    const event = await runSearch(starter, { text: 'love' });
+    expect(event.data.results[0].html).toBe(
+      '&lt;img src=x onerror="alert(1)"&gt; <span class="highlight">love</span> ' +
+      '&amp; &lt;b&gt;peace&lt;/b&gt;'
+    );
+  });
+
   it('uses OR semantics and tolerates individual network failures', async () => {
-    fixtures.createSearchTerms.mockReturnValue([/faith/gi, /hope/gi]);
     const info = { biblebrain: { textFilesets: [{ id: 'ONE' }, { id: 'TWO' }] } };
     const starter = createBibleBrainSearchStarter({
       getTextInfoSync: () => info, isEnabled: () => true,
@@ -99,7 +108,8 @@ describe('BibleBrainSearch', () => {
       .mockRejectedValueOnce(new Error('offline'))
       .mockResolvedValueOnce(response({ json: { data: [
         { book_id: 'JHN', chapter: 3, verse_start: 1, verse_text: 'Hope remains' },
-        { book_id: 'JHN', chapter: 3, verse_start: 2, verse_text: 'Love remains' }
+        { book_id: 'JHN', chapter: 3, verse_start: 2, verse_text: 'Love remains' },
+        { book_id: 'JHN', chapter: 3, verse_start: 3, verse_text: 'bread or wine' }
       ] } }));
     const event = await runSearch(starter, { text: 'faith OR hope' });
     expect(event.data.results).toEqual([{
@@ -107,8 +117,7 @@ describe('BibleBrainSearch', () => {
     }]);
   });
 
-  it('returns no matches when search-term generation is empty', async () => {
-    fixtures.createSearchTerms.mockReturnValue([]);
+  it('returns no matches when the query has no terms', async () => {
     const starter = createBibleBrainSearchStarter({
       getTextInfoSync: () => ({ biblebrain: { textFilesets: [{ id: 'ONE' }] } }),
       isEnabled: () => true,
@@ -117,7 +126,7 @@ describe('BibleBrainSearch', () => {
     fetch.mockResolvedValue(response({ json: { data: [
       { book_id: 'JHN', chapter: 1, verse_start: 1, verse_text: 'anything' }
     ] } }));
-    expect((await runSearch(starter)).data.results).toEqual([]);
+    expect((await runSearch(starter, { text: '' })).data.results).toEqual([]);
   });
 
   it('logs unexpected processing failures and still completes', async () => {

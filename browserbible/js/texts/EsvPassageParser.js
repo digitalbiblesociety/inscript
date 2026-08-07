@@ -1,9 +1,5 @@
 import { toBcp47Lang } from '../lib/bcp47.js';
-
-export const escapeHtml = (s) => String(s)
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;');
+import { escapeHtml } from '../lib/escapeHtml.js';
 
 const SKIPPED_INLINE = ['footnote', 'crossref', 'audio', 'extra_text', 'copyright'];
 // Passage reference headings, footnote blocks and audio links are turned

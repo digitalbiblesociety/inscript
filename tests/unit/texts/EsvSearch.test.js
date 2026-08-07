@@ -1,16 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const fixtures = vi.hoisted(() => ({
-  config: {},
-  createSearchTerms: vi.fn(),
-  escapeHtml: vi.fn(text => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;'))
-}));
+const fixtures = vi.hoisted(() => ({ config: {} }));
 
 vi.mock('@core/config.js', () => ({ getConfig: () => fixtures.config }));
-vi.mock('@texts/SearchTools.js', () => ({
-  SearchTools: { createSearchTerms: fixtures.createSearchTerms }
-}));
-vi.mock('@texts/EsvPassageParser.js', () => ({ escapeHtml: fixtures.escapeHtml }));
 
 import { createEsvSearchStarter } from '@texts/EsvSearch.js';
 
@@ -29,8 +21,6 @@ describe('EsvSearch', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     fixtures.config = { esvProxyBase: 'https://proxy.test' };
-    fixtures.createSearchTerms.mockReturnValue([/love/gi]);
-    fixtures.escapeHtml.mockImplementation(text => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;'));
     vi.stubGlobal('fetch', vi.fn());
   });
 
@@ -54,31 +44,58 @@ describe('EsvSearch', () => {
       .mockResolvedValueOnce(response({ json: {
         total_pages: 2,
         results: [
-          { reference: 'John 3:16', content: 'God so loved <the world>' },
-          { reference: 'Unknown 1:1', content: 'love' },
-          { reference: 'bad reference', content: 'love' },
-          { reference: 'Genesis 1:1', content: 'creation' }
+          { reference: 'John 3:16', content: 'God so love <the world> in mercy' },
+          { reference: 'Unknown 1:1', content: 'love and mercy' },
+          { reference: 'bad reference', content: 'love and mercy' },
+          { reference: 'Genesis 1:1', content: 'love and mercy' }
         ]
       } }))
       .mockResolvedValueOnce(response({ json: {
         total_pages: 2,
         results: [{ reference: 'Psalms 23:1', content: 'love & mercy' }]
       } }));
-    const event = await runSearch(starter, { text: 'love song', divisions: ['JN', 'PS'] });
+    const event = await runSearch(starter, { text: 'love mercy', divisions: ['JN', 'PS'] });
     expect(fetch.mock.calls.map(call => call[0])).toEqual([
-      'https://proxy.test/passage/search/?q=love+song&page-size=100&page=1',
-      'https://proxy.test/passage/search/?q=love+song&page-size=100&page=2'
+      'https://proxy.test/passage/search/?q=love+mercy&page-size=100&page=1',
+      'https://proxy.test/passage/search/?q=love+mercy&page-size=100&page=2'
     ]);
     expect(event.data.results).toEqual([
       {
         fragmentid: 'JN3_16',
-        html: 'God so <span class="highlight">love</span>d &lt;the world>'
+        html: 'God so <span class="highlight">love</span> &lt;the world&gt; ' +
+          'in <span class="highlight">mercy</span>'
       },
       {
         fragmentid: 'PS23_1',
-        html: '<span class="highlight">love</span> &amp; mercy'
+        html: '<span class="highlight">love</span> &amp; <span class="highlight">mercy</span>'
       }
     ]);
+  });
+
+  it('keeps only verses matching every AND term', async () => {
+    const starter = createEsvSearchStarter({
+      getTextInfoSync: () => ({ id: 'ESV' }), bookName: id => id
+    });
+    fetch.mockResolvedValue(response({ json: { results: [
+      { reference: 'John 1:1', content: 'faith and hope' },
+      { reference: 'John 1:2', content: 'hope alone' },
+      { reference: 'John 1:3', content: 'faith alone' }
+    ] } }));
+    const event = await runSearch(starter, { text: 'faith hope' });
+    expect(event.data.results.map(result => result.fragmentid)).toEqual(['JN1_1']);
+  });
+
+  it('keeps verses matching any OR term and ignores the operator', async () => {
+    const starter = createEsvSearchStarter({
+      getTextInfoSync: () => ({ id: 'ESV' }), bookName: id => id
+    });
+    fetch.mockResolvedValue(response({ json: { results: [
+      { reference: 'John 1:1', content: 'faith alone' },
+      { reference: 'John 1:2', content: 'hope alone' },
+      { reference: 'John 1:3', content: 'bread or wine' }
+    ] } }));
+    const event = await runSearch(starter, { text: 'faith OR hope' });
+    expect(event.data.results.map(result => result.fragmentid)).toEqual(['JN1_1', 'JN1_2']);
   });
 
   it('recognizes numbered and alternate book names with an unrestricted division list', async () => {
@@ -126,14 +143,14 @@ describe('EsvSearch', () => {
     expect((await runSearch(starter)).data.results).toEqual([]);
   });
 
-  it('handles empty search regexes through the request error completion path', async () => {
-    fixtures.createSearchTerms.mockReturnValue([]);
+  it('matches nothing when the query has no terms', async () => {
     const starter = createEsvSearchStarter({
       getTextInfoSync: () => ({ id: 'ESV' }), bookName: () => 'JN'
     });
     fetch.mockResolvedValue(response({ json: { results: [
       { reference: 'John 1:1', content: 'anything' }
     ] } }));
-    expect((await runSearch(starter)).data.results).toEqual([]);
+    const event = await runSearch(starter, { text: '' });
+    expect(event.data.results).toEqual([]);
   });
 });

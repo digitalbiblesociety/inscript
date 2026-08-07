@@ -7,6 +7,11 @@ export function getTextid(input) {
   return (parts.length > 1) ? parts[1] : parts[0];
 }
 
+/** Stable identity for a text across providers, with bare-id fallback for legacy data. */
+export function getTextIdentity(textInfo) {
+  return textInfo?.providerid ?? textInfo?.id ?? '';
+}
+
 /**
  * Version abbreviation for display: strips the leading ISO 639-3 language
  * prefix from ids like "ENGKJV" so the UI shows "KJV".

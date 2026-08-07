@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildStructureFromBooks,
   entryToTextInfo,
-  escapeHtml,
   fetchAllBibles,
   flattenFilesets,
   normalizeChapters,
@@ -22,9 +21,7 @@ describe('BibleBrainCatalog lifecycle', () => {
     vi.stubGlobal('fetch', vi.fn());
   });
 
-  it('escapes nullable values and normalizes chapter collections', () => {
-    expect(escapeHtml(null)).toBe('');
-    expect(escapeHtml('<&>')).toBe('&lt;&amp;&gt;');
+  it('normalizes chapter collections', () => {
     expect(normalizeChapters([1, '2', 0, 'bad'])).toEqual([1, 2]);
     expect(normalizeChapters('1, 2, bad, 0')).toEqual([1, 2]);
     expect(normalizeChapters({})).toEqual([]);

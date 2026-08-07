@@ -1,10 +1,13 @@
 /**
- * HTML sanitization and text utilities for notes.
+ * HTML sanitization and text utilities.
  *
- * Note content is user HTML from a contentEditable editor (including pasted
- * markup) that gets re-injected via innerHTML and interpolated into the print
- * page, so everything stored or rendered must pass through sanitizeHtml().
+ * Two kinds of caller: note content, which is user HTML from a contentEditable
+ * editor (including pasted markup) re-injected via innerHTML and interpolated
+ * into the print page; and provider-supplied HTML fragments such as API.Bible's
+ * publisher info. Anything from either source must pass through sanitizeHtml().
  */
+
+export { escapeHtml } from './escapeHtml.js';
 
 // Tags kept as-is. `div` stays because Chrome's contentEditable emits <div>
 // line blocks; unwrapping them would destroy line structure.
@@ -114,15 +117,4 @@ export function stripHtml(html) {
   tmp.innerHTML = spaced;
   const text = tmp.textContent || tmp.innerText || '';
   return text.replace(/\s*\n\s*/g, '\n').trim();
-}
-
-/** Escape a plain-text string for interpolation into HTML markup. */
-export function escapeHtml(text) {
-  if (text == null) return '';
-  return String(text)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }

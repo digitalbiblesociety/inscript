@@ -32,7 +32,7 @@ vi.mock('@windows/NotesWindow/query.js', () => ({
   filterAndSortNotes: fixtures.filterAndSortNotes
 }));
 
-vi.mock('@windows/NotesWindow/sanitize.js', () => ({
+vi.mock('@lib/sanitizeHtml.js', () => ({
   sanitizeHtml: fixtures.sanitizeHtml,
   stripHtml: fixtures.stripHtml
 }));

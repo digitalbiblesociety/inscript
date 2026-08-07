@@ -4,7 +4,7 @@
  * only; the store wiring lives in NotesStore.js.
  */
 
-import { sanitizeHtml } from './sanitize.js';
+import { sanitizeHtml } from '../../lib/sanitizeHtml.js';
 
 export const NOTES_STORAGE_KEY = 'browserbible_notes';
 export const CORRUPT_BACKUP_KEY = 'browserbible_notes_corrupt_backup';

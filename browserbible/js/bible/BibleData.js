@@ -5,7 +5,10 @@ const SECTIONS = ["penta","hist","poet","majorp","minorp","gospel","acts","paul"
 const UNKNOWN = new Map();
 const unknownChapters = (n) => {
   let a = UNKNOWN.get(n);
-  if (!a) UNKNOWN.set(n, a = Object.freeze(new Array(n).fill(null)));
+  if (!a) {
+    a = Object.freeze(new Array(n).fill(null));
+    UNKNOWN.set(n, a);
+  }
   return a;
 };
 

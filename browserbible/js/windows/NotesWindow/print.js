@@ -10,11 +10,11 @@ import { loadSection } from '../../texts/TextLoader.js';
 import { getConfig } from '../../core/config.js';
 import { t } from '../../lib/i18n.js';
 import { showNotice } from './notice.js';
-import { stripHtml, escapeHtml, sanitizeHtml } from './sanitize.js';
+import { escapeHtml } from '../../lib/escapeHtml.js';
+import { stripHtml, sanitizeHtml } from '../../lib/sanitizeHtml.js';
 import { detectReferences } from './references.js';
 
-// loadSection never calls back when a text's provider is missing; don't let
-// one bad reference hang the whole print job.
+// Keep one stalled remote provider from hanging the whole print job.
 const SECTION_LOAD_TIMEOUT_MS = 15_000;
 
 function loadSectionAsync(textid, sectionid) {

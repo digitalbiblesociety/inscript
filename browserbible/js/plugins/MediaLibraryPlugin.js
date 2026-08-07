@@ -13,6 +13,7 @@ class MediaLibraryController {
     this.extension = {};
     mixinEventEmitter(this.extension);
     this.librariesRequested = false;
+    this.mediaEventsBound = false;
     this.extension.on('message', (event) => this.handleMessage(event));
   }
 
@@ -21,15 +22,32 @@ class MediaLibraryController {
     const MediaLibrary = window.MediaLibrary;
     if (!MediaLibrary?.getMediaLibraries) return;
     this.librariesRequested = true;
-    primeDbsVideoCatalog().then(() => MediaLibrary.getMediaLibraries((data) => {
-      this.mediaLibraries = data;
-      this.bindMediaEvents();
-      this.content.process();
-    }));
+    primeDbsVideoCatalog()
+      .catch((error) => console.warn('DBS video catalog unavailable:', error.message))
+      .then(() => {
+        try {
+          MediaLibrary.getMediaLibraries((data) => {
+            if (!Array.isArray(data)) {
+              this.librariesRequested = false;
+              return;
+            }
+            this.mediaLibraries = data;
+            this.bindMediaEvents();
+            this.content.process();
+          });
+        } catch (error) {
+          this.librariesRequested = false;
+          console.warn('Media library load failed:', error.message);
+        }
+      });
   }
 
   bindMediaEvents() {
-    document.querySelector('.windows-main')?.addEventListener('click', (event) => {
+    if (this.mediaEventsBound) return;
+    const windowsMain = document.querySelector('.windows-main');
+    if (!windowsMain) return;
+    this.mediaEventsBound = true;
+    windowsMain.addEventListener('click', (event) => {
       const icon = event.target.closest('.mediathumb');
       if (icon) this.handleMediaClick(icon);
     });

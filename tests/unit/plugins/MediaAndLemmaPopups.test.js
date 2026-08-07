@@ -92,6 +92,26 @@ describe('media library popups', () => {
     });
     expect(popups.popup.body.querySelector('a').title).toBe('A < B - DBS');
   });
+
+  it('rejects unsafe media URL schemes', () => {
+    const popups = new MediaLibraryPopups();
+    const icon = document.createElement('button');
+    document.body.appendChild(icon);
+    popups.showImage({
+      icon,
+      mediaLibrary: { folder: 'art', baseUrl: 'javascript:' },
+      mediaForVerse: [{ filename: 'alert(1)', exts: 'jpg' }],
+      reference: 'John', verseid: 'JN3_16', sectionid: 'JN3'
+    });
+    expect(popups.popup.body.querySelector('a')).toBeNull();
+
+    popups.showVideoChooser({
+      icon, mediaLibrary: { folder: 'dbsvideo' },
+      mediaForVerse: [{ cover: 'javascript:alert(1)', filename: 'clip' }],
+      reference: 'John', verseid: 'JN3_16', sectionid: 'JN3'
+    });
+    expect(popups.popup.body.querySelector('a')).toBeNull();
+  });
 });
 
 describe('lemma popup plugin', () => {
@@ -140,5 +160,63 @@ describe('lemma popup plugin', () => {
     section.querySelector('l:not([s])').click();
     expect(document.querySelector('#lemma-popup').textContent).toContain("No Strong's data");
     section.querySelector('l:not([s])').click();
+  });
+
+  it('keeps multi-Strong results ordered and sanitizes outlines', async () => {
+    const pending = new Map();
+    vi.stubGlobal('fetch', vi.fn(url => new Promise((resolve) => {
+      pending.set(url, resolve);
+    })));
+    LemmaPopupPlugin();
+    const section = document.createElement('div');
+    section.className = 'BibleWindow section';
+    section.lang = 'grc';
+    section.innerHTML = '<div class="chapter" data-textid="ENG"><span class="v" data-id="JN1_1">' +
+      '<l s="G1 G2" m="N-NSM V-AA">word</l></span></div>';
+    document.querySelector('.windows-main').appendChild(section);
+    section.querySelector('l').click();
+
+    const entries = [...pending.entries()];
+    entries.find(([url]) => url.endsWith('/G2.json'))[1]({
+      ok: true, json: async () => ({ lemma: 'second', frequency: 2, outline: '<p>safe</p>' })
+    });
+    entries.find(([url]) => url.endsWith('/G1.json'))[1]({
+      ok: true, json: async () => ({ lemma: 'first', frequency: 1, outline: '<script>bad()</script><p>safe</p>' })
+    });
+
+    const popup = document.querySelector('#lemma-popup');
+    await vi.waitFor(() => expect(popup.querySelectorAll('.lemma-word')).toHaveLength(2));
+    expect([...popup.querySelectorAll('.lemma-word > span:first-child')].map(el => el.textContent))
+      .toEqual(['first', 'second']);
+    expect(popup.querySelector('script')).toBeNull();
+  });
+
+  it('ignores a lexicon response belonging to an older selection', async () => {
+    const pending = new Map();
+    vi.stubGlobal('fetch', vi.fn(url => new Promise((resolve) => {
+      pending.set(url, resolve);
+    })));
+    LemmaPopupPlugin();
+    const section = document.createElement('div');
+    section.className = 'BibleWindow section';
+    section.lang = 'grc';
+    section.innerHTML = '<div class="chapter" data-textid="ENG"><span class="v" data-id="JN1_1">' +
+      '<l s="G1">first</l><l s="G2">second</l></span></div>';
+    document.querySelector('.windows-main').appendChild(section);
+    const words = section.querySelectorAll('l');
+    words[0].click();
+    words[1].click();
+
+    pending.get([...pending.keys()].find(url => url.endsWith('/G2.json')))({
+      ok: true, json: async () => ({ lemma: 'current', frequency: 1, outline: '' })
+    });
+    const popup = document.querySelector('#lemma-popup');
+    await vi.waitFor(() => expect(popup.textContent).toContain('current'));
+    pending.get([...pending.keys()].find(url => url.endsWith('/G1.json')))({
+      ok: true, json: async () => ({ lemma: 'stale', frequency: 1, outline: '' })
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(popup.textContent).not.toContain('stale');
   });
 });

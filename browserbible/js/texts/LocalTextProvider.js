@@ -111,6 +111,10 @@ function loadSection(textid, sectionid, callback, errorCallback) {
       .catch(() => {
         errorCallback?.(textid, sectionid);
       });
+  }, () => {
+    // Without this the section load never settles and TextLoader keeps queueing
+    // later callers behind it.
+    errorCallback?.(textid, sectionid);
   });
 }
 

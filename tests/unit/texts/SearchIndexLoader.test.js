@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const fixtures = vi.hoisted(() => ({
   config: {},
   showApocrypha: true,
-  splitWords: vi.fn(),
   hashWord: vi.fn(),
   isApocryphalSection: vi.fn(sectionid => sectionid.startsWith('TB'))
 }));
@@ -15,12 +14,12 @@ vi.mock('@bible/Apocrypha.js', () => ({
   isApocryphalSection: fixtures.isApocryphalSection
 }));
 
-vi.mock('@texts/SearchTools.js', () => ({
-  SearchTools: {
-    splitWords: fixtures.splitWords,
-    hashWord: fixtures.hashWord
-  }
-}));
+// Real query parsing and word splitting: only hashWord is stubbed, so the index
+// urls stay predictable while the terms come from the actual query.
+vi.mock('@texts/SearchTools.js', async (importOriginal) => {
+  const actual = await importOriginal();
+  return { SearchTools: { ...actual.SearchTools, hashWord: fixtures.hashWord } };
+});
 
 import { SearchIndexLoader } from '@texts/SearchIndexLoader.js';
 
@@ -40,7 +39,6 @@ describe('SearchIndexLoader', () => {
     };
     fixtures.showApocrypha = true;
     vi.clearAllMocks();
-    fixtures.splitWords.mockImplementation(text => text.split(/\s+(?:OR\s+)?/).filter(Boolean));
     fixtures.hashWord.mockImplementation(word => word.length);
     fixtures.isApocryphalSection.mockImplementation(sectionid => sectionid.startsWith('TB'));
     vi.stubGlobal('fetch', vi.fn());
@@ -67,7 +65,6 @@ describe('SearchIndexLoader', () => {
   it('loads stemming and term indexes sequentially, then merges an OR search', async () => {
     const loader = new SearchIndexLoader();
     const text = { id: 'ENG', sections: ['GN1', 'JN3'] };
-    fixtures.splitWords.mockReturnValue(['Love', 'hope']);
     fetch.mockImplementation(url => {
       if (url.endsWith('/stems.json')) {
         return Promise.resolve(response({ json: { love: 'lov' } }));
@@ -101,7 +98,6 @@ describe('SearchIndexLoader', () => {
 
   it('continues without stemming data when its request fails', async () => {
     const loader = new SearchIndexLoader();
-    fixtures.splitWords.mockReturnValue(['Word']);
     fetch
       .mockResolvedValueOnce(response({ ok: false, status: 404 }))
       .mockResolvedValueOnce(response({ json: { word: ['GN1_1'] } }));
@@ -115,7 +111,6 @@ describe('SearchIndexLoader', () => {
 
   it('loads lemma indexes directly with long and short Strong-number buckets', async () => {
     const loader = new SearchIndexLoader();
-    fixtures.splitWords.mockReturnValue(['g12345', 'h12']);
     fetch
       .mockResolvedValueOnce(response({ json: { G12345: ['JN3_16', 'JN3_17'] } }))
       .mockResolvedValueOnce(response({ json: { H12: ['JN3_17'] } }));
@@ -133,7 +128,6 @@ describe('SearchIndexLoader', () => {
   it('skips stemming when it is disabled', async () => {
     const loader = new SearchIndexLoader();
     loader.isStemEnabled = false;
-    fixtures.splitWords.mockReturnValue(['word']);
     fetch.mockResolvedValue(response({ json: { word: ['GN1_1'] } }));
     const done = complete(loader);
     loader.loadIndexes({ id: 'ENG', sections: ['GN1'] }, [], 'word', false);
@@ -182,7 +176,6 @@ describe('SearchIndexLoader', () => {
   it('records failed term indexes and clears the all-failed sentinel set', async () => {
     const loader = new SearchIndexLoader();
     loader.isStemEnabled = false;
-    fixtures.splitWords.mockReturnValue(['one', 'two']);
     fetch
       .mockRejectedValueOnce(new Error('offline'))
       .mockResolvedValueOnce(response({ ok: false, status: 500 }));
@@ -195,11 +188,40 @@ describe('SearchIndexLoader', () => {
     });
   });
 
+  it('never asks for an index of the OR operator itself', async () => {
+    const loader = new SearchIndexLoader();
+    loader.isStemEnabled = false;
+    fetch.mockResolvedValue(response({ json: {} }));
+    const done = complete(loader);
+    loader.loadIndexes({ id: 'ENG', sections: ['GN1'] }, [], 'love OR hope', false);
+    await done;
+    expect(loader.searchTerms).toEqual(['love', 'hope']);
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fetch.mock.calls.map(call => call[0])).not.toContain(
+      'https://content.test/texts/ENG/index/_2.json'
+    );
+  });
+
   it('sorts OR fragments by canonical section and numeric verse', () => {
     const loader = new SearchIndexLoader();
     loader.textInfo = { sections: ['GN1', 'EX2', 'JN3'] };
     loader.loadedIndexes = [['JN3_10', 'GN1_12'], ['JN3_2', 'EX2_1']];
     expect(loader.mergeOrIndexes()).toEqual(['GN1_12', 'EX2_1', 'JN3_2', 'JN3_10']);
+  });
+
+  it('reports a verse once when several OR terms match it', () => {
+    const loader = new SearchIndexLoader();
+    loader.textInfo = { sections: ['GN1', 'JN3'] };
+    loader.loadedIndexes = [['JN3_16', 'GN1_1'], ['JN3_16'], ['JN3_16', 'GN1_1']];
+    expect(loader.mergeOrIndexes()).toEqual(['GN1_1', 'JN3_16']);
+
+    loader.searchDivisions = [];
+    loader.searchType = 'OR';
+    loader.processIndexes();
+    expect(loader.loadedResults).toEqual([
+      { sectionid: 'GN1', fragmentids: ['GN1_1'] },
+      { sectionid: 'JN3', fragmentids: ['JN3_16'] }
+    ]);
   });
 
   it('intersects zero, one, and several AND indexes', () => {

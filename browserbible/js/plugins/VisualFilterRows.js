@@ -39,10 +39,13 @@ const cellWithClass = (cells, className) => cells.find((cell) => cell.classList.
 
 function compileMorphology(transform) {
   if (!transform.morph) return null;
-  const pattern = transform.morph.replace(/\?/gi, '.{1}');
+  const pattern = transform.morph
+    .split('?')
+    .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('.');
   if (transform.morphType === 'robinson') return new RegExp(`^${pattern}`, 'i');
-  if (transform.morphType === 'morphhb') return new RegExp(`(^H${pattern})|(/${pattern})`, 'i');
-  return undefined;
+  if (transform.morphType === 'morphhb') return new RegExp(`(?:^H${pattern}|/${pattern})`, 'i');
+  return null;
 }
 
 function readTransform(startCell) {

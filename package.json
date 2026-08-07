@@ -35,6 +35,7 @@
     "fetch-starter-pack": "node tests/scripts/fetch-starter-pack.mjs",
     "repair-starter-pack": "node tests/scripts/repair-starter-pack.mjs",
     "demo": "node tools/demo-walkthrough.mjs",
+    "bundle-size": "pnpm run build && node tools/bundle-size.mjs",
     "build-basemap": "node tools/build-basemap.mjs",
     "build-dbs-video-media": "node tools/build-dbs-video-media.mjs",
     "lint": "eslint browserbible/js",

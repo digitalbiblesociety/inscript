@@ -34,6 +34,85 @@ describe('SearchTools.splitWords', () => {
   it('coerces non-string input', () => {
     expect(SearchTools.splitWords(42)).toEqual(['42']);
   });
+
+  it('splits on every kind of whitespace, not just a literal space', () => {
+    expect(SearchTools.splitWords('love\nhope\tfaith')).toEqual(['love', 'hope', 'faith']);
+  });
+});
+
+describe('SearchTools.removeOperators', () => {
+  it('drops standalone AND/OR tokens in any case', () => {
+    expect(SearchTools.removeOperators('love OR hope')).toBe('love hope');
+    expect(SearchTools.removeOperators('love and hope')).toBe('love hope');
+    expect(SearchTools.removeOperators('faith or hope AND love')).toBe('faith hope love');
+  });
+
+  it('keeps words that merely contain an operator', () => {
+    expect(SearchTools.removeOperators('order android')).toBe('order android');
+    expect(SearchTools.removeOperators('bread-or-wine faith')).toBe('bread-or-wine faith');
+  });
+
+  it('keeps operators inside quoted phrases', () => {
+    expect(SearchTools.removeOperators('"war and peace" OR hope')).toBe('"war and peace" hope');
+  });
+
+  it('drops a leading or trailing operator too', () => {
+    expect(SearchTools.removeOperators('love or')).toBe('love');
+    expect(SearchTools.removeOperators('  OR love  ')).toBe('love');
+  });
+});
+
+describe('SearchTools.parseQuery', () => {
+  it('reports OR mode and excludes the operator from the terms', () => {
+    const query = SearchTools.parseQuery('love OR hope');
+    expect(query.searchType).toBe('OR');
+    expect(query.words).toEqual(['love', 'hope']);
+    expect(query.searchTermsRegExp).toHaveLength(2);
+    expect(query.searchTermsRegExp.some(re => re.test('or'))).toBe(false);
+  });
+
+  it('defaults to AND and drops the AND operator', () => {
+    const query = SearchTools.parseQuery('love AND hope');
+    expect(query.searchType).toBe('AND');
+    expect(query.words).toEqual(['love', 'hope']);
+    expect(query.searchTermsRegExp).toHaveLength(2);
+  });
+
+  it('keeps the words of a quoted phrase as index terms', () => {
+    const query = SearchTools.parseQuery('"jesus christ"');
+    expect(query.words).toEqual(['jesus', 'christ']);
+    expect(query.searchTermsRegExp).toHaveLength(1);
+  });
+
+  it('treats a lemma query as whitespace-separated Strong numbers', () => {
+    const query = SearchTools.parseQuery('G2424 G5547 G2424', true);
+    expect(query.searchType).toBe('AND');
+    expect(query.words).toEqual(['G2424', 'G5547']);
+  });
+
+  it('applies the operator to a lemma query without indexing it', () => {
+    const query = SearchTools.parseQuery('H430 OR H3068', true);
+    expect(query.searchType).toBe('OR');
+    expect(query.words).toEqual(['H430', 'H3068']);
+    expect(query.searchTermsRegExp).toHaveLength(2);
+  });
+
+  it('strips operators from non-ASCII queries too', () => {
+    expect(SearchTools.parseQuery('神 OR 愛').words).toEqual(['神', '愛']);
+  });
+
+  it('does not infer OR mode from a hyphenated word', () => {
+    const query = SearchTools.parseQuery('bread-or-wine faith');
+    expect(query.searchType).toBe('AND');
+    expect(query.words).toEqual(['bread-or-wine', 'faith']);
+  });
+
+  it('does not treat an operator inside a quoted phrase as query syntax', () => {
+    const query = SearchTools.parseQuery('"war OR peace"');
+    expect(query.searchType).toBe('AND');
+    expect(query.words).toEqual(['war', 'OR', 'peace']);
+    expect(query.searchTermsRegExp).toHaveLength(1);
+  });
 });
 
 describe('SearchTools.createSearchTerms', () => {
